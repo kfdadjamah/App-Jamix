@@ -182,3 +182,25 @@ L'organisateur peut modifier (horaire, style, etc.) ou annuler manuellement une 
 ## Bloquée par
 
 - Phase 5 (récurrence) et Phase 6 (cycle de statuts) doivent exister pour gérer portée et statut annulée
+
+---
+
+## Phase 9 : Vue carte des jams par statut
+
+**User stories** : US-21
+
+### Ce qu'on livre
+
+En complément de la vue liste (Phase 2/4), le musicien peut basculer vers une vue carte affichant, pour la date sélectionnée, un marqueur par bar ayant une jam publiée, avec une indication visuelle du statut de chaque jam (confirmée / programmée / en attente de confirmation / annulée). La carte réutilise la géolocalisation de la Phase 3 pour se centrer sur la position du musicien quand elle est disponible.
+
+### Critères d'acceptation
+
+- [ ] Le musicien peut basculer entre vue liste et vue carte pour une même date sélectionnée
+- [ ] Chaque bar ayant une jam à la date sélectionnée apparaît comme marqueur sur la carte
+- [ ] Le statut de chaque jam (confirmée / programmée / en attente de confirmation / annulée) est visuellement distinguable sur la carte
+- [ ] Cliquer/toucher un marqueur affiche les informations de l'annonce (lieu, adresse, horaire, style, instruments, photos) comme dans la vue liste
+- [ ] Sans géolocalisation acceptée, la carte reste consultable (dégradation gracieuse, sans centrage sur la position du musicien)
+
+## Bloquée par
+
+- Phase 2 (annonces et consultation par date), Phase 3 (géolocalisation), Phase 6 et Phase 8 (cycle complet des statuts d'occurrence, y compris annulation)

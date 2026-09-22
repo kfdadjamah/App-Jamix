@@ -33,6 +33,7 @@ US-17. En tant que musicien, je veux voir la distance entre ma position et le ba
 US-18. En tant que musicien qui refuse la géolocalisation, je veux tout de même consulter les annonces (sans distance affichée), afin de ne pas être bloqué dans l'usage de l'outil.
 US-19. En tant que musicien, je veux, quand aucune jam n'est publiée à la date sélectionnée, voir un message clair et les prochaines dates où des jams ont lieu, afin de ne pas rester sans solution.
 US-20. En tant que musicien, je veux voir clairement si une jam est confirmée, en attente de confirmation, ou annulée, afin de ne pas me déplacer pour rien.
+US-21. En tant que musicien, je veux visualiser sur une carte les bars organisant une jam à la date sélectionnée, avec le statut de chaque jam (confirmée / en attente de confirmation / annulée), afin de repérer rapidement où jouer près de chez moi.
 
 ## Critères de succès
 
@@ -68,6 +69,9 @@ US-20. En tant que musicien, je veux voir clairement si une jam est confirmée, 
 - La distance est calculée à partir de la géolocalisation du navigateur du musicien, demandée au moment de la consultation.
 - Si le musicien refuse la géolocalisation, les annonces s'affichent normalement, sans la distance.
 - Si aucune jam n'est publiée à la date sélectionnée, l'application affiche un message clair et propose les prochaines dates où des jams sont publiées.
+- En complément de la liste, la consultation par date propose une vue carte affichant chaque bar ayant une jam à la date sélectionnée, positionné géographiquement, avec une indication visuelle du statut de sa jam (confirmée / programmée / en attente de confirmation / annulée).
+- La vue carte réutilise les mêmes annonces, statuts et données de géolocalisation que la vue liste ; elle n'introduit ni nouvelle donnée ni nouveau filtre — l'heure de chaque jam reste affichée comme dans la vue liste, sans devenir un critère de filtrage supplémentaire.
+- Le musicien peut basculer entre vue liste et vue carte sans perdre la date sélectionnée.
 
 ## Notes complémentaires
 
