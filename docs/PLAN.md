@@ -1,0 +1,184 @@
+# Plan : App-Jamix — annonces de jams à Lyon
+
+> PRD source : `docs/PRD.md`
+
+## Décisions architecturales
+
+- **Modèles clés** : `Bar` (nom, adresse, photo/logo optionnel), `CompteOrganisateur` (rattaché à un seul `Bar`), `Annonce` (style musical, instruments/backline, récurrente ou non, statut Brouillon/Publiée, jusqu'à 2 photos optionnelles), `OccurrenceJam` (date, horaire, statut de confirmation, échéance J-7) — chaque date d'une annonce récurrente est une occurrence indépendante avec son propre statut.
+- **Deux axes de statut distincts** : (1) statut de l'annonce — `Brouillon` (invisible côté musicien, aucune occurrence n'entre dans le cycle J-7) → `Publiée` ; (2) statut de chaque occurrence — `confirmée` / `programmée (sera confirmée le J-7)` / `en attente de confirmation` / `annulée`, qui ne démarre qu'à la publication de l'annonce.
+- **Gestion des photos** : upload optionnel côté fiche bar (photo/logo) et côté annonce (jusqu'à 2 photos maximum) ; toute image importée est automatiquement ajustée/recadrée au format d'affichage de l'application (pas de cadrage manuel), sans jamais bloquer la création/publication si aucune photo n'est fournie.
+- **Authentification / autorisation** : seuls les organisateurs ont un compte (email/mot de passe) ; la consultation musicien est publique, sans compte, sans autorisation.
+- **Statuts d'occurrence** : `confirmée`, `programmée (en attente de confirmation, sera confirmée le J-7)`, `en attente de confirmation (J-7 dépassé)`, `annulée`. Ce cycle de statuts est fixé dès la Phase 6 et réutilisé jusqu'à la Phase 8.
+- **Relances de confirmation** : canal in-app uniquement (pas d'email/SMS) — pour ne pas introduire de dépendance à un service d'email tiers.
+- **Géolocalisation** : basée sur l'API de géolocalisation du navigateur, demandée à la consultation ; dégradation gracieuse (pas de distance affichée) si refusée.
+- **Frontière tierce** : aucune dépendance externe obligatoire hors géolocalisation navigateur (pas d'email, pas de carte tierce imposée par le PRD).
+
+---
+
+## Phase 1 : Compte organisateur et fiche bar
+
+**User stories** : US-1, US-2
+
+### Ce qu'on livre
+
+Un organisateur peut créer un compte et renseigner la fiche de son bar (nom, adresse, photo/logo optionnel) en une seule séquence d'inscription, ou ajouter/modifier la photo plus tard. Un compte est rattaché à un seul bar.
+
+### Critères d'acceptation
+
+- [ ] Un visiteur peut créer un compte organisateur (email/mot de passe ou équivalent)
+- [ ] Lors de l'inscription, l'organisateur renseigne nom et adresse de son bar
+- [ ] L'organisateur peut ajouter, remplacer ou retirer une photo/logo sur la fiche bar, à l'inscription ou plus tard
+- [ ] Une photo importée est automatiquement ajustée au format d'affichage de l'application
+- [ ] L'absence de photo n'empêche jamais la création ou la validité de la fiche bar
+- [ ] Le compte créé est rattaché à cette fiche bar de façon permanente
+
+## Bloquée par
+
+Aucune — démarrable immédiatement
+
+---
+
+## Phase 2 : Publication d'une annonce ponctuelle (avec brouillon et photos) et consultation publique par date
+
+**User stories** : US-3, US-4, US-5, US-7, US-14, US-15, US-16
+
+### Ce qu'on livre
+
+Tranche verticale bout-en-bout minimale : un organisateur connecté crée une annonce de jam ponctuelle (date, horaire, style musical, instruments disponibles, jusqu'à 2 photos optionnelles), qu'il peut enregistrer en Brouillon pour la compléter plus tard ou publier directement, sans limite de délai à l'avance. Un musicien, sans compte, sélectionne une date et voit uniquement les annonces publiées disponibles ce jour-là, avec lieu, adresse, horaire, style, instruments et photos.
+
+### Critères d'acceptation
+
+- [ ] Un organisateur connecté crée une annonce avec date, horaire, style musical, instruments disponibles
+- [ ] L'organisateur peut ajouter jusqu'à 2 photos à l'annonce, importées et automatiquement ajustées au format d'affichage de l'application
+- [ ] Une tentative d'ajout d'une 3e photo est bloquée/empêchée
+- [ ] L'annonce reste créable et publiable sans aucune photo
+- [ ] L'organisateur peut enregistrer l'annonce en statut Brouillon (incomplète ou non), la retrouver plus tard et la compléter
+- [ ] L'organisateur publie explicitement une annonce (depuis un brouillon ou directement) pour la rendre visible
+- [ ] Une annonce en Brouillon n'apparaît jamais dans la consultation musicien
+- [ ] Aucune contrainte de délai minimum/maximum n'empêche la publication à l'avance
+- [ ] Un visiteur sans compte sélectionne une date et voit la liste des annonces publiées ce jour-là
+- [ ] Chaque annonce affiche lieu, adresse, horaire, style musical, instruments disponibles et ses éventuelles photos
+
+## Bloquée par
+
+- Phase 1 (un compte organisateur et un bar doivent exister pour publier)
+
+---
+
+## Phase 3 : Distance jusqu'au bar via géolocalisation
+
+**User stories** : US-17, US-18
+
+### Ce qu'on livre
+
+À la consultation, l'application demande la géolocalisation du navigateur du musicien et affiche la distance jusqu'à chaque bar. Si la géolocalisation est refusée, les annonces restent consultables normalement, sans distance affichée.
+
+### Critères d'acceptation
+
+- [ ] La géolocalisation est demandée au moment de la consultation des annonces
+- [ ] Si acceptée, chaque annonce affiche la distance jusqu'au bar
+- [ ] Si refusée, les annonces s'affichent sans distance, sans blocage de la consultation
+
+## Bloquée par
+
+- Phase 2 (nécessite déjà la liste d'annonces affichée)
+
+---
+
+## Phase 4 : Suggestion des prochaines dates disponibles
+
+**User stories** : US-19
+
+### Ce qu'on livre
+
+Quand aucune jam n'est publiée à la date sélectionnée par le musicien, l'application affiche un message clair et propose les prochaines dates où des jams sont publiées à Lyon.
+
+### Critères d'acceptation
+
+- [ ] Une date sans annonce publiée affiche un message explicite (pas une liste vide silencieuse)
+- [ ] Les prochaines dates avec au moins une jam publiée sont proposées, sélectionnables
+
+## Bloquée par
+
+- Phase 2 (nécessite déjà le flux de sélection de date et d'affichage des annonces)
+
+---
+
+## Phase 5 : Annonces récurrentes — publication multi-dates
+
+**User stories** : US-6
+
+### Ce qu'on livre
+
+Lors de la publication, l'organisateur peut choisir de rendre une annonce récurrente en sélectionnant plusieurs dates. Chaque date devient une occurrence à part entière, visible et consultable indépendamment côté musicien (via le flux de la Phase 2). Le statut Brouillon introduit en Phase 2 s'applique sans changement à une annonce récurrente : elle peut rester en brouillon tant que les dates ne sont pas finalisées.
+
+### Critères d'acceptation
+
+- [ ] L'organisateur choisit, à la publication, si l'annonce est ponctuelle ou récurrente
+- [ ] Pour une annonce récurrente, il sélectionne plusieurs dates en une seule publication
+- [ ] Chaque date sélectionnée apparaît comme une occurrence indépendante dans la consultation musicien
+
+## Bloquée par
+
+- Phase 2 (réutilise le modèle d'annonce et le flux de consultation)
+
+---
+
+## Phase 6 : Confirmation à J-7 et statuts d'occurrence
+
+**User stories** : US-8, US-9, US-10, US-20 (statuts confirmée / en attente)
+
+### Ce qu'on livre
+
+Toute occurrence publiée plus de 7 jours à l'avance affiche « Jam programmée, sera confirmée le [date J-7] » tant qu'elle n'est pas confirmée. L'organisateur peut la confirmer avant J-7. Si elle n'est pas confirmée à J-7, elle reste visible avec le statut « en attente de confirmation » (jamais supprimée ni annulée automatiquement). Le musicien voit ce statut sur chaque annonce.
+
+### Critères d'acceptation
+
+- [ ] Une occurrence à plus de J-7 affiche « sera confirmée le [date J-7] »
+- [ ] L'organisateur peut confirmer une occurrence avant son échéance J-7
+- [ ] Une occurrence non confirmée après J-7 passe au statut « en attente de confirmation » et reste visible
+- [ ] Le musicien voit distinctement le statut (confirmée / en attente) sur chaque annonce
+
+## Bloquée par
+
+- Phase 2 (occurrences ponctuelles) et Phase 5 (occurrences récurrentes), car le mécanisme s'applique à toute occurrence quel que soit son origine
+
+---
+
+## Phase 7 : Relances de confirmation in-app
+
+**User stories** : US-11
+
+### Ce qu'on livre
+
+Tant qu'une occurrence n'est pas confirmée après son échéance J-7, l'organisateur reçoit des relances in-app à J-5, J-3, J-2, J-1 et le jour J, visibles dans son espace organisateur.
+
+### Critères d'acceptation
+
+- [ ] Une occurrence non confirmée après J-7 génère une relance in-app à J-5, J-3, J-2, J-1 et J0
+- [ ] Les relances s'arrêtent dès que l'organisateur confirme l'occurrence
+- [ ] Les relances sont visibles dans l'espace organisateur (pas de canal externe)
+
+## Bloquée par
+
+- Phase 6 (le statut « en attente de confirmation » doit exister avant de déclencher des relances)
+
+---
+
+## Phase 8 : Modification et annulation ciblée ou globale
+
+**User stories** : US-12, US-13, US-20 (statut annulée)
+
+### Ce qu'on livre
+
+L'organisateur peut modifier (horaire, style, etc.) ou annuler manuellement une annonce à tout moment. Pour une annonce récurrente, il choisit à chaque action si elle s'applique uniquement à la date sélectionnée ou à toutes les dates. Le musicien voit le statut « annulée » sur les occurrences concernées.
+
+### Critères d'acceptation
+
+- [ ] L'organisateur modifie une occurrence et choisit portée « cette date seule » ou « toutes les dates » pour une annonce récurrente
+- [ ] L'organisateur annule une occurrence et choisit la même portée
+- [ ] Une occurrence annulée affiche le statut « annulée » côté musicien, sans être supprimée de la vue
+
+## Bloquée par
+
+- Phase 5 (récurrence) et Phase 6 (cycle de statuts) doivent exister pour gérer portée et statut annulée
