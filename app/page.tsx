@@ -1,10 +1,20 @@
 import Link from "next/link";
-import { recupererAnnoncesPubliees } from "@/lib/annonces";
+import { recupererAnnoncesPubliees, recupererProchainesDatesDisponibles } from "@/lib/annonces";
 import SelecteurDate from "./selecteur-date";
 import ListeAnnonces from "./liste-annonces";
 
+const NOMBRE_DATES_SUGGEREES = 3;
+
 function aujourdHuiIso() {
   return new Date().toISOString().slice(0, 10);
+}
+
+function formaterDateCourte(dateIso: string) {
+  return new Intl.DateTimeFormat("fr-FR", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+  }).format(new Date(dateIso));
 }
 
 export default async function Home({
@@ -15,6 +25,10 @@ export default async function Home({
   const { date } = await searchParams;
   const dateSelectionnee = date ?? aujourdHuiIso();
   const occurrences = await recupererAnnoncesPubliees(dateSelectionnee);
+  const prochainesDates =
+    occurrences.length === 0
+      ? await recupererProchainesDatesDisponibles(dateSelectionnee, NOMBRE_DATES_SUGGEREES)
+      : [];
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-8 px-6 py-16">
@@ -35,9 +49,29 @@ export default async function Home({
       </label>
 
       {occurrences.length === 0 ? (
-        <p className="text-[18px] leading-[1.26] text-[color:var(--color-warm-cream)]">
-          Aucune jam publiée à cette date pour le moment.
-        </p>
+        <div className="flex flex-col gap-4">
+          <p className="text-[18px] leading-[1.26] text-[color:var(--color-warm-cream)]">
+            Aucune jam publiée à cette date pour le moment.
+          </p>
+          {prochainesDates.length > 0 && (
+            <div className="flex flex-col gap-2">
+              <span className="text-[12px] font-medium uppercase text-[color:var(--color-driftwood)]">
+                Prochaines dates
+              </span>
+              <div className="flex flex-wrap gap-4">
+                {prochainesDates.map((date) => (
+                  <Link
+                    key={date}
+                    href={`/?date=${date}`}
+                    className="text-[12px] font-medium uppercase text-[color:var(--color-warm-cream)] underline"
+                  >
+                    {formaterDateCourte(date)}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
       ) : (
         <ListeAnnonces occurrences={occurrences} />
       )}

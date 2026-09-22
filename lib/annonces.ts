@@ -14,3 +14,21 @@ export async function recupererAnnoncesPubliees(dateIso: string) {
 
   return occurrences;
 }
+
+export async function recupererProchainesDatesDisponibles(
+  dateIso: string,
+  limite: number,
+) {
+  const occurrences = await prisma.occurrenceJam.findMany({
+    where: {
+      date: { gt: new Date(dateIso) },
+      annonce: { statut: "PUBLIEE" },
+    },
+    distinct: ["date"],
+    orderBy: { date: "asc" },
+    take: limite,
+    select: { date: true },
+  });
+
+  return occurrences.map((occurrence) => occurrence.date.toISOString().slice(0, 10));
+}

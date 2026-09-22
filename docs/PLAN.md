@@ -95,8 +95,8 @@ Quand aucune jam n'est publiée à la date sélectionnée par le musicien, l'app
 
 ### Critères d'acceptation
 
-- [ ] Une date sans annonce publiée affiche un message explicite (pas une liste vide silencieuse)
-- [ ] Les prochaines dates avec au moins une jam publiée sont proposées, sélectionnables
+- [x] Une date sans annonce publiée affiche un message explicite (pas une liste vide silencieuse)
+- [x] Les prochaines dates avec au moins une jam publiée sont proposées, sélectionnables
 
 ## Bloquée par
 
