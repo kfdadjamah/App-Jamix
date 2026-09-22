@@ -14,20 +14,22 @@ L'outil centralise les annonces de jams publiées par les organisateurs des bars
 ## User Stories
 
 US-1. En tant qu'organisateur, je veux créer un compte et renseigner la fiche de mon bar (nom, adresse), afin de pouvoir publier des annonces de jams pour ce lieu.
-US-2. En tant qu'organisateur, je veux publier une annonce de jam avec une date, un horaire, un style musical et les instruments disponibles sur place, afin d'informer les musiciens de l'événement.
-US-3. En tant qu'organisateur, je veux pouvoir publier une annonce sans limite de délai à l'avance, afin d'annoncer une jam dès que je connais la date.
-US-4. En tant qu'organisateur ayant publié une annonce plus de 15 jours avant la date de la jam, je veux devoir la confirmer 7 jours avant, afin de garantir aux musiciens une information à jour.
-US-5. En tant qu'organisateur, je veux que mon annonce affiche « Jam programmée, sera confirmée le [date J-7] » tant que je ne l'ai pas confirmée, afin que les musiciens sachent que l'information n'est pas encore définitive.
-US-6. En tant qu'organisateur qui n'a pas confirmé une jam à J-7, je veux que l'annonce reste affichée avec le statut « en attente de confirmation », afin de ne pas perdre la visibilité de mon annonce tant que je ne l'ai pas explicitement annulée.
-US-7. En tant qu'organisateur, je veux pouvoir modifier les informations d'une annonce déjà publiée (horaire, style...), afin de corriger ou ajuster les détails d'une jam.
-US-8. En tant qu'organisateur, je veux pouvoir annuler manuellement une annonce à tout moment, afin de prévenir les musiciens si la jam n'a finalement pas lieu.
-US-9. En tant que musicien, je veux sélectionner une date, afin de voir les jams disponibles ce jour-là à Lyon.
-US-10. En tant que musicien, je veux consulter les annonces de jams sans avoir à créer de compte, afin d'accéder à l'information rapidement.
-US-11. En tant que musicien, je veux voir pour chaque annonce le lieu, l'adresse, l'horaire, le style musical et les instruments disponibles sur place, afin de décider si je m'y rends.
-US-12. En tant que musicien, je veux voir la distance entre ma position et le bar, afin de choisir une jam accessible facilement.
-US-13. En tant que musicien qui refuse la géolocalisation, je veux tout de même consulter les annonces (sans distance affichée), afin de ne pas être bloqué dans l'usage de l'outil.
-US-14. En tant que musicien, je veux, quand aucune jam n'est publiée à la date sélectionnée, voir un message clair et les prochaines dates où des jams ont lieu, afin de ne pas rester sans solution.
-US-15. En tant que musicien, je veux voir clairement si une jam est confirmée, en attente de confirmation, ou annulée, afin de ne pas me déplacer pour rien.
+US-2. En tant qu'organisateur, je veux publier une annonce de jam avec une ou plusieurs dates, un horaire, un style musical et les instruments disponibles sur place, afin d'informer les musiciens de l'événement.
+US-3. En tant qu'organisateur, je veux pouvoir rendre une annonce récurrente en sélectionnant plusieurs dates lors de la publication, afin de ne pas avoir à republier la même annonce chaque semaine et de simplement confirmer chaque échéance.
+US-4. En tant qu'organisateur, je veux pouvoir publier une annonce sans limite de délai à l'avance, afin d'annoncer une jam dès que je connais la date.
+US-5. En tant qu'organisateur ayant publié une date de jam plus de 7 jours à l'avance, je veux devoir la confirmer 7 jours avant cette date, afin de garantir aux musiciens une information à jour.
+US-6. En tant qu'organisateur, je veux que chaque date de mon annonce affiche « Jam programmée, sera confirmée le [date J-7] » tant que je ne l'ai pas confirmée, afin que les musiciens sachent que l'information n'est pas encore définitive.
+US-7. En tant qu'organisateur qui n'a pas confirmé une date à J-7, je veux que cette date reste affichée avec le statut « en attente de confirmation », afin de ne pas perdre la visibilité de mon annonce tant que je ne l'ai pas explicitement annulée.
+US-8. En tant qu'organisateur qui n'a pas confirmé une date à J-7, je veux recevoir des relances à J-5, J-3, J-2, J-1 et le jour J tant que je n'ai pas confirmé, afin de ne pas oublier de confirmer ma jam.
+US-9. En tant qu'organisateur, je veux, en modifiant les informations d'une annonce récurrente déjà publiée (horaire, style...), pouvoir choisir d'appliquer la modification uniquement à la date sélectionnée ou à toutes les dates, afin de garder la main sur la portée du changement.
+US-10. En tant qu'organisateur, je veux, en annulant manuellement une annonce récurrente à tout moment, pouvoir choisir d'annuler uniquement la date sélectionnée ou toutes les dates, afin de prévenir les musiciens selon l'ampleur réelle de l'annulation.
+US-11. En tant que musicien, je veux sélectionner une date, afin de voir les jams disponibles ce jour-là à Lyon.
+US-12. En tant que musicien, je veux consulter les annonces de jams sans avoir à créer de compte, afin d'accéder à l'information rapidement.
+US-13. En tant que musicien, je veux voir pour chaque annonce le lieu, l'adresse, l'horaire, le style musical et les instruments disponibles sur place, afin de décider si je m'y rends.
+US-14. En tant que musicien, je veux voir la distance entre ma position et le bar, afin de choisir une jam accessible facilement.
+US-15. En tant que musicien qui refuse la géolocalisation, je veux tout de même consulter les annonces (sans distance affichée), afin de ne pas être bloqué dans l'usage de l'outil.
+US-16. En tant que musicien, je veux, quand aucune jam n'est publiée à la date sélectionnée, voir un message clair et les prochaines dates où des jams ont lieu, afin de ne pas rester sans solution.
+US-17. En tant que musicien, je veux voir clairement si une jam est confirmée, en attente de confirmation, ou annulée, afin de ne pas me déplacer pour rien.
 
 ## Critères de succès
 
@@ -49,11 +51,12 @@ US-15. En tant que musicien, je veux voir clairement si une jam est confirmée, 
 - L'outil est une application web, accessible et utilisable sur mobile comme sur ordinateur (responsive), sans installation.
 - Seuls les organisateurs créent un compte, pour publier des annonces ; la consultation par les musiciens est libre, sans compte.
 - Un compte organisateur est rattaché à un seul bar ; l'organisateur crée la fiche du bar (nom, adresse) au moment de son inscription.
-- Une annonce de jam est ponctuelle : chaque jam donne lieu à une publication distincte par l'organisateur (pas de récurrence automatique).
+- Une annonce de jam peut être ponctuelle (une seule date) ou récurrente : lors de la publication, l'organisateur indique si l'annonce est récurrente, puis sélectionne les dates sur lesquelles elle sera affichée. Chaque date est une occurrence à part entière, avec son propre statut et sa propre échéance de confirmation à J-7.
 - Pas de limite de délai pour publier une annonce à l'avance ; le musicien ne peut consulter que les jams à venir (pas d'historique des jams passées).
-- Si une annonce est publiée plus de 15 jours avant la date de la jam, l'organisateur doit la confirmer 7 jours avant (J-7) ; jusque-là, l'annonce affiche « Jam programmée, sera confirmée le [date J-7] ».
-- Si l'organisateur ne confirme pas à J-7, l'annonce reste visible avec le statut « en attente de confirmation » (pas de suppression ni d'annulation automatique).
-- L'organisateur peut modifier ou annuler manuellement une annonce à tout moment, indépendamment du mécanisme de confirmation à J-7.
+- Si une date d'une annonce est publiée plus de 7 jours à l'avance, l'organisateur doit la confirmer 7 jours avant cette date (J-7) ; jusque-là, l'occurrence affiche « Jam programmée, sera confirmée le [date J-7] ».
+- Si l'organisateur ne confirme pas une date à J-7, cette occurrence reste visible avec le statut « en attente de confirmation » (pas de suppression ni d'annulation automatique).
+- Tant qu'une date n'est pas confirmée après J-7, l'organisateur reçoit des relances à J-5, J-3, J-2, J-1 et le jour J.
+- L'organisateur peut modifier ou annuler manuellement une annonce à tout moment, indépendamment du mécanisme de confirmation à J-7. Pour une annonce récurrente, la modification comme l'annulation s'appliquent, au choix de l'organisateur, uniquement à la date sélectionnée ou à toutes les dates.
 - Chaque annonce affiche : nom et adresse du bar, distance jusqu'au musicien, horaire, style musical, instruments/backline disponibles sur place.
 - La distance est calculée à partir de la géolocalisation du navigateur du musicien, demandée au moment de la consultation.
 - Si le musicien refuse la géolocalisation, les annonces s'affichent normalement, sans la distance.
