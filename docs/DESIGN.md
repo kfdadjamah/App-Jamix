@@ -16,7 +16,7 @@ The ORYZO visual system treats a single product object like a museum artifact: f
 | Bark Brown | `#382416` | `--color-bark-brown` | Elevated surface and filled button background — the one chromatic step above the canvas, used for the single solid CTA |
 | Cork Border | `#40372e` | `--color-cork-border` | Hairline dividers, dashed section separators, subtle container borders — warmer than the canvas by one step |
 | Driftwood | `#6c5f51` | `--color-driftwood` | Mid-tone warm gray for secondary dividers and muted structural elements — the bridge between Bark and Cream |
-| Gold elegance | `#fca311` | `--color-gold-elegance` | Gold text accent for links, tags, and emphasized short phrases. |
+| Gold elegance | `#fca311` | `--color-gold-elegance` | Orange text accent for links, tags, and emphasized short phrases. |
 | Pure Black | `#000000` | `--color-pure-black` | SVG icon fills and decorative vector elements only — never used as a background or text color |
 
 ## Tokens — Typography
@@ -150,7 +150,7 @@ Fallback font (Arial 8px weight 500 uppercase) for things like "* ADOBE ILLUSTRA
 
 ### Do
 - Set all UI text in #ffedd7 (Warm Cream) — never use pure #fff; the warm tint is the system's signature.
-- Use #fca311 (Gold elegance) only for credit lines, the "Built by" label, and the Lusion studio link — a single accent earns its rarity through restraint.
+- Use #dc5000 (Ember) only for credit lines, the "Built by" label, and the Lusion studio link — a single accent earns its rarity through restraint.
 - Set type in uppercase weight 500 across the entire interface; use weight 400 / mixed case only for the 29px body copy that explains the product.
 - Use 36px border-radius for the one filled CTA and 22.5px for outlined ghost buttons; 12px for cards; 0px for inputs and inline links — these four values are the entire radius vocabulary.
 - Set section gaps at 100vh — each section gets its own full viewport, never compress product reveals into bands.
@@ -159,7 +159,7 @@ Fallback font (Arial 8px weight 500 uppercase) for things like "* ADOBE ILLUSTRA
 
 ### Don't
 - Never use pure #fff for text or #000 for backgrounds — the warm cream and walnut shadow are the system; purity reads as wrong here.
-- Never apply #fca311 to buttons, CTAs, or interactive surfaces — the gold is editorial credit only.
+- Never apply #dc5000 to buttons, CTAs, or interactive surfaces — the orange is editorial credit only.
 - Never use lowercase or sentence-case for headings, nav, or labels; the only mixed-case text is the 29px body description.
 - Never add drop shadows to cards, buttons, or sections — depth comes from the two-step surface stack (#100904 → #382416), not from blur.
 - Never use border-radius below 12px on containers — the geometry is deliberately chunky, not sharp.
@@ -204,7 +204,7 @@ The bold signature: line-height 0.9 at 41–51px display sizes. This is unusuall
 - background: #100904 (Walnut Shadow)
 - surface: #382416 (Bark Brown)
 - border: #40372e (Cork Border)
-- accent: #fca311 (Gold elegance)
+- accent: #dc5000 (Ember)
 - primary action: no distinct CTA color
 
 ## 3-5 Example Component Prompts
@@ -239,7 +239,7 @@ No distinct primary action color was observed; use the extracted neutral button 
   --color-bark-brown: #382416;
   --color-cork-border: #40372e;
   --color-driftwood: #6c5f51;
-  --color-gold-elegance: #fca311;
+  --color-ember-accent: #dc5000;
   --color-pure-black: #000000;
 
   /* Typography — Font Families */
@@ -317,7 +317,7 @@ No distinct primary action color was observed; use the extracted neutral button 
   --color-bark-brown: #382416;
   --color-cork-border: #40372e;
   --color-driftwood: #6c5f51;
-  --color-gold-elegance: #fca311;
+  --color-ember-accent: #dc5000;
   --color-pure-black: #000000;
 
   /* Typography */
