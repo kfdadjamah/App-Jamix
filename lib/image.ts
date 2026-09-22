@@ -9,7 +9,7 @@ const TAILLE_CIBLE_PX = 512;
  */
 export async function recadrerEtUploaderPhoto(
   fichier: File,
-  dossier: "bars"
+  dossier: "bars" | "annonces"
 ): Promise<string> {
   const buffer = Buffer.from(await fichier.arrayBuffer());
 

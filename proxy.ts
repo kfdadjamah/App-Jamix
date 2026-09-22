@@ -9,5 +9,5 @@ export default auth((req) => {
 });
 
 export const config = {
-  matcher: ["/mon-bar/:path*"],
+  matcher: ["/mon-bar/:path*", "/mes-annonces/:path*"],
 };

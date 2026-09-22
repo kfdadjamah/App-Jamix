@@ -24,6 +24,49 @@ model Bar {
   photoUrl       String?
   organisateurId String       @unique
   organisateur   Organisateur @relation(fields: [organisateurId], references: [id])
+  annonces       Annonce[]
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
+}
+
+enum StatutAnnonce {
+  BROUILLON
+  PUBLIEE
+}
+
+enum StatutOccurrence {
+  CONFIRMEE
+  PROGRAMMEE
+  EN_ATTENTE_CONFIRMATION
+  ANNULEE
+}
+
+model Annonce {
+  id             String           @id @default(cuid())
+  barId          String
+  bar            Bar              @relation(fields: [barId], references: [id])
+  statut         StatutAnnonce    @default(BROUILLON)
+  estRecurrente  Boolean          @default(false)
+  styles         String[]
+  styleAutre     String?
+  instruments    String[]
+  instrumentAutre String?
+  photoUrl1      String?
+  photoUrl2      String?
+  occurrences    OccurrenceJam[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+}
+
+model OccurrenceJam {
+  id              String           @id @default(cuid())
+  annonceId       String
+  annonce         Annonce          @relation(fields: [annonceId], references: [id], onDelete: Cascade)
+  date            DateTime         @db.Date
+  heureDebut      String
+  heureFin        String?
+  statut          StatutOccurrence @default(CONFIRMEE)
+  confirmationJ7  DateTime?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
 }

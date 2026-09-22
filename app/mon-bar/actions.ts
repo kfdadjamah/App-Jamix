@@ -2,24 +2,11 @@
 
 import { revalidatePath } from "next/cache";
 import { del } from "@vercel/blob";
-import { auth, signOut } from "@/auth";
+import { signOut } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { recadrerEtUploaderPhoto } from "@/lib/image";
 import { schemaPhoto } from "@/lib/validation/inscription";
-
-async function recupererBarDeLOrganisateurConnecte() {
-  const session = await auth();
-  if (!session?.user?.id) {
-    throw new Error("Non authentifié.");
-  }
-  const bar = await prisma.bar.findUnique({
-    where: { organisateurId: session.user.id },
-  });
-  if (!bar) {
-    throw new Error("Aucun bar associé à ce compte.");
-  }
-  return bar;
-}
+import { recupererBarDeLOrganisateurConnecte } from "@/lib/organisateur";
 
 export async function mettreAJourPhotoBar(
   formData: FormData
