@@ -12,6 +12,7 @@
 - **Relances de confirmation** : canal in-app uniquement (pas d'email/SMS) — pour ne pas introduire de dépendance à un service d'email tiers.
 - **Géolocalisation** : basée sur l'API de géolocalisation du navigateur, demandée à la consultation ; dégradation gracieuse (pas de distance affichée) si refusée.
 - **Frontière tierce** : aucune dépendance externe obligatoire hors géolocalisation navigateur (pas d'email, pas de carte tierce imposée par le PRD).
+- **Récurrence (Phase 5)** : le champ `estRecurrente` est dérivé automatiquement du nombre d'occurrences (`occurrences.length > 1`), pas de toggle dédié dans l'UI ; l'horaire (`heureDebut`/`heureFin`) est unique par annonce et s'applique à toutes ses occurrences ; jusqu'à 12 dates maximum par annonce, sans doublon (contrainte `@@unique([annonceId, date])` en base + validation applicative) ; les dates ne sont librement modifiables (ajout/retrait) que tant que l'annonce est en Brouillon — une fois Publiée, la modification des dates relève de la Phase 8 (portée ciblée/globale).
 
 ---
 
@@ -110,13 +111,18 @@ Quand aucune jam n'est publiée à la date sélectionnée par le musicien, l'app
 
 ### Ce qu'on livre
 
-Lors de la publication, l'organisateur peut choisir de rendre une annonce récurrente en sélectionnant plusieurs dates. Chaque date devient une occurrence à part entière, visible et consultable indépendamment côté musicien (via le flux de la Phase 2). Le statut Brouillon introduit en Phase 2 s'applique sans changement à une annonce récurrente : elle peut rester en brouillon tant que les dates ne sont pas finalisées.
+Lors de la création ou de l'édition d'une annonce en Brouillon, l'organisateur ajoute une ou plusieurs dates (jusqu'à 12) via une liste de dates ajoutables/supprimables, avec un horaire unique partagé par toutes les dates de l'annonce. Le caractère récurrent de l'annonce (`estRecurrente`) est déduit automatiquement dès que plus d'une date est renseignée, sans bascule ponctuelle/récurrente distincte. Chaque date devient une occurrence à part entière, visible et consultable indépendamment côté musicien (via le flux de la Phase 2). Le statut Brouillon introduit en Phase 2 s'applique sans changement à une annonce récurrente : elle peut rester en brouillon tant que les dates ne sont pas finalisées, et ses dates restent librement modifiables tant qu'elle n'est pas Publiée. Une fois Publiée, la liste des dates n'est plus modifiable depuis ce formulaire (modification déléguée à la Phase 8).
 
 ### Critères d'acceptation
 
-- [ ] L'organisateur choisit, à la publication, si l'annonce est ponctuelle ou récurrente
-- [ ] Pour une annonce récurrente, il sélectionne plusieurs dates en une seule publication
+- [ ] L'organisateur ajoute une ou plusieurs dates (jusqu'à 12) à une annonce via une liste de dates ajoutables/supprimables, sans bascule ponctuelle/récurrente distincte
+- [ ] Le caractère récurrent de l'annonce est déduit automatiquement dès que plus d'une date est renseignée
+- [ ] Un horaire unique s'applique à toutes les dates d'une même annonce
+- [ ] Une tentative d'ajout d'une date déjà présente dans la liste est bloquée/ignorée
+- [ ] Une tentative d'ajout d'une 13e date est bloquée/empêchée
 - [ ] Chaque date sélectionnée apparaît comme une occurrence indépendante dans la consultation musicien
+- [ ] Tant que l'annonce est en Brouillon, l'organisateur peut librement ajouter ou retirer des dates
+- [ ] Une fois l'annonce Publiée, la liste des dates n'est plus modifiable depuis le formulaire (modification déléguée à la Phase 8)
 
 ## Bloquée par
 
