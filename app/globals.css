@@ -183,9 +183,13 @@ body {
 }
 .champ-input:focus {
   outline: none;
-  border-bottom-color: var(--color-gold-elegance);
+  border-bottom-width: 2px;
+  padding-bottom: 0;
 }
 .champ-input--fichier {
   border-bottom: 1px solid var(--color-cork-border);
   font-size: 12px;
+}
+.champ-input--fichier:focus {
+  border-bottom-color: var(--color-warm-cream);
 }
