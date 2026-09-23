@@ -12,7 +12,7 @@
 - **Relances de confirmation** : canal in-app uniquement (pas d'email/SMS) — pour ne pas introduire de dépendance à un service d'email tiers.
 - **Géolocalisation** : basée sur l'API de géolocalisation du navigateur, demandée à la consultation ; dégradation gracieuse (pas de distance affichée) si refusée.
 - **Frontière tierce** : aucune dépendance externe obligatoire hors géolocalisation navigateur (pas d'email, pas de carte tierce imposée par le PRD).
-- **Récurrence (Phase 5)** : le champ `estRecurrente` est dérivé automatiquement du nombre d'occurrences (`occurrences.length > 1`), pas de toggle dédié dans l'UI ; l'horaire (`heureDebut`/`heureFin`) est unique par annonce et s'applique à toutes ses occurrences ; jusqu'à 12 dates maximum par annonce, sans doublon (contrainte `@@unique([annonceId, date])` en base + validation applicative) ; les dates ne sont librement modifiables (ajout/retrait) que tant que l'annonce est en Brouillon — une fois Publiée, la modification des dates relève de la Phase 8 (portée ciblée/globale).
+- **Récurrence (Phase 5)** : le champ `estRecurrente` est dérivé automatiquement du nombre d'occurrences (`occurrences.length > 1`), pas de toggle dédié dans l'UI ; l'horaire (`heureDebut`/`heureFin`) est unique par annonce et s'applique à toutes ses occurrences ; jusqu'à 12 dates maximum par annonce, sans doublon (contrainte `@@unique([annonceId, date])` en base + validation applicative) ; les dates ne sont librement modifiables (ajout/retrait) que tant que l'annonce est en Brouillon — une fois Publiée, la modification des dates relève de la Phase 8 (portée ciblée/globale). Tant que l'annonce est en Brouillon, chaque sauvegarde resynchronise ses occurrences par remplacement complet (suppression puis recréation à partir des dates soumises), sans diff fin — aucune donnée par occurrence n'a encore d'état à préserver à ce stade. Une fois Publiée, les autres champs (horaire, style, instruments, photos) restent modifiables et s'appliquent alors à toutes les occurrences existantes.
 
 ---
 
@@ -115,14 +115,15 @@ Lors de la création ou de l'édition d'une annonce en Brouillon, l'organisateur
 
 ### Critères d'acceptation
 
-- [ ] L'organisateur ajoute une ou plusieurs dates (jusqu'à 12) à une annonce via une liste de dates ajoutables/supprimables, sans bascule ponctuelle/récurrente distincte
-- [ ] Le caractère récurrent de l'annonce est déduit automatiquement dès que plus d'une date est renseignée
-- [ ] Un horaire unique s'applique à toutes les dates d'une même annonce
-- [ ] Une tentative d'ajout d'une date déjà présente dans la liste est bloquée/ignorée
-- [ ] Une tentative d'ajout d'une 13e date est bloquée/empêchée
-- [ ] Chaque date sélectionnée apparaît comme une occurrence indépendante dans la consultation musicien
-- [ ] Tant que l'annonce est en Brouillon, l'organisateur peut librement ajouter ou retirer des dates
-- [ ] Une fois l'annonce Publiée, la liste des dates n'est plus modifiable depuis le formulaire (modification déléguée à la Phase 8)
+- [x] L'organisateur ajoute une ou plusieurs dates (jusqu'à 12) à une annonce via une liste de dates ajoutables/supprimables, sans bascule ponctuelle/récurrente distincte
+- [x] Le caractère récurrent de l'annonce est déduit automatiquement dès que plus d'une date est renseignée
+- [x] Un horaire unique s'applique à toutes les dates d'une même annonce
+- [x] Une tentative d'ajout d'une date déjà présente dans la liste est bloquée/ignorée
+- [x] Une tentative d'ajout d'une 13e date est bloquée/empêchée
+- [x] Chaque date sélectionnée apparaît comme une occurrence indépendante dans la consultation musicien
+- [x] Tant que l'annonce est en Brouillon, l'organisateur peut librement ajouter ou retirer des dates
+- [x] Une fois l'annonce Publiée, la liste des dates n'est plus modifiable depuis le formulaire (modification déléguée à la Phase 8), mais horaire/style/instruments/photos restent modifiables et s'appliquent à toutes les occurrences existantes
+- [x] Dans « Mes annonces », une annonce récurrente s'affiche comme une seule carte listant toutes ses dates, avec un badge « Récurrente »
 
 ## Bloquée par
 

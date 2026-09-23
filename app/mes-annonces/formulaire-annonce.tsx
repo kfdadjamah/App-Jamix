@@ -2,11 +2,12 @@
 
 import { useRef, useState } from "react";
 import { STYLES_MUSICAUX, INSTRUMENTS_BACKLINE } from "@/lib/annonce-constantes";
+import { NOMBRE_MAX_DATES } from "@/lib/validation/annonce";
 
 type Resultat = { erreur: string } | { succes: true };
 
 export type ValeursInitialesAnnonce = {
-  date: string;
+  dates: string[];
   heureDebut: string;
   heureFin: string;
   styles: string[];
@@ -16,7 +17,7 @@ export type ValeursInitialesAnnonce = {
 };
 
 const valeursVides: ValeursInitialesAnnonce = {
-  date: "",
+  dates: [],
   heureDebut: "",
   heureFin: "",
   styles: [],
@@ -28,12 +29,14 @@ const valeursVides: ValeursInitialesAnnonce = {
 export default function FormulaireAnnonce({
   valeursInitiales,
   afficherPhotos,
+  datesModifiables = true,
   actionBrouillon,
   actionPublier,
   actionModifier,
 }: {
   valeursInitiales?: ValeursInitialesAnnonce;
   afficherPhotos: boolean;
+  datesModifiables?: boolean;
   actionBrouillon?: (formData: FormData) => Promise<Resultat>;
   actionPublier?: (formData: FormData) => Promise<Resultat>;
   actionModifier?: (formData: FormData) => Promise<Resultat>;
@@ -41,7 +44,28 @@ export default function FormulaireAnnonce({
   const valeurs = valeursInitiales ?? valeursVides;
   const [erreur, setErreur] = useState<string | null>(null);
   const [enCours, setEnCours] = useState(false);
+  const [dates, setDates] = useState<string[]>(valeurs.dates);
+  const [nouvelleDate, setNouvelleDate] = useState("");
   const formRef = useRef<HTMLFormElement>(null);
+
+  function ajouterDate() {
+    if (!nouvelleDate) return;
+    if (dates.includes(nouvelleDate)) {
+      setErreur("Cette date est déjà dans la liste.");
+      return;
+    }
+    if (dates.length >= NOMBRE_MAX_DATES) {
+      setErreur(`${NOMBRE_MAX_DATES} dates maximum par annonce.`);
+      return;
+    }
+    setErreur(null);
+    setDates([...dates, nouvelleDate].sort());
+    setNouvelleDate("");
+  }
+
+  function retirerDate(date: string) {
+    setDates(dates.filter((d) => d !== date));
+  }
 
   async function soumettre(action: (formData: FormData) => Promise<Resultat>) {
     if (!formRef.current) return;
@@ -57,15 +81,65 @@ export default function FormulaireAnnonce({
 
   return (
     <form ref={formRef} className="flex flex-col gap-8" noValidate>
-      <Champ label="Date">
-        <input
-          type="date"
-          name="date"
-          min={new Date().toISOString().slice(0, 10)}
-          defaultValue={valeurs.date}
-          className="champ-input"
-        />
-      </Champ>
+      <div className="flex flex-col gap-3">
+        <span className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)]">
+          {dates.length > 1 ? "Dates (annonce récurrente)" : "Date"}
+        </span>
+
+        {dates.length > 0 && (
+          <ul className="flex flex-wrap gap-2">
+            {dates.map((date) => (
+              <li
+                key={date}
+                className="flex items-center gap-2 rounded-[9999px] border border-[var(--color-cork-border)] px-3 py-1 text-[12px] uppercase text-[var(--color-warm-cream)]"
+              >
+                {new Date(date).toLocaleDateString("fr-FR", {
+                  weekday: "short",
+                  day: "numeric",
+                  month: "short",
+                })}
+                {datesModifiables && (
+                  <button
+                    type="button"
+                    onClick={() => retirerDate(date)}
+                    aria-label={`Retirer le ${date}`}
+                    className="text-[var(--color-driftwood)]"
+                  >
+                    ×
+                  </button>
+                )}
+                <input type="hidden" name="dates" value={date} />
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {datesModifiables ? (
+          <div className="flex items-end gap-3">
+            <input
+              type="date"
+              min={new Date().toISOString().slice(0, 10)}
+              value={nouvelleDate}
+              onChange={(e) => setNouvelleDate(e.target.value)}
+              className="champ-input"
+            />
+            <button
+              type="button"
+              onClick={ajouterDate}
+              disabled={dates.length >= NOMBRE_MAX_DATES}
+              className="whitespace-nowrap rounded-[22.5px] border border-[var(--color-warm-cream)] px-4 py-[7.5px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)] disabled:opacity-60"
+            >
+              Ajouter une date
+            </button>
+          </div>
+        ) : (
+          dates.length === 0 && (
+            <span className="text-[15px] text-[var(--color-driftwood)]">
+              Aucune date renseignée
+            </span>
+          )
+        )}
+      </div>
 
       <div className="flex gap-6">
         <Champ label="Heure de début">

@@ -16,7 +16,7 @@ type Resultat = { erreur: string } | { succes: true };
 
 function extraireChampsFormulaire(formData: FormData) {
   return {
-    date: formData.get("date") ?? "",
+    dates: formData.getAll("dates"),
     heureDebut: formData.get("heureDebut") ?? "",
     heureFin: formData.get("heureFin") ?? "",
     styles: formData.getAll("styles"),
@@ -35,32 +35,36 @@ async function verifierProprietaireAnnonce(annonceId: string) {
   return annonce;
 }
 
-async function synchroniserOccurrence(
+async function synchroniserOccurrences(
   annonceId: string,
-  donnees: ChampsAnnonceBrouillon
+  donnees: ChampsAnnonceBrouillon,
+  annonceEtaitDejaPubliee: boolean
 ) {
-  if (!donnees.date || !donnees.heureDebut) return;
+  if (!donnees.heureDebut) return;
+  const heureFin = donnees.heureFin || null;
 
-  const occurrenceExistante = await prisma.occurrenceJam.findFirst({
-    where: { annonceId },
-  });
-
-  const donneesOccurrence = {
-    date: new Date(donnees.date),
-    heureDebut: donnees.heureDebut,
-    heureFin: donnees.heureFin || null,
-  };
-
-  if (occurrenceExistante) {
-    await prisma.occurrenceJam.update({
-      where: { id: occurrenceExistante.id },
-      data: donneesOccurrence,
+  if (annonceEtaitDejaPubliee) {
+    // Une fois Publiée, la liste des dates est gelée (Phase 8 gérera sa modification) ;
+    // seul l'horaire, partagé par toutes les occurrences, reste synchronisé.
+    await prisma.occurrenceJam.updateMany({
+      where: { annonceId },
+      data: { heureDebut: donnees.heureDebut, heureFin },
     });
-  } else {
-    await prisma.occurrenceJam.create({
-      data: { ...donneesOccurrence, annonceId },
-    });
+    return;
   }
+
+  // Création ou Brouillon : aucune occurrence n'a d'état à préserver,
+  // on resynchronise par remplacement complet à partir des dates soumises.
+  await prisma.occurrenceJam.deleteMany({ where: { annonceId } });
+  if (donnees.dates.length === 0) return;
+  await prisma.occurrenceJam.createMany({
+    data: donnees.dates.map((date) => ({
+      annonceId,
+      date: new Date(date),
+      heureDebut: donnees.heureDebut!,
+      heureFin,
+    })),
+  });
 }
 
 export async function creerAnnonce(
@@ -94,6 +98,7 @@ export async function creerAnnonce(
     data: {
       barId: bar.id,
       statut: action === "publier" ? "PUBLIEE" : "BROUILLON",
+      estRecurrente: donnees.dates.length > 1,
       styles: donnees.styles,
       styleAutre: donnees.styleAutre || null,
       instruments: donnees.instruments,
@@ -103,7 +108,7 @@ export async function creerAnnonce(
     },
   });
 
-  await synchroniserOccurrence(annonce.id, donnees);
+  await synchroniserOccurrences(annonce.id, donnees, false);
 
   redirect("/mes-annonces");
 }
@@ -122,6 +127,7 @@ export async function modifierAnnonce(
   }
   const donnees = resultat.data;
 
+  const annonceEtaitDejaPubliee = annonceExistante.statut === "PUBLIEE";
   const nouveauStatut =
     action === "publier" ? "PUBLIEE" : action === "brouillon" ? "BROUILLON" : annonceExistante.statut;
 
@@ -129,6 +135,9 @@ export async function modifierAnnonce(
     where: { id: annonceId },
     data: {
       statut: nouveauStatut,
+      estRecurrente: annonceEtaitDejaPubliee
+        ? annonceExistante.estRecurrente
+        : donnees.dates.length > 1,
       styles: donnees.styles,
       styleAutre: donnees.styleAutre || null,
       instruments: donnees.instruments,
@@ -136,7 +145,7 @@ export async function modifierAnnonce(
     },
   });
 
-  await synchroniserOccurrence(annonceId, donnees);
+  await synchroniserOccurrences(annonceId, donnees, annonceEtaitDejaPubliee);
 
   revalidatePath("/mes-annonces");
   revalidatePath(`/mes-annonces/${annonceId}`);

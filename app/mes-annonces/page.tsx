@@ -36,38 +36,55 @@ export default async function PageMesAnnonces() {
 
       <div className="flex flex-col gap-4">
         {annonces.map((annonce) => {
-          const occurrence = annonce.occurrences[0];
+          const occurrencesTriees = [...annonce.occurrences].sort(
+            (a, b) => a.date.getTime() - b.date.getTime()
+          );
+          const premiereOccurrence = occurrencesTriees[0];
           return (
             <Link
               key={annonce.id}
               href={`/mes-annonces/${annonce.id}`}
               className="flex flex-col gap-2 rounded-[12px] border border-[var(--color-cork-border)] p-4"
             >
-              <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
                 <span className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)]">
                   {annonce.statut === "BROUILLON" ? "Brouillon" : "Publiée"}
                 </span>
-                {occurrence && (
-                  <span className="text-[10px] font-medium uppercase text-[var(--color-driftwood)]">
-                    {LIBELLES_STATUT_OCCURRENCE[occurrence.statut]}
+                {annonce.estRecurrente && (
+                  <span className="rounded-[9999px] border border-[var(--color-driftwood)] px-2 py-[2px] text-[10px] font-medium uppercase text-[var(--color-driftwood)]">
+                    Récurrente
                   </span>
                 )}
               </div>
-              {occurrence ? (
+
+              {premiereOccurrence ? (
                 <span className="text-[18px] text-[var(--color-warm-cream)]">
-                  {new Date(occurrence.date).toLocaleDateString("fr-FR", {
-                    weekday: "long",
-                    day: "numeric",
-                    month: "long",
-                  })}{" "}
-                  · {occurrence.heureDebut}
-                  {occurrence.heureFin ? ` – ${occurrence.heureFin}` : ""}
+                  {premiereOccurrence.heureDebut}
+                  {premiereOccurrence.heureFin ? ` – ${premiereOccurrence.heureFin}` : ""}
                 </span>
               ) : (
                 <span className="text-[15px] text-[var(--color-driftwood)]">
                   Aucune date renseignée
                 </span>
               )}
+
+              {occurrencesTriees.length > 0 && (
+                <ul className="flex flex-wrap gap-2">
+                  {occurrencesTriees.map((occurrence) => (
+                    <li
+                      key={occurrence.id}
+                      className="rounded-[9999px] border border-[var(--color-cork-border)] px-3 py-1 text-[10px] font-medium uppercase text-[var(--color-warm-cream)]"
+                    >
+                      {new Date(occurrence.date).toLocaleDateString("fr-FR", {
+                        day: "numeric",
+                        month: "short",
+                      })}{" "}
+                      · {LIBELLES_STATUT_OCCURRENCE[occurrence.statut]}
+                    </li>
+                  ))}
+                </ul>
+              )}
+
               {annonce.styles.length > 0 && (
                 <span className="text-[12px] uppercase text-[var(--color-driftwood)]">
                   {annonce.styles.join(", ")}

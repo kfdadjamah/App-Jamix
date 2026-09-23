@@ -22,7 +22,10 @@ export default async function PageEditionAnnonce({
     notFound();
   }
 
-  const occurrence = annonce.occurrences[0];
+  const occurrencesTriees = [...annonce.occurrences].sort(
+    (a, b) => a.date.getTime() - b.date.getTime()
+  );
+  const premiereOccurrence = occurrencesTriees[0];
   const estPubliee = annonce.statut === "PUBLIEE";
 
   const enregistrerBrouillon = modifierAnnonce.bind(null, annonce.id, "brouillon");
@@ -39,10 +42,11 @@ export default async function PageEditionAnnonce({
 
       <FormulaireAnnonce
         afficherPhotos={false}
+        datesModifiables={!estPubliee}
         valeursInitiales={{
-          date: occurrence ? new Date(occurrence.date).toISOString().slice(0, 10) : "",
-          heureDebut: occurrence?.heureDebut ?? "",
-          heureFin: occurrence?.heureFin ?? "",
+          dates: occurrencesTriees.map((o) => new Date(o.date).toISOString().slice(0, 10)),
+          heureDebut: premiereOccurrence?.heureDebut ?? "",
+          heureFin: premiereOccurrence?.heureFin ?? "",
           styles: annonce.styles,
           styleAutre: annonce.styleAutre ?? "",
           instruments: annonce.instruments,

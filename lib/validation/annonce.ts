@@ -7,8 +7,17 @@ const regexDate = /^\d{4}-\d{2}-\d{2}$/;
 
 const schemaPhotoAnnonce = z.union([schemaPhoto, z.literal(null)]).optional();
 
+export const NOMBRE_MAX_DATES = 12;
+
+const schemaDates = z
+  .array(z.string().regex(regexDate, "Date invalide."))
+  .max(NOMBRE_MAX_DATES, `${NOMBRE_MAX_DATES} dates maximum par annonce.`)
+  .refine((dates) => new Set(dates).size === dates.length, {
+    message: "Une même date ne peut pas être ajoutée deux fois.",
+  });
+
 const champsCommuns = {
-  date: z.string().regex(regexDate, "Date invalide.").optional().or(z.literal("")),
+  dates: schemaDates.default([]),
   heureDebut: z.string().regex(regexHeure, "Heure invalide.").optional().or(z.literal("")),
   heureFin: z.string().regex(regexHeure, "Heure invalide.").optional().or(z.literal("")),
   styles: z.array(z.enum(STYLES_MUSICAUX)).default([]),
@@ -24,7 +33,7 @@ export type ChampsAnnonceBrouillon = z.infer<typeof schemaAnnonceBrouillon>;
 
 export const schemaAnnoncePublication = z.object({
   ...champsCommuns,
-  date: z.string().regex(regexDate, "La date est requise."),
+  dates: schemaDates.min(1, "Au moins une date est requise."),
   heureDebut: z.string().regex(regexHeure, "L'heure de début est requise."),
   styles: z.array(z.enum(STYLES_MUSICAUX)).min(1, "Sélectionnez au moins un style musical."),
 });
