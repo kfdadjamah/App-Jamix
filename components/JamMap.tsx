@@ -10,6 +10,7 @@ import {
   PRIORITE_STATUT_OCCURRENCE,
 } from "@/lib/annonce-constantes";
 import { statutAffiche, type recupererAnnoncesPubliees } from "@/lib/annonces";
+import { calculerDistanceKm, formaterDistance } from "@/lib/distance";
 
 type Occurrence = Awaited<ReturnType<typeof recupererAnnoncesPubliees>>[number];
 
@@ -61,7 +62,11 @@ function resoudreChevauchements(map: maplibregl.Map, marqueurs: MarqueurBar[]) {
   }
 }
 
-function creerElementMarqueur(nomBar: string, statut: StatutOccurrence): HTMLDivElement {
+function creerElementMarqueur(
+  nomBar: string,
+  statut: StatutOccurrence,
+  distanceKm: number | null
+): HTMLDivElement {
   const couleur = COULEURS_STATUT_OCCURRENCE[statut];
   const wrapper = document.createElement("div");
   wrapper.className = "jam-sticker";
@@ -76,6 +81,7 @@ function creerElementMarqueur(nomBar: string, statut: StatutOccurrence): HTMLDiv
       <div class="jam-sticker__text">
         <span class="jam-sticker__name"></span>
         <span class="jam-sticker__sub">${LIBELLES_STATUT_OCCURRENCE[statut]}</span>
+        ${distanceKm !== null ? `<span class="jam-sticker__distance">${formaterDistance(distanceKm)}</span>` : ""}
       </div>
     </div>
     <div class="jam-sticker__pointer" style="border-top-color:${couleur}"></div>
@@ -99,10 +105,11 @@ function statutPrioritaire(occurrences: Occurrence[]): StatutOccurrence {
 
 interface JamMapProps {
   occurrences: Occurrence[];
+  positionMusicien: { latitude: number; longitude: number } | null;
   onSelectionBar: (barId: string) => void;
 }
 
-export default function JamMap({ occurrences, onSelectionBar }: JamMapProps) {
+export default function JamMap({ occurrences, positionMusicien, onSelectionBar }: JamMapProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
 
@@ -149,7 +156,13 @@ export default function JamMap({ occurrences, onSelectionBar }: JamMapProps) {
     for (const [barId, occurrencesDuBar] of occurrencesParBar) {
       const bar = occurrencesDuBar[0].annonce.bar;
       const statut = statutPrioritaire(occurrencesDuBar);
-      const el = creerElementMarqueur(bar.nom, statut);
+      const distanceKm = positionMusicien
+        ? calculerDistanceKm(positionMusicien, {
+            latitude: bar.latitude!,
+            longitude: bar.longitude!,
+          })
+        : null;
+      const el = creerElementMarqueur(bar.nom, statut, distanceKm);
       el.addEventListener("click", () => onSelectionBar(barId));
 
       const marker = new maplibregl.Marker({ element: el, anchor: "bottom" })
@@ -175,7 +188,7 @@ export default function JamMap({ occurrences, onSelectionBar }: JamMapProps) {
       map.off("resize", recalculer);
       marqueurs.forEach((m) => m.marker.remove());
     };
-  }, [occurrences, onSelectionBar]);
+  }, [occurrences, positionMusicien, onSelectionBar]);
 
   return <div ref={containerRef} className="jam-map h-full w-full" />;
 }

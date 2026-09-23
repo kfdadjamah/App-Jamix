@@ -121,6 +121,14 @@ body {
   line-height: 1;
 }
 
+.jam-sticker__distance {
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  color: rgba(255, 237, 215, 0.7);
+  line-height: 1;
+}
+
 .jam-sticker__pointer {
   width: 0;
   height: 0;

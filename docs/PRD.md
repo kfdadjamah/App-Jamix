@@ -34,6 +34,9 @@ US-18. En tant que musicien qui refuse la géolocalisation, je veux tout de mêm
 US-19. En tant que musicien, je veux, quand aucune jam n'est publiée à la date sélectionnée, voir un message clair et les prochaines dates où des jams ont lieu, afin de ne pas rester sans solution.
 US-20. En tant que musicien, je veux voir clairement si une jam est confirmée, en attente de confirmation, ou annulée, afin de ne pas me déplacer pour rien.
 US-21. En tant que musicien, je veux visualiser sur une carte les bars organisant une jam à la date sélectionnée, avec le statut de chaque jam (confirmée / en attente de confirmation / annulée), afin de repérer rapidement où jouer près de chez moi.
+US-22. En tant que musicien, je veux voir sur la carte la distance jusqu'à chaque bar, sous le statut de sa jam, afin de repérer les jams proches sans ouvrir chaque fiche.
+US-23. En tant que musicien, je veux, depuis une annonce (liste ou carte), toucher un bouton « Itinéraire » et choisir l'application de cartographie à ouvrir (Google Maps, Plans, Waze, Citymapper), afin de trouver le transport jusqu'au bar.
+US-24. En tant que musicien qui n'a pas l'application choisie, je veux être redirigé vers sa version web, afin de ne jamais tomber sur une impasse.
 
 ## Critères de succès
 
@@ -49,6 +52,9 @@ US-21. En tant que musicien, je veux visualiser sur une carte les bars organisan
 - Historique des jams passées.
 - Un organisateur rattaché à plusieurs bars (un compte = un bar).
 - Liste pré-remplie de bars lyonnais : chaque organisateur crée sa propre fiche bar.
+- Itinéraire calculé dans l'application (le trajet est délégué à l'application de cartographie externe).
+- Affichage d'un temps de trajet.
+- Mémorisation de l'application de cartographie choisie par le musicien.
 
 ## Décisions d'implémentation
 
@@ -75,7 +81,12 @@ US-21. En tant que musicien, je veux visualiser sur une carte les bars organisan
 - En complément de la liste, la consultation par date propose une vue carte affichant chaque bar ayant une jam à la date sélectionnée, positionné géographiquement, avec une indication visuelle du statut de sa jam (confirmée / programmée / en attente de confirmation / annulée).
 - La vue carte réutilise les mêmes annonces, statuts et données de géolocalisation que la vue liste ; elle n'introduit ni nouvelle donnée ni nouveau filtre — l'heure de chaque jam reste affichée comme dans la vue liste, sans devenir un critère de filtrage supplémentaire.
 - Le musicien peut basculer entre vue liste et vue carte sans perdre la date sélectionnée.
+- Sur la carte, la distance jusqu'au bar s'affiche sur le marqueur, sous le statut, uniquement si la géolocalisation est acceptée ; elle est masquée sur un marqueur réduit (chevauchement).
+- Chaque annonce, dans la liste comme dans la fiche ouverte depuis un marqueur, propose un bouton fantôme secondaire « Itinéraire ».
+- Ce bouton ouvre un menu de 4 applications de cartographie : Google Maps, Plans (proposé uniquement sur les appareils Apple), Waze et Citymapper (proposés uniquement sur mobile). Si l'application n'est pas installée, sa version web s'ouvre.
+- Le bar est la destination ; le point de départ est géré par l'application externe, donc le bouton fonctionne même sans géolocalisation.
+- Toucher un marqueur ouvre toujours la fiche de l'annonce, sans changement.
 
 ## Notes complémentaires
 
-Rien à signaler.
+L'itinéraire dépend d'applications tierces (Google Maps, Plans, Waze, Citymapper). Sans l'application installée, Waze et Citymapper peuvent ouvrir une page web qui pousse surtout à les installer.

@@ -1,4 +1,5 @@
 import { formaterDistance } from "@/lib/distance";
+import BoutonItineraire from "./bouton-itineraire";
 import { LIBELLES_STATUT_OCCURRENCE, formaterDateCourte } from "@/lib/annonce-constantes";
 import { statutAffiche, type recupererAnnoncesPubliees } from "@/lib/annonces";
 
@@ -71,6 +72,7 @@ export default function CarteAnnonce({
             ))}
         </div>
       )}
+      <BoutonItineraire bar={occurrence.annonce.bar} />
     </div>
   );
 }

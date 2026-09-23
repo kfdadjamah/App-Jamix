@@ -52,7 +52,11 @@ export default function ConsultationMusicien({
         <ListeAnnonces occurrences={occurrences} positionMusicien={positionMusicien} />
       ) : (
         <div className="relative h-[70vh] overflow-hidden rounded-[12px]">
-          <JamMap occurrences={occurrences} onSelectionBar={setBarSelectionneId} />
+          <JamMap
+            occurrences={occurrences}
+            positionMusicien={positionMusicien}
+            onSelectionBar={setBarSelectionneId}
+          />
           {barSelectionneId && (
             <BottomSheetBar
               occurrences={occurrencesDuBarSelectionne}

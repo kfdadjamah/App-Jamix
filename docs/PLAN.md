@@ -212,3 +212,27 @@ En complément de la vue liste (Phase 2/4), le musicien peut basculer vers une v
 ## Bloquée par
 
 - Phase 2 (annonces et consultation par date), Phase 3 (géolocalisation), Phase 6 et Phase 8 (cycle complet des statuts d'occurrence, y compris annulation)
+
+---
+
+## Phase 10 : Distance sur la carte et itinéraire
+
+**User stories** : US-22, US-23, US-24
+
+### Ce qu'on livre
+
+Sur la vue carte, chaque marqueur affiche sous le statut de la jam la distance jusqu'au bar, quand la géolocalisation est acceptée (masquée sur un marqueur réduit). Chaque annonce, dans la liste comme dans la fiche ouverte depuis un marqueur, propose un bouton fantôme « Itinéraire » qui ouvre un menu de choix de l'application de cartographie (Google Maps, Plans, Waze, Citymapper), avec le bar comme destination. Si l'application n'est pas installée, sa version web s'ouvre.
+
+### Critères d'acceptation
+
+- [x] Avec géolocalisation acceptée, chaque marqueur de la carte affiche la distance jusqu'au bar sous le statut
+- [x] Sans géolocalisation, aucune distance n'est affichée sur les marqueurs
+- [x] La distance est masquée sur un marqueur réduit (chevauchement)
+- [x] Chaque annonce (liste et fiche de la carte) affiche un bouton fantôme « Itinéraire »
+- [x] Le bouton ouvre un menu proposant Google Maps, Plans (appareils Apple uniquement), Waze et Citymapper (mobile uniquement)
+- [x] Chaque lien ouvre l'application ou sa version web avec le bar comme destination
+- [x] Le bouton fonctionne même sans géolocalisation acceptée
+
+## Bloquée par
+
+- Phase 3 (géolocalisation et distance) et Phase 9 (vue carte)
