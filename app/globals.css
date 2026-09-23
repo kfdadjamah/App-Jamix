@@ -46,6 +46,14 @@ body {
   cursor: pointer;
 }
 
+.jam-sticker--compact .jam-sticker__text {
+  display: none;
+}
+
+.jam-sticker--compact .jam-sticker__pill {
+  padding: 6px;
+}
+
 .jam-sticker__pill {
   display: flex;
   align-items: center;
