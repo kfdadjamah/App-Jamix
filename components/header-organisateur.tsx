@@ -63,7 +63,7 @@ export default async function HeaderOrganisateur({
       {nbRelancesActives > 0 && (
         <Link
           href="/mes-annonces"
-          className="text-[12px] font-medium uppercase text-[var(--color-gold-elegance)] underline"
+          className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)] underline"
         >
           ⚠ {nbRelancesActives} jam{nbRelancesActives > 1 ? "s" : ""} en attente de confirmation
         </Link>
