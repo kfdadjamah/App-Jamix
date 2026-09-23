@@ -183,9 +183,9 @@ L'organisateur peut modifier (horaire, style, etc.) ou annuler manuellement une 
 
 ### Critères d'acceptation
 
-- [ ] L'organisateur modifie une occurrence et choisit portée « cette date seule » ou « toutes les dates » pour une annonce récurrente
-- [ ] L'organisateur annule une occurrence et choisit la même portée
-- [ ] Une occurrence annulée affiche le statut « annulée » côté musicien, sans être supprimée de la vue
+- [x] L'organisateur modifie une occurrence et choisit portée « cette date seule » ou « toutes les dates » pour une annonce récurrente
+- [x] L'organisateur annule une occurrence et choisit la même portée
+- [x] Une occurrence annulée affiche le statut « annulée » côté musicien, sans être supprimée de la vue
 
 ## Bloquée par
 

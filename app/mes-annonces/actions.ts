@@ -40,16 +40,17 @@ async function synchroniserOccurrences(
   annonceId: string,
   donnees: ChampsAnnonceBrouillon,
   annonceEtaitDejaPubliee: boolean,
-  nouveauStatut: "BROUILLON" | "PUBLIEE"
+  nouveauStatut: "BROUILLON" | "PUBLIEE",
+  porteeOccurrenceId?: string
 ) {
   if (!donnees.heureDebut) return;
   const heureFin = donnees.heureFin || null;
 
   if (annonceEtaitDejaPubliee) {
-    // Une fois Publiée, la liste des dates est gelée (Phase 8 gérera sa modification) ;
-    // seul l'horaire, partagé par toutes les occurrences, reste synchronisé.
+    // Une fois Publiée, la liste des dates est gelée ; seul l'horaire, partagé par
+    // toutes les occurrences (ou une seule, selon la portée choisie), reste synchronisé.
     await prisma.occurrenceJam.updateMany({
-      where: { annonceId },
+      where: { annonceId, ...(porteeOccurrenceId ? { id: porteeOccurrenceId } : {}) },
       data: { heureDebut: donnees.heureDebut, heureFin },
     });
     return;
@@ -161,7 +162,19 @@ export async function modifierAnnonce(
     },
   });
 
-  await synchroniserOccurrences(annonceId, donnees, annonceEtaitDejaPubliee, nouveauStatut);
+  const porteeOccurrenceIdBrut = formData.get("porteeOccurrenceId");
+  const porteeOccurrenceId =
+    typeof porteeOccurrenceIdBrut === "string" && porteeOccurrenceIdBrut
+      ? porteeOccurrenceIdBrut
+      : undefined;
+
+  await synchroniserOccurrences(
+    annonceId,
+    donnees,
+    annonceEtaitDejaPubliee,
+    nouveauStatut,
+    porteeOccurrenceId
+  );
 
   revalidatePath("/mes-annonces");
   revalidatePath(`/mes-annonces/${annonceId}`);
@@ -184,6 +197,39 @@ export async function confirmerOccurrence(occurrenceId: string): Promise<Resulta
   });
 
   revalidatePath(`/mes-annonces/${occurrence.annonceId}`);
+  revalidatePath("/mes-annonces");
+  return { succes: true };
+}
+
+export async function annulerOccurrence(occurrenceId: string): Promise<Resultat> {
+  const occurrence = await prisma.occurrenceJam.findUnique({
+    where: { id: occurrenceId },
+    include: { annonce: true },
+  });
+  const bar = await recupererBarDeLOrganisateurConnecte();
+  if (!occurrence || occurrence.annonce.barId !== bar.id) {
+    return { erreur: "Occurrence introuvable." };
+  }
+
+  await prisma.occurrenceJam.update({
+    where: { id: occurrenceId },
+    data: { statut: "ANNULEE", confirmationJ7: null },
+  });
+
+  revalidatePath(`/mes-annonces/${occurrence.annonceId}`);
+  revalidatePath("/mes-annonces");
+  return { succes: true };
+}
+
+export async function annulerAnnonce(annonceId: string): Promise<Resultat> {
+  await verifierProprietaireAnnonce(annonceId);
+
+  await prisma.occurrenceJam.updateMany({
+    where: { annonceId },
+    data: { statut: "ANNULEE", confirmationJ7: null },
+  });
+
+  revalidatePath(`/mes-annonces/${annonceId}`);
   revalidatePath("/mes-annonces");
   return { succes: true };
 }

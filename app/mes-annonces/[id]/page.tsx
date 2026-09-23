@@ -6,6 +6,8 @@ import FormulaireAnnonce from "../formulaire-annonce";
 import { modifierAnnonce } from "../actions";
 import PhotoAnnonce from "./photo-annonce";
 import ConfirmerOccurrence from "./confirmer-occurrence";
+import AnnulerOccurrence from "./annuler-occurrence";
+import AnnulerAnnonce from "./annuler-annonce";
 import { statutAffiche } from "@/lib/annonces";
 import { messageRelance } from "@/lib/relances";
 import { LIBELLES_STATUT_OCCURRENCE, formaterDateCourte } from "@/lib/annonce-constantes";
@@ -31,6 +33,9 @@ export default async function PageEditionAnnonce({
   );
   const premiereOccurrence = occurrencesTriees[0];
   const estPubliee = annonce.statut === "PUBLIEE";
+  const occurrencesNonAnnulees = occurrencesTriees.filter(
+    (occurrence) => statutAffiche(occurrence) !== "ANNULEE"
+  );
 
   const enregistrerBrouillon = modifierAnnonce.bind(null, annonce.id, "brouillon");
   const publier = modifierAnnonce.bind(null, annonce.id, "publier");
@@ -73,18 +78,34 @@ export default async function PageEditionAnnonce({
                     {relance}
                   </span>
                 )}
-                {afficherEcheance && (
-                  <ConfirmerOccurrence occurrenceId={occurrence.id} />
-                )}
+                <div className="flex gap-3">
+                  {afficherEcheance && (
+                    <ConfirmerOccurrence occurrenceId={occurrence.id} />
+                  )}
+                  {statut !== "ANNULEE" && (
+                    <AnnulerOccurrence occurrenceId={occurrence.id} />
+                  )}
+                </div>
               </div>
             );
           })}
+          {annonce.estRecurrente && occurrencesNonAnnulees.length > 0 && (
+            <AnnulerAnnonce annonceId={annonce.id} />
+          )}
         </div>
       )}
 
       <FormulaireAnnonce
         afficherPhotos={false}
         datesModifiables={!estPubliee}
+        occurrencesPourPortee={
+          estPubliee && annonce.estRecurrente
+            ? occurrencesNonAnnulees.map((occurrence) => ({
+                id: occurrence.id,
+                date: new Date(occurrence.date).toISOString().slice(0, 10),
+              }))
+            : undefined
+        }
         valeursInitiales={{
           dates: occurrencesTriees.map((o) => new Date(o.date).toISOString().slice(0, 10)),
           heureDebut: premiereOccurrence?.heureDebut ?? "",

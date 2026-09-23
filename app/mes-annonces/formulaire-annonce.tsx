@@ -30,6 +30,7 @@ export default function FormulaireAnnonce({
   valeursInitiales,
   afficherPhotos,
   datesModifiables = true,
+  occurrencesPourPortee,
   actionBrouillon,
   actionPublier,
   actionModifier,
@@ -37,6 +38,7 @@ export default function FormulaireAnnonce({
   valeursInitiales?: ValeursInitialesAnnonce;
   afficherPhotos: boolean;
   datesModifiables?: boolean;
+  occurrencesPourPortee?: { id: string; date: string }[];
   actionBrouillon?: (formData: FormData) => Promise<Resultat>;
   actionPublier?: (formData: FormData) => Promise<Resultat>;
   actionModifier?: (formData: FormData) => Promise<Resultat>;
@@ -46,6 +48,7 @@ export default function FormulaireAnnonce({
   const [enCours, setEnCours] = useState(false);
   const [dates, setDates] = useState<string[]>(valeurs.dates);
   const [nouvelleDate, setNouvelleDate] = useState("");
+  const [porteeOccurrenceId, setPorteeOccurrenceId] = useState("");
   const formRef = useRef<HTMLFormElement>(null);
 
   function ajouterDate() {
@@ -159,6 +162,31 @@ export default function FormulaireAnnonce({
           />
         </Champ>
       </div>
+
+      {occurrencesPourPortee && occurrencesPourPortee.length > 0 && (
+        <div className="flex flex-col gap-3">
+          <span className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)]">
+            Appliquer l&apos;horaire à
+          </span>
+          <select
+            value={porteeOccurrenceId}
+            onChange={(e) => setPorteeOccurrenceId(e.target.value)}
+            className="champ-input"
+          >
+            <option value="">Toutes les dates</option>
+            {occurrencesPourPortee.map((occurrence) => (
+              <option key={occurrence.id} value={occurrence.id}>
+                {new Date(occurrence.date).toLocaleDateString("fr-FR", {
+                  weekday: "short",
+                  day: "numeric",
+                  month: "short",
+                })}
+              </option>
+            ))}
+          </select>
+          <input type="hidden" name="porteeOccurrenceId" value={porteeOccurrenceId} />
+        </div>
+      )}
 
       <GroupeCases
         label="Style musical"
