@@ -7,6 +7,7 @@ import { modifierAnnonce } from "../actions";
 import PhotoAnnonce from "./photo-annonce";
 import ConfirmerOccurrence from "./confirmer-occurrence";
 import { statutAffiche } from "@/lib/annonces";
+import { messageRelance } from "@/lib/relances";
 import { LIBELLES_STATUT_OCCURRENCE, formaterDateCourte } from "@/lib/annonce-constantes";
 
 export default async function PageEditionAnnonce({
@@ -48,6 +49,7 @@ export default async function PageEditionAnnonce({
           {occurrencesTriees.map((occurrence) => {
             const statut = statutAffiche(occurrence);
             const afficherEcheance = statut === "PROGRAMMEE" || statut === "EN_ATTENTE_CONFIRMATION";
+            const relance = statut === "EN_ATTENTE_CONFIRMATION" ? messageRelance(occurrence) : null;
             return (
               <div
                 key={occurrence.id}
@@ -61,9 +63,14 @@ export default async function PageEditionAnnonce({
                     {LIBELLES_STATUT_OCCURRENCE[statut]}
                   </span>
                 </div>
-                {afficherEcheance && occurrence.confirmationJ7 && (
+                {statut === "PROGRAMMEE" && occurrence.confirmationJ7 && (
                   <span className="text-[12px] text-[var(--color-driftwood)]">
                     Sera confirmée le {formaterDateCourte(new Date(occurrence.confirmationJ7))}
+                  </span>
+                )}
+                {relance && (
+                  <span className="text-[12px] font-medium uppercase text-[var(--color-gold-elegance)]">
+                    {relance}
                   </span>
                 )}
                 {afficherEcheance && (

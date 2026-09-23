@@ -4,6 +4,7 @@ import { recupererBarDeLOrganisateurConnecte } from "@/lib/organisateur";
 import HeaderOrganisateur from "@/components/header-organisateur";
 import { LIBELLES_STATUT_OCCURRENCE } from "@/lib/annonce-constantes";
 import { statutAffiche } from "@/lib/annonces";
+import { messageRelance } from "@/lib/relances";
 
 export default async function PageMesAnnonces() {
   const bar = await recupererBarDeLOrganisateurConnecte();
@@ -71,18 +72,26 @@ export default async function PageMesAnnonces() {
 
               {occurrencesTriees.length > 0 && (
                 <ul className="flex flex-wrap gap-2">
-                  {occurrencesTriees.map((occurrence) => (
-                    <li
-                      key={occurrence.id}
-                      className="rounded-[9999px] border border-[var(--color-cork-border)] px-3 py-1 text-[10px] font-medium uppercase text-[var(--color-warm-cream)]"
-                    >
-                      {new Date(occurrence.date).toLocaleDateString("fr-FR", {
-                        day: "numeric",
-                        month: "short",
-                      })}{" "}
-                      · {LIBELLES_STATUT_OCCURRENCE[statutAffiche(occurrence)]}
-                    </li>
-                  ))}
+                  {occurrencesTriees.map((occurrence) => {
+                    const relance = messageRelance(occurrence);
+                    return (
+                      <li
+                        key={occurrence.id}
+                        className="flex flex-col rounded-[9999px] border border-[var(--color-cork-border)] px-3 py-1 text-[10px] font-medium uppercase text-[var(--color-warm-cream)]"
+                      >
+                        <span>
+                          {new Date(occurrence.date).toLocaleDateString("fr-FR", {
+                            day: "numeric",
+                            month: "short",
+                          })}{" "}
+                          · {LIBELLES_STATUT_OCCURRENCE[statutAffiche(occurrence)]}
+                        </span>
+                        {relance && (
+                          <span className="text-[var(--color-gold-elegance)]">{relance}</span>
+                        )}
+                      </li>
+                    );
+                  })}
                 </ul>
               )}
 

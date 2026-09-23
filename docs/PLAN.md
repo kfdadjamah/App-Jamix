@@ -163,9 +163,9 @@ Tant qu'une occurrence n'est pas confirmée après son échéance J-7, l'organis
 
 ### Critères d'acceptation
 
-- [ ] Une occurrence non confirmée après J-7 génère une relance in-app à J-5, J-3, J-2, J-1 et J0
-- [ ] Les relances s'arrêtent dès que l'organisateur confirme l'occurrence
-- [ ] Les relances sont visibles dans l'espace organisateur (pas de canal externe)
+- [x] Une occurrence non confirmée après J-7 génère une relance in-app à J-5, J-3, J-2, J-1 et J0
+- [x] Les relances s'arrêtent dès que l'organisateur confirme l'occurrence
+- [x] Les relances sont visibles dans l'espace organisateur (pas de canal externe)
 
 ## Bloquée par
 
