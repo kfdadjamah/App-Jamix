@@ -34,6 +34,11 @@ describe("formaterDistance", () => {
     expect(formaterDistance(3.26)).toBe("3.3 km");
   });
 
+  it("bascule au km entier quand l'arrondi atteint 10 km", () => {
+    expect(formaterDistance(9.96)).toBe("10 km");
+    expect(formaterDistance(9.94)).toBe("9.9 km");
+  });
+
   it("arrondit au km au-delà de 10 km", () => {
     expect(formaterDistance(12.4)).toBe("12 km");
   });

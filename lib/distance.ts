@@ -32,13 +32,14 @@ export function distanceJusquAuBar(
 }
 
 export function formaterDistance(distanceKm: number) {
-  // Arrondi aux 100 m d'abord : 0,96 km donne 1000 m, qui doit s'afficher en km.
-  const metresArrondis = Math.round(distanceKm * 10) * 100;
-  if (metresArrondis < 1000) {
-    return `${metresArrondis} m`;
+  // Arrondi aux 100 m d'abord, puis choix du format : 0,96 km donne 1000 m
+  // (affiché « 1.0 km ») et 9,96 km donne 10,0 km (affiché « 10 km »).
+  const hectometres = Math.round(distanceKm * 10);
+  if (hectometres < 10) {
+    return `${hectometres * 100} m`;
   }
-  if (distanceKm < 10) {
-    return `${distanceKm.toFixed(1)} km`;
+  if (hectometres < 100) {
+    return `${(hectometres / 10).toFixed(1)} km`;
   }
   return `${Math.round(distanceKm)} km`;
 }
