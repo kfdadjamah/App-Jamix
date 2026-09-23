@@ -1,55 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-
-interface Destination {
-  nom: string;
-  adresse: string;
-  latitude: number | null;
-  longitude: number | null;
-}
-
-interface ApplicationCarto {
-  nom: string;
-  url: string;
-  appleSeulement?: boolean;
-  mobileSeulement?: boolean;
-}
-
-// Liens universels : ils ouvrent l'application si elle est installée, sa version web sinon.
-function applicationsCarto(bar: Destination): ApplicationCarto[] {
-  const coordonnees =
-    bar.latitude !== null && bar.longitude !== null ? `${bar.latitude},${bar.longitude}` : null;
-  const adresse = encodeURIComponent(bar.adresse);
-  const destination = coordonnees ?? adresse;
-
-  return [
-    {
-      nom: "Google Maps",
-      url: `https://www.google.com/maps/dir/?api=1&destination=${destination}`,
-    },
-    {
-      nom: "Plans",
-      url: `https://maps.apple.com/?daddr=${destination}`,
-      appleSeulement: true,
-    },
-    {
-      nom: "Waze",
-      url: coordonnees
-        ? `https://waze.com/ul?ll=${coordonnees}&navigate=yes`
-        : `https://waze.com/ul?q=${adresse}&navigate=yes`,
-      mobileSeulement: true,
-    },
-    {
-      nom: "Citymapper",
-      url:
-        "https://citymapper.com/directions?" +
-        (coordonnees ? `endcoord=${coordonnees}&` : "") +
-        `endname=${encodeURIComponent(bar.nom)}&endaddress=${adresse}`,
-      mobileSeulement: true,
-    },
-  ];
-}
+import { applicationsCarto, detecterAppareil, type Destination } from "@/lib/itineraire";
 
 export default function BoutonItineraire({ bar }: { bar: Destination }) {
   const [ouvert, setOuvert] = useState(false);
@@ -59,10 +11,9 @@ export default function BoutonItineraire({ bar }: { bar: Destination }) {
   // Détection à l'ouverture, côté client : le menu n'est jamais rendu côté serveur.
   function basculerMenu() {
     if (!ouvert) {
-      setAppareil({
-        apple: /iPhone|iPad|Macintosh/.test(navigator.userAgent),
-        mobile: window.matchMedia("(pointer: coarse)").matches,
-      });
+      setAppareil(
+        detecterAppareil(navigator.userAgent, window.matchMedia("(pointer: coarse)").matches)
+      );
     }
     setOuvert(!ouvert);
   }
@@ -72,13 +23,18 @@ export default function BoutonItineraire({ bar }: { bar: Destination }) {
     function surClicExterieur(event: PointerEvent) {
       if (!conteneurRef.current?.contains(event.target as Node)) setOuvert(false);
     }
+    function surTouche(event: KeyboardEvent) {
+      if (event.key === "Escape") setOuvert(false);
+    }
     document.addEventListener("pointerdown", surClicExterieur);
-    return () => document.removeEventListener("pointerdown", surClicExterieur);
+    document.addEventListener("keydown", surTouche);
+    return () => {
+      document.removeEventListener("pointerdown", surClicExterieur);
+      document.removeEventListener("keydown", surTouche);
+    };
   }, [ouvert]);
 
-  const applications = applicationsCarto(bar).filter(
-    (app) => (!app.appleSeulement || appareil.apple) && (!app.mobileSeulement || appareil.mobile)
-  );
+  const applications = applicationsCarto(bar, appareil);
 
   return (
     <div ref={conteneurRef} className="self-start">
