@@ -265,28 +265,6 @@ export default function FormulaireAnnonce({
           </button>
         )}
       </div>
-
-      <style jsx global>{`
-        .champ-input {
-          width: 100%;
-          background: transparent;
-          border: none;
-          border-bottom: 1px solid var(--color-warm-cream);
-          border-radius: 0;
-          padding: 1px 2px;
-          color: var(--color-warm-cream);
-          font-size: 15px;
-          color-scheme: dark;
-        }
-        .champ-input:focus {
-          outline: none;
-          border-bottom-color: var(--color-gold-elegance);
-        }
-        .champ-input--fichier {
-          border-bottom: 1px solid var(--color-cork-border);
-          font-size: 12px;
-        }
-      `}</style>
     </form>
   );
 }

@@ -7,8 +7,7 @@ import { geocoderAdresse } from "@/lib/geocode";
 import { recadrerEtUploaderPhoto } from "@/lib/image";
 import { schemaInscription } from "@/lib/validation/inscription";
 import { signIn } from "@/auth";
-
-const TOURS_HASHING = 12;
+import { TOURS_HASHING } from "@/lib/auth-constantes";
 
 export async function inscrireOrganisateur(
   formData: FormData

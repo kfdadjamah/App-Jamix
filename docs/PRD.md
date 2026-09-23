@@ -37,6 +37,9 @@ US-21. En tant que musicien, je veux visualiser sur une carte les bars organisan
 US-22. En tant que musicien, je veux voir sur la carte la distance jusqu'à chaque bar, sous le statut de sa jam, afin de repérer les jams proches sans ouvrir chaque fiche.
 US-23. En tant que musicien, je veux, depuis une annonce (liste ou carte), toucher un bouton « Itinéraire » et choisir l'application de cartographie à ouvrir (Google Maps, Plans, Waze, Citymapper), afin de trouver le transport jusqu'au bar.
 US-24. En tant que musicien qui n'a pas l'application choisie, je veux être redirigé vers sa version web, afin de ne jamais tomber sur une impasse.
+US-25. En tant qu'organisateur, je veux modifier le nom et l'adresse de mon bar, afin de garder sa fiche à jour.
+US-26. En tant qu'organisateur, je veux changer mon email et mon mot de passe, afin de garder la maîtrise de mon compte.
+US-27. En tant qu'organisateur, je veux supprimer définitivement mon compte, avec mon bar, mes annonces et mes photos, afin de quitter l'application sans laisser de données derrière moi.
 
 ## Critères de succès
 
@@ -86,6 +89,10 @@ US-24. En tant que musicien qui n'a pas l'application choisie, je veux être red
 - Ce bouton ouvre un menu de 4 applications de cartographie : Google Maps, Plans (proposé uniquement sur les appareils Apple), Waze et Citymapper (proposés uniquement sur mobile). Si l'application n'est pas installée, sa version web s'ouvre.
 - Le bar est la destination ; le point de départ est géré par l'application externe, donc le bouton fonctionne même sans géolocalisation.
 - Toucher un marqueur ouvre toujours la fiche de l'annonce, sans changement.
+- L'organisateur peut modifier le nom et l'adresse de son bar à tout moment ; une adresse modifiée est re-géocodée (en cas d'échec, la fiche reste valide mais le bar n'apparaît plus sur la carte).
+- Changer l'email ou le mot de passe exige la saisie du mot de passe actuel.
+- La suppression du compte est définitive (pas de corbeille) et exige une confirmation explicite ; elle supprime le bar, ses annonces, leurs occurrences et toutes les photos associées.
+- Le rattachement « un compte = un bar » est conservé : l'organisateur édite son bar existant, il n'en change jamais.
 
 ## Notes complémentaires
 

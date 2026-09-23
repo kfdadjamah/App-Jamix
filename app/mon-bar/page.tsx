@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import HeaderOrganisateur from "@/components/header-organisateur";
 import GestionPhotoBar from "./gestion-photo-bar";
+import FormulaireFicheBar from "./formulaire-fiche-bar";
 
 export default async function PageMonBar() {
   const session = await auth();
@@ -25,19 +26,7 @@ export default async function PageMonBar() {
         Mon bar
       </h1>
 
-      <div className="flex flex-col gap-1">
-        <span className="text-[12px] font-medium uppercase text-[var(--color-driftwood)]">
-          Nom
-        </span>
-        <span className="text-[18px] text-[var(--color-warm-cream)]">{bar.nom}</span>
-      </div>
-
-      <div className="flex flex-col gap-1">
-        <span className="text-[12px] font-medium uppercase text-[var(--color-driftwood)]">
-          Adresse
-        </span>
-        <span className="text-[18px] text-[var(--color-warm-cream)]">{bar.adresse}</span>
-      </div>
+      <FormulaireFicheBar nom={bar.nom} adresse={bar.adresse} />
 
       <GestionPhotoBar photoUrl={bar.photoUrl} />
     </main>

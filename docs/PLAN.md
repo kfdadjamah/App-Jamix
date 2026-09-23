@@ -14,6 +14,8 @@
 - **Géolocalisation** : basée sur l'API de géolocalisation du navigateur, demandée à la consultation ; dégradation gracieuse (pas de distance affichée) si refusée.
 - **Frontière tierce** : pas d'email ni de SMS. Dépendances externes limitées à : géolocalisation navigateur, géocodage des adresses de bar (API Adresse data.gouv.fr), fond de carte vectoriel gratuit et sans clé API (Phase 9), et applications de cartographie externes (Google Maps, Plans, Waze, Citymapper) ouvertes par simple lien universel avec le bar comme destination — aucun calcul d'itinéraire ni clé API côté application (Phase 10).
 - **Récurrence (Phase 5)** : le champ `estRecurrente` est dérivé automatiquement du nombre d'occurrences (`occurrences.length > 1`), pas de toggle dédié dans l'UI ; l'horaire (`heureDebut`/`heureFin`) est unique par annonce et s'applique à toutes ses occurrences ; jusqu'à 12 dates maximum par annonce, sans doublon (contrainte `@@unique([annonceId, date])` en base + validation applicative) ; les dates ne sont librement modifiables (ajout/retrait) que tant que l'annonce est en Brouillon — une fois Publiée, la modification des dates relève de la Phase 8 (portée ciblée/globale). Tant que l'annonce est en Brouillon, chaque sauvegarde resynchronise ses occurrences par remplacement complet (suppression puis recréation à partir des dates soumises), sans diff fin — aucune donnée par occurrence n'a encore d'état à préserver à ce stade. Une fois Publiée, les autres champs (horaire, style, instruments, photos) restent modifiables et s'appliquent alors à toutes les occurrences existantes.
+- **Routes** : consultation musicien publique sur `/` ; `/inscription` et `/connexion` publiques ; espace organisateur protégé (redirection vers `/connexion` si non connecté) sur `/mon-bar` (fiche bar), `/mes-annonces` (annonces, confirmations, relances) et `/mon-compte` (email, mot de passe, suppression).
+- **Profil et compte (Phase 11)** : aucune migration de schéma. Le géocodage d'une adresse de bar n'est relancé que si l'adresse change ; un échec remet latitude/longitude à `null` (fiche valide, bar absent de la carte, distance non affichée). Session JWT contenant uniquement l'identifiant de l'organisateur : l'email affiché est toujours relu en base, jamais depuis la session. Toute action sensible (email, mot de passe, suppression) revérifie le mot de passe actuel côté serveur. La suppression de compte efface, en une transaction, les annonces (occurrences en cascade), le bar puis le compte, faute de cascade `Organisateur → Bar → Annonce` dans le schéma ; les photos (bar et annonces) sont retirées du stockage ensuite, sans bloquer la suppression en cas d'échec.
 
 ---
 
@@ -236,3 +238,29 @@ Sur la vue carte, chaque marqueur affiche sous le statut de la jam la distance j
 ## Bloquée par
 
 - Phase 3 (géolocalisation et distance) et Phase 9 (vue carte)
+
+---
+
+## Phase 11 : Profil organisateur et gestion du compte
+
+**User stories** : US-25, US-26, US-27
+
+### Ce qu'on livre
+
+La fiche bar (`/mon-bar`) devient éditable : nom, adresse (re-géocodée si elle change) et photo. Une nouvelle page `/mon-compte` permet à l'organisateur de changer son email et son mot de passe (mot de passe actuel exigé) et de supprimer définitivement son compte, avec son bar, ses annonces, leurs occurrences et leurs photos. Le rattachement « un compte = un bar » est conservé.
+
+### Critères d'acceptation
+
+- [x] L'organisateur modifie le nom et l'adresse de son bar depuis `/mon-bar`
+- [x] Une adresse modifiée est re-géocodée ; en cas d'échec, la fiche reste valide mais le bar disparaît de la carte
+- [x] Les modifications de la fiche bar sont visibles côté musicien (liste et carte)
+- [x] L'organisateur change son email en saisissant son mot de passe actuel ; un email déjà utilisé est refusé
+- [x] L'organisateur change son mot de passe en saisissant son mot de passe actuel et une confirmation identique
+- [x] Un mot de passe actuel erroné est refusé pour toute action sensible
+- [x] L'organisateur supprime définitivement son compte après saisie de son mot de passe et du mot « SUPPRIMER »
+- [x] La suppression retire le bar, ses annonces, leurs occurrences et leurs photos, puis déconnecte l'organisateur
+- [x] `/mon-compte` n'est accessible qu'à un organisateur connecté
+
+## Bloquée par
+
+- Phase 1 (compte organisateur et fiche bar)

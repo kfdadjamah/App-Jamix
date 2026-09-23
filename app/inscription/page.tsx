@@ -7,6 +7,7 @@ import {
   schemaInscriptionClient,
   type ChampsInscriptionClient,
 } from "@/lib/validation/inscription";
+import ChampFormulaire from "@/components/champ-formulaire";
 import { inscrireOrganisateur } from "./actions";
 
 export default function PageInscription() {
@@ -61,45 +62,45 @@ export default function PageInscription() {
       </div>
 
       <form onSubmit={surSoumission} className="flex flex-col gap-6" noValidate>
-        <Champ label="Email" erreur={errors.email?.message}>
+        <ChampFormulaire label="Email" erreur={errors.email?.message}>
           <input
             type="email"
             autoComplete="email"
             {...register("email")}
             className="champ-input"
           />
-        </Champ>
+        </ChampFormulaire>
 
-        <Champ label="Mot de passe" erreur={errors.motDePasse?.message}>
+        <ChampFormulaire label="Mot de passe" erreur={errors.motDePasse?.message}>
           <input
             type="password"
             autoComplete="new-password"
             {...register("motDePasse")}
             className="champ-input"
           />
-        </Champ>
+        </ChampFormulaire>
 
-        <Champ label="Nom du bar" erreur={errors.nomBar?.message}>
+        <ChampFormulaire label="Nom du bar" erreur={errors.nomBar?.message}>
           <input type="text" {...register("nomBar")} className="champ-input" />
-        </Champ>
+        </ChampFormulaire>
 
-        <Champ label="Adresse du bar" erreur={errors.adresseBar?.message}>
+        <ChampFormulaire label="Adresse du bar" erreur={errors.adresseBar?.message}>
           <input
             type="text"
             placeholder="12 rue de la République, Lyon"
             {...register("adresseBar")}
             className="champ-input"
           />
-        </Champ>
+        </ChampFormulaire>
 
-        <Champ label="Photo ou logo (optionnel)">
+        <ChampFormulaire label="Photo ou logo (optionnel)">
           <input
             type="file"
             accept="image/jpeg,image/png,image/webp"
             ref={refPhoto}
             className="champ-input champ-input--fichier"
           />
-        </Champ>
+        </ChampFormulaire>
 
         {erreurServeur && (
           <p className="text-[12px] font-medium uppercase text-[var(--color-gold-elegance)]">
@@ -122,51 +123,6 @@ export default function PageInscription() {
           Se connecter
         </a>
       </p>
-
-      <style jsx global>{`
-        .champ-input {
-          width: 100%;
-          background: transparent;
-          border: none;
-          border-bottom: 1px solid var(--color-warm-cream);
-          border-radius: 0;
-          padding: 1px 2px;
-          color: var(--color-warm-cream);
-          font-size: 15px;
-        }
-        .champ-input:focus {
-          outline: none;
-          border-bottom-color: var(--color-gold-elegance);
-        }
-        .champ-input--fichier {
-          border-bottom: 1px solid var(--color-cork-border);
-          font-size: 12px;
-        }
-      `}</style>
     </main>
-  );
-}
-
-function Champ({
-  label,
-  erreur,
-  children,
-}: {
-  label: string;
-  erreur?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <label className="flex flex-col gap-2">
-      <span className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)]">
-        {label}
-      </span>
-      {children}
-      {erreur && (
-        <span className="text-[10px] font-medium uppercase text-[var(--color-gold-elegance)]">
-          {erreur}
-        </span>
-      )}
-    </label>
   );
 }

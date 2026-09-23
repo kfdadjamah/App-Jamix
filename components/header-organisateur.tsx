@@ -7,7 +7,7 @@ import { prisma } from "@/lib/prisma";
 export default async function HeaderOrganisateur({
   page,
 }: {
-  page: "mon-bar" | "mes-annonces";
+  page: "mon-bar" | "mes-annonces" | "mon-compte";
 }) {
   const bar = await recupererBarDeLOrganisateurConnecte();
   const occurrences = await prisma.occurrenceJam.findMany({
@@ -18,8 +18,8 @@ export default async function HeaderOrganisateur({
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex items-center justify-between">
-        <nav className="flex gap-6">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <nav className="flex gap-3 whitespace-nowrap">
           <Link
             href="/mon-bar"
             className={`text-[12px] font-medium uppercase ${
@@ -40,13 +40,23 @@ export default async function HeaderOrganisateur({
           >
             Mes annonces
           </Link>
+          <Link
+            href="/mon-compte"
+            className={`text-[12px] font-medium uppercase ${
+              page === "mon-compte"
+                ? "text-[var(--color-warm-cream)] underline"
+                : "text-[var(--color-driftwood)]"
+            }`}
+          >
+            Mon compte
+          </Link>
         </nav>
         <form action={deconnecterOrganisateur}>
           <button
             type="submit"
-            className="rounded-[22.5px] border border-[var(--color-warm-cream)] px-4 py-[7.5px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)]"
+            className="whitespace-nowrap rounded-[22.5px] border border-[var(--color-warm-cream)] px-4 py-[7.5px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)]"
           >
-            Se déconnecter
+            Déconnexion
           </button>
         </form>
       </div>
