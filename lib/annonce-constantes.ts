@@ -29,3 +29,11 @@ export const LIBELLES_STATUT_OCCURRENCE: Record<string, string> = {
   EN_ATTENTE_CONFIRMATION: "En attente de confirmation",
   ANNULEE: "Annulée",
 };
+
+export function formaterDateCourte(date: Date): string {
+  return date.toLocaleDateString("fr-FR", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+  });
+}

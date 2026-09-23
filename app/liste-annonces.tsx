@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { calculerDistanceKm, formaterDistance } from "@/lib/distance";
-import { LIBELLES_STATUT_OCCURRENCE } from "@/lib/annonce-constantes";
-import type { recupererAnnoncesPubliees } from "@/lib/annonces";
+import { LIBELLES_STATUT_OCCURRENCE, formaterDateCourte } from "@/lib/annonce-constantes";
+import { statutAffiche, type recupererAnnoncesPubliees } from "@/lib/annonces";
 
 type Occurrence = Awaited<ReturnType<typeof recupererAnnoncesPubliees>>[number];
 
@@ -56,7 +56,7 @@ export default function ListeAnnonces({ occurrences }: { occurrences: Occurrence
               {occurrence.annonce.bar.nom}
             </span>
             <span className="text-[10px] font-medium uppercase text-[var(--color-driftwood)]">
-              {LIBELLES_STATUT_OCCURRENCE[occurrence.statut]}
+              {LIBELLES_STATUT_OCCURRENCE[statutAffiche(occurrence)]}
             </span>
           </div>
           <div className="flex items-center justify-between gap-2">
@@ -73,6 +73,18 @@ export default function ListeAnnonces({ occurrences }: { occurrences: Occurrence
             {occurrence.heureDebut}
             {occurrence.heureFin ? ` – ${occurrence.heureFin}` : ""}
           </span>
+          {(() => {
+            const statut = statutAffiche(occurrence);
+            const afficherEcheance =
+              (statut === "PROGRAMMEE" || statut === "EN_ATTENTE_CONFIRMATION") &&
+              occurrence.confirmationJ7;
+            if (!afficherEcheance) return null;
+            return (
+              <span className="text-[12px] text-[var(--color-driftwood)]">
+                Sera confirmée le {formaterDateCourte(new Date(occurrence.confirmationJ7!))}
+              </span>
+            );
+          })()}
           {occurrence.annonce.styles.length > 0 && (
             <span className="text-[12px] uppercase text-[var(--color-driftwood)]">
               {occurrence.annonce.styles.join(", ")}

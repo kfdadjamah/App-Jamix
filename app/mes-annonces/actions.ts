@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { del } from "@vercel/blob";
 import { prisma } from "@/lib/prisma";
+import { calculerStatutInitial } from "@/lib/annonces";
 import { recadrerEtUploaderPhoto } from "@/lib/image";
 import { recupererBarDeLOrganisateurConnecte } from "@/lib/organisateur";
 import {
@@ -38,7 +39,8 @@ async function verifierProprietaireAnnonce(annonceId: string) {
 async function synchroniserOccurrences(
   annonceId: string,
   donnees: ChampsAnnonceBrouillon,
-  annonceEtaitDejaPubliee: boolean
+  annonceEtaitDejaPubliee: boolean,
+  nouveauStatut: "BROUILLON" | "PUBLIEE"
 ) {
   if (!donnees.heureDebut) return;
   const heureFin = donnees.heureFin || null;
@@ -57,13 +59,22 @@ async function synchroniserOccurrences(
   // on resynchronise par remplacement complet à partir des dates soumises.
   await prisma.occurrenceJam.deleteMany({ where: { annonceId } });
   if (donnees.dates.length === 0) return;
+
+  const vientDEtrePubliee = nouveauStatut === "PUBLIEE" && !annonceEtaitDejaPubliee;
+
   await prisma.occurrenceJam.createMany({
-    data: donnees.dates.map((date) => ({
-      annonceId,
-      date: new Date(date),
-      heureDebut: donnees.heureDebut!,
-      heureFin,
-    })),
+    data: donnees.dates.map((date) => {
+      const statutInitial = vientDEtrePubliee
+        ? calculerStatutInitial(new Date(date))
+        : null;
+      return {
+        annonceId,
+        date: new Date(date),
+        heureDebut: donnees.heureDebut!,
+        heureFin,
+        ...(statutInitial ?? {}),
+      };
+    }),
   });
 }
 
@@ -108,7 +119,12 @@ export async function creerAnnonce(
     },
   });
 
-  await synchroniserOccurrences(annonce.id, donnees, false);
+  await synchroniserOccurrences(
+    annonce.id,
+    donnees,
+    false,
+    action === "publier" ? "PUBLIEE" : "BROUILLON"
+  );
 
   redirect("/mes-annonces");
 }
@@ -145,10 +161,30 @@ export async function modifierAnnonce(
     },
   });
 
-  await synchroniserOccurrences(annonceId, donnees, annonceEtaitDejaPubliee);
+  await synchroniserOccurrences(annonceId, donnees, annonceEtaitDejaPubliee, nouveauStatut);
 
   revalidatePath("/mes-annonces");
   revalidatePath(`/mes-annonces/${annonceId}`);
+  return { succes: true };
+}
+
+export async function confirmerOccurrence(occurrenceId: string): Promise<Resultat> {
+  const occurrence = await prisma.occurrenceJam.findUnique({
+    where: { id: occurrenceId },
+    include: { annonce: true },
+  });
+  const bar = await recupererBarDeLOrganisateurConnecte();
+  if (!occurrence || occurrence.annonce.barId !== bar.id) {
+    return { erreur: "Occurrence introuvable." };
+  }
+
+  await prisma.occurrenceJam.update({
+    where: { id: occurrenceId },
+    data: { statut: "CONFIRMEE", confirmationJ7: null },
+  });
+
+  revalidatePath(`/mes-annonces/${occurrence.annonceId}`);
+  revalidatePath("/mes-annonces");
   return { succes: true };
 }
 

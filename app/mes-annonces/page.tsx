@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { recupererBarDeLOrganisateurConnecte } from "@/lib/organisateur";
 import HeaderOrganisateur from "@/components/header-organisateur";
 import { LIBELLES_STATUT_OCCURRENCE } from "@/lib/annonce-constantes";
+import { statutAffiche } from "@/lib/annonces";
 
 export default async function PageMesAnnonces() {
   const bar = await recupererBarDeLOrganisateurConnecte();
@@ -79,7 +80,7 @@ export default async function PageMesAnnonces() {
                         day: "numeric",
                         month: "short",
                       })}{" "}
-                      · {LIBELLES_STATUT_OCCURRENCE[occurrence.statut]}
+                      · {LIBELLES_STATUT_OCCURRENCE[statutAffiche(occurrence)]}
                     </li>
                   ))}
                 </ul>

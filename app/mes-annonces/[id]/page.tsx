@@ -5,6 +5,9 @@ import HeaderOrganisateur from "@/components/header-organisateur";
 import FormulaireAnnonce from "../formulaire-annonce";
 import { modifierAnnonce } from "../actions";
 import PhotoAnnonce from "./photo-annonce";
+import ConfirmerOccurrence from "./confirmer-occurrence";
+import { statutAffiche } from "@/lib/annonces";
+import { LIBELLES_STATUT_OCCURRENCE, formaterDateCourte } from "@/lib/annonce-constantes";
 
 export default async function PageEditionAnnonce({
   params,
@@ -39,6 +42,38 @@ export default async function PageEditionAnnonce({
       <h1 className="text-[41px] font-medium uppercase leading-[0.9] text-[var(--color-warm-cream)]">
         {estPubliee ? "Modifier l'annonce" : "Compléter le brouillon"}
       </h1>
+
+      {estPubliee && (
+        <div className="flex flex-col gap-4">
+          {occurrencesTriees.map((occurrence) => {
+            const statut = statutAffiche(occurrence);
+            const afficherEcheance = statut === "PROGRAMMEE" || statut === "EN_ATTENTE_CONFIRMATION";
+            return (
+              <div
+                key={occurrence.id}
+                className="flex flex-col gap-2 rounded-[12px] border border-[var(--color-cork-border)] p-4"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-[15px] text-[var(--color-warm-cream)]">
+                    {formaterDateCourte(new Date(occurrence.date))}
+                  </span>
+                  <span className="text-[10px] font-medium uppercase text-[var(--color-driftwood)]">
+                    {LIBELLES_STATUT_OCCURRENCE[statut]}
+                  </span>
+                </div>
+                {afficherEcheance && occurrence.confirmationJ7 && (
+                  <span className="text-[12px] text-[var(--color-driftwood)]">
+                    Sera confirmée le {formaterDateCourte(new Date(occurrence.confirmationJ7))}
+                  </span>
+                )}
+                {afficherEcheance && (
+                  <ConfirmerOccurrence occurrenceId={occurrence.id} />
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
 
       <FormulaireAnnonce
         afficherPhotos={false}
