@@ -3,68 +3,56 @@
 import { useEffect, useRef } from "react";
 import * as maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { getStickerState, type Bar, type Occurrence, type StickerState } from "@/lib/jam-types";
+import { StatutOccurrence } from "@prisma/client";
+import {
+  COULEURS_STATUT_OCCURRENCE,
+  LIBELLES_STATUT_OCCURRENCE,
+  PRIORITE_STATUT_OCCURRENCE,
+} from "@/lib/annonce-constantes";
+import { statutAffiche, type recupererAnnoncesPubliees } from "@/lib/annonces";
 
-const STATE_COLOR: Record<StickerState, string> = {
-  confirmee: "#22c55e",
-  en_attente: "#a89a8c",
-  live: "#ef4444",
-  annulee: "#6c5f51",
-};
+type Occurrence = Awaited<ReturnType<typeof recupererAnnoncesPubliees>>[number];
 
-const STATE_LABEL: Record<StickerState, string> = {
-  confirmee: "Confirmée",
-  en_attente: "En attente de confirmation",
-  live: "En cours · Live",
-  annulee: "Annulée",
-};
+const CENTRE_LYON: [number, number] = [4.835, 45.764];
 
-function formatDate(iso: string): string {
-  return new Date(iso).toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
-}
-
-function subLabel(occurrence: Occurrence, state: StickerState): string {
-  if (state === "live") return "En cours · Live";
-  if (state === "annulee") return "Annulée";
-  if (state === "en_attente") {
-    return occurrence.status === "programmee"
-      ? `Sera confirmée le ${formatDate(occurrence.confirmationJ7)}`
-      : "En attente de confirmation";
-  }
-  return `Confirmée · ${occurrence.heureDebut} · ${occurrence.style}`;
-}
-
-function createStickerElement(bar: Bar, occurrence: Occurrence, state: StickerState): HTMLDivElement {
-  const color = STATE_COLOR[state];
+function creerElementMarqueur(nomBar: string, statut: StatutOccurrence): HTMLDivElement {
+  const couleur = COULEURS_STATUT_OCCURRENCE[statut];
   const wrapper = document.createElement("div");
   wrapper.className = "jam-sticker";
-  wrapper.style.opacity = state === "annulee" ? "0.55" : "1";
-
-  const dotHtml =
-    state === "live"
-      ? `<span class="jam-sticker__dot-wrap"><span class="jam-sticker__pulse"></span><span class="jam-sticker__dot" style="background:${color}"></span></span>`
-      : `<span class="jam-sticker__dot" style="background:${color}"></span>`;
+  wrapper.style.opacity = statut === "ANNULEE" ? "0.55" : "1";
+  wrapper.style.cursor = "pointer";
 
   wrapper.innerHTML = `
-    <div class="jam-sticker__pill" style="border-color:${color}">
-      ${dotHtml}
+    <div class="jam-sticker__pill" style="border-color:${couleur}">
+      <span class="jam-sticker__dot" style="background:${couleur}"></span>
       <div class="jam-sticker__text">
-        <span class="jam-sticker__name">${bar.nom}</span>
-        <span class="jam-sticker__sub" style="${state === "live" ? `color:${color}` : ""}">${subLabel(occurrence, state)}</span>
+        <span class="jam-sticker__name">${nomBar}</span>
+        <span class="jam-sticker__sub">${LIBELLES_STATUT_OCCURRENCE[statut]}</span>
       </div>
     </div>
-    <div class="jam-sticker__pointer" style="border-top-color:${color}"></div>
+    <div class="jam-sticker__pointer" style="border-top-color:${couleur}"></div>
   `;
 
   return wrapper;
 }
 
-interface JamMapProps {
-  bars: Bar[];
-  occurrences: Occurrence[];
+function statutPrioritaire(occurrences: Occurrence[]): StatutOccurrence {
+  let meilleur = statutAffiche(occurrences[0]);
+  for (const occurrence of occurrences.slice(1)) {
+    const statut = statutAffiche(occurrence);
+    if (PRIORITE_STATUT_OCCURRENCE[statut] < PRIORITE_STATUT_OCCURRENCE[meilleur]) {
+      meilleur = statut;
+    }
+  }
+  return meilleur;
 }
 
-export default function JamMap({ bars, occurrences }: JamMapProps) {
+interface JamMapProps {
+  occurrences: Occurrence[];
+  onSelectionBar: (barId: string) => void;
+}
+
+export default function JamMap({ occurrences, onSelectionBar }: JamMapProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
 
@@ -92,7 +80,7 @@ export default function JamMap({ bars, occurrences }: JamMapProps) {
           { id: "carto-dark-layer", type: "raster", source: "carto-dark" },
         ],
       },
-      center: [4.835, 45.764],
+      center: CENTRE_LYON,
       zoom: 13,
       attributionControl: { compact: true },
     });
@@ -110,27 +98,25 @@ export default function JamMap({ bars, occurrences }: JamMapProps) {
     const map = mapRef.current;
     if (!map) return;
 
-    const markers: maplibregl.Marker[] = [];
-    const now = new Date();
-
+    const occurrencesParBar = new Map<string, Occurrence[]>();
     for (const occurrence of occurrences) {
-      const bar = bars.find((b) => b.id === occurrence.barId);
-      if (!bar) continue;
+      const bar = occurrence.annonce.bar;
+      if (bar.latitude === null || bar.longitude === null) continue;
+      const liste = occurrencesParBar.get(bar.id) ?? [];
+      liste.push(occurrence);
+      occurrencesParBar.set(bar.id, liste);
+    }
 
-      const state = getStickerState(occurrence, now);
-      const el = createStickerElement(bar, occurrence, state);
+    const markers: maplibregl.Marker[] = [];
 
-      const popup = new maplibregl.Popup({ offset: 18, closeButton: false }).setHTML(
-        `<div class="jam-popup">
-          <div class="jam-popup__title">${bar.nom}</div>
-          <div class="jam-popup__addr">${bar.adresse}</div>
-          <div class="jam-popup__status" style="color:${STATE_COLOR[state]}">${STATE_LABEL[state]}</div>
-        </div>`
-      );
+    for (const [barId, occurrencesDuBar] of occurrencesParBar) {
+      const bar = occurrencesDuBar[0].annonce.bar;
+      const statut = statutPrioritaire(occurrencesDuBar);
+      const el = creerElementMarqueur(bar.nom, statut);
+      el.addEventListener("click", () => onSelectionBar(barId));
 
       const marker = new maplibregl.Marker({ element: el, anchor: "bottom" })
-        .setLngLat([bar.lng, bar.lat])
-        .setPopup(popup)
+        .setLngLat([bar.longitude!, bar.latitude!])
         .addTo(map);
 
       markers.push(marker);
@@ -139,7 +125,7 @@ export default function JamMap({ bars, occurrences }: JamMapProps) {
     return () => {
       markers.forEach((m) => m.remove());
     };
-  }, [bars, occurrences]);
+  }, [occurrences, onSelectionBar]);
 
-  return <div ref={containerRef} className="jam-map" />;
+  return <div ref={containerRef} className="jam-map h-full w-full" />;
 }

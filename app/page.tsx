@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { recupererAnnoncesPubliees, recupererProchainesDatesDisponibles } from "@/lib/annonces";
 import SelecteurDate from "./selecteur-date";
-import ListeAnnonces from "./liste-annonces";
+import ConsultationMusicien from "./consultation-musicien";
+import type { Vue } from "./toggle-vue";
 
 const NOMBRE_DATES_SUGGEREES = 3;
 
@@ -20,10 +21,11 @@ function formaterDateCourte(dateIso: string) {
 export default async function Home({
   searchParams,
 }: {
-  searchParams: Promise<{ date?: string }>;
+  searchParams: Promise<{ date?: string; vue?: string }>;
 }) {
-  const { date } = await searchParams;
+  const { date, vue } = await searchParams;
   const dateSelectionnee = date ?? aujourdHuiIso();
+  const vueSelectionnee: Vue = vue === "carte" ? "carte" : "liste";
   const occurrences = await recupererAnnoncesPubliees(dateSelectionnee);
   const prochainesDates =
     occurrences.length === 0
@@ -73,15 +75,12 @@ export default async function Home({
           )}
         </div>
       ) : (
-        <ListeAnnonces occurrences={occurrences} />
+        <ConsultationMusicien
+          occurrences={occurrences}
+          dateSelectionnee={dateSelectionnee}
+          vue={vueSelectionnee}
+        />
       )}
-
-      <Link
-        href="/map"
-        className="rounded-[36px] bg-[color:var(--color-brass-copper)] px-6 py-3.5 text-center text-xs font-medium uppercase text-[color:var(--color-warm-cream)]"
-      >
-        Voir la carte
-      </Link>
     </main>
   );
 }

@@ -203,11 +203,11 @@ En complément de la vue liste (Phase 2/4), le musicien peut basculer vers une v
 
 ### Critères d'acceptation
 
-- [ ] Le musicien peut basculer entre vue liste et vue carte pour une même date sélectionnée
-- [ ] Chaque bar ayant une jam à la date sélectionnée apparaît comme marqueur sur la carte
-- [ ] Le statut de chaque jam (confirmée / programmée / en attente de confirmation / annulée) est visuellement distinguable sur la carte
-- [ ] Cliquer/toucher un marqueur affiche les informations de l'annonce (lieu, adresse, horaire, style, instruments, photos) comme dans la vue liste
-- [ ] Sans géolocalisation acceptée, la carte reste consultable (dégradation gracieuse, sans centrage sur la position du musicien)
+- [x] Le musicien peut basculer entre vue liste et vue carte pour une même date sélectionnée
+- [x] Chaque bar ayant une jam à la date sélectionnée apparaît comme marqueur sur la carte
+- [x] Le statut de chaque jam (confirmée / programmée / en attente de confirmation / annulée) est visuellement distinguable sur la carte
+- [x] Cliquer/toucher un marqueur affiche les informations de l'annonce (lieu, adresse, horaire, style, instruments, photos) comme dans la vue liste
+- [x] Sans géolocalisation acceptée, la carte reste consultable (dégradation gracieuse, sans centrage sur la position du musicien)
 
 ## Bloquée par
 

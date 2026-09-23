@@ -30,6 +30,20 @@ export const LIBELLES_STATUT_OCCURRENCE: Record<string, string> = {
   ANNULEE: "Annulée",
 };
 
+export const COULEURS_STATUT_OCCURRENCE: Record<string, string> = {
+  CONFIRMEE: "#22c55e",
+  PROGRAMMEE: "#a89a8c",
+  EN_ATTENTE_CONFIRMATION: "#a89a8c",
+  ANNULEE: "#6c5f51",
+};
+
+export const PRIORITE_STATUT_OCCURRENCE: Record<string, number> = {
+  CONFIRMEE: 0,
+  PROGRAMMEE: 1,
+  EN_ATTENTE_CONFIRMATION: 2,
+  ANNULEE: 3,
+};
+
 export function formaterDateCourte(date: Date): string {
   return date.toLocaleDateString("fr-FR", {
     weekday: "short",
