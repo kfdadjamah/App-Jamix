@@ -27,12 +27,12 @@ Un organisateur peut créer un compte et renseigner la fiche de son bar (nom, ad
 
 ### Critères d'acceptation
 
-- [ ] Un visiteur peut créer un compte organisateur (email/mot de passe ou équivalent)
-- [ ] Lors de l'inscription, l'organisateur renseigne nom et adresse de son bar
-- [ ] L'organisateur peut ajouter, remplacer ou retirer une photo/logo sur la fiche bar, à l'inscription ou plus tard
-- [ ] Une photo importée est automatiquement ajustée au format d'affichage de l'application
-- [ ] L'absence de photo n'empêche jamais la création ou la validité de la fiche bar
-- [ ] Le compte créé est rattaché à cette fiche bar de façon permanente
+- [x] Un visiteur peut créer un compte organisateur (email/mot de passe ou équivalent)
+- [x] Lors de l'inscription, l'organisateur renseigne nom et adresse de son bar
+- [x] L'organisateur peut ajouter, remplacer ou retirer une photo/logo sur la fiche bar, à l'inscription ou plus tard
+- [x] Une photo importée est automatiquement ajustée au format d'affichage de l'application
+- [x] L'absence de photo n'empêche jamais la création ou la validité de la fiche bar
+- [x] Le compte créé est rattaché à cette fiche bar de façon permanente
 
 ## Bloquée par
 
@@ -50,16 +50,16 @@ Tranche verticale bout-en-bout minimale : un organisateur connecté crée une an
 
 ### Critères d'acceptation
 
-- [ ] Un organisateur connecté crée une annonce avec date, horaire, style musical, instruments disponibles
-- [ ] L'organisateur peut ajouter jusqu'à 2 photos à l'annonce, importées et automatiquement ajustées au format d'affichage de l'application
-- [ ] Une tentative d'ajout d'une 3e photo est bloquée/empêchée
-- [ ] L'annonce reste créable et publiable sans aucune photo
-- [ ] L'organisateur peut enregistrer l'annonce en statut Brouillon (incomplète ou non), la retrouver plus tard et la compléter
-- [ ] L'organisateur publie explicitement une annonce (depuis un brouillon ou directement) pour la rendre visible
-- [ ] Une annonce en Brouillon n'apparaît jamais dans la consultation musicien
-- [ ] Aucune contrainte de délai minimum/maximum n'empêche la publication à l'avance
-- [ ] Un visiteur sans compte sélectionne une date et voit la liste des annonces publiées ce jour-là
-- [ ] Chaque annonce affiche lieu, adresse, horaire, style musical, instruments disponibles et ses éventuelles photos
+- [x] Un organisateur connecté crée une annonce avec date, horaire, style musical, instruments disponibles
+- [x] L'organisateur peut ajouter jusqu'à 2 photos à l'annonce, importées et automatiquement ajustées au format d'affichage de l'application
+- [x] Une tentative d'ajout d'une 3e photo est bloquée/empêchée
+- [x] L'annonce reste créable et publiable sans aucune photo
+- [x] L'organisateur peut enregistrer l'annonce en statut Brouillon (incomplète ou non), la retrouver plus tard et la compléter
+- [x] L'organisateur publie explicitement une annonce (depuis un brouillon ou directement) pour la rendre visible
+- [x] Une annonce en Brouillon n'apparaît jamais dans la consultation musicien
+- [x] Aucune contrainte de délai minimum/maximum n'empêche la publication à l'avance
+- [x] Un visiteur sans compte sélectionne une date et voit la liste des annonces publiées ce jour-là
+- [x] Chaque annonce affiche lieu, adresse, horaire, style musical, instruments disponibles et ses éventuelles photos
 
 ## Bloquée par
 
@@ -77,9 +77,9 @@ Tranche verticale bout-en-bout minimale : un organisateur connecté crée une an
 
 ### Critères d'acceptation
 
-- [ ] La géolocalisation est demandée au moment de la consultation des annonces
-- [ ] Si acceptée, chaque annonce affiche la distance jusqu'au bar
-- [ ] Si refusée, les annonces s'affichent sans distance, sans blocage de la consultation
+- [x] La géolocalisation est demandée au moment de la consultation des annonces
+- [x] Si acceptée, chaque annonce affiche la distance jusqu'au bar
+- [x] Si refusée, les annonces s'affichent sans distance, sans blocage de la consultation
 
 ## Bloquée par
 
@@ -142,10 +142,10 @@ Toute occurrence publiée plus de 7 jours à l'avance affiche « Jam programmée
 
 ### Critères d'acceptation
 
-- [ ] Une occurrence à plus de J-7 affiche « sera confirmée le [date J-7] »
-- [ ] L'organisateur peut confirmer une occurrence avant son échéance J-7
-- [ ] Une occurrence non confirmée après J-7 passe au statut « en attente de confirmation » et reste visible
-- [ ] Le musicien voit distinctement le statut (confirmée / en attente) sur chaque annonce
+- [x] Une occurrence à plus de J-7 affiche « sera confirmée le [date J-7] »
+- [x] L'organisateur peut confirmer une occurrence avant son échéance J-7
+- [x] Une occurrence non confirmée après J-7 passe au statut « en attente de confirmation » et reste visible
+- [x] Le musicien voit distinctement le statut (confirmée / en attente) sur chaque annonce
 
 ## Bloquée par
 
