@@ -10,7 +10,7 @@ import {
   PRIORITE_STATUT_OCCURRENCE,
 } from "@/lib/annonce-constantes";
 import { statutAffiche, type recupererAnnoncesPubliees } from "@/lib/annonces";
-import { calculerDistanceKm, formaterDistance } from "@/lib/distance";
+import { distanceJusquAuBar, formaterDistance } from "@/lib/distance";
 
 type Occurrence = Awaited<ReturnType<typeof recupererAnnoncesPubliees>>[number];
 
@@ -155,18 +155,15 @@ export default function JamMap({ occurrences, positionMusicien, onSelectionBar }
 
     for (const [barId, occurrencesDuBar] of occurrencesParBar) {
       const bar = occurrencesDuBar[0].annonce.bar;
+      const { latitude, longitude } = bar;
+      if (latitude === null || longitude === null) continue;
       const statut = statutPrioritaire(occurrencesDuBar);
-      const distanceKm = positionMusicien
-        ? calculerDistanceKm(positionMusicien, {
-            latitude: bar.latitude!,
-            longitude: bar.longitude!,
-          })
-        : null;
+      const distanceKm = distanceJusquAuBar(positionMusicien, bar);
       const el = creerElementMarqueur(bar.nom, statut, distanceKm);
       el.addEventListener("click", () => onSelectionBar(barId));
 
       const marker = new maplibregl.Marker({ element: el, anchor: "bottom" })
-        .setLngLat([bar.longitude!, bar.latitude!])
+        .setLngLat([longitude, latitude])
         .addTo(map);
 
       marqueurs.push({

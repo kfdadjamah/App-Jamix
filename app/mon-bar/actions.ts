@@ -5,7 +5,7 @@ import { del } from "@vercel/blob";
 import { signOut } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { recadrerEtUploaderPhoto } from "@/lib/image";
-import { geocoderAdresse } from "@/lib/geocode";
+import { coordonneesApresModification } from "@/lib/compte";
 import { schemaFicheBar, schemaPhoto } from "@/lib/validation/inscription";
 import { recupererBarDeLOrganisateurConnecte } from "@/lib/organisateur";
 
@@ -23,16 +23,8 @@ export async function mettreAJourFicheBar(
   const { nomBar, adresseBar } = resultat.data;
   const bar = await recupererBarDeLOrganisateurConnecte();
 
-  // Adresse modifiée : on re-géocode. En cas d'échec, lat/long passent à null
-  // (comme à l'inscription) — la fiche reste valide, le bar sort de la carte.
-  let coordonnees = {};
-  if (adresseBar !== bar.adresse) {
-    const resultatGeocodage = await geocoderAdresse(adresseBar);
-    coordonnees = {
-      latitude: resultatGeocodage?.latitude ?? null,
-      longitude: resultatGeocodage?.longitude ?? null,
-    };
-  }
+  // Adresse modifiée : re-géocodage ; en cas d'échec, le bar sort de la carte.
+  const coordonnees = await coordonneesApresModification(bar.adresse, adresseBar);
 
   await prisma.bar.update({
     where: { id: bar.id },

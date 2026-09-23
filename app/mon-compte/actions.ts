@@ -7,6 +7,7 @@ import { Prisma } from "@prisma/client";
 import { auth, signOut } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { TOURS_HASHING } from "@/lib/auth-constantes";
+import { urlsPhotosDuCompte } from "@/lib/compte";
 import {
   schemaChangementEmail,
   schemaChangementMotDePasse,
@@ -128,12 +129,7 @@ export async function supprimerCompte(formData: FormData): Promise<ResultatActio
     },
   });
 
-  const urlsPhotos = bar
-    ? [
-        bar.photoUrl,
-        ...bar.annonces.flatMap((annonce) => [annonce.photoUrl1, annonce.photoUrl2]),
-      ].filter((url): url is string => Boolean(url))
-    : [];
+  const urlsPhotos = urlsPhotosDuCompte(bar);
 
   // Pas de cascade Bar→Annonce ni Organisateur→Bar dans le schéma : on supprime
   // dans l'ordre. Les occurrences partent en cascade avec leur annonce.

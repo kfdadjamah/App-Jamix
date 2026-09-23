@@ -1,6 +1,6 @@
 "use client";
 
-import { calculerDistanceKm } from "@/lib/distance";
+import { distanceJusquAuBar } from "@/lib/distance";
 import { type recupererAnnoncesPubliees } from "@/lib/annonces";
 import CarteAnnonce from "./carte-annonce";
 
@@ -14,11 +14,7 @@ export default function ListeAnnonces({
   positionMusicien: { latitude: number; longitude: number } | null;
 }) {
   const occurrencesAvecDistance = occurrences.map((occurrence) => {
-    const { latitude, longitude } = occurrence.annonce.bar;
-    const distanceKm =
-      positionMusicien && latitude !== null && longitude !== null
-        ? calculerDistanceKm(positionMusicien, { latitude, longitude })
-        : null;
+    const distanceKm = distanceJusquAuBar(positionMusicien, occurrence.annonce.bar);
 
     return { occurrence, distanceKm };
   });
