@@ -193,3 +193,15 @@ body {
 .champ-input--fichier:focus {
   border-bottom-color: var(--color-warm-cream);
 }
+
+/* Focus clavier (DESIGN.md : Warm Cream, 2 px max, pas d'ombre).
+   En @layer base pour que .champ-input:focus et les utilitaires Tailwind gardent la main. */
+@layer base {
+  :where(a, button, input[type="file"], input[type="checkbox"]):not(.maplibregl-ctrl *):focus-visible {
+    outline: 2px solid var(--color-warm-cream);
+    outline-offset: 2px;
+  }
+  input[type="checkbox"] {
+    accent-color: var(--color-warm-cream);
+  }
+}
