@@ -11,7 +11,7 @@ export function messageRelance(
   occurrence: { statut: StatutOccurrence; confirmationJ7: Date | null; date: Date },
   aujourdHui: Date = aujourdHuiUTC()
 ): string | null {
-  if (statutAffiche(occurrence) !== "EN_ATTENTE_CONFIRMATION") {
+  if (statutAffiche(occurrence, aujourdHui) !== "EN_ATTENTE_CONFIRMATION") {
     return null;
   }
 
@@ -30,8 +30,10 @@ export function messageRelance(
 }
 
 export function compterRelancesActives(
-  occurrences: { statut: StatutOccurrence; confirmationJ7: Date | null }[]
+  occurrences: { statut: StatutOccurrence; confirmationJ7: Date | null }[],
+  aujourdHui: Date = aujourdHuiUTC()
 ): number {
-  return occurrences.filter((occurrence) => statutAffiche(occurrence) === "EN_ATTENTE_CONFIRMATION")
-    .length;
+  return occurrences.filter(
+    (occurrence) => statutAffiche(occurrence, aujourdHui) === "EN_ATTENTE_CONFIRMATION"
+  ).length;
 }

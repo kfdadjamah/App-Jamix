@@ -106,7 +106,7 @@ describe("compterRelancesActives", () => {
       { statut: "ANNULEE" as const, confirmationJ7: null },
       { statut: "PROGRAMMEE" as const, confirmationJ7: joursApres(-5) },
     ];
-    expect(compterRelancesActives(occurrences)).toBe(2);
+    expect(compterRelancesActives(occurrences, AUJOURDHUI)).toBe(2);
   });
 
   it("retourne 0 sur un tableau vide", () => {

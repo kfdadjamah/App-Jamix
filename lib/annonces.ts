@@ -22,14 +22,14 @@ export function calculerStatutInitial(
   return { statut: "CONFIRMEE", confirmationJ7: null };
 }
 
-export function statutAffiche(occurrence: {
-  statut: StatutOccurrence;
-  confirmationJ7: Date | null;
-}): StatutOccurrence {
+export function statutAffiche(
+  occurrence: { statut: StatutOccurrence; confirmationJ7: Date | null },
+  aujourdHui: Date = aujourdHuiUTC()
+): StatutOccurrence {
   if (
     occurrence.statut === "PROGRAMMEE" &&
     occurrence.confirmationJ7 !== null &&
-    occurrence.confirmationJ7.getTime() <= aujourdHuiUTC().getTime()
+    occurrence.confirmationJ7.getTime() <= aujourdHui.getTime()
   ) {
     return "EN_ATTENTE_CONFIRMATION";
   }

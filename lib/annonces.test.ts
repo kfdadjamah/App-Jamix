@@ -32,7 +32,7 @@ describe("statutAffiche", () => {
     const resultat = statutAffiche({
       statut: "PROGRAMMEE",
       confirmationJ7: joursApres(-1),
-    });
+    }, AUJOURDHUI);
     expect(resultat).toBe("EN_ATTENTE_CONFIRMATION");
   });
 
@@ -40,17 +40,17 @@ describe("statutAffiche", () => {
     const resultat = statutAffiche({
       statut: "PROGRAMMEE",
       confirmationJ7: joursApres(1),
-    });
+    }, AUJOURDHUI);
     expect(resultat).toBe("PROGRAMMEE");
   });
 
   it("CONFIRMEE reste inchangé", () => {
-    const resultat = statutAffiche({ statut: "CONFIRMEE", confirmationJ7: null });
+    const resultat = statutAffiche({ statut: "CONFIRMEE", confirmationJ7: null }, AUJOURDHUI);
     expect(resultat).toBe("CONFIRMEE");
   });
 
   it("ANNULEE reste inchangé", () => {
-    const resultat = statutAffiche({ statut: "ANNULEE", confirmationJ7: null });
+    const resultat = statutAffiche({ statut: "ANNULEE", confirmationJ7: null }, AUJOURDHUI);
     expect(resultat).toBe("ANNULEE");
   });
 });
