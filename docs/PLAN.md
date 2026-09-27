@@ -279,13 +279,13 @@ La page d'accueil propose un bouton fantôme « Connexion organisateur » en hau
 
 ### Critères d'acceptation
 
-- [ ] Un visiteur non connecté voit un bouton fantôme « Connexion organisateur » en haut à droite de `/`, qui mène à `/connexion`
-- [ ] Un organisateur connecté voit une icône de profil au même endroit, sur `/` comme dans son espace, qui mène à `/mon-profil`
-- [ ] `/mon-profil` affiche photo, nom et adresse du bar, email, changement de mot de passe, déconnexion et suppression du compte, avec les mêmes règles qu'en Phase 11
-- [ ] `/mon-profil` n'est accessible qu'à un organisateur connecté
-- [ ] `/mon-bar` et `/mon-compte` redirigent vers `/mon-profil`
-- [ ] L'en-tête organisateur ne contient que « Mes annonces », l'alerte des relances et l'icône de profil
-- [ ] Après connexion comme après inscription, l'organisateur arrive sur `/mes-annonces`
+- [x] Un visiteur non connecté voit un bouton fantôme « Connexion organisateur » en haut à droite de `/`, qui mène à `/connexion`
+- [x] Un organisateur connecté voit une icône de profil au même endroit, sur `/` comme dans son espace, qui mène à `/mon-profil`
+- [x] `/mon-profil` affiche photo, nom et adresse du bar, email, changement de mot de passe, déconnexion et suppression du compte, avec les mêmes règles qu'en Phase 11
+- [x] `/mon-profil` n'est accessible qu'à un organisateur connecté
+- [x] `/mon-bar` et `/mon-compte` redirigent vers `/mon-profil`
+- [x] L'en-tête organisateur ne contient que « Mes annonces », l'alerte des relances et l'icône de profil
+- [x] Après connexion comme après inscription, l'organisateur arrive sur `/mes-annonces`
 
 ## Bloquée par
 
