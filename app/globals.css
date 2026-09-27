@@ -205,3 +205,8 @@ body {
     accent-color: var(--color-warm-cream);
   }
 }
+
+/* Fenêtre de sortie d'une annonce : fond Walnut Shadow voilé derrière la fenêtre, sans flou. */
+.fenetre-sortie::backdrop {
+  background: rgb(16 9 4 / 0.8);
+}

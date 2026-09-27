@@ -1,8 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { del } from "@vercel/blob";
+import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { calculerStatutInitial } from "@/lib/annonces";
 import { recadrerEtUploaderPhoto } from "@/lib/image";
@@ -14,6 +14,12 @@ import {
 } from "@/lib/validation/annonce";
 
 type Resultat = { erreur: string } | { succes: true };
+
+const ERREUR_ENREGISTREMENT = "L'annonce n'a pas pu être enregistrée. Réessayez.";
+
+async function supprimerPhotos(urls: string[]) {
+  await Promise.all(urls.map((url) => del(url).catch(() => undefined)));
+}
 
 function extraireChampsFormulaire(formData: FormData) {
   return {
@@ -37,6 +43,7 @@ async function verifierProprietaireAnnonce(annonceId: string) {
 }
 
 async function synchroniserOccurrences(
+  tx: Prisma.TransactionClient,
   annonceId: string,
   donnees: ChampsAnnonceBrouillon,
   annonceEtaitDejaPubliee: boolean,
@@ -49,7 +56,7 @@ async function synchroniserOccurrences(
   if (annonceEtaitDejaPubliee) {
     // Une fois Publiée, la liste des dates est gelée ; seul l'horaire, partagé par
     // toutes les occurrences (ou une seule, selon la portée choisie), reste synchronisé.
-    await prisma.occurrenceJam.updateMany({
+    await tx.occurrenceJam.updateMany({
       where: { annonceId, ...(porteeOccurrenceId ? { id: porteeOccurrenceId } : {}) },
       data: { heureDebut: donnees.heureDebut, heureFin },
     });
@@ -58,12 +65,12 @@ async function synchroniserOccurrences(
 
   // Création ou Brouillon : aucune occurrence n'a d'état à préserver,
   // on resynchronise par remplacement complet à partir des dates soumises.
-  await prisma.occurrenceJam.deleteMany({ where: { annonceId } });
+  await tx.occurrenceJam.deleteMany({ where: { annonceId } });
   if (donnees.dates.length === 0) return;
 
   const vientDEtrePubliee = nouveauStatut === "PUBLIEE" && !annonceEtaitDejaPubliee;
 
-  await prisma.occurrenceJam.createMany({
+  await tx.occurrenceJam.createMany({
     data: donnees.dates.map((date) => {
       const statutInitial = vientDEtrePubliee
         ? calculerStatutInitial(new Date(date))
@@ -82,7 +89,7 @@ async function synchroniserOccurrences(
 export async function creerAnnonce(
   action: "brouillon" | "publier",
   formData: FormData
-): Promise<Resultat | never> {
+): Promise<Resultat> {
   const schema = action === "publier" ? schemaAnnoncePublication : schemaAnnonceBrouillon;
   const photo1Brut = formData.get("photo1");
   const photo2Brut = formData.get("photo2");
@@ -101,33 +108,48 @@ export async function creerAnnonce(
   const bar = await recupererBarDeLOrganisateurConnecte();
   const donnees = resultat.data;
 
-  const [photoUrl1, photoUrl2] = await Promise.all([
+  // Si une photo échoue, on retire celle déjà uploadée : aucun enregistrement partiel.
+  const uploads = await Promise.allSettled([
     photo1 ? recadrerEtUploaderPhoto(photo1, "annonces") : Promise.resolve(null),
     photo2 ? recadrerEtUploaderPhoto(photo2, "annonces") : Promise.resolve(null),
   ]);
-
-  const annonce = await prisma.annonce.create({
-    data: {
-      barId: bar.id,
-      statut: action === "publier" ? "PUBLIEE" : "BROUILLON",
-      estRecurrente: donnees.dates.length > 1,
-      styles: donnees.styles,
-      styleAutre: donnees.styleAutre || null,
-      instruments: donnees.instruments,
-      instrumentAutre: donnees.instrumentAutre || null,
-      photoUrl1,
-      photoUrl2,
-    },
-  });
-
-  await synchroniserOccurrences(
-    annonce.id,
-    donnees,
-    false,
-    action === "publier" ? "PUBLIEE" : "BROUILLON"
+  const urlsUploadees = uploads.flatMap((u) =>
+    u.status === "fulfilled" && u.value ? [u.value] : []
+  );
+  if (uploads.some((u) => u.status === "rejected")) {
+    await supprimerPhotos(urlsUploadees);
+    return { erreur: "La photo n'a pas pu être traitée." };
+  }
+  const [photoUrl1, photoUrl2] = uploads.map((u) =>
+    u.status === "fulfilled" ? u.value : null
   );
 
-  redirect("/mes-annonces");
+  const statut = action === "publier" ? "PUBLIEE" : "BROUILLON";
+  try {
+    await prisma.$transaction(async (tx) => {
+      const annonce = await tx.annonce.create({
+        data: {
+          barId: bar.id,
+          statut,
+          estRecurrente: donnees.dates.length > 1,
+          styles: donnees.styles,
+          styleAutre: donnees.styleAutre || null,
+          instruments: donnees.instruments,
+          instrumentAutre: donnees.instrumentAutre || null,
+          photoUrl1,
+          photoUrl2,
+        },
+      });
+      await synchroniserOccurrences(tx, annonce.id, donnees, false, statut);
+    });
+  } catch (erreur) {
+    console.error("Création d'annonce impossible :", erreur);
+    await supprimerPhotos(urlsUploadees);
+    return { erreur: ERREUR_ENREGISTREMENT };
+  }
+
+  revalidatePath("/mes-annonces");
+  return { succes: true };
 }
 
 export async function modifierAnnonce(
@@ -148,33 +170,40 @@ export async function modifierAnnonce(
   const nouveauStatut =
     action === "publier" ? "PUBLIEE" : action === "brouillon" ? "BROUILLON" : annonceExistante.statut;
 
-  await prisma.annonce.update({
-    where: { id: annonceId },
-    data: {
-      statut: nouveauStatut,
-      estRecurrente: annonceEtaitDejaPubliee
-        ? annonceExistante.estRecurrente
-        : donnees.dates.length > 1,
-      styles: donnees.styles,
-      styleAutre: donnees.styleAutre || null,
-      instruments: donnees.instruments,
-      instrumentAutre: donnees.instrumentAutre || null,
-    },
-  });
-
   const porteeOccurrenceIdBrut = formData.get("porteeOccurrenceId");
   const porteeOccurrenceId =
     typeof porteeOccurrenceIdBrut === "string" && porteeOccurrenceIdBrut
       ? porteeOccurrenceIdBrut
       : undefined;
 
-  await synchroniserOccurrences(
-    annonceId,
-    donnees,
-    annonceEtaitDejaPubliee,
-    nouveauStatut,
-    porteeOccurrenceId
-  );
+  try {
+    await prisma.$transaction(async (tx) => {
+      await tx.annonce.update({
+        where: { id: annonceId },
+        data: {
+          statut: nouveauStatut,
+          estRecurrente: annonceEtaitDejaPubliee
+            ? annonceExistante.estRecurrente
+            : donnees.dates.length > 1,
+          styles: donnees.styles,
+          styleAutre: donnees.styleAutre || null,
+          instruments: donnees.instruments,
+          instrumentAutre: donnees.instrumentAutre || null,
+        },
+      });
+      await synchroniserOccurrences(
+        tx,
+        annonceId,
+        donnees,
+        annonceEtaitDejaPubliee,
+        nouveauStatut,
+        porteeOccurrenceId
+      );
+    });
+  } catch (erreur) {
+    console.error("Modification d'annonce impossible :", erreur);
+    return { erreur: ERREUR_ENREGISTREMENT };
+  }
 
   revalidatePath("/mes-annonces");
   revalidatePath(`/mes-annonces/${annonceId}`);

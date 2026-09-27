@@ -375,18 +375,18 @@ Un lien texte « ← Retour », sous l'en-tête et au-dessus du titre, vers une 
 
 ### Critères d'acceptation
 
-- [ ] `/mes-annonces/nouvelle` et `/mes-annonces/[id]` affichent « ← Retour » vers `/mes-annonces`
-- [ ] Nouvelle annonce vide ou brouillon rouvert sans changement : Retour, « Mes annonces » et l'icône de profil mènent directement à leur destination, sans brouillon ni fenêtre
-- [ ] Nouvelle annonce avec une saisie (date, heure, style, instrument, précision « Autre » ou photo) : la sortie crée un brouillon, même incomplet, photos comprises, visible dans « Mes annonces »
-- [ ] Brouillon modifié : la sortie enregistre les changements dans ce brouillon (pas de nouveau brouillon)
-- [ ] Après enregistrement, une fenêtre affiche « Annonce enregistrée en brouillon, vous pourrez la reprendre plus tard dans Mes annonces » ; après validation, l'organisateur arrive sur la page demandée (Retour/« Mes annonces » → `/mes-annonces`, icône → `/mon-profil`)
-- [ ] Après un clic sur « Enregistrer le brouillon » ou « Enregistrer les modifications », l'état enregistré devient la référence : une sortie immédiate est directe
-- [ ] Si l'enregistrement échoue (photo refusée, erreur réseau), l'organisateur reste sur le formulaire ; une fenêtre donne la raison avec « Rester » (par défaut) et « Quitter sans enregistrer » ; rien n'est enregistré partiellement
-- [ ] Pendant l'enregistrement, les sorties sont inactives (pas de double brouillon)
-- [ ] Annonce Publiée avec des modifications non enregistrées : une fenêtre avertit de leur perte, avec « Quitter » et « Rester » ; l'annonce reste publiée telle quelle
-- [ ] Changer uniquement la portée, confirmer ou annuler une date, ou modifier les photos d'une annonce existante ne compte pas comme une modification en cours
-- [ ] Avec des modifications en cours, fermer l'onglet ou recharger déclenche l'alerte standard du navigateur, sans enregistrement
-- [ ] Les fenêtres respectent DESIGN.md (Walnut Shadow, Warm Cream, un seul bouton plein par fenêtre, sans ombre)
+- [x] `/mes-annonces/nouvelle` et `/mes-annonces/[id]` affichent « ← Retour » vers `/mes-annonces`
+- [x] Nouvelle annonce vide ou brouillon rouvert sans changement : Retour, « Mes annonces » et l'icône de profil mènent directement à leur destination, sans brouillon ni fenêtre
+- [x] Nouvelle annonce avec une saisie (date, heure, style, instrument, précision « Autre » ou photo) : la sortie crée un brouillon, même incomplet, photos comprises, visible dans « Mes annonces »
+- [x] Brouillon modifié : la sortie enregistre les changements dans ce brouillon (pas de nouveau brouillon)
+- [x] Après enregistrement, une fenêtre affiche « Annonce enregistrée en brouillon, vous pourrez la reprendre plus tard dans Mes annonces » ; après validation, l'organisateur arrive sur la page demandée (Retour/« Mes annonces » → `/mes-annonces`, icône → `/mon-profil`)
+- [x] Après un clic sur « Enregistrer le brouillon » ou « Enregistrer les modifications », l'état enregistré devient la référence : une sortie immédiate est directe
+- [x] Si l'enregistrement échoue (photo refusée, erreur réseau), l'organisateur reste sur le formulaire ; une fenêtre donne la raison avec « Rester » (par défaut) et « Quitter sans enregistrer » ; rien n'est enregistré partiellement
+- [x] Pendant l'enregistrement, les sorties sont inactives (pas de double brouillon)
+- [x] Annonce Publiée avec des modifications non enregistrées : une fenêtre avertit de leur perte, avec « Quitter » et « Rester » ; l'annonce reste publiée telle quelle
+- [x] Changer uniquement la portée, confirmer ou annuler une date, ou modifier les photos d'une annonce existante ne compte pas comme une modification en cours
+- [x] Avec des modifications en cours, fermer l'onglet ou recharger déclenche l'alerte standard du navigateur, sans enregistrement
+- [x] Les fenêtres respectent DESIGN.md (Walnut Shadow, Warm Cream, un seul bouton plein par fenêtre, sans ombre)
 
 ## Bloquée par
 

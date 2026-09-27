@@ -1,10 +1,10 @@
-import Link from "next/link";
+import { LienGarde } from "./garde-sortie";
 import { UserRound } from "lucide-react";
 
 // Cercle ghost button ; rempli en Warm Cream quand /mon-profil est la page active.
 export default function IconeProfil({ actif = false }: { actif?: boolean }) {
   return (
-    <Link
+    <LienGarde
       href="/mon-profil"
       aria-label="Mon profil"
       aria-current={actif ? "page" : undefined}
@@ -15,6 +15,6 @@ export default function IconeProfil({ actif = false }: { actif?: boolean }) {
       }`}
     >
       <UserRound size={18} strokeWidth={1.5} aria-hidden="true" />
-    </Link>
+    </LienGarde>
   );
 }

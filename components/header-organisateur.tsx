@@ -1,8 +1,8 @@
-import Link from "next/link";
 import { recupererBarDeLOrganisateurConnecte } from "@/lib/organisateur";
 import { compterRelancesActives } from "@/lib/relances";
 import { prisma } from "@/lib/prisma";
 import IconeProfil from "./icone-profil";
+import { LienGarde } from "./garde-sortie";
 
 export default async function HeaderOrganisateur({
   page,
@@ -19,7 +19,7 @@ export default async function HeaderOrganisateur({
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between gap-3">
-        <Link
+        <LienGarde
           href="/mes-annonces"
           className={`whitespace-nowrap text-[12px] font-medium uppercase ${
             page === "mes-annonces"
@@ -28,16 +28,16 @@ export default async function HeaderOrganisateur({
           }`}
         >
           Mes annonces
-        </Link>
+        </LienGarde>
         <IconeProfil actif={page === "mon-profil"} />
       </div>
       {nbRelancesActives > 0 && (
-        <Link
+        <LienGarde
           href="/mes-annonces"
           className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)] underline"
         >
           ⚠ {nbRelancesActives} jam{nbRelancesActives > 1 ? "s" : ""} en attente de confirmation
-        </Link>
+        </LienGarde>
       )}
     </div>
   );

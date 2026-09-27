@@ -1,10 +1,32 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { STYLES_MUSICAUX, INSTRUMENTS_BACKLINE } from "@/lib/annonce-constantes";
 import { NOMBRE_MAX_DATES } from "@/lib/validation/annonce";
+import { decisionSortie, instantane } from "@/lib/garde-sortie";
+import { useGardeSortie } from "@/components/garde-sortie";
+import FenetreSortie from "@/components/fenetre-sortie";
 
 type Resultat = { erreur: string } | { succes: true };
+
+const ERREUR_RESEAU = "Connexion impossible, l'annonce n'a pas été enregistrée.";
+
+type Fenetre =
+  | { type: "brouillon-enregistre"; destination: string }
+  | { type: "echec"; destination: string; raison: string }
+  | { type: "avertir-perte"; destination: string };
+
+async function appelerAction(
+  action: (formData: FormData) => Promise<Resultat>,
+  formData: FormData
+): Promise<Resultat> {
+  try {
+    return await action(formData);
+  } catch {
+    return { erreur: ERREUR_RESEAU };
+  }
+}
 
 export type ValeursInitialesAnnonce = {
   dates: string[];
@@ -34,6 +56,7 @@ export default function FormulaireAnnonce({
   actionBrouillon,
   actionPublier,
   actionModifier,
+  destinationApresEnregistrement,
 }: {
   valeursInitiales?: ValeursInitialesAnnonce;
   afficherPhotos: boolean;
@@ -42,6 +65,8 @@ export default function FormulaireAnnonce({
   actionBrouillon?: (formData: FormData) => Promise<Resultat>;
   actionPublier?: (formData: FormData) => Promise<Resultat>;
   actionModifier?: (formData: FormData) => Promise<Resultat>;
+  // Nouvelle annonce : après « Enregistrer le brouillon » ou « Publier », on quitte le formulaire.
+  destinationApresEnregistrement?: string;
 }) {
   const valeurs = valeursInitiales ?? valeursVides;
   const [erreur, setErreur] = useState<string | null>(null);
@@ -50,6 +75,79 @@ export default function FormulaireAnnonce({
   const [nouvelleDate, setNouvelleDate] = useState("");
   const [porteeOccurrenceId, setPorteeOccurrenceId] = useState("");
   const formRef = useRef<HTMLFormElement>(null);
+  const router = useRouter();
+  const gardeSortie = useGardeSortie();
+  const occupe = gardeSortie?.occupe ?? false;
+  const setOccupe = gardeSortie?.setOccupe;
+  const [fenetre, setFenetre] = useState<Fenetre | null>(null);
+  // État de référence : formulaire tel qu'ouvert, puis dernier enregistrement réussi.
+  const referenceRef = useRef<string | null>(null);
+
+  const instantaneCourant = useCallback(
+    () => (formRef.current ? instantane(new FormData(formRef.current)) : null),
+    []
+  );
+  const estModifie = useCallback(() => {
+    const courant = instantaneCourant();
+    return courant !== null && courant !== referenceRef.current;
+  }, [instantaneCourant]);
+
+  useEffect(() => {
+    referenceRef.current = instantaneCourant();
+  }, [instantaneCourant]);
+
+  // Sortie par le navigateur (fermeture, rechargement) : alerte standard, sans enregistrement.
+  useEffect(() => {
+    function surAvantDechargement(e: BeforeUnloadEvent) {
+      if (!estModifie()) return;
+      e.preventDefault();
+      e.returnValue = "";
+    }
+    window.addEventListener("beforeunload", surAvantDechargement);
+    return () => window.removeEventListener("beforeunload", surAvantDechargement);
+  }, [estModifie]);
+
+  // Sorties via l'application (Retour, « Mes annonces », alerte des relances, icône de profil).
+  const gererSortie = useCallback(
+    async (destination: string) => {
+      const decision = decisionSortie({
+        modifie: estModifie(),
+        enregistrableEnBrouillon: Boolean(actionBrouillon),
+      });
+      if (decision === "directe") {
+        router.push(destination);
+        return;
+      }
+      if (decision === "avertir" || !actionBrouillon || !formRef.current) {
+        setFenetre({ type: "avertir-perte", destination });
+        return;
+      }
+      setOccupe?.(true);
+      const formData = new FormData(formRef.current);
+      const resultat = await appelerAction(actionBrouillon, formData);
+      setOccupe?.(false);
+      if ("erreur" in resultat) {
+        setFenetre({ type: "echec", destination, raison: resultat.erreur });
+        return;
+      }
+      referenceRef.current = instantaneCourant();
+      setFenetre({ type: "brouillon-enregistre", destination });
+    },
+    [actionBrouillon, estModifie, instantaneCourant, router, setOccupe]
+  );
+
+  const enregistrerGarde = gardeSortie?.enregistrerGarde;
+  useEffect(() => {
+    enregistrerGarde?.(gererSortie);
+    return () => enregistrerGarde?.(null);
+  }, [enregistrerGarde, gererSortie]);
+
+  function quitterVers(destination: string) {
+    setFenetre(null);
+    // La saisie abandonnée ne doit plus déclencher l'alerte du navigateur.
+    referenceRef.current = instantaneCourant();
+    router.push(destination);
+  }
 
   function ajouterDate() {
     if (!nouvelleDate) return;
@@ -74,16 +172,59 @@ export default function FormulaireAnnonce({
     if (!formRef.current) return;
     setErreur(null);
     setEnCours(true);
+    setOccupe?.(true);
     const formData = new FormData(formRef.current);
-    const resultat = await action(formData);
+    const resultat = await appelerAction(action, formData);
     setEnCours(false);
-    if (resultat && "erreur" in resultat) {
+    setOccupe?.(false);
+    if ("erreur" in resultat) {
       setErreur(resultat.erreur);
+      return;
+    }
+    referenceRef.current = instantaneCourant();
+    if (destinationApresEnregistrement) {
+      router.push(destinationApresEnregistrement);
     }
   }
 
+  const inactif = enCours || occupe;
+
   return (
     <form ref={formRef} className="flex flex-col gap-8" noValidate>
+      {fenetre?.type === "brouillon-enregistre" && (
+        <FenetreSortie
+          titre="Brouillon enregistré"
+          message="Annonce enregistrée en brouillon, vous pourrez la reprendre plus tard dans Mes annonces."
+          libelleDefaut="OK"
+          surDefaut={() => quitterVers(fenetre.destination)}
+        />
+      )}
+      {fenetre?.type === "echec" && (
+        <FenetreSortie
+          titre="Enregistrement impossible"
+          message={
+            <>
+              <p>{fenetre.raison}</p>
+              <p>Rien n&apos;a été enregistré.</p>
+            </>
+          }
+          libelleDefaut="Rester"
+          surDefaut={() => setFenetre(null)}
+          libelleSecondaire="Quitter sans enregistrer"
+          surSecondaire={() => quitterVers(fenetre.destination)}
+        />
+      )}
+      {fenetre?.type === "avertir-perte" && (
+        <FenetreSortie
+          titre="Modifications non enregistrées"
+          message="Vos modifications non enregistrées seront perdues. L'annonce reste publiée telle quelle."
+          libelleDefaut="Rester"
+          surDefaut={() => setFenetre(null)}
+          libelleSecondaire="Quitter"
+          surSecondaire={() => quitterVers(fenetre.destination)}
+        />
+      )}
+
       <div className="flex flex-col gap-3">
         <span className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)]">
           {dates.length > 1 ? "Dates (annonce récurrente)" : "Date"}
@@ -237,7 +378,7 @@ export default function FormulaireAnnonce({
         {actionBrouillon && (
           <button
             type="button"
-            disabled={enCours}
+            disabled={inactif}
             onClick={() => soumettre(actionBrouillon)}
             className="rounded-[22.5px] border border-[var(--color-warm-cream)] px-4 py-[7.5px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)] disabled:opacity-60"
           >
@@ -247,7 +388,7 @@ export default function FormulaireAnnonce({
         {actionPublier && (
           <button
             type="button"
-            disabled={enCours}
+            disabled={inactif}
             onClick={() => soumettre(actionPublier)}
             className="rounded-[36px] bg-[var(--color-brass-copper)] px-6 py-[14px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)] disabled:opacity-60"
           >
@@ -257,7 +398,7 @@ export default function FormulaireAnnonce({
         {actionModifier && (
           <button
             type="button"
-            disabled={enCours}
+            disabled={inactif}
             onClick={() => soumettre(actionModifier)}
             className="rounded-[36px] bg-[var(--color-brass-copper)] px-6 py-[14px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)] disabled:opacity-60"
           >
