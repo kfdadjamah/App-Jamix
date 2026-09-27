@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { recupererAnnoncesPubliees, recupererProchainesDatesDisponibles } from "@/lib/annonces";
+import HeaderPublic from "@/components/header-public";
 import SelecteurDate from "./selecteur-date";
 import ConsultationMusicien from "./consultation-musicien";
 import type { Vue } from "./toggle-vue";
@@ -34,6 +35,8 @@ export default async function Home({
 
   return (
     <main className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-8 px-6 py-16">
+      <HeaderPublic />
+
       <div>
         <h1 className="text-[41px] font-medium uppercase leading-[0.9] text-[color:var(--color-warm-cream)]">
           Jamix
