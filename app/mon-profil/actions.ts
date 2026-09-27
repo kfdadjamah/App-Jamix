@@ -7,10 +7,14 @@ import { Prisma } from "@prisma/client";
 import { auth, signOut } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { TOURS_HASHING } from "@/lib/auth-constantes";
-import { urlsPhotosDuCompte } from "@/lib/compte";
+import { recadrerEtUploaderPhoto } from "@/lib/image";
+import { coordonneesApresModification, urlsPhotosDuCompte } from "@/lib/compte";
+import { recupererBarDeLOrganisateurConnecte } from "@/lib/organisateur";
 import {
   schemaChangementEmail,
   schemaChangementMotDePasse,
+  schemaFicheBar,
+  schemaPhoto,
   schemaSuppressionCompte,
 } from "@/lib/validation/inscription";
 
@@ -37,6 +41,78 @@ async function verifierMotDePasseActuel(
   });
   if (!organisateur) return false;
   return bcrypt.compare(motDePasse, organisateur.motDePasseHash);
+}
+
+export async function mettreAJourFicheBar(
+  formData: FormData
+): Promise<ResultatAction> {
+  const resultat = schemaFicheBar.safeParse({
+    nomBar: formData.get("nomBar"),
+    adresseBar: formData.get("adresseBar"),
+  });
+  if (!resultat.success) {
+    return { erreur: resultat.error.issues[0]?.message ?? "Formulaire invalide." };
+  }
+
+  const { nomBar, adresseBar } = resultat.data;
+  const bar = await recupererBarDeLOrganisateurConnecte();
+
+  // Adresse modifiée : re-géocodage ; en cas d'échec, le bar sort de la carte.
+  const coordonnees = await coordonneesApresModification(bar.adresse, adresseBar);
+
+  await prisma.bar.update({
+    where: { id: bar.id },
+    data: { nom: nomBar, adresse: adresseBar, ...coordonnees },
+  });
+
+  revalidatePath("/mon-profil");
+  revalidatePath("/");
+  return { succes: true };
+}
+
+export async function mettreAJourPhotoBar(
+  formData: FormData
+): Promise<ResultatAction> {
+  const fichier = formData.get("photo");
+  const resultat = schemaPhoto.safeParse(fichier);
+  if (!resultat.success) {
+    return { erreur: resultat.error.issues[0]?.message ?? "Photo invalide." };
+  }
+
+  const bar = await recupererBarDeLOrganisateurConnecte();
+  const nouvellePhotoUrl = await recadrerEtUploaderPhoto(resultat.data, "bars");
+
+  if (bar.photoUrl) {
+    await del(bar.photoUrl).catch(() => undefined);
+  }
+
+  await prisma.bar.update({
+    where: { id: bar.id },
+    data: { photoUrl: nouvellePhotoUrl },
+  });
+
+  revalidatePath("/mon-profil");
+  return { succes: true };
+}
+
+export async function retirerPhotoBar(): Promise<ResultatAction> {
+  const bar = await recupererBarDeLOrganisateurConnecte();
+
+  if (bar.photoUrl) {
+    await del(bar.photoUrl).catch(() => undefined);
+  }
+
+  await prisma.bar.update({
+    where: { id: bar.id },
+    data: { photoUrl: null },
+  });
+
+  revalidatePath("/mon-profil");
+  return { succes: true };
+}
+
+export async function deconnecterOrganisateur() {
+  await signOut({ redirectTo: "/" });
 }
 
 export async function changerEmail(formData: FormData): Promise<ResultatAction> {
@@ -76,7 +152,7 @@ export async function changerEmail(formData: FormData): Promise<ResultatAction> 
     throw erreur;
   }
 
-  revalidatePath("/mon-compte");
+  revalidatePath("/mon-profil");
   return { succes: true };
 }
 
