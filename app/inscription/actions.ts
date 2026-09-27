@@ -59,5 +59,5 @@ export async function inscrireOrganisateur(
   });
 
   await signIn("credentials", { email, motDePasse, redirect: false });
-  redirect("/mon-bar");
+  redirect("/mes-annonces");
 }

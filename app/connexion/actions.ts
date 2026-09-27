@@ -30,5 +30,5 @@ export async function connecterOrganisateur(
     throw erreur;
   }
 
-  redirect("/mon-bar");
+  redirect("/mes-annonces");
 }
