@@ -2,13 +2,13 @@
 
 Le musicien qui joue régulièrement en dehors d'un groupe fixe (amateur ou semi-professionnel) ne dispose d'aucune source fiable et centralisée pour savoir où jouer à Lyon un soir donné. L'information sur les jams circule de façon dispersée — bouche-à-oreille, réseaux sociaux, groupes propres à chaque bar — si bien qu'il est impossible de savoir en un coup d'œil quels bars organisent une jam à une date donnée, et l'information disponible est parfois obsolète ou concerne une jam annulée sans que cela se sache.
 
-Côté organisateur, l'accès à son espace n'est pas évident : la page d'accueil ne propose aucun lien de connexion, les informations du bar et du compte sont réparties sur plusieurs pages, et un organisateur qui oublie son mot de passe ne peut pas récupérer son compte.
+Côté organisateur, l'accès à son espace n'est pas évident : la page d'accueil ne propose aucun lien de connexion, les informations du bar et du compte sont réparties sur plusieurs pages, et un organisateur qui oublie son mot de passe ne peut pas récupérer son compte. Une fois sur une page de l'espace organisateur ou de connexion, il n'existe aucun moyen visible de revenir en arrière : un visiteur qui clique sur « Connexion organisateur » puis renonce, ou un organisateur qui quitte la saisie d'une annonce, doit passer par le navigateur, au risque de sortir de l'application ou de perdre sa saisie.
 
 ## Solution
 
 L'outil centralise les annonces de jams publiées par les organisateurs des bars lyonnais. Le musicien sélectionne une date et consulte les annonces disponibles ce jour-là : lieu, adresse, distance jusqu'à chez lui, horaire, style musical et instruments mis à disposition sur place. Quand aucune jam n'est publiée à la date choisie, l'outil lui suggère les prochaines dates où des jams ont lieu. À terme, l'outil s'ouvrira aussi au grand public souhaitant assister à une jam.
 
-L'organisateur accède à son espace depuis la page d'accueil, retrouve toutes les informations de son bar et de son compte sur une page profil unique, et peut réinitialiser son mot de passe par email. Il reçoit aussi par email les avis liés à la sécurité de son compte.
+L'organisateur accède à son espace depuis la page d'accueil, retrouve toutes les informations de son bar et de son compte sur une page profil unique, et peut réinitialiser son mot de passe par email. Il reçoit aussi par email les avis liés à la sécurité de son compte. Chaque page qui n'est pas un point de départ propose un bouton « Retour » vers sa page parente. Quitter la saisie d'une annonce en cours l'enregistre en brouillon, reprenable plus tard ; quitter une annonce publiée avec des modifications non enregistrées demande confirmation.
 
 ## Utilisateur cible
 
@@ -56,12 +56,21 @@ US-36. En tant qu'organisateur, je veux que la demande de réinitialisation affi
 US-37. En tant qu'organisateur, je veux recevoir un email de bienvenue à mon inscription, afin de confirmer la création de mon compte.
 US-38. En tant qu'organisateur, je veux être prévenu par email quand mon mot de passe est changé ou réinitialisé, afin de réagir si ce n'est pas moi.
 US-39. En tant qu'organisateur, je veux être prévenu sur mon ancienne adresse quand l'email de mon compte est changé, afin de réagir si ce n'est pas moi.
+US-40. En tant que visiteur arrivé sur la page de connexion, je veux un bouton « Retour » vers l'accueil, afin de renoncer à me connecter en tant qu'organisateur.
+US-41. En tant que visiteur sur la page d'inscription, de mot de passe oublié ou de réinitialisation du mot de passe, je veux un bouton « Retour » vers la connexion, afin de revenir à l'étape précédente du parcours.
+US-42. En tant qu'organisateur sur ma page profil, je veux un bouton « Retour » vers « Mes annonces », afin de retrouver mes jams.
+US-43. En tant qu'organisateur qui saisit une nouvelle annonce ou modifie un brouillon, je veux que quitter la saisie depuis l'application enregistre mes changements en brouillon et m'en informe par une fenêtre, afin de savoir que je pourrai la reprendre plus tard.
+US-44. En tant qu'organisateur qui quitte une annonce sans y avoir rien changé (nouvelle annonce vide ou brouillon rouvert tel quel), je veux revenir directement là où j'ai cliqué, afin de ne pas créer de brouillon vide ni voir un message inutile.
+US-45. En tant qu'organisateur qui modifie une annonce déjà publiée, je veux être averti avant de quitter que mes modifications non enregistrées seront perdues, afin de ne pas les abandonner par erreur tout en gardant l'annonce publiée telle quelle.
+US-46. En tant qu'organisateur dont la saisie n'a pas pu être enregistrée en brouillon, je veux en connaître la raison et choisir entre rester pour corriger ou quitter sans enregistrer, afin de ne jamais perdre ma saisie sans le savoir.
 
 ## Critères de succès
 
 - Sur le premier mois de la bêta, au moins 5 organisateurs distincts ont publié au moins une annonce de jam.
 - Sur le premier mois de la bêta, l'application enregistre au moins 50 consultations d'annonces de jams.
 - Sur le premier mois de la bêta, tout organisateur ayant demandé une réinitialisation de mot de passe a pu se reconnecter sans intervention manuelle.
+- Depuis chaque page dotée d'un bouton « Retour », un clic mène à la page parente prévue, sans passer par le navigateur.
+- Toute sortie via l'application pendant la saisie d'une nouvelle annonce non vide produit soit un brouillon visible dans « Mes annonces », soit un message laissant le choix de rester ou de quitter : jamais de perte silencieuse.
 
 ## Hors périmètre
 
@@ -78,6 +87,9 @@ US-39. En tant qu'organisateur, je veux être prévenu sur mon ancienne adresse 
 - Relances J-7, notifications d'annonce et tout email autre que les messages de compte (réinitialisation, bienvenue, avis de changement de mot de passe ou d'email).
 - Vérification de l'adresse email à l'inscription ou au changement d'email.
 - Connexion via un fournisseur tiers (Google, Apple…) et authentification à deux facteurs.
+- Retour vers la page précédemment visitée (historique de navigation) : la destination du bouton « Retour » est toujours la page parente fixe.
+- Enregistrement automatique en brouillon lors d'une sortie par le navigateur (bouton précédent, fermeture d'onglet, rechargement) : seule une alerte standard du navigateur prévient de la perte de saisie.
+- Confirmation avant de quitter le formulaire du profil ou les pages de connexion.
 
 ## Décisions d'implémentation
 
@@ -119,6 +131,15 @@ US-39. En tant qu'organisateur, je veux être prévenu sur mon ancienne adresse 
 - Après la connexion comme après l'inscription, l'organisateur arrive sur « Mes annonces ».
 - Mot de passe oublié : l'organisateur saisit son email et reçoit un lien valable 1 heure, à usage unique, invalidé dès qu'un nouveau lien est demandé. Le message affiché est le même que l'adresse soit connue ou non. Après réinitialisation, l'organisateur est renvoyé vers la connexion avec un message de succès.
 - Emails envoyés, uniquement liés au compte : lien de réinitialisation, bienvenue à l'inscription, avis de changement ou de réinitialisation du mot de passe, avis de changement d'email envoyé à l'ancienne adresse. Un échec d'envoi d'un email d'avis ne bloque jamais l'action qui l'a déclenché.
+- Un bouton « Retour » apparaît en haut à gauche, sous l'en-tête et au-dessus du titre de la page, sous forme de lien texte « ← Retour », sur : connexion (→ accueil) ; inscription, mot de passe oublié et réinitialisation du mot de passe (→ connexion) ; profil, nouvelle annonce et modification d'annonce (→ « Mes annonces »). L'accueil et « Mes annonces », points de départ, n'en ont pas.
+- La destination du bouton « Retour » est toujours la même pour une page donnée, quel que soit le chemin d'arrivée (lien direct, favori…). Les liens de l'en-tête gardent leur propre destination.
+- Pendant la saisie d'une annonce, toute sortie via l'application (« Retour », ou « Mes annonces » et icône de profil dans l'en-tête) suit les règles ci-dessous ; l'organisateur arrive ensuite sur la page qu'il a demandée.
+- Une modification en cours se mesure par rapport au formulaire vide (nouvelle annonce) ou à l'annonce telle qu'ouverte, puis au dernier enregistrement. Sans changement, la sortie est directe, sans brouillon ni fenêtre, quel que soit le statut de l'annonce. Le choix de portée et les actions déjà enregistrées immédiatement (confirmation, annulation d'une date, photos d'une annonce existante) ne comptent pas comme des modifications.
+- Sur une nouvelle annonce ou un brouillon modifié, quitter enregistre la saisie en brouillon (même incomplète, dates et photos comprises), puis affiche une fenêtre « Annonce enregistrée en brouillon, vous pourrez la reprendre plus tard dans Mes annonces » ; après validation, l'organisateur arrive sur la page demandée.
+- Si cet enregistrement échoue (photo refusée, erreur réseau…), l'organisateur reste sur le formulaire et une fenêtre en donne la raison, avec « Rester » (par défaut) et « Quitter sans enregistrer » ; aucun enregistrement partiel. Pendant l'enregistrement, le bouton est inactif.
+- Sur une annonce Publiée avec des modifications non enregistrées, quitter affiche une fenêtre avertissant qu'elles seront perdues, avec « Quitter » et « Rester » ; l'annonce reste publiée telle quelle.
+- Sur les formulaires d'annonce, une sortie par le navigateur avec des modifications en cours déclenche l'alerte standard du navigateur ; elle peut ne pas se déclencher sur le bouton précédent du navigateur.
+- Sur le profil et les pages de connexion, « Retour » quitte immédiatement, sans confirmation ; une saisie non enregistrée y est perdue.
 
 ## Notes complémentaires
 
