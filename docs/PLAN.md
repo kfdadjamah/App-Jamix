@@ -10,11 +10,13 @@
 - **Authentification / autorisation** : seuls les organisateurs ont un compte (email/mot de passe) ; la consultation musicien est publique, sans compte, sans autorisation.
 - **Statuts d'occurrence** : `confirmée`, `programmée (en attente de confirmation, sera confirmée le J-7)`, `en attente de confirmation (J-7 dépassé)`, `annulée`. Ce cycle de statuts est fixé dès la Phase 6 et réutilisé jusqu'à la Phase 8.
 - **Déclenchement du cycle J-7 (Phase 6)** : la décision « cycle de confirmation requis ou non » est figée une seule fois, au moment de la publication de l'annonce (création directement publiée, ou passage Brouillon → Publiée) — jamais recalculée ensuite. Pour chaque occurrence, si sa date est à plus de 7 jours de l'instant de publication, on écrit `statut = PROGRAMMEE` et `confirmationJ7 = date - 7j` ; sinon (publiée à 7 jours ou moins de son échéance, ex. J-2), on écrit directement `statut = CONFIRMEE` et `confirmationJ7 = null`, sans cycle ni relance. Cette règle s'applique indépendamment à chaque occurrence, y compris pour une annonce récurrente publiée en une fois avec plusieurs dates. Le calcul des écarts de jours se fait en UTC, date seule (`new Date(new Date().toISOString().slice(0,10))`), cohérent avec le reste de l'app — pas de gestion de fuseau Europe/Paris. Le statut « en attente de confirmation » n'est jamais persisté : il est calculé à la volée à chaque lecture (statut = PROGRAMMEE et confirmationJ7 <= aujourd'hui), sans tâche planifiée (pas d'infra cron dans le projet).
-- **Relances de confirmation** : canal in-app uniquement (pas d'email/SMS) — pour ne pas introduire de dépendance à un service d'email tiers.
+- **Relances de confirmation** : canal in-app uniquement (jamais d'email ni de SMS pour les relances J-7) ; l'email est réservé aux messages de compte (Phases 13 et 14).
 - **Géolocalisation** : basée sur l'API de géolocalisation du navigateur, demandée à la consultation ; dégradation gracieuse (pas de distance affichée) si refusée.
-- **Frontière tierce** : pas d'email ni de SMS. Dépendances externes limitées à : géolocalisation navigateur, géocodage des adresses de bar (API Adresse data.gouv.fr), fond de carte vectoriel gratuit et sans clé API (Phase 9), et applications de cartographie externes (Google Maps, Plans, Waze, Citymapper) ouvertes par simple lien universel avec le bar comme destination — aucun calcul d'itinéraire ni clé API côté application (Phase 10).
+- **Frontière tierce** : pas de SMS ; email uniquement pour les messages de compte, via **Resend** (réinitialisation du mot de passe, bienvenue, avis de changement de mot de passe ou d'email — Phases 13 et 14), jamais pour les relances J-7. Dépendances externes limitées à : Resend (clé `RESEND_API_KEY`), géolocalisation navigateur, géocodage des adresses de bar (API Adresse data.gouv.fr), fond de carte vectoriel gratuit et sans clé API (Phase 9), et applications de cartographie externes (Google Maps, Plans, Waze, Citymapper) ouvertes par simple lien universel avec le bar comme destination — aucun calcul d'itinéraire ni clé API côté application (Phase 10).
 - **Récurrence (Phase 5)** : le champ `estRecurrente` est dérivé automatiquement du nombre d'occurrences (`occurrences.length > 1`), pas de toggle dédié dans l'UI ; l'horaire (`heureDebut`/`heureFin`) est unique par annonce et s'applique à toutes ses occurrences ; jusqu'à 12 dates maximum par annonce, sans doublon (contrainte `@@unique([annonceId, date])` en base + validation applicative) ; les dates ne sont librement modifiables (ajout/retrait) que tant que l'annonce est en Brouillon — une fois Publiée, la modification des dates relève de la Phase 8 (portée ciblée/globale). Tant que l'annonce est en Brouillon, chaque sauvegarde resynchronise ses occurrences par remplacement complet (suppression puis recréation à partir des dates soumises), sans diff fin — aucune donnée par occurrence n'a encore d'état à préserver à ce stade. Une fois Publiée, les autres champs (horaire, style, instruments, photos) restent modifiables et s'appliquent alors à toutes les occurrences existantes.
-- **Routes** : consultation musicien publique sur `/` ; `/inscription` et `/connexion` publiques ; espace organisateur protégé (redirection vers `/connexion` si non connecté) sur `/mon-bar` (fiche bar), `/mes-annonces` (annonces, confirmations, relances) et `/mon-compte` (email, mot de passe, suppression).
+- **Routes** : consultation musicien publique sur `/` ; `/inscription`, `/connexion`, `/mot-de-passe-oublie` et `/reinitialiser-mot-de-passe` publiques ; espace organisateur protégé (redirection vers `/connexion` si non connecté) sur `/mes-annonces` (annonces, confirmations, relances) et `/mon-profil` (fiche bar, email, mot de passe, déconnexion, suppression). Depuis la Phase 12, `/mon-profil` remplace `/mon-bar` et `/mon-compte`, qui redirigent vers lui. Après connexion ou inscription, l'organisateur arrive sur `/mes-annonces`.
+- **Réinitialisation du mot de passe (Phase 13)** : modèle `JetonReinitialisation` (cascade à la suppression de l'organisateur) ; seul le hash SHA-256 du jeton est stocké, jamais le jeton brut ; validité 1 h ; une nouvelle demande supprime les jetons existants ; une réinitialisation réussie supprime tous les jetons de l'organisateur (usage unique). Message de retour identique que l'email soit connu ou non.
+- **Emails d'avis (Phase 14)** : envoyés après l'écriture en base, dans un `try/catch` qui journalise sans remonter l'erreur ; un échec d'envoi ne bloque jamais l'action.
 - **Profil et compte (Phase 11)** : aucune migration de schéma. Le géocodage d'une adresse de bar n'est relancé que si l'adresse change ; un échec remet latitude/longitude à `null` (fiche valide, bar absent de la carte, distance non affichée). Session JWT contenant uniquement l'identifiant de l'organisateur : l'email affiché est toujours relu en base, jamais depuis la session. Toute action sensible (email, mot de passe, suppression) revérifie le mot de passe actuel côté serveur. La suppression de compte efface, en une transaction, les annonces (occurrences en cascade), le bar puis le compte, faute de cascade `Organisateur → Bar → Annonce` dans le schéma ; les photos (bar et annonces) sont retirées du stockage ensuite, sans bloquer la suppression en cas d'échec.
 
 ---
@@ -264,3 +266,75 @@ La fiche bar (`/mon-bar`) devient éditable : nom, adresse (re-géocodée si ell
 ## Bloquée par
 
 - Phase 1 (compte organisateur et fiche bar)
+
+---
+
+## Phase 12 : Accès organisateur et page profil unifiée
+
+**User stories** : US-28, US-29, US-30, US-31, US-32, US-33
+
+### Ce qu'on livre
+
+La page d'accueil propose un bouton fantôme « Connexion organisateur » en haut à droite ; une fois connecté, l'organisateur voit à la place une icône de profil, sur toutes les pages. Cette icône mène à une nouvelle page `/mon-profil` qui regroupe la fiche bar (photo, nom, adresse), l'email, le mot de passe, la déconnexion et la suppression du compte. `/mon-bar` et `/mon-compte` redirigent vers `/mon-profil`. L'en-tête organisateur est réduit à « Mes annonces », l'alerte des relances et l'icône. Après connexion ou inscription, l'organisateur arrive sur `/mes-annonces`. Aucune migration de schéma.
+
+### Critères d'acceptation
+
+- [ ] Un visiteur non connecté voit un bouton fantôme « Connexion organisateur » en haut à droite de `/`, qui mène à `/connexion`
+- [ ] Un organisateur connecté voit une icône de profil au même endroit, sur `/` comme dans son espace, qui mène à `/mon-profil`
+- [ ] `/mon-profil` affiche photo, nom et adresse du bar, email, changement de mot de passe, déconnexion et suppression du compte, avec les mêmes règles qu'en Phase 11
+- [ ] `/mon-profil` n'est accessible qu'à un organisateur connecté
+- [ ] `/mon-bar` et `/mon-compte` redirigent vers `/mon-profil`
+- [ ] L'en-tête organisateur ne contient que « Mes annonces », l'alerte des relances et l'icône de profil
+- [ ] Après connexion comme après inscription, l'organisateur arrive sur `/mes-annonces`
+
+## Bloquée par
+
+- Phase 11 (fiche bar éditable et gestion du compte)
+
+---
+
+## Phase 13 : Mot de passe oublié par email
+
+**User stories** : US-34, US-35, US-36
+
+### Ce qu'on livre
+
+Depuis la page de connexion, un lien « Mot de passe oublié » mène à `/mot-de-passe-oublie`, où l'organisateur saisit son email. S'il existe un compte, un email Resend lui envoie un lien vers `/reinitialiser-mot-de-passe`, valable 1 h et à usage unique, où il choisit un nouveau mot de passe. Il est ensuite renvoyé vers la connexion avec un message de succès. Nouveau modèle `JetonReinitialisation` (migration).
+
+### Critères d'acceptation
+
+- [ ] La page de connexion propose un lien « Mot de passe oublié »
+- [ ] La demande affiche toujours le même message, que l'email soit connu ou non
+- [ ] Un email contenant le lien de réinitialisation est envoyé si le compte existe
+- [ ] Le lien expire au bout d'1 h
+- [ ] Le lien ne fonctionne qu'une fois ; un lien déjà utilisé, expiré ou remplacé affiche un message clair et propose d'en demander un nouveau
+- [ ] Une nouvelle demande invalide le lien précédent
+- [ ] Le nouveau mot de passe respecte les règles existantes (8 caractères minimum, confirmation identique)
+- [ ] Après réinitialisation, l'organisateur est renvoyé vers `/connexion` avec un message de succès et peut se connecter avec son nouveau mot de passe
+- [ ] Seul le hash du jeton est stocké en base ; les jetons sont supprimés avec le compte
+
+## Bloquée par
+
+- Phase 12 (routes et redirections organisateur à jour)
+
+---
+
+## Phase 14 : Emails d'avis de compte
+
+**User stories** : US-37, US-38, US-39
+
+### Ce qu'on livre
+
+L'organisateur reçoit un email de bienvenue à son inscription, un avis quand son mot de passe est changé ou réinitialisé, et un avis envoyé à son ancienne adresse quand l'email du compte est changé. Un échec d'envoi ne bloque jamais l'action.
+
+### Critères d'acceptation
+
+- [ ] L'inscription déclenche un email de bienvenue
+- [ ] Un changement de mot de passe depuis `/mon-profil` déclenche un email d'avis
+- [ ] Une réinitialisation de mot de passe déclenche le même email d'avis
+- [ ] Un changement d'email déclenche un avis envoyé à l'ancienne adresse
+- [ ] Si l'envoi échoue, l'action réussit quand même et l'erreur est seulement journalisée
+
+## Bloquée par
+
+- Phase 13 (service d'envoi Resend et gabarits en place)

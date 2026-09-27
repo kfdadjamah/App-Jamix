@@ -2,9 +2,13 @@
 
 Le musicien qui joue régulièrement en dehors d'un groupe fixe (amateur ou semi-professionnel) ne dispose d'aucune source fiable et centralisée pour savoir où jouer à Lyon un soir donné. L'information sur les jams circule de façon dispersée — bouche-à-oreille, réseaux sociaux, groupes propres à chaque bar — si bien qu'il est impossible de savoir en un coup d'œil quels bars organisent une jam à une date donnée, et l'information disponible est parfois obsolète ou concerne une jam annulée sans que cela se sache.
 
+Côté organisateur, l'accès à son espace n'est pas évident : la page d'accueil ne propose aucun lien de connexion, les informations du bar et du compte sont réparties sur plusieurs pages, et un organisateur qui oublie son mot de passe ne peut pas récupérer son compte.
+
 ## Solution
 
 L'outil centralise les annonces de jams publiées par les organisateurs des bars lyonnais. Le musicien sélectionne une date et consulte les annonces disponibles ce jour-là : lieu, adresse, distance jusqu'à chez lui, horaire, style musical et instruments mis à disposition sur place. Quand aucune jam n'est publiée à la date choisie, l'outil lui suggère les prochaines dates où des jams ont lieu. À terme, l'outil s'ouvrira aussi au grand public souhaitant assister à une jam.
+
+L'organisateur accède à son espace depuis la page d'accueil, retrouve toutes les informations de son bar et de son compte sur une page profil unique, et peut réinitialiser son mot de passe par email. Il reçoit aussi par email les avis liés à la sécurité de son compte.
 
 ## Utilisateur cible
 
@@ -40,11 +44,24 @@ US-24. En tant que musicien qui n'a pas l'application choisie, je veux être red
 US-25. En tant qu'organisateur, je veux modifier le nom et l'adresse de mon bar, afin de garder sa fiche à jour.
 US-26. En tant qu'organisateur, je veux changer mon email et mon mot de passe, afin de garder la maîtrise de mon compte.
 US-27. En tant qu'organisateur, je veux supprimer définitivement mon compte, avec mon bar, mes annonces et mes photos, afin de quitter l'application sans laisser de données derrière moi.
+US-28. En tant qu'organisateur non connecté, je veux trouver un bouton « Connexion organisateur » en haut à droite de la page d'accueil, afin d'accéder à mon espace sans connaître l'adresse de la page de connexion.
+US-29. En tant qu'organisateur connecté, je veux voir une icône de profil en haut à droite de chaque page, afin d'accéder à mon profil depuis n'importe où.
+US-30. En tant qu'organisateur, je veux retrouver sur une seule page profil la fiche de mon bar (photo, nom, adresse), mon email, mon mot de passe, la déconnexion et la suppression de mon compte, afin de gérer toutes mes informations au même endroit.
+US-31. En tant qu'organisateur, je veux un en-tête réduit à « Mes annonces », à l'alerte des relances et à l'icône de profil, afin de naviguer sans encombrement.
+US-32. En tant qu'organisateur, je veux arriver sur « Mes annonces » après m'être connecté, afin de gérer directement mes jams.
+US-33. En tant qu'organisateur, je veux arriver sur « Mes annonces » après mon inscription, afin de publier ma première annonce sans détour.
+US-34. En tant qu'organisateur qui a oublié son mot de passe, je veux recevoir par email un lien de réinitialisation, afin de récupérer l'accès à mon compte.
+US-35. En tant qu'organisateur, je veux que ce lien ne soit valable qu'une heure, une seule fois, et qu'il soit invalidé dès que j'en demande un nouveau, afin que mon compte reste protégé.
+US-36. En tant qu'organisateur, je veux que la demande de réinitialisation affiche le même message que l'adresse soit connue ou non, afin que personne ne puisse savoir si un email est inscrit.
+US-37. En tant qu'organisateur, je veux recevoir un email de bienvenue à mon inscription, afin de confirmer la création de mon compte.
+US-38. En tant qu'organisateur, je veux être prévenu par email quand mon mot de passe est changé ou réinitialisé, afin de réagir si ce n'est pas moi.
+US-39. En tant qu'organisateur, je veux être prévenu sur mon ancienne adresse quand l'email de mon compte est changé, afin de réagir si ce n'est pas moi.
 
 ## Critères de succès
 
 - Sur le premier mois de la bêta, au moins 5 organisateurs distincts ont publié au moins une annonce de jam.
 - Sur le premier mois de la bêta, l'application enregistre au moins 50 consultations d'annonces de jams.
+- Sur le premier mois de la bêta, tout organisateur ayant demandé une réinitialisation de mot de passe a pu se reconnecter sans intervention manuelle.
 
 ## Hors périmètre
 
@@ -58,6 +75,9 @@ US-27. En tant qu'organisateur, je veux supprimer définitivement mon compte, av
 - Itinéraire calculé dans l'application (le trajet est délégué à l'application de cartographie externe).
 - Affichage d'un temps de trajet.
 - Mémorisation de l'application de cartographie choisie par le musicien.
+- Relances J-7, notifications d'annonce et tout email autre que les messages de compte (réinitialisation, bienvenue, avis de changement de mot de passe ou d'email).
+- Vérification de l'adresse email à l'inscription ou au changement d'email.
+- Connexion via un fournisseur tiers (Google, Apple…) et authentification à deux facteurs.
 
 ## Décisions d'implémentation
 
@@ -75,7 +95,7 @@ US-27. En tant qu'organisateur, je veux supprimer définitivement mon compte, av
 - Pas de limite de délai pour publier une annonce à l'avance ; le musicien ne peut consulter que les jams à venir (pas d'historique des jams passées).
 - Si une date d'une annonce est publiée plus de 7 jours à l'avance, l'organisateur doit la confirmer 7 jours avant cette date (J-7) ; jusque-là, l'occurrence affiche « Jam programmée, sera confirmée le [date J-7] ». Si la date est publiée à 7 jours ou moins de son échéance (ex. publiée à J-2), l'occurrence est directement au statut confirmée dès la publication, sans cycle de confirmation ni relance. Pour une annonce récurrente publiée avec plusieurs dates en une seule fois, cette règle J-7/J-2 s'évalue indépendamment pour chaque date : une date à plus de 7 jours peut être « Programmée » tandis qu'une autre date de la même annonce, à 7 jours ou moins, est directement « Confirmée ».
 - Si l'organisateur ne confirme pas une date à J-7, cette occurrence reste visible avec le statut « en attente de confirmation » (pas de suppression ni d'annulation automatique).
-- Tant qu'une date n'est pas confirmée après J-7, l'organisateur reçoit des relances in-app (dans son espace organisateur, pas d'email ni de SMS) à J-5, J-3, J-2, J-1 et le jour J.
+- Tant qu'une date n'est pas confirmée après J-7, l'organisateur reçoit des relances in-app (dans son espace organisateur uniquement : les relances J-7 ne passent jamais par email ni SMS, l'email étant réservé aux messages de compte) à J-5, J-3, J-2, J-1 et le jour J.
 - L'organisateur peut modifier ou annuler manuellement une annonce à tout moment, indépendamment du mécanisme de confirmation à J-7. Pour une annonce récurrente, la modification comme l'annulation s'appliquent, au choix de l'organisateur, uniquement à la date sélectionnée ou à toutes les dates.
 - Chaque annonce affiche : nom et adresse du bar, distance jusqu'au musicien, horaire, style musical, instruments/backline disponibles sur place, et ses éventuelles photos.
 - La distance est calculée à partir de la géolocalisation du navigateur du musicien, demandée au moment de la consultation.
@@ -93,7 +113,15 @@ US-27. En tant qu'organisateur, je veux supprimer définitivement mon compte, av
 - Changer l'email ou le mot de passe exige la saisie du mot de passe actuel.
 - La suppression du compte est définitive (pas de corbeille) et exige une confirmation explicite ; elle supprime le bar, ses annonces, leurs occurrences et toutes les photos associées.
 - Le rattachement « un compte = un bar » est conservé : l'organisateur édite son bar existant, il n'en change jamais.
+- Visiteur non connecté : un bouton fantôme « Connexion organisateur » en haut à droite de la page d'accueil. Organisateur connecté : une icône bonhomme au même endroit, sur toutes les pages, qui mène à la page profil.
+- La page profil unique regroupe la fiche bar (photo, nom, adresse), l'email, le mot de passe, la déconnexion et la suppression du compte ; elle remplace les pages séparées fiche bar et compte, dont les anciennes adresses redirigent vers elle.
+- L'en-tête de l'espace organisateur ne contient plus que « Mes annonces », l'alerte des relances et l'icône de profil.
+- Après la connexion comme après l'inscription, l'organisateur arrive sur « Mes annonces ».
+- Mot de passe oublié : l'organisateur saisit son email et reçoit un lien valable 1 heure, à usage unique, invalidé dès qu'un nouveau lien est demandé. Le message affiché est le même que l'adresse soit connue ou non. Après réinitialisation, l'organisateur est renvoyé vers la connexion avec un message de succès.
+- Emails envoyés, uniquement liés au compte : lien de réinitialisation, bienvenue à l'inscription, avis de changement ou de réinitialisation du mot de passe, avis de changement d'email envoyé à l'ancienne adresse. Un échec d'envoi d'un email d'avis ne bloque jamais l'action qui l'a déclenché.
 
 ## Notes complémentaires
 
 L'itinéraire dépend d'applications tierces (Google Maps, Plans, Waze, Citymapper). Sans l'application installée, Waze et Citymapper peuvent ouvrir une page web qui pousse surtout à les installer.
+
+Les emails de compte dépendent d'un service d'envoi tiers (Resend). En mode test, Resend n'envoie qu'à l'adresse du compte Resend ; un domaine d'expédition vérifié est nécessaire pour la bêta. Les emails peuvent arriver en spam, d'où la mention « Pensez à vérifier vos spams » après une demande de réinitialisation.

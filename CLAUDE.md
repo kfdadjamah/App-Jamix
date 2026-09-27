@@ -16,6 +16,7 @@ Toujours lire DESIGN.md avant toute décision visuelle ou UI. Polices, couleurs,
 - Une annonce a deux statuts indépendants : Brouillon/Publiée (annonce) et confirmée/programmée/en attente/annulée (par occurrence) — ne pas les confondre.
 - Chaque date d'une annonce récurrente est une OccurrenceJam à part entière, avec son propre cycle de confirmation J-7.
 - Confirmation J-7 : relances in-app uniquement (jamais email/SMS), à J-5/J-3/J-2/J-1/J0, seulement après dépassement de J-7 sans confirmation.
+- Email (Resend) réservé aux messages de compte : réinitialisation du mot de passe, bienvenue, avis de changement de mot de passe ou d'email. Jamais de SMS.
 - Modification/annulation d'une annonce récurrente : l'organisateur choisit explicitement la portée (date seule vs toutes les dates).
 - Un compte organisateur est rattaché à un seul bar ; pas de multi-bar.
 
