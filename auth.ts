@@ -36,7 +36,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         }
 
         const organisateur = await prisma.organisateur.findUnique({
-          where: { email },
+          where: { email: email.trim().toLowerCase() },
         });
         if (!organisateur) return null;
 

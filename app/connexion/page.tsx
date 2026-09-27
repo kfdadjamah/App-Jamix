@@ -1,12 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { use, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { schemaConnexion, type ChampsConnexion } from "@/lib/validation/inscription";
 import { connecterOrganisateur } from "./actions";
 
-export default function PageConnexion() {
+export default function PageConnexion({
+  searchParams,
+}: {
+  searchParams: Promise<{ reinitialise?: string }>;
+}) {
+  const { reinitialise } = use(searchParams);
   const [erreurServeur, setErreurServeur] = useState<string | null>(null);
   const [enCours, setEnCours] = useState(false);
 
@@ -44,6 +49,12 @@ export default function PageConnexion() {
         </p>
       </div>
 
+      {reinitialise === "1" && (
+        <p className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)]">
+          Mot de passe modifié. Vous pouvez vous connecter.
+        </p>
+      )}
+
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6" noValidate>
         <label className="flex flex-col gap-2">
           <span className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)]">
@@ -78,6 +89,13 @@ export default function PageConnexion() {
             </span>
           )}
         </label>
+
+        <a
+          href="/mot-de-passe-oublie"
+          className="-mt-3 self-start text-[12px] font-medium uppercase text-[var(--color-warm-cream)] underline"
+        >
+          Mot de passe oublié ?
+        </a>
 
         {erreurServeur && (
           <p className="text-[12px] font-medium uppercase text-[var(--color-gold-elegance)]">

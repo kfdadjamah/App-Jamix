@@ -13,6 +13,19 @@ model Organisateur {
   motDePasseHash String
   createdAt      DateTime @default(now())
   bar            Bar?
+  jetonsReinitialisation JetonReinitialisation[]
+}
+
+// Seul le hash SHA-256 du jeton est stocké, jamais le jeton brut envoyé par email.
+model JetonReinitialisation {
+  id             String       @id @default(cuid())
+  hash           String       @unique
+  organisateurId String
+  organisateur   Organisateur @relation(fields: [organisateurId], references: [id], onDelete: Cascade)
+  expireLe       DateTime
+  createdAt      DateTime     @default(now())
+
+  @@index([organisateurId])
 }
 
 model Bar {

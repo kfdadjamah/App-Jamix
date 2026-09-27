@@ -12,7 +12,9 @@ export const schemaPhoto = z
     message: "Format d'image non supporté (JPEG, PNG ou WebP uniquement).",
   });
 
-const champEmail = z.string().email("Adresse email invalide.");
+// Emails normalisés (espaces retirés, minuscules) partout où ils sont saisis,
+// pour que la casse ne bloque ni la connexion ni la réinitialisation.
+const champEmail = z.string().trim().toLowerCase().email("Adresse email invalide.");
 const champMotDePasse = z
   .string()
   .min(8, "Le mot de passe doit contenir au moins 8 caractères.");
@@ -70,6 +72,26 @@ export const schemaChangementMotDePasse = z
   });
 
 export type ChampsChangementMotDePasse = z.infer<typeof schemaChangementMotDePasse>;
+
+export const schemaMotDePasseOublie = z.object({
+  email: champEmail,
+});
+
+export type ChampsMotDePasseOublie = z.infer<typeof schemaMotDePasseOublie>;
+
+export const schemaReinitialisationMotDePasse = z
+  .object({
+    nouveauMotDePasse: champMotDePasse,
+    confirmation: z.string(),
+  })
+  .refine((champs) => champs.confirmation === champs.nouveauMotDePasse, {
+    message: "La confirmation ne correspond pas au nouveau mot de passe.",
+    path: ["confirmation"],
+  });
+
+export type ChampsReinitialisationMotDePasse = z.infer<
+  typeof schemaReinitialisationMotDePasse
+>;
 
 export const MOT_CONFIRMATION_SUPPRESSION = "SUPPRIMER";
 

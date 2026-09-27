@@ -304,15 +304,15 @@ Depuis la page de connexion, un lien « Mot de passe oublié » mène à `/mot-d
 
 ### Critères d'acceptation
 
-- [ ] La page de connexion propose un lien « Mot de passe oublié »
-- [ ] La demande affiche toujours le même message, que l'email soit connu ou non
+- [x] La page de connexion propose un lien « Mot de passe oublié »
+- [x] La demande affiche toujours le même message, que l'email soit connu ou non
 - [ ] Un email contenant le lien de réinitialisation est envoyé si le compte existe
 - [ ] Le lien expire au bout d'1 h
-- [ ] Le lien ne fonctionne qu'une fois ; un lien déjà utilisé, expiré ou remplacé affiche un message clair et propose d'en demander un nouveau
+- [x] Le lien ne fonctionne qu'une fois ; un lien déjà utilisé, expiré ou remplacé affiche un message clair et propose d'en demander un nouveau
 - [ ] Une nouvelle demande invalide le lien précédent
-- [ ] Le nouveau mot de passe respecte les règles existantes (8 caractères minimum, confirmation identique)
-- [ ] Après réinitialisation, l'organisateur est renvoyé vers `/connexion` avec un message de succès et peut se connecter avec son nouveau mot de passe
-- [ ] Seul le hash du jeton est stocké en base ; les jetons sont supprimés avec le compte
+- [x] Le nouveau mot de passe respecte les règles existantes (8 caractères minimum, confirmation identique)
+- [x] Après réinitialisation, l'organisateur est renvoyé vers `/connexion` avec un message de succès et peut se connecter avec son nouveau mot de passe
+- [x] Seul le hash du jeton est stocké en base ; les jetons sont supprimés avec le compte
 
 ## Bloquée par
 
@@ -391,3 +391,24 @@ Un lien texte « ← Retour », sous l'en-tête et au-dessus du titre, vers une 
 ## Bloquée par
 
 - Phase 15 (composant « ← Retour »)
+
+---
+
+## Phase 17 : Déconnexion des autres sessions après changement de mot de passe
+
+**User stories** : aucune (dette de sécurité identifiée lors du cadrage de la Phase 13)
+
+### Ce qu'on livre
+
+Aujourd'hui la session est un JWT contenant uniquement l'identifiant de l'organisateur : un appareil déjà connecté le reste après un changement (Phase 11) ou une réinitialisation (Phase 13) du mot de passe, y compris celui d'un éventuel intrus. On ajoute un champ `motDePasseModifieLe` sur `Organisateur`, mis à jour à chaque changement ou réinitialisation du mot de passe ; le JWT mémorise sa date d'émission, et toute session émise avant `motDePasseModifieLe` est rejetée (retour à `/connexion`). Après un changement depuis `/mon-profil`, la session courante est réémise pour que l'organisateur reste connecté sur l'appareil utilisé.
+
+### Critères d'acceptation
+
+- [ ] Après une réinitialisation du mot de passe, toute session ouverte auparavant est déconnectée à sa prochaine requête vers une page protégée
+- [ ] Après un changement de mot de passe depuis `/mon-profil`, les autres sessions sont déconnectées ; la session courante reste active
+- [ ] Un organisateur dont le compte a été supprimé est aussi déconnecté (session rejetée si l'organisateur n'existe plus)
+- [ ] Les sessions existantes avant le déploiement de la phase ne sont pas déconnectées à tort (champ `null` = aucune invalidation)
+
+## Bloquée par
+
+- Phase 13 (réinitialisation du mot de passe)

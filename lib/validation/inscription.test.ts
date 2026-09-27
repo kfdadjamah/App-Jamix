@@ -2,9 +2,57 @@ import { describe, expect, it } from "vitest";
 import {
   schemaChangementEmail,
   schemaChangementMotDePasse,
+  schemaConnexion,
   schemaFicheBar,
+  schemaMotDePasseOublie,
+  schemaReinitialisationMotDePasse,
   schemaSuppressionCompte,
 } from "./inscription";
+
+describe("normalisation de l'email", () => {
+  it("retire les espaces et passe en minuscules", () => {
+    const resultat = schemaConnexion.safeParse({ email: "  Jean@MonBar.FR ", motDePasse: "x" });
+    expect(resultat.success && resultat.data.email).toBe("jean@monbar.fr");
+  });
+
+  it("s'applique au mot de passe oublié", () => {
+    const resultat = schemaMotDePasseOublie.safeParse({ email: "Jean@MonBar.fr" });
+    expect(resultat.success && resultat.data.email).toBe("jean@monbar.fr");
+  });
+
+  it("refuse toujours un email invalide", () => {
+    expect(schemaMotDePasseOublie.safeParse({ email: "pas-un-email" }).success).toBe(false);
+  });
+});
+
+describe("schemaReinitialisationMotDePasse", () => {
+  it("accepte un mot de passe de 8 caractères confirmé", () => {
+    expect(
+      schemaReinitialisationMotDePasse.safeParse({
+        nouveauMotDePasse: "12345678",
+        confirmation: "12345678",
+      }).success
+    ).toBe(true);
+  });
+
+  it("refuse un mot de passe de moins de 8 caractères", () => {
+    expect(
+      schemaReinitialisationMotDePasse.safeParse({
+        nouveauMotDePasse: "1234567",
+        confirmation: "1234567",
+      }).success
+    ).toBe(false);
+  });
+
+  it("refuse une confirmation différente", () => {
+    expect(
+      schemaReinitialisationMotDePasse.safeParse({
+        nouveauMotDePasse: "12345678",
+        confirmation: "12345679",
+      }).success
+    ).toBe(false);
+  });
+});
 
 describe("schemaFicheBar", () => {
   it("accepte un nom et une adresse", () => {
