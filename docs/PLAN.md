@@ -18,6 +18,7 @@
 - **Réinitialisation du mot de passe (Phase 13)** : modèle `JetonReinitialisation` (cascade à la suppression de l'organisateur) ; seul le hash SHA-256 du jeton est stocké, jamais le jeton brut ; validité 1 h ; une nouvelle demande supprime les jetons existants ; une réinitialisation réussie supprime tous les jetons de l'organisateur (usage unique). Message de retour identique que l'email soit connu ou non.
 - **Emails d'avis (Phase 14)** : envoyés après l'écriture en base, dans un `try/catch` qui journalise sans remonter l'erreur ; un échec d'envoi ne bloque jamais l'action.
 - **Profil et compte (Phase 11)** : aucune migration de schéma. Le géocodage d'une adresse de bar n'est relancé que si l'adresse change ; un échec remet latitude/longitude à `null` (fiche valide, bar absent de la carte, distance non affichée). Session JWT contenant uniquement l'identifiant de l'organisateur : l'email affiché est toujours relu en base, jamais depuis la session. Toute action sensible (email, mot de passe, suppression) revérifie le mot de passe actuel côté serveur. La suppression de compte efface, en une transaction, les annonces (occurrences en cascade), le bar puis le compte, faute de cascade `Organisateur → Bar → Annonce` dans le schéma ; les photos (bar et annonces) sont retirées du stockage ensuite, sans bloquer la suppression en cas d'échec.
+- **Navigation retour (Phases 15 et 16)** : aucune migration de schéma. Un composant unique « ← Retour » (lien texte, destination fixe par page, jamais l'historique du navigateur) placé sous l'en-tête et au-dessus du titre. Sur les formulaires d'annonce, les sorties via l'application (Retour, « Mes annonces » et icône de profil de l'en-tête) passent par une même garde côté client qui compare l'état courant du formulaire à un état de référence (formulaire vide, annonce telle qu'ouverte, puis dernier enregistrement réussi) ; le choix de portée et les actions immédiates (confirmation, annulation d'une date, photos d'une annonce existante) sont exclus de la comparaison. L'enregistrement automatique réutilise l'action d'enregistrement en brouillon existante (même validation, pas d'enregistrement partiel). Sortie par le navigateur : alerte standard `beforeunload` uniquement, sans enregistrement.
 
 ---
 
@@ -338,3 +339,55 @@ L'organisateur reçoit un email de bienvenue à son inscription, un avis quand s
 ## Bloquée par
 
 - Phase 13 (service d'envoi Resend et gabarits en place)
+
+---
+
+## Phase 15 : Bouton « Retour » sur les pages simples
+
+**User stories** : US-40, US-41, US-42
+
+### Ce qu'on livre
+
+Un lien texte « ← Retour », sous l'en-tête et au-dessus du titre, vers une page parente fixe : connexion → accueil ; inscription, mot de passe oublié et réinitialisation du mot de passe → connexion ; profil → « Mes annonces ». Le retour est immédiat, sans confirmation. L'accueil et « Mes annonces » n'en ont pas.
+
+### Critères d'acceptation
+
+- [ ] `/connexion` affiche « ← Retour » vers `/`
+- [ ] `/inscription`, `/mot-de-passe-oublie` et `/reinitialiser-mot-de-passe` affichent « ← Retour » vers `/connexion`
+- [ ] `/mon-profil` affiche « ← Retour » vers `/mes-annonces`, sous l'en-tête organisateur
+- [ ] La destination est la même quel que soit le chemin d'arrivée (lien direct, favori), sans recours à l'historique du navigateur
+- [ ] Le retour est immédiat, sans confirmation ; une saisie non enregistrée est perdue
+- [ ] `/` et `/mes-annonces` n'affichent pas de bouton « Retour »
+
+## Bloquée par
+
+- Phase 13 (pages mot de passe oublié et réinitialisation)
+
+---
+
+## Phase 16 : Sortie de la saisie d'une annonce
+
+**User stories** : US-43, US-44, US-45, US-46
+
+### Ce qu'on livre
+
+« ← Retour » sur la nouvelle annonce et la modification d'annonce (→ « Mes annonces »). Pendant la saisie, toute sortie via l'application (Retour, « Mes annonces » ou icône de profil de l'en-tête) est interceptée : sur une nouvelle annonce ou un brouillon modifié, la saisie est enregistrée en brouillon puis une fenêtre l'annonce ; sur une annonce Publiée modifiée, une fenêtre Quitter/Rester avertit de la perte ; sans changement, la sortie est directe. L'organisateur arrive ensuite sur la page demandée. En cas d'échec de l'enregistrement, il reste sur le formulaire et choisit. Une sortie par le navigateur avec des modifications en cours déclenche l'alerte standard du navigateur.
+
+### Critères d'acceptation
+
+- [ ] `/mes-annonces/nouvelle` et `/mes-annonces/[id]` affichent « ← Retour » vers `/mes-annonces`
+- [ ] Nouvelle annonce vide ou brouillon rouvert sans changement : Retour, « Mes annonces » et l'icône de profil mènent directement à leur destination, sans brouillon ni fenêtre
+- [ ] Nouvelle annonce avec une saisie (date, heure, style, instrument, précision « Autre » ou photo) : la sortie crée un brouillon, même incomplet, photos comprises, visible dans « Mes annonces »
+- [ ] Brouillon modifié : la sortie enregistre les changements dans ce brouillon (pas de nouveau brouillon)
+- [ ] Après enregistrement, une fenêtre affiche « Annonce enregistrée en brouillon, vous pourrez la reprendre plus tard dans Mes annonces » ; après validation, l'organisateur arrive sur la page demandée (Retour/« Mes annonces » → `/mes-annonces`, icône → `/mon-profil`)
+- [ ] Après un clic sur « Enregistrer le brouillon » ou « Enregistrer les modifications », l'état enregistré devient la référence : une sortie immédiate est directe
+- [ ] Si l'enregistrement échoue (photo refusée, erreur réseau), l'organisateur reste sur le formulaire ; une fenêtre donne la raison avec « Rester » (par défaut) et « Quitter sans enregistrer » ; rien n'est enregistré partiellement
+- [ ] Pendant l'enregistrement, les sorties sont inactives (pas de double brouillon)
+- [ ] Annonce Publiée avec des modifications non enregistrées : une fenêtre avertit de leur perte, avec « Quitter » et « Rester » ; l'annonce reste publiée telle quelle
+- [ ] Changer uniquement la portée, confirmer ou annuler une date, ou modifier les photos d'une annonce existante ne compte pas comme une modification en cours
+- [ ] Avec des modifications en cours, fermer l'onglet ou recharger déclenche l'alerte standard du navigateur, sans enregistrement
+- [ ] Les fenêtres respectent DESIGN.md (Walnut Shadow, Warm Cream, un seul bouton plein par fenêtre, sans ombre)
+
+## Bloquée par
+
+- Phase 15 (composant « ← Retour »)
