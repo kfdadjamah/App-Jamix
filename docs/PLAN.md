@@ -352,12 +352,12 @@ Un lien texte « ← Retour », sous l'en-tête et au-dessus du titre, vers une 
 
 ### Critères d'acceptation
 
-- [ ] `/connexion` affiche « ← Retour » vers `/`
-- [ ] `/inscription`, `/mot-de-passe-oublie` et `/reinitialiser-mot-de-passe` affichent « ← Retour » vers `/connexion`
-- [ ] `/mon-profil` affiche « ← Retour » vers `/mes-annonces`, sous l'en-tête organisateur
-- [ ] La destination est la même quel que soit le chemin d'arrivée (lien direct, favori), sans recours à l'historique du navigateur
-- [ ] Le retour est immédiat, sans confirmation ; une saisie non enregistrée est perdue
-- [ ] `/` et `/mes-annonces` n'affichent pas de bouton « Retour »
+- [x] `/connexion` affiche « ← Retour » vers `/`
+- [x] `/inscription`, `/mot-de-passe-oublie` et `/reinitialiser-mot-de-passe` affichent « ← Retour » vers `/connexion`
+- [x] `/mon-profil` affiche « ← Retour » vers `/mes-annonces`, sous l'en-tête organisateur
+- [x] La destination est la même quel que soit le chemin d'arrivée (lien direct, favori), sans recours à l'historique du navigateur
+- [x] Le retour est immédiat, sans confirmation ; une saisie non enregistrée est perdue
+- [x] `/` et `/mes-annonces` n'affichent pas de bouton « Retour »
 
 ## Bloquée par
 

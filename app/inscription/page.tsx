@@ -8,6 +8,7 @@ import {
   type ChampsInscriptionClient,
 } from "@/lib/validation/inscription";
 import ChampFormulaire from "@/components/champ-formulaire";
+import BoutonRetour from "@/components/bouton-retour";
 import { inscrireOrganisateur } from "./actions";
 
 export default function PageInscription() {
@@ -51,7 +52,8 @@ export default function PageInscription() {
   }
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center gap-8 px-6 py-16">
+    <main className="mx-auto flex min-h-screen max-w-md flex-col gap-8 px-6 py-16">
+      <BoutonRetour href="/connexion" />
       <div>
         <h1 className="text-[41px] font-medium uppercase leading-[0.9] text-[var(--color-warm-cream)]">
           Inscription

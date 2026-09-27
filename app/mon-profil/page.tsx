@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import HeaderOrganisateur from "@/components/header-organisateur";
+import BoutonRetour from "@/components/bouton-retour";
 import GestionPhotoBar from "./gestion-photo-bar";
 import FormulaireFicheBar from "./formulaire-fiche-bar";
 import FormulaireEmail from "./formulaire-email";
@@ -38,6 +39,7 @@ export default async function PageMonProfil() {
   return (
     <main className="mx-auto flex min-h-screen max-w-md flex-col gap-8 px-6 py-16">
       <HeaderOrganisateur page="mon-profil" />
+      <BoutonRetour href="/mes-annonces" />
 
       <div className="flex flex-col gap-3">
         <h1 className="text-[41px] font-medium uppercase leading-[0.9] text-[var(--color-warm-cream)]">

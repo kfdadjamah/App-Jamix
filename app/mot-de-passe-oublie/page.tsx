@@ -8,6 +8,7 @@ import {
   type ChampsMotDePasseOublie,
 } from "@/lib/validation/inscription";
 import ChampFormulaire from "@/components/champ-formulaire";
+import BoutonRetour from "@/components/bouton-retour";
 import { demanderReinitialisation } from "./actions";
 
 export default function PageMotDePasseOublie() {
@@ -40,7 +41,8 @@ export default function PageMotDePasseOublie() {
   }
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center gap-8 px-6 py-16">
+    <main className="mx-auto flex min-h-screen max-w-md flex-col gap-8 px-6 py-16">
+      <BoutonRetour href="/connexion" />
       <div>
         <h1 className="text-[41px] font-medium uppercase leading-[0.9] text-[var(--color-warm-cream)]">
           Mot de passe oublié
@@ -84,12 +86,6 @@ export default function PageMotDePasseOublie() {
           </button>
         </form>
       )}
-
-      <p className="text-[12px] uppercase text-[var(--color-driftwood)]">
-        <a href="/connexion" className="text-[var(--color-warm-cream)] underline">
-          Retour à la connexion
-        </a>
-      </p>
     </main>
   );
 }

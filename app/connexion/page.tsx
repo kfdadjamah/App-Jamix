@@ -4,6 +4,7 @@ import { use, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { schemaConnexion, type ChampsConnexion } from "@/lib/validation/inscription";
+import BoutonRetour from "@/components/bouton-retour";
 import { connecterOrganisateur } from "./actions";
 
 export default function PageConnexion({
@@ -39,7 +40,8 @@ export default function PageConnexion({
   }
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-md flex-col justify-center gap-8 px-6 py-16">
+    <main className="mx-auto flex min-h-screen max-w-md flex-col gap-8 px-6 py-16">
+      <BoutonRetour href="/" />
       <div>
         <h1 className="text-[41px] font-medium uppercase leading-[0.9] text-[var(--color-warm-cream)]">
           Connexion
