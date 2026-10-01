@@ -123,6 +123,7 @@ US-46. En tant qu'organisateur dont la saisie n'a pas pu être enregistrée en b
 - Toucher un marqueur ouvre toujours la fiche de l'annonce, sans changement.
 - L'organisateur peut modifier le nom et l'adresse de son bar à tout moment ; une adresse modifiée est re-géocodée (en cas d'échec, la fiche reste valide mais le bar n'apparaît plus sur la carte).
 - Changer l'email ou le mot de passe exige la saisie du mot de passe actuel.
+- Après un changement de mot de passe depuis le profil, l'organisateur reste connecté sur l'appareil utilisé et voit la confirmation du changement, sans page d'erreur ; ses autres sessions ouvertes sont déconnectées. Après une réinitialisation par email, toutes les sessions ouvertes auparavant sont déconnectées.
 - La suppression du compte est définitive (pas de corbeille) et exige une confirmation explicite ; elle supprime le bar, ses annonces, leurs occurrences et toutes les photos associées.
 - Le rattachement « un compte = un bar » est conservé : l'organisateur édite son bar existant, il n'en change jamais.
 - Visiteur non connecté : un bouton fantôme « Connexion organisateur » en haut à droite de la page d'accueil. Organisateur connecté : une icône bonhomme au même endroit, sur toutes les pages, qui mène à la page profil.
