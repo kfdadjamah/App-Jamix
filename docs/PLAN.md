@@ -4,7 +4,7 @@
 
 ## Décisions architecturales
 
-- **Modèles clés** : `Bar` (nom, adresse, photo/logo optionnel), `Organisateur` (compte rattaché à un seul `Bar`), `Annonce` (style musical, instruments/backline, récurrente ou non, statut Brouillon/Publiée, jusqu'à 2 photos optionnelles), `OccurrenceJam` (date, horaire, statut de confirmation, échéance J-7) — chaque date d'une annonce récurrente est une occurrence indépendante avec son propre statut.
+- **Modèles clés** : `Bar` (nom, adresse, photo/logo optionnel), `Organisateur` (compte rattaché à un seul `Bar` jusqu'à la Phase 17, puis à 1 à 10 `Bar` depuis la Phase 18), `Annonce` (style musical, instruments/backline, récurrente ou non, statut Brouillon/Publiée, jusqu'à 2 photos optionnelles), `OccurrenceJam` (date, horaire, statut de confirmation, échéance J-7) — chaque date d'une annonce récurrente est une occurrence indépendante avec son propre statut.
 - **Deux axes de statut distincts** : (1) statut de l'annonce — `Brouillon` (invisible côté musicien, aucune occurrence n'entre dans le cycle J-7) → `Publiée` ; (2) statut de chaque occurrence — `confirmée` / `programmée (sera confirmée le J-7)` / `en attente de confirmation` / `annulée`, qui ne démarre qu'à la publication de l'annonce.
 - **Gestion des photos** : upload optionnel côté fiche bar (photo/logo) et côté annonce (jusqu'à 2 photos maximum) ; toute image importée est automatiquement ajustée/recadrée au format d'affichage de l'application (pas de cadrage manuel), sans jamais bloquer la création/publication si aucune photo n'est fournie.
 - **Authentification / autorisation** : seuls les organisateurs ont un compte (email/mot de passe) ; la consultation musicien est publique, sans compte, sans autorisation.
@@ -19,6 +19,14 @@
 - **Emails d'avis (Phase 14)** : envoyés après la réponse (`after()`), une fois l'écriture en base faite ; `envoyerEmail` journalise un échec sans remonter l'erreur, qui ne bloque donc jamais l'action. Les avis de mot de passe sont datés (heure de Paris, affichage seul) et renvoient vers `/mot-de-passe-oublie`, sans jeton créé d'office. L'avis de changement d'email part vers l'ancienne adresse, nouvelle adresse masquée, et seulement si l'email change réellement. `EMAIL_CONTACT` (optionnelle) sert de `Reply-To` à tous les emails de compte.
 - **Profil et compte (Phase 11)** : aucune migration de schéma. Le géocodage d'une adresse de bar n'est relancé que si l'adresse change ; un échec remet latitude/longitude à `null` (fiche valide, bar absent de la carte, distance non affichée). Session JWT contenant uniquement l'identifiant de l'organisateur : l'email affiché est toujours relu en base, jamais depuis la session. Toute action sensible (email, mot de passe, suppression) revérifie le mot de passe actuel côté serveur. La suppression de compte efface, en une transaction, les annonces (occurrences en cascade), le bar puis le compte, faute de cascade `Organisateur → Bar → Annonce` dans le schéma ; les photos (bar et annonces) sont retirées du stockage ensuite, sans bloquer la suppression en cas d'échec.
 - **Navigation retour (Phases 15 et 16)** : aucune migration de schéma. Un composant unique « ← Retour » (lien texte, destination fixe par page, jamais l'historique du navigateur) placé sous l'en-tête et au-dessus du titre. Sur les formulaires d'annonce, les sorties via l'application (Retour, « Mes annonces » et icône de profil de l'en-tête) passent par une même garde côté client qui compare l'état courant du formulaire à un état de référence (formulaire vide, annonce telle qu'ouverte, puis dernier enregistrement réussi) ; le choix de portée et les actions immédiates (confirmation, annulation d'une date, photos d'une annonce existante) sont exclus de la comparaison. L'enregistrement automatique réutilise l'action d'enregistrement en brouillon existante (même validation, pas d'enregistrement partiel). Sortie par le navigateur : alerte standard `beforeunload` uniquement, sans enregistrement.
+- **Plusieurs bars par compte (Phases 18 à 21)** :
+  - *Modèle* : `Organisateur` 1–N `Bar` ; on retire `@unique` sur `Bar.organisateurId` et `Organisateur.bar` devient `bars Bar[]`. Contrainte `@@unique([organisateurId, nom, adresse])` en base comme filet ; la détection des doublons se fait côté application avec comparaison normalisée (espaces en début/fin retirés, espaces multiples réduits, casse ignorée), à l'ajout comme à la modification. Nom et adresse sont stockés tels que saisis, débarrassés des espaces superflus. Limite de 10 bars vérifiée côté serveur. Migration sans perte : les données existantes sont déjà conformes.
+  - *Date de publication* : nouveau champ `Annonce.publieeLe DateTime?`, écrit une seule fois au passage Brouillon → Publiée, en même temps que le calcul J-7 (Phase 6). Ajouté par la migration de la Phase 18 ; les annonces déjà publiées sont remplies avec `createdAt`.
+  - *Autorisation* : toute action sur un bar ou une annonce vérifie que `bar.organisateurId` est l'organisateur connecté. `recupererBarDeLOrganisateurConnecte` (`lib/organisateur.ts`) est remplacée par une lecture des bars du compte et une vérification de propriété par `barId`.
+  - *Bar d'une annonce* : `Annonce.barId` reste non nullable ; le bar est exigé dès l'enregistrement en brouillon. `barId` est modifiable tant que l'annonce est `BROUILLON` et refusé côté serveur une fois `PUBLIEE`. Dans la garde de sortie (`lib/garde-sortie.ts`), le bar est exclu de la comparaison sur une nouvelle annonce et inclus sur un brouillon ; une sortie sans bar choisi est un échec d'enregistrement (fenêtre Rester / Quitter sans enregistrer).
+  - *Reprise* : la dernière annonce d'un bar est l'annonce `PUBLIEE` au `publieeLe` le plus récent, quelles que soient ses dates (passées ou annulées comprises). Les photos reprises ne sont jamais partagées entre deux annonces (`del()` casserait l'autre) : le formulaire transmet l'URL source, et à l'enregistrement le serveur vérifie qu'elle appartient à une annonce d'un des bars de l'organisateur, puis la duplique avec `copy()` de `@vercel/blob` vers un nouveau `annonces/<uuid>.webp`. Un échec de copie est un échec d'enregistrement, sans enregistrement partiel.
+  - *Routes* : aucune nouvelle route. Les bars se gèrent sur `/mon-profil` (liste compacte, un bar déplié à la fois) ; le filtre par bar est un état client non persisté de `/mes-annonces`.
+  - *Suppression d'un bar* : en une transaction, les annonces (occurrences en cascade) puis le bar ; les photos (bar et annonces) sont retirées du stockage ensuite, sans bloquer, sur le modèle de la suppression de compte. La suppression de compte efface tous les bars du compte.
 
 ---
 
@@ -418,3 +426,109 @@ Aujourd'hui la session est un JWT contenant uniquement l'identifiant de l'organi
 
 - Session rejetée pendant une server action (formulaire de `/mon-profil` envoyé depuis un onglet resté ouvert) : aujourd'hui `recupererIdOrganisateurConnecte` lève « Non authentifié. » et Next affiche une page d'erreur. À reprendre : renvoyer une erreur propre au formulaire ou rediriger vers `/connexion`.
 - Aucun message n'explique la déconnexion : l'organisateur arrive sur `/connexion` sans savoir pourquoi. À reprendre : un message du type « Votre mot de passe a été modifié, reconnectez-vous » (nécessite de transmettre la raison du rejet, le cookie de session étant déjà effacé).
+
+---
+
+## Phase 18 : Plusieurs bars par compte et choix du bar d'une annonce
+
+**User stories** : US-25, US-30, US-47, US-48, US-49, US-50, US-51, US-52, US-59, US-60, US-55 (nom du bar sur chaque annonce)
+
+### Ce qu'on livre
+
+Un compte peut gérer jusqu'à 10 bars. Sur `/mon-profil`, la section « Mon bar » devient « Mes bars » : une liste compacte (miniature, nom, adresse, « Modifier ») dont un seul bar est déplié à la fois (photo, nom, adresse), et un bouton « Ajouter un bar » qui déplie un formulaire vide. Un compte d'un seul bar voit sa fiche dépliée d'office. Les doublons dans un même compte et un 11e bar sont refusés. Le formulaire d'annonce commence par un champ « Bar », présélectionné s'il n'y en a qu'un, obligatoire dès le brouillon, modifiable en Brouillon et figé une fois Publiée. Chaque annonce de « Mes annonces » affiche le nom de son bar. Migration : relation 1–N `Organisateur` → `Bar`, contrainte `@@unique([organisateurId, nom, adresse])` et champ `Annonce.publieeLe`.
+
+### Critères d'acceptation
+
+- [ ] Les comptes existants gardent leur bar et leurs annonces après la migration, sans action de l'organisateur ; les annonces déjà publiées ont un `publieeLe` égal à leur `createdAt`
+- [ ] `/mon-profil` affiche une section « Mes bars » en liste compacte ; un seul bar est déplié à la fois ; un compte d'un seul bar voit sa fiche dépliée d'office
+- [ ] « Ajouter un bar » crée un bar (nom, adresse, photo optionnelle), géocodé comme à l'inscription ; en cas d'échec du géocodage, le bar est créé sans apparaître sur la carte
+- [ ] L'organisateur modifie la photo, le nom et l'adresse de chacun de ses bars, avec les mêmes règles qu'en Phase 11 (re-géocodage si l'adresse change)
+- [ ] Un bar de même nom et même adresse qu'un autre bar du compte (casse et espaces en trop ignorés) est refusé avec « Ce bar existe déjà dans votre compte », à l'ajout comme à la modification ; deux comptes différents peuvent avoir des bars identiques
+- [ ] À 10 bars, « Ajouter un bar » est inactif avec « Limite de 10 bars atteinte » ; un 11e bar est aussi refusé côté serveur
+- [ ] Le formulaire d'annonce commence par un champ « Bar » : présélectionné s'il n'y a qu'un bar, sans choix par défaut sinon
+- [ ] Le bar est obligatoire dès l'enregistrement en brouillon ; une sortie sans bar choisi affiche la fenêtre d'échec « Choisissez un bar pour enregistrer le brouillon » (Rester / Quitter sans enregistrer)
+- [ ] Sur une nouvelle annonce, choisir un bar ne compte pas à lui seul comme une saisie ; sur un brouillon rouvert, changer de bar compte comme une modification
+- [ ] Le bar d'un brouillon est modifiable ; celui d'une annonce Publiée est affiché sans pouvoir être changé, et un changement est refusé côté serveur
+- [ ] Le passage en Publiée écrit `publieeLe` une seule fois
+- [ ] Toute action sur un bar ou une annonce d'un autre compte est refusée côté serveur
+- [ ] Chaque annonce de « Mes annonces » affiche le nom de son bar
+- [ ] Côté musicien, chaque annonce s'affiche à l'adresse de son bar, sans autre changement
+
+## Bloquée par
+
+- Phase 12 (page profil unifiée) et Phase 16 (garde de sortie du formulaire d'annonce)
+
+---
+
+## Phase 19 : Filtre par bar et relances de tous les bars
+
+**User stories** : US-55 (filtre), US-56
+
+### Ce qu'on livre
+
+Dès 2 bars, « Mes annonces » propose un filtre « Tous » / un bouton par bar, qui restreint la liste aux annonces (brouillons compris) du bar choisi. L'alerte des relances de l'en-tête compte les dates en attente de confirmation de tous les bars du compte ; chaque relance s'affiche sur l'annonce, qui nomme son bar.
+
+### Critères d'acceptation
+
+- [ ] Avec un seul bar, aucun filtre n'est affiché
+- [ ] Dès 2 bars, un filtre « Tous » / un bouton par bar s'affiche au-dessus de la liste : boutons fantômes compacts, défilement horizontal sur mobile, bouton actif souligné, sans liste déroulante (DESIGN.md)
+- [ ] Choisir un bar restreint la liste à ses annonces, brouillons compris ; « Tous » affiche toutes les annonces
+- [ ] Le filtre revient sur « Tous » à chaque visite de « Mes annonces » et n'influence pas le formulaire de nouvelle annonce
+- [ ] L'alerte de l'en-tête compte les relances de tous les bars du compte
+- [ ] Chaque relance s'affiche sur l'annonce, qui porte le nom de son bar
+
+## Bloquée par
+
+- Phase 18 (plusieurs bars et nom du bar sur chaque annonce)
+
+---
+
+## Phase 20 : Suppression d'un bar
+
+**User stories** : US-57, US-58, US-27 (suppression du compte avec plusieurs bars)
+
+### Ce qu'on livre
+
+Dans la fiche dépliée d'un bar, « Supprimer ce bar » ouvre une fenêtre qui annonce ce qui sera supprimé et demande de saisir le nom du bar. La suppression est définitive et emporte les annonces du bar, leurs occurrences et toutes les photos. Le dernier bar d'un compte ne peut pas être supprimé. La suppression du compte emporte tous ses bars.
+
+### Critères d'acceptation
+
+- [ ] « Supprimer ce bar » ouvre une fenêtre : « Ce bar et ses N annonces (dont M dates à venir publiées) seront supprimés définitivement. Les musiciens ne les verront plus. », ou « Ce bar sera supprimé définitivement. » s'il n'a aucune annonce
+- [ ] « Supprimer définitivement » reste inactif tant que le nom saisi ne correspond pas au nom du bar (casse et espaces en trop ignorés) ; aucun mot de passe n'est demandé
+- [ ] La fenêtre respecte DESIGN.md (Walnut Shadow, Warm Cream, un seul bouton plein Brass Copper pour « Supprimer définitivement », « Annuler » en fantôme, sans ombre)
+- [ ] La suppression retire, en une transaction, les annonces du bar (occurrences en cascade) puis le bar ; les photos du bar et des annonces sont ensuite retirées du stockage, sans bloquer en cas d'échec
+- [ ] Après la suppression, aucune annonce du bar n'est visible, ni côté musicien (liste et carte) ni dans « Mes annonces »
+- [ ] Aucun email n'est envoyé
+- [ ] Le dernier bar d'un compte n'a pas de bouton de suppression, mais la mention « Un compte doit garder au moins un bar ; pour tout supprimer, supprimez votre compte » ; une suppression du dernier bar est aussi refusée côté serveur
+- [ ] La suppression du compte efface tous ses bars, leurs annonces, leurs occurrences et leurs photos
+
+## Bloquée par
+
+- Phase 18 (plusieurs bars par compte)
+
+---
+
+## Phase 21 : Reprise de la dernière annonce du bar
+
+**User stories** : US-53, US-54
+
+### Ce qu'on livre
+
+Sur une nouvelle annonce, dès qu'un bar est choisi et qu'il a au moins une annonce publiée, un bouton fantôme « Reprendre la dernière annonce de ce bar » remplit l'horaire, les styles, les instruments, les précisions « Autre » et les photos de son annonce publiée le plus récemment. Les dates restent vides. Les photos reprises sont dupliquées à l'enregistrement.
+
+### Critères d'acceptation
+
+- [ ] Le bouton n'apparaît que sur une nouvelle annonce, avec un bar choisi qui a au moins une annonce publiée
+- [ ] La dernière annonce est celle au `publieeLe` le plus récent pour ce bar, même si toutes ses dates sont passées ou annulées ; les brouillons sont ignorés
+- [ ] Le bouton remplit l'horaire, les styles, les instruments, les précisions « Autre » et les photos, en écrasant ces champs sans confirmation ; les dates ne sont jamais touchées
+- [ ] Changer ensuite de bar ne modifie pas les champs repris ; le bouton suit le bar choisi (dernière annonce du nouveau bar, ou masqué)
+- [ ] La reprise compte comme une saisie : quitter ensuite le formulaire crée un brouillon (Phase 16)
+- [ ] À l'enregistrement (brouillon ou publication), chaque photo reprise est dupliquée dans un nouveau fichier, après vérification côté serveur qu'elle appartient à une annonce d'un des bars de l'organisateur ; supprimer ou modifier l'annonce source ne touche jamais les photos de la nouvelle
+- [ ] Si la copie d'une photo échoue, l'enregistrement échoue sans enregistrement partiel (fenêtre d'échec de la Phase 16 en cas de sortie)
+- [ ] Une URL de photo qui n'appartient pas à l'organisateur est refusée
+
+## Bloquée par
+
+- Phase 18 (choix du bar et champ `publieeLe`)
+
+Les phases 19, 20 et 21 sont indépendantes entre elles.

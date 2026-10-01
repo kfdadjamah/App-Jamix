@@ -4,16 +4,20 @@ Le musicien qui joue régulièrement en dehors d'un groupe fixe (amateur ou semi
 
 Côté organisateur, l'accès à son espace n'est pas évident : la page d'accueil ne propose aucun lien de connexion, les informations du bar et du compte sont réparties sur plusieurs pages, et un organisateur qui oublie son mot de passe ne peut pas récupérer son compte. Une fois sur une page de l'espace organisateur ou de connexion, il n'existe aucun moyen visible de revenir en arrière : un visiteur qui clique sur « Connexion organisateur » puis renonce, ou un organisateur qui quitte la saisie d'une annonce, doit passer par le navigateur, au risque de sortir de l'application ou de perdre sa saisie.
 
+Un organisateur qui anime des jams dans plusieurs bars doit aujourd'hui créer un compte par bar, donc utiliser une adresse email différente pour chacun, et se déconnecter pour passer de l'un à l'autre. À chaque nouvelle annonce, il ressaisit aussi l'horaire, les styles, les instruments et les photos, même quand la jam revient à l'identique.
+
 ## Solution
 
 L'outil centralise les annonces de jams publiées par les organisateurs des bars lyonnais. Le musicien sélectionne une date et consulte les annonces disponibles ce jour-là : lieu, adresse, distance jusqu'à chez lui, horaire, style musical et instruments mis à disposition sur place. Quand aucune jam n'est publiée à la date choisie, l'outil lui suggère les prochaines dates où des jams ont lieu. À terme, l'outil s'ouvrira aussi au grand public souhaitant assister à une jam.
 
-L'organisateur accède à son espace depuis la page d'accueil, retrouve toutes les informations de son bar et de son compte sur une page profil unique, et peut réinitialiser son mot de passe par email. Il reçoit aussi par email les avis liés à la sécurité de son compte. Chaque page qui n'est pas un point de départ propose un bouton « Retour » vers sa page parente. Quitter la saisie d'une annonce en cours l'enregistre en brouillon, reprenable plus tard ; quitter une annonce publiée avec des modifications non enregistrées demande confirmation.
+L'organisateur accède à son espace depuis la page d'accueil, retrouve toutes les informations de ses bars et de son compte sur une page profil unique, et peut réinitialiser son mot de passe par email. Il reçoit aussi par email les avis liés à la sécurité de son compte. Chaque page qui n'est pas un point de départ propose un bouton « Retour » vers sa page parente. Quitter la saisie d'une annonce en cours l'enregistre en brouillon, reprenable plus tard ; quitter une annonce publiée avec des modifications non enregistrées demande confirmation.
+
+Un même compte peut gérer jusqu'à 10 bars, ajoutés, modifiés ou supprimés depuis le profil. Chaque annonce porte sur un bar choisi par l'organisateur ; « Mes annonces » affiche le nom du bar sur chaque annonce et permet de filtrer par bar. Sur une nouvelle annonce, un bouton reprend en un clic l'horaire, les styles, les instruments et les photos de la dernière annonce publiée du bar choisi ; il ne reste qu'à ajouter les dates.
 
 ## Utilisateur cible
 
 - Musicien amateur ou semi-professionnel, tous instruments et styles confondus, qui joue régulièrement en dehors de tout groupe fixe et cherche des occasions de jouer en live sans avoir à monter un concert. Il vit à Lyon ou y passe.
-- Organisateur de jam, rattaché à un bar lyonnais (pas nécessairement le gérant du bar), qui publie et gère les annonces de jams pour ce bar.
+- Organisateur de jam, rattaché à un ou plusieurs bars lyonnais (pas nécessairement le gérant de ces bars), qui publie et gère les annonces de jams pour ces bars.
 
 ## User Stories
 
@@ -41,12 +45,12 @@ US-21. En tant que musicien, je veux visualiser sur une carte les bars organisan
 US-22. En tant que musicien, je veux voir sur la carte la distance jusqu'à chaque bar, sous le statut de sa jam, afin de repérer les jams proches sans ouvrir chaque fiche.
 US-23. En tant que musicien, je veux, depuis une annonce (liste ou carte), toucher un bouton « Itinéraire » et choisir l'application de cartographie à ouvrir (Google Maps, Plans, Waze, Citymapper), afin de trouver le transport jusqu'au bar.
 US-24. En tant que musicien qui n'a pas l'application choisie, je veux être redirigé vers sa version web, afin de ne jamais tomber sur une impasse.
-US-25. En tant qu'organisateur, je veux modifier le nom et l'adresse de mon bar, afin de garder sa fiche à jour.
+US-25. En tant qu'organisateur, je veux modifier le nom et l'adresse de chacun de mes bars, afin de garder leurs fiches à jour.
 US-26. En tant qu'organisateur, je veux changer mon email et mon mot de passe, afin de garder la maîtrise de mon compte.
-US-27. En tant qu'organisateur, je veux supprimer définitivement mon compte, avec mon bar, mes annonces et mes photos, afin de quitter l'application sans laisser de données derrière moi.
+US-27. En tant qu'organisateur, je veux supprimer définitivement mon compte, avec mes bars, mes annonces et mes photos, afin de quitter l'application sans laisser de données derrière moi.
 US-28. En tant qu'organisateur non connecté, je veux trouver un bouton « Connexion organisateur » en haut à droite de la page d'accueil, afin d'accéder à mon espace sans connaître l'adresse de la page de connexion.
 US-29. En tant qu'organisateur connecté, je veux voir une icône de profil en haut à droite de chaque page, afin d'accéder à mon profil depuis n'importe où.
-US-30. En tant qu'organisateur, je veux retrouver sur une seule page profil la fiche de mon bar (photo, nom, adresse), mon email, mon mot de passe, la déconnexion et la suppression de mon compte, afin de gérer toutes mes informations au même endroit.
+US-30. En tant qu'organisateur, je veux retrouver sur une seule page profil les fiches de mes bars (photo, nom, adresse), mon email, mon mot de passe, la déconnexion et la suppression de mon compte, afin de gérer toutes mes informations au même endroit.
 US-31. En tant qu'organisateur, je veux un en-tête réduit à « Mes annonces », à l'alerte des relances et à l'icône de profil, afin de naviguer sans encombrement.
 US-32. En tant qu'organisateur, je veux arriver sur « Mes annonces » après m'être connecté, afin de gérer directement mes jams.
 US-33. En tant qu'organisateur, je veux arriver sur « Mes annonces » après mon inscription, afin de publier ma première annonce sans détour.
@@ -63,6 +67,20 @@ US-43. En tant qu'organisateur qui saisit une nouvelle annonce ou modifie un bro
 US-44. En tant qu'organisateur qui quitte une annonce sans y avoir rien changé (nouvelle annonce vide ou brouillon rouvert tel quel), je veux revenir directement là où j'ai cliqué, afin de ne pas créer de brouillon vide ni voir un message inutile.
 US-45. En tant qu'organisateur qui modifie une annonce déjà publiée, je veux être averti avant de quitter que mes modifications non enregistrées seront perdues, afin de ne pas les abandonner par erreur tout en gardant l'annonce publiée telle quelle.
 US-46. En tant qu'organisateur dont la saisie n'a pas pu être enregistrée en brouillon, je veux en connaître la raison et choisir entre rester pour corriger ou quitter sans enregistrer, afin de ne jamais perdre ma saisie sans le savoir.
+US-47. En tant qu'organisateur, je veux ajouter d'autres bars à mon compte depuis mon profil, afin de publier des annonces pour chacun sans créer un compte par bar.
+US-48. En tant qu'organisateur, je veux modifier la photo, le nom et l'adresse de chacun de mes bars, afin de garder chaque fiche à jour indépendamment des autres.
+US-49. En tant qu'organisateur ayant plusieurs bars, je veux choisir le bar de chaque annonce, sans choix par défaut, ce choix étant obligatoire dès l'enregistrement en brouillon, afin de ne jamais publier une jam pour le mauvais bar.
+US-50. En tant qu'organisateur n'ayant qu'un bar, je veux que ce bar soit présélectionné dans le formulaire d'annonce, afin de ne pas avoir à le choisir à chaque fois.
+US-51. En tant qu'organisateur, je veux pouvoir changer le bar d'une annonce tant qu'elle est en brouillon, afin de corriger une erreur avant publication.
+US-52. En tant qu'organisateur, je veux que le bar d'une annonce publiée ne puisse plus être changé, afin que les musiciens ne voient jamais une jam changer de lieu.
+US-53. En tant qu'organisateur qui crée une nouvelle annonce, je veux un bouton « Reprendre la dernière annonce de ce bar » qui remplit l'horaire, les styles, les instruments, les précisions « Autre » et les photos de la dernière annonce publiée du bar choisi, sans les dates, afin de ne pas tout ressaisir pour une jam qui revient.
+US-54. En tant qu'organisateur dont le bar choisi n'a encore aucune annonce publiée, je ne veux pas voir le bouton de reprise, afin de ne pas proposer une action impossible.
+US-55. En tant qu'organisateur ayant plusieurs bars, je veux voir le nom du bar sur chaque annonce de « Mes annonces » et pouvoir filtrer la liste par bar, afin de m'y retrouver rapidement.
+US-56. En tant qu'organisateur ayant plusieurs bars, je veux que chaque relance s'affiche sur l'annonce qui nomme son bar, et que l'alerte de l'en-tête compte les relances de tous mes bars, afin de savoir quel bar doit confirmer quelle jam.
+US-57. En tant qu'organisateur, je veux supprimer définitivement un de mes bars, avec ses annonces, leurs dates et leurs photos, en saisissant son nom pour confirmer, afin de retirer un lieu où je n'organise plus de jams.
+US-58. En tant qu'organisateur, je veux que mon dernier bar ne puisse pas être supprimé et qu'un message m'oriente vers la suppression du compte, afin que mon compte garde toujours au moins un bar.
+US-59. En tant qu'organisateur, je veux être informé quand j'atteins la limite de 10 bars, afin de comprendre pourquoi je ne peux plus en ajouter.
+US-60. En tant qu'organisateur, je veux qu'un bar portant le même nom et la même adresse qu'un de mes bars soit refusé, afin de ne pas créer de doublon par erreur.
 
 ## Critères de succès
 
@@ -71,6 +89,11 @@ US-46. En tant qu'organisateur dont la saisie n'a pas pu être enregistrée en b
 - Sur le premier mois de la bêta, tout organisateur ayant demandé une réinitialisation de mot de passe a pu se reconnecter sans intervention manuelle.
 - Depuis chaque page dotée d'un bouton « Retour », un clic mène à la page parente prévue, sans passer par le navigateur.
 - Toute sortie via l'application pendant la saisie d'une nouvelle annonce non vide produit soit un brouillon visible dans « Mes annonces », soit un message laissant le choix de rester ou de quitter : jamais de perte silencieuse.
+- Un organisateur publie des annonces pour 2 bars depuis un seul compte, sans se déconnecter.
+- Une annonce s'affiche côté musicien à l'adresse du bar choisi.
+- Le bouton de reprise remplit l'horaire, les styles, les instruments et les photos, et laisse les dates vides.
+- Après la suppression d'un bar, aucune de ses annonces n'est plus visible, ni côté musicien ni dans « Mes annonces ».
+- Sur le premier mois suivant la mise en ligne, au moins un organisateur gère au moins 2 bars.
 
 ## Hors périmètre
 
@@ -79,7 +102,6 @@ US-46. En tant qu'organisateur dont la saisie n'a pas pu être enregistrée en b
 - Inscription ou réservation de place préalable pour jouer à une jam.
 - Modération ou validation manuelle des annonces avant publication.
 - Historique des jams passées.
-- Un organisateur rattaché à plusieurs bars (un compte = un bar).
 - Liste pré-remplie de bars lyonnais : chaque organisateur crée sa propre fiche bar.
 - Itinéraire calculé dans l'application (le trajet est délégué à l'application de cartographie externe).
 - Affichage d'un temps de trajet.
@@ -90,13 +112,22 @@ US-46. En tant qu'organisateur dont la saisie n'a pas pu être enregistrée en b
 - Retour vers la page précédemment visitée (historique de navigation) : la destination du bouton « Retour » est toujours la page parente fixe.
 - Enregistrement automatique en brouillon lors d'une sortie par le navigateur (bouton précédent, fermeture d'onglet, rechargement) : seule une alerte standard du navigateur prévient de la perte de saisie.
 - Confirmation avant de quitter le formulaire du profil ou les pages de connexion.
+- Bar partagé entre plusieurs organisateurs (droits accordés par un organisateur principal).
+- Changement du bar d'une annonce publiée.
+- Annonce portant sur plusieurs bars.
+- Archivage d'un bar (seule la suppression définitive existe).
+- Transfert d'un bar vers un autre compte.
+- Reprise depuis un brouillon, depuis un autre bar que celui choisi, ou sur une annonce existante.
+- Reprise des dates d'une annonce.
+- Mémorisation du filtre par bar de « Mes annonces ».
+- Affichage de l'organisateur côté musicien.
 
 ## Décisions d'implémentation
 
 - L'outil est une application web, accessible et utilisable sur mobile comme sur ordinateur (responsive), sans installation.
 - Seuls les organisateurs créent un compte, pour publier des annonces ; la consultation par les musiciens est libre, sans compte.
-- Un compte organisateur est rattaché à un seul bar ; l'organisateur crée la fiche du bar (nom, adresse) au moment de son inscription.
-- L'organisateur peut ajouter, remplacer ou retirer une photo ou un logo sur la fiche de son bar, à l'inscription ou plus tard ; cette photo est optionnelle et son absence n'empêche jamais la création ou la validité de la fiche bar.
+- Un compte organisateur est rattaché à 1 à 10 bars : il crée la fiche de son premier bar (nom, adresse) au moment de son inscription, puis ajoute les suivants depuis son profil ; un compte garde toujours au moins un bar. Un bar n'appartient qu'à un seul compte.
+- L'organisateur peut ajouter, remplacer ou retirer une photo ou un logo sur la fiche de chacun de ses bars, à l'inscription ou plus tard ; cette photo est optionnelle et son absence n'empêche jamais la création ou la validité de la fiche bar.
 - Une annonce de jam peut être enregistrée en statut **brouillon** : elle est incomplète ou en cours de préparation, invisible en consultation musicien, et aucune de ses dates n'entre dans le cycle de confirmation J-7. L'organisateur la complète et la publie explicitement quand elle est prête, ce qui la fait basculer en statut **publiée** et démarre, pour chaque date, le cycle de statuts (confirmée / programmée / en attente de confirmation / annulée).
 - Une annonce peut inclure jusqu'à 2 photos, optionnelles ; leur absence n'empêche jamais la création, le brouillon ou la publication de l'annonce.
 - Toute photo importée (fiche bar ou annonce) est automatiquement ajustée/recadrée au format d'affichage prévu par l'application, sans contrôle manuel du cadrage par l'organisateur.
@@ -121,13 +152,12 @@ US-46. En tant qu'organisateur dont la saisie n'a pas pu être enregistrée en b
 - Ce bouton ouvre un menu de 4 applications de cartographie : Google Maps, Plans (proposé uniquement sur les appareils Apple), Waze et Citymapper (proposés uniquement sur mobile). Si l'application n'est pas installée, sa version web s'ouvre.
 - Le bar est la destination ; le point de départ est géré par l'application externe, donc le bouton fonctionne même sans géolocalisation.
 - Toucher un marqueur ouvre toujours la fiche de l'annonce, sans changement.
-- L'organisateur peut modifier le nom et l'adresse de son bar à tout moment ; une adresse modifiée est re-géocodée (en cas d'échec, la fiche reste valide mais le bar n'apparaît plus sur la carte).
+- L'organisateur peut modifier le nom et l'adresse de chacun de ses bars à tout moment ; une adresse modifiée est re-géocodée (en cas d'échec, la fiche reste valide mais le bar n'apparaît plus sur la carte).
 - Changer l'email ou le mot de passe exige la saisie du mot de passe actuel.
 - Après un changement de mot de passe depuis le profil, l'organisateur reste connecté sur l'appareil utilisé et voit la confirmation du changement, sans page d'erreur ; ses autres sessions ouvertes sont déconnectées. Après une réinitialisation par email, toutes les sessions ouvertes auparavant sont déconnectées.
-- La suppression du compte est définitive (pas de corbeille) et exige une confirmation explicite ; elle supprime le bar, ses annonces, leurs occurrences et toutes les photos associées.
-- Le rattachement « un compte = un bar » est conservé : l'organisateur édite son bar existant, il n'en change jamais.
+- La suppression du compte est définitive (pas de corbeille) et exige une confirmation explicite ; elle supprime tous ses bars, leurs annonces, leurs occurrences et toutes les photos associées.
 - Visiteur non connecté : un bouton fantôme « Connexion organisateur » en haut à droite de la page d'accueil. Organisateur connecté : une icône bonhomme au même endroit, sur toutes les pages, qui mène à la page profil.
-- La page profil unique regroupe la fiche bar (photo, nom, adresse), l'email, le mot de passe, la déconnexion et la suppression du compte ; elle remplace les pages séparées fiche bar et compte, dont les anciennes adresses redirigent vers elle.
+- La page profil unique regroupe les fiches des bars (photo, nom, adresse), l'email, le mot de passe, la déconnexion et la suppression du compte ; elle remplace les pages séparées fiche bar et compte, dont les anciennes adresses redirigent vers elle.
 - L'en-tête de l'espace organisateur ne contient plus que « Mes annonces », l'alerte des relances et l'icône de profil.
 - Après la connexion comme après l'inscription, l'organisateur arrive sur « Mes annonces ».
 - Mot de passe oublié : l'organisateur saisit son email et reçoit un lien valable 1 heure, à usage unique, invalidé dès qu'un nouveau lien est demandé. Le message affiché est le même que l'adresse soit connue ou non. Après réinitialisation, l'organisateur est renvoyé vers la connexion avec un message de succès.
@@ -141,9 +171,26 @@ US-46. En tant qu'organisateur dont la saisie n'a pas pu être enregistrée en b
 - Sur une annonce Publiée avec des modifications non enregistrées, quitter affiche une fenêtre avertissant qu'elles seront perdues, avec « Quitter » et « Rester » ; l'annonce reste publiée telle quelle.
 - Sur les formulaires d'annonce, une sortie par le navigateur avec des modifications en cours déclenche l'alerte standard du navigateur ; elle peut ne pas se déclencher sur le bouton précédent du navigateur.
 - Sur le profil et les pages de connexion, « Retour » quitte immédiatement, sans confirmation ; une saisie non enregistrée y est perdue.
+- Le profil contient une section « Mes bars » : une liste compacte (miniature, nom, adresse, « Modifier ») dont un seul bar est déplié à la fois pour modifier sa photo, son nom et son adresse ou le supprimer. Un bouton « Ajouter un bar » déplie un formulaire vide (nom, adresse, photo optionnelle). Un compte d'un seul bar voit sa fiche dépliée d'office. Replier une fiche perd la saisie non enregistrée, sans confirmation.
+- Un bar portant le même nom et la même adresse qu'un autre bar du compte est refusé avec « Ce bar existe déjà dans votre compte », à l'ajout comme à la modification. La comparaison ignore la casse et les espaces en trop. Deux comptes différents peuvent avoir des bars identiques.
+- À 10 bars, le bouton « Ajouter un bar » est inactif, avec la mention « Limite de 10 bars atteinte ».
+- « Supprimer ce bar » ouvre une fenêtre : « Ce bar et ses N annonces (dont M dates à venir publiées) seront supprimés définitivement. Les musiciens ne les verront plus. » (ou « Ce bar sera supprimé définitivement. » sans annonce). L'organisateur saisit le nom du bar (casse et espaces en trop ignorés) pour activer « Supprimer définitivement » ; aucun mot de passe n'est demandé et aucun email n'est envoyé. La suppression est définitive et emporte les annonces, leurs occurrences et leurs photos.
+- Le dernier bar d'un compte ne peut pas être supprimé : à la place du bouton, la mention « Un compte doit garder au moins un bar ; pour tout supprimer, supprimez votre compte ».
+- Le formulaire d'annonce commence par un champ « Bar ». S'il n'y a qu'un bar, il est présélectionné ; sinon, aucun bar n'est choisi par défaut. Le bar est obligatoire dès l'enregistrement, brouillon compris : une sortie sans bar choisi affiche la fenêtre d'échec d'enregistrement (« Choisissez un bar pour enregistrer le brouillon »). Une annonce porte sur un seul bar.
+- Le bar d'une annonce est modifiable tant qu'elle est en Brouillon et figé une fois Publiée.
+- Sur une nouvelle annonce, choisir un bar ne compte pas à lui seul comme une saisie : sans autre champ rempli, la sortie est directe. Sur un brouillon rouvert, changer de bar compte comme une modification.
+- Sur une nouvelle annonce uniquement, dès qu'un bar est choisi et qu'il a au moins une annonce publiée, un bouton fantôme « Reprendre la dernière annonce de ce bar » apparaît. Il remplit l'horaire, les styles, les instruments, les précisions « Autre » et les photos de l'annonce publiée le plus récemment pour ce bar, même si toutes ses dates sont passées ou annulées ; il écrase ces champs sans confirmation et ne touche jamais aux dates. Changer ensuite de bar ne modifie pas les champs repris ; le bouton suit le bar choisi. La reprise compte comme une saisie pour la sortie de la saisie d'une annonce.
+- Les photos reprises sont dupliquées à l'enregistrement : les deux annonces ne partagent jamais un même fichier. Si la copie échoue, l'enregistrement échoue sans enregistrement partiel.
+- « Mes annonces » affiche une seule liste, avec le nom du bar sur chaque annonce. Dès 2 bars, un filtre « Tous » / un bouton par bar (boutons fantômes, défilement horizontal sur mobile) restreint la liste ; il revient sur « Tous » à chaque visite et n'influence pas le formulaire de nouvelle annonce.
+- L'alerte des relances de l'en-tête compte les relances de tous les bars du compte ; chaque relance s'affiche sur l'annonce, qui nomme son bar.
+- Rien ne change côté musicien : chaque annonce s'affiche avec le nom et l'adresse de son bar.
 
 ## Notes complémentaires
 
 L'itinéraire dépend d'applications tierces (Google Maps, Plans, Waze, Citymapper). Sans l'application installée, Waze et Citymapper peuvent ouvrir une page web qui pousse surtout à les installer.
 
 Les emails de compte dépendent d'un service d'envoi tiers (Resend). En mode test, Resend n'envoie qu'à l'adresse du compte Resend ; un domaine d'expédition vérifié est nécessaire pour la bêta. Les emails peuvent arriver en spam, d'où la mention « Pensez à vérifier vos spams » après une demande de réinitialisation.
+
+Hypothèse : chaque compte existant garde son bar et ses annonces au passage à plusieurs bars, sans action de l'organisateur.
+
+Piste future : des co-organisateurs, avec des droits sur un bar accordés par un organisateur principal. Restent à cadrer l'invitation par email, le périmètre des droits, le destinataire des relances et le sort des annonces en cas de retrait d'un co-organisateur.

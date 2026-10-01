@@ -18,7 +18,7 @@ Toujours lire DESIGN.md avant toute décision visuelle ou UI. Polices, couleurs,
 - Confirmation J-7 : relances in-app uniquement (jamais email/SMS), à J-5/J-3/J-2/J-1/J0, seulement après dépassement de J-7 sans confirmation.
 - Email (Resend) réservé aux messages de compte : réinitialisation du mot de passe, bienvenue, avis de changement de mot de passe ou d'email. Jamais de SMS.
 - Modification/annulation d'une annonce récurrente : l'organisateur choisit explicitement la portée (date seule vs toutes les dates).
-- Un compte organisateur est rattaché à un seul bar ; pas de multi-bar.
+- Un compte organisateur peut être rattaché à 1 à 10 bars ; une annonce porte sur un seul bar, figé une fois publiée. Pas de bar partagé entre plusieurs comptes.
 
 ## Jargon métier
 - Occurrence : une date précise d'une annonce, avec son propre statut, distincte de l'annonce elle-même.
