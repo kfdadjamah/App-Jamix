@@ -475,12 +475,12 @@ Dès 2 bars, « Mes annonces » propose un filtre « Tous » / un bouton par bar
 
 ### Critères d'acceptation
 
-- [ ] Avec un seul bar, aucun filtre n'est affiché
-- [ ] Dès 2 bars, un filtre « Tous » / un bouton par bar s'affiche au-dessus de la liste : boutons fantômes compacts, défilement horizontal sur mobile, bouton actif souligné, sans liste déroulante (DESIGN.md)
-- [ ] Choisir un bar restreint la liste à ses annonces, brouillons compris ; « Tous » affiche toutes les annonces
-- [ ] Le filtre revient sur « Tous » à chaque visite de « Mes annonces » et n'influence pas le formulaire de nouvelle annonce
-- [ ] L'alerte de l'en-tête compte les relances de tous les bars du compte
-- [ ] Chaque relance s'affiche sur l'annonce, qui porte le nom de son bar
+- [x] Avec un seul bar, aucun filtre n'est affiché
+- [x] Dès 2 bars, un filtre « Tous » / un bouton par bar s'affiche au-dessus de la liste : boutons fantômes compacts, défilement horizontal sur mobile, bouton actif souligné, sans liste déroulante (DESIGN.md)
+- [x] Choisir un bar restreint la liste à ses annonces, brouillons compris ; « Tous » affiche toutes les annonces
+- [x] Le filtre revient sur « Tous » à chaque visite de « Mes annonces » et n'influence pas le formulaire de nouvelle annonce
+- [x] L'alerte de l'en-tête compte les relances de tous les bars du compte
+- [x] Chaque relance s'affiche sur l'annonce, qui porte le nom de son bar
 
 ## Bloquée par
 
