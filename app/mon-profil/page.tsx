@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { sessionCourante } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import { aujourdHuiUTC } from "@/lib/annonces";
 import HeaderOrganisateur from "@/components/header-organisateur";
 import BoutonRetour from "@/components/bouton-retour";
 import MesBars from "./mes-bars";
@@ -22,7 +23,20 @@ export default async function PageMonProfil() {
     select: {
       email: true,
       createdAt: true,
-      bars: { orderBy: { createdAt: "asc" } },
+      bars: {
+        orderBy: { createdAt: "asc" },
+        // Pour la fenêtre de suppression : N annonces (brouillons compris) et
+        // M dates à venir des annonces publiées (annulées comprises).
+        include: {
+          _count: { select: { annonces: true } },
+          annonces: {
+            where: { statut: "PUBLIEE" },
+            select: {
+              _count: { select: { occurrences: { where: { date: { gte: aujourdHuiUTC() } } } } },
+            },
+          },
+        },
+      },
     },
   });
 
@@ -62,6 +76,11 @@ export default async function PageMonProfil() {
           adresse: bar.adresse,
           photoUrl: bar.photoUrl,
           surLaCarte: bar.latitude !== null && bar.longitude !== null,
+          nombreAnnonces: bar._count.annonces,
+          datesAVenirPubliees: bar.annonces.reduce(
+            (total, annonce) => total + annonce._count.occurrences,
+            0
+          ),
         }))}
       />
       <Separateur />

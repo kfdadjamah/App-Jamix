@@ -496,16 +496,27 @@ Dès 2 bars, « Mes annonces » propose un filtre « Tous » / un bouton par bar
 
 Dans la fiche dépliée d'un bar, « Supprimer ce bar » ouvre une fenêtre qui annonce ce qui sera supprimé et demande de saisir le nom du bar. La suppression est définitive et emporte les annonces du bar, leurs occurrences et toutes les photos. Le dernier bar d'un compte ne peut pas être supprimé. La suppression du compte emporte tous ses bars.
 
+### Décisions de cadrage
+
+- **N et M** : N compte toutes les annonces du bar, brouillons compris. M compte les occurrences des annonces `PUBLIEE` dont la date est aujourd'hui ou plus tard (UTC, `aujourdHuiUTC()`), **annulées comprises** (visibles côté musicien, elles vont disparaître). N et M sont calculés au chargement de `/mon-profil` (une requête, 10 bars maximum) et transmis à `MesBars`.
+- **Accords du message** : N = 0 → « Ce bar sera supprimé définitivement. » ; singulier → « Ce bar et son annonce (dont 1 date à venir publiée) seront supprimés définitivement. » ; M = 0 → sans parenthèse **et sans** « Les musiciens ne les verront plus. » (rien n'est visible côté musicien).
+- **Fenêtre dédiée** (`FenetreSuppressionBar`, pas `FenetreSortie`) : même aspect (Walnut Shadow, bordure Cork Border, rayon 12px, sans ombre). Focus d'office dans le champ du nom ; Échap et clic hors fenêtre = « Annuler » (jamais la suppression) ; pendant la suppression, boutons inactifs et Échap sans effet ; une erreur serveur s'affiche dans la fenêtre, qui reste ouverte. `FenetreSortie` reste inchangée.
+- **Placement** : « Supprimer ce bar » est un bouton fantôme à droite, sur la même ligne qu'« Enregistrer » (formulaire de la fiche dépliée, `justify-between`). Dernier bar : « Enregistrer » seul sur sa ligne, la mention « Un compte doit garder au moins un bar ; pour tout supprimer, supprimez votre compte » juste en dessous (12px, majuscules, Driftwood).
+- **Après la suppression** : la fenêtre se ferme, l'organisateur reste sur `/mon-profil`, message « Bar supprimé. » à l'emplacement de « Bar ajouté. ». Toutes les fiches sont repliées, sauf s'il ne reste qu'un bar : sa fiche est dépliée d'office (la règle s'applique aussi après suppression, pas seulement au chargement).
+- **Serveur** : action `supprimerBar(barId, nomSaisi)` dans `app/mon-profil/actions.ts`. Propriété vérifiée (`recupererBarDuCompte`), nom saisi revérifié (même comparaison normalisée), dernier bar refusé. Transaction : annonces du bar (occurrences en cascade) puis bar ; photos du bar et des annonces retirées ensuite avec `del`, sans bloquer. `revalidatePath` sur `/`, `/mes-annonces`, `/mon-profil`. Aucun email.
+- **Logique pure** dans `lib/bars.ts` avec tests Vitest : construction du message (N/M, accords, M = 0), comparaison du nom saisi, photos d'un bar (réutilise `urlsPhotosDuCompte`).
+- **Texte de « Supprimer mon compte »** : « Vos bars, vos annonces, leurs dates et leurs photos seront supprimés définitivement. » (au lieu de « Votre bar… »).
+
 ### Critères d'acceptation
 
-- [ ] « Supprimer ce bar » ouvre une fenêtre : « Ce bar et ses N annonces (dont M dates à venir publiées) seront supprimés définitivement. Les musiciens ne les verront plus. », ou « Ce bar sera supprimé définitivement. » s'il n'a aucune annonce
-- [ ] « Supprimer définitivement » reste inactif tant que le nom saisi ne correspond pas au nom du bar (casse et espaces en trop ignorés) ; aucun mot de passe n'est demandé
-- [ ] La fenêtre respecte DESIGN.md (Walnut Shadow, Warm Cream, un seul bouton plein Brass Copper pour « Supprimer définitivement », « Annuler » en fantôme, sans ombre)
+- [x] « Supprimer ce bar » ouvre une fenêtre : « Ce bar et ses N annonces (dont M dates à venir publiées) seront supprimés définitivement. Les musiciens ne les verront plus. », ou « Ce bar sera supprimé définitivement. » s'il n'a aucune annonce
+- [x] « Supprimer définitivement » reste inactif tant que le nom saisi ne correspond pas au nom du bar (casse et espaces en trop ignorés) ; aucun mot de passe n'est demandé
+- [x] La fenêtre respecte DESIGN.md (Walnut Shadow, Warm Cream, un seul bouton plein Brass Copper pour « Supprimer définitivement », « Annuler » en fantôme, sans ombre)
 - [ ] La suppression retire, en une transaction, les annonces du bar (occurrences en cascade) puis le bar ; les photos du bar et des annonces sont ensuite retirées du stockage, sans bloquer en cas d'échec
-- [ ] Après la suppression, aucune annonce du bar n'est visible, ni côté musicien (liste et carte) ni dans « Mes annonces »
-- [ ] Aucun email n'est envoyé
-- [ ] Le dernier bar d'un compte n'a pas de bouton de suppression, mais la mention « Un compte doit garder au moins un bar ; pour tout supprimer, supprimez votre compte » ; une suppression du dernier bar est aussi refusée côté serveur
-- [ ] La suppression du compte efface tous ses bars, leurs annonces, leurs occurrences et leurs photos
+- [x] Après la suppression, aucune annonce du bar n'est visible, ni côté musicien (liste et carte) ni dans « Mes annonces »
+- [x] Aucun email n'est envoyé
+- [x] Le dernier bar d'un compte n'a pas de bouton de suppression, mais la mention « Un compte doit garder au moins un bar ; pour tout supprimer, supprimez votre compte » ; une suppression du dernier bar est aussi refusée côté serveur
+- [x] La suppression du compte efface tous ses bars, leurs annonces, leurs occurrences et leurs photos
 
 ## Bloquée par
 

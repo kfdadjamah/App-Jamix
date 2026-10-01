@@ -1,10 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { AVERTISSEMENT_ADRESSE_INTROUVABLE, NOMBRE_MAX_BARS } from "@/lib/bars";
+import {
+  AVERTISSEMENT_ADRESSE_INTROUVABLE,
+  MENTION_DERNIER_BAR,
+  NOMBRE_MAX_BARS,
+} from "@/lib/bars";
 import GestionPhotoBar from "./gestion-photo-bar";
 import FormulaireFicheBar from "./formulaire-fiche-bar";
 import FormulaireAjoutBar from "./formulaire-ajout-bar";
+import FenetreSuppressionBar from "./fenetre-suppression-bar";
 
 export type BarDuProfil = {
   id: string;
@@ -12,6 +17,10 @@ export type BarDuProfil = {
   adresse: string;
   photoUrl: string | null;
   surLaCarte: boolean;
+  // Toutes les annonces du bar, brouillons compris.
+  nombreAnnonces: number;
+  // Occurrences à venir des annonces publiées, annulées comprises.
+  datesAVenirPubliees: number;
 };
 
 // Panneau ouvert : un bar (son id) ou le formulaire d'ajout ; un seul à la fois.
@@ -23,20 +32,30 @@ const classeBoutonFantome =
 export default function MesBars({ bars }: { bars: BarDuProfil[] }) {
   // Un compte d'un seul bar voit sa fiche dépliée d'office.
   const [panneau, setPanneau] = useState<Panneau>(bars.length === 1 ? bars[0].id : null);
-  const [messageAjout, setMessageAjout] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
+  const [barASupprimer, setBarASupprimer] = useState<BarDuProfil | null>(null);
   const limiteAtteinte = bars.length >= NOMBRE_MAX_BARS;
 
   function basculer(cible: Panneau) {
-    setMessageAjout(null);
+    setMessage(null);
     // Replier perd la saisie non enregistrée, sans confirmation.
     setPanneau(panneau === cible ? null : cible);
   }
 
   function surAjout(adresseIntrouvable: boolean) {
     setPanneau(null);
-    setMessageAjout(
+    setMessage(
       adresseIntrouvable ? `Bar ajouté. ${AVERTISSEMENT_ADRESSE_INTROUVABLE}` : "Bar ajouté."
     );
+  }
+
+  function surSuppression() {
+    // La liste des bars est déjà revalidée par l'action : il en reste `bars.length - 1`.
+    const restants = bars.filter((bar) => bar.id !== barASupprimer?.id);
+    setBarASupprimer(null);
+    // Un compte d'un seul bar voit sa fiche dépliée d'office, y compris après une suppression.
+    setPanneau(restants.length === 1 ? restants[0].id : null);
+    setMessage("Bar supprimé.");
   }
 
   return (
@@ -90,7 +109,29 @@ export default function MesBars({ bars }: { bars: BarDuProfil[] }) {
               {deplie && (
                 <div className="flex flex-col gap-6">
                   <GestionPhotoBar barId={bar.id} photoUrl={bar.photoUrl} />
-                  <FormulaireFicheBar barId={bar.id} nom={bar.nom} adresse={bar.adresse} />
+                  <div className="flex flex-col gap-2">
+                    <FormulaireFicheBar
+                      barId={bar.id}
+                      nom={bar.nom}
+                      adresse={bar.adresse}
+                      actionDroite={
+                        bars.length > 1 && (
+                          <button
+                            type="button"
+                            onClick={() => setBarASupprimer(bar)}
+                            className={classeBoutonFantome}
+                          >
+                            Supprimer ce bar
+                          </button>
+                        )
+                      }
+                    />
+                    {bars.length === 1 && (
+                      <span className="text-[12px] font-medium uppercase text-[var(--color-driftwood)]">
+                        {MENTION_DERNIER_BAR}
+                      </span>
+                    )}
+                  </div>
                 </div>
               )}
             </li>
@@ -98,10 +139,21 @@ export default function MesBars({ bars }: { bars: BarDuProfil[] }) {
         })}
       </ul>
 
-      {messageAjout && (
+      {message && (
         <p className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)]">
-          {messageAjout}
+          {message}
         </p>
+      )}
+
+      {barASupprimer && (
+        <FenetreSuppressionBar
+          barId={barASupprimer.id}
+          nomBar={barASupprimer.nom}
+          nombreAnnonces={barASupprimer.nombreAnnonces}
+          datesAVenirPubliees={barASupprimer.datesAVenirPubliees}
+          surAnnuler={() => setBarASupprimer(null)}
+          surSuppression={surSuppression}
+        />
       )}
 
       {panneau === "ajout" ? (

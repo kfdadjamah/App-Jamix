@@ -15,9 +15,12 @@ import { geocoderAdresse } from "@/lib/geocode";
 import { recupererBarDuCompte } from "@/lib/organisateur";
 import {
   ERREUR_BAR_EN_DOUBLE,
+  ERREUR_DERNIER_BAR,
   ERREUR_LIMITE_BARS,
+  ERREUR_NOM_BAR_DIFFERENT,
   NOMBRE_MAX_BARS,
   estBarEnDouble,
+  nomBarCorrespond,
 } from "@/lib/bars";
 import {
   schemaAjoutBar,
@@ -200,6 +203,37 @@ export async function retirerPhotoBar(barId: string): Promise<ResultatAction> {
     data: { photoUrl: null },
   });
 
+  revalidatePath("/mon-profil");
+  return { succes: true };
+}
+
+export async function supprimerBar(barId: string, nomSaisi: string): Promise<ResultatAction> {
+  const bar = await recupererBarDuCompte(barId);
+  if (!bar) return { erreur: ERREUR_BAR_INTROUVABLE };
+  // Revérifié côté serveur : le bouton inactif côté client ne suffit pas.
+  if (!nomBarCorrespond(nomSaisi, bar.nom)) return { erreur: ERREUR_NOM_BAR_DIFFERENT };
+
+  const nombreBars = await prisma.bar.count({ where: { organisateurId: bar.organisateurId } });
+  if (nombreBars <= 1) return { erreur: ERREUR_DERNIER_BAR };
+
+  const annonces = await prisma.annonce.findMany({
+    where: { barId: bar.id },
+    select: { photoUrl1: true, photoUrl2: true },
+  });
+  const urlsPhotos = urlsPhotosDuCompte([{ photoUrl: bar.photoUrl, annonces }]);
+
+  // Pas de cascade Bar→Annonce dans le schéma : annonces d'abord (occurrences en cascade), puis le bar.
+  await prisma.$transaction([
+    prisma.annonce.deleteMany({ where: { barId: bar.id } }),
+    prisma.bar.delete({ where: { id: bar.id } }),
+  ]);
+
+  if (urlsPhotos.length > 0) {
+    await del(urlsPhotos).catch(() => undefined);
+  }
+
+  revalidatePath("/");
+  revalidatePath("/mes-annonces");
   revalidatePath("/mon-profil");
   return { succes: true };
 }

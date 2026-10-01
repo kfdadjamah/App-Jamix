@@ -54,7 +54,7 @@ export default function SuppressionCompte() {
           Supprimer mon compte
         </h2>
         <p className="text-[15px] leading-[1.26] text-[var(--color-driftwood)]">
-          Votre bar, vos annonces, leurs dates et leurs photos seront supprimés
+          Vos bars, vos annonces, leurs dates et leurs photos seront supprimés
           définitivement. Cette action est irréversible.
         </p>
       </div>

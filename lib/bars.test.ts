@@ -4,7 +4,9 @@ import {
   ERREUR_BAR_REQUIS,
   barApresModification,
   estBarEnDouble,
+  messageSuppressionBar,
   nettoyerEspaces,
+  nomBarCorrespond,
 } from "./bars";
 
 const BARS = [
@@ -71,5 +73,40 @@ describe("barApresModification", () => {
     expect(
       barApresModification({ annonceEstPubliee: true, barIdActuel: "a", barIdSoumis: "b" })
     ).toEqual({ erreur: ERREUR_BAR_FIGE });
+  });
+});
+
+describe("nomBarCorrespond", () => {
+  it("ignore la casse et les espaces en trop", () => {
+    expect(nomBarCorrespond("  le   SIRIUS ", "Le Sirius")).toBe(true);
+  });
+
+  it("refuse un nom différent ou vide", () => {
+    expect(nomBarCorrespond("Le Siriu", "Le Sirius")).toBe(false);
+    expect(nomBarCorrespond("", "Le Sirius")).toBe(false);
+  });
+});
+
+describe("messageSuppressionBar", () => {
+  it("sans annonce", () => {
+    expect(messageSuppressionBar(0, 0)).toBe("Ce bar sera supprimé définitivement.");
+  });
+
+  it("au pluriel, avec des dates à venir publiées", () => {
+    expect(messageSuppressionBar(3, 5)).toBe(
+      "Ce bar et ses 3 annonces (dont 5 dates à venir publiées) seront supprimés définitivement. Les musiciens ne les verront plus."
+    );
+  });
+
+  it("au singulier", () => {
+    expect(messageSuppressionBar(1, 1)).toBe(
+      "Ce bar et son annonce (dont 1 date à venir publiée) seront supprimés définitivement. Les musiciens ne les verront plus."
+    );
+  });
+
+  it("sans date à venir publiée : ni parenthèse ni mention des musiciens", () => {
+    expect(messageSuppressionBar(2, 0)).toBe(
+      "Ce bar et ses 2 annonces seront supprimés définitivement."
+    );
   });
 });

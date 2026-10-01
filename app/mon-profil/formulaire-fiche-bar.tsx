@@ -12,10 +12,13 @@ export default function FormulaireFicheBar({
   barId,
   nom,
   adresse,
+  actionDroite,
 }: {
   barId: string;
   nom: string;
   adresse: string;
+  // Affichée à droite d'« Enregistrer », sur la même ligne (ex. « Supprimer ce bar »).
+  actionDroite?: React.ReactNode;
 }) {
   const [erreurServeur, setErreurServeur] = useState<string | null>(null);
   const [succes, setSucces] = useState(false);
@@ -79,13 +82,16 @@ export default function FormulaireFicheBar({
         </p>
       )}
 
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        className="self-start rounded-[22.5px] border border-[var(--color-warm-cream)] px-4 py-[7.5px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)] disabled:opacity-60"
-      >
-        {isSubmitting ? "Enregistrement…" : "Enregistrer"}
-      </button>
+      <div className="flex items-center justify-between gap-3">
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="rounded-[22.5px] border border-[var(--color-warm-cream)] px-4 py-[7.5px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)] disabled:opacity-60"
+        >
+          {isSubmitting ? "Enregistrement…" : "Enregistrer"}
+        </button>
+        {actionDroite}
+      </div>
     </form>
   );
 }

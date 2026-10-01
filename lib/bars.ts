@@ -52,3 +52,37 @@ export function barApresModification({
   if (!barIdSoumis) return { erreur: ERREUR_BAR_REQUIS };
   return { barId: barIdSoumis };
 }
+
+// Suppression d'un bar (phase 20).
+
+export const ERREUR_DERNIER_BAR = "Un compte doit garder au moins un bar.";
+export const ERREUR_NOM_BAR_DIFFERENT = "Le nom saisi ne correspond pas au nom du bar.";
+export const MENTION_DERNIER_BAR =
+  "Un compte doit garder au moins un bar ; pour tout supprimer, supprimez votre compte";
+
+/** Le nom saisi pour confirmer correspond au nom du bar (casse et espaces en trop ignorés). */
+export function nomBarCorrespond(nomSaisi: string, nomBar: string): boolean {
+  return nettoyerEspaces(nomSaisi).toLowerCase() === nettoyerEspaces(nomBar).toLowerCase();
+}
+
+/**
+ * Message de la fenêtre de suppression. `nombreAnnonces` : toutes les annonces du bar,
+ * brouillons compris ; `datesAVenirPubliees` : occurrences à venir des annonces publiées,
+ * annulées comprises. Sans date à venir, rien n'est visible côté musicien.
+ */
+export function messageSuppressionBar(
+  nombreAnnonces: number,
+  datesAVenirPubliees: number
+): string {
+  if (nombreAnnonces === 0) return "Ce bar sera supprimé définitivement.";
+
+  const annonces = nombreAnnonces === 1 ? "son annonce" : `ses ${nombreAnnonces} annonces`;
+  if (datesAVenirPubliees === 0) {
+    return `Ce bar et ${annonces} seront supprimés définitivement.`;
+  }
+  const dates =
+    datesAVenirPubliees === 1
+      ? "dont 1 date à venir publiée"
+      : `dont ${datesAVenirPubliees} dates à venir publiées`;
+  return `Ce bar et ${annonces} (${dates}) seront supprimés définitivement. Les musiciens ne les verront plus.`;
+}
