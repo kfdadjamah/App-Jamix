@@ -1,4 +1,5 @@
-import { auth } from "@/auth";
+import { redirect } from "next/navigation";
+import { sessionCourante } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import HeaderOrganisateur from "@/components/header-organisateur";
 import BoutonRetour from "@/components/bouton-retour";
@@ -14,10 +15,11 @@ function Separateur() {
 }
 
 export default async function PageMonProfil() {
-  const session = await auth();
+  const session = await sessionCourante();
+  if (!session?.user?.id) redirect("/connexion");
   // Email lu en base, jamais depuis le JWT : celui-ci garde l'ancien email après un changement.
   const organisateur = await prisma.organisateur.findUnique({
-    where: { id: session!.user.id },
+    where: { id: session.user.id },
     select: { email: true, createdAt: true, bar: true },
   });
 

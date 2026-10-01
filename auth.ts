@@ -1,4 +1,6 @@
 import NextAuth from "next-auth";
+import type { NextApiRequest, NextApiResponse } from "next";
+import { cookies, headers } from "next/headers";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
@@ -63,3 +65,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
 });
+
+/**
+ * Session lue depuis `cookies()` plutôt que `headers()` (lu par `auth()`).
+ * Après un `signIn` dans une server action, Next re-rend la page dans la même
+ * requête : `cookies()` y voit le nouveau jeton, `headers()` garde l'ancien,
+ * rejeté par le callback `jwt` s'il date d'avant le changement de mot de passe.
+ */
+export async function sessionCourante() {
+  const [enTetesRequete, cookiesRequete] = await Promise.all([headers(), cookies()]);
+  const enTetes = new Headers(enTetesRequete);
+  enTetes.set("cookie", cookiesRequete.toString());
+  // Forme « requête/réponse » d'`auth()` : les cookies qu'elle renvoie sont ignorés.
+  return auth(
+    { headers: enTetes } as unknown as NextApiRequest,
+    { headers: new Headers() } as unknown as NextApiResponse
+  );
+}

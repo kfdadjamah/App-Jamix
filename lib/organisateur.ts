@@ -1,8 +1,8 @@
-import { auth } from "@/auth";
+import { sessionCourante } from "@/auth";
 import { prisma } from "@/lib/prisma";
 
 export async function recupererBarDeLOrganisateurConnecte() {
-  const session = await auth();
+  const session = await sessionCourante();
   if (!session?.user?.id) {
     throw new Error("Non authentifié.");
   }
