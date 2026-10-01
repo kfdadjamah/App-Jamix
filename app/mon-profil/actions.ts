@@ -2,11 +2,13 @@
 
 import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
+import { after } from "next/server";
 import { del } from "@vercel/blob";
 import { Prisma } from "@prisma/client";
 import { auth, signOut } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { TOURS_HASHING } from "@/lib/auth-constantes";
+import { emailAvisChangementEmail, emailAvisMotDePasse, envoyerEmail } from "@/lib/email";
 import { recadrerEtUploaderPhoto } from "@/lib/image";
 import { coordonneesApresModification, urlsPhotosDuCompte } from "@/lib/compte";
 import { recupererBarDeLOrganisateurConnecte } from "@/lib/organisateur";
@@ -139,6 +141,11 @@ export async function changerEmail(formData: FormData): Promise<ResultatAction> 
     return { erreur: ERREUR_EMAIL_UTILISE };
   }
 
+  const ancien = await prisma.organisateur.findUnique({
+    where: { id: organisateurId },
+    select: { email: true },
+  });
+
   try {
     await prisma.organisateur.update({
       where: { id: organisateurId },
@@ -150,6 +157,12 @@ export async function changerEmail(formData: FormData): Promise<ResultatAction> 
       return { erreur: ERREUR_EMAIL_UTILISE };
     }
     throw erreur;
+  }
+
+  // Avis à l'ancienne adresse, seulement si l'email a réellement changé.
+  if (ancien && ancien.email !== nouvelEmail) {
+    const date = new Date();
+    after(() => envoyerEmail(emailAvisChangementEmail(ancien.email, nouvelEmail, date)));
   }
 
   revalidatePath("/mon-profil");
@@ -173,10 +186,14 @@ export async function changerMotDePasse(formData: FormData): Promise<ResultatAct
     return { erreur: ERREUR_MOT_DE_PASSE };
   }
 
-  await prisma.organisateur.update({
+  const { email } = await prisma.organisateur.update({
     where: { id: organisateurId },
     data: { motDePasseHash: await bcrypt.hash(nouveauMotDePasse, TOURS_HASHING) },
+    select: { email: true },
   });
+
+  const date = new Date();
+  after(() => envoyerEmail(emailAvisMotDePasse(email, "modifie", date)));
 
   return { succes: true };
 }

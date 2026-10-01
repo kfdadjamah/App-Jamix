@@ -2,8 +2,10 @@
 
 import bcrypt from "bcryptjs";
 import { redirect } from "next/navigation";
+import { after } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { TOURS_HASHING } from "@/lib/auth-constantes";
+import { emailAvisMotDePasse, envoyerEmail } from "@/lib/email";
 import { trouverJetonValide } from "@/lib/jeton-reinitialisation";
 import { schemaReinitialisationMotDePasse } from "@/lib/validation/inscription";
 
@@ -29,19 +31,23 @@ export async function reinitialiserMotDePasse(
 
   // Usage unique : le jeton est consommé dans la transaction ; si une requête
   // concurrente l'a déjà supprimé, rien n'est modifié.
-  const reinitialise = await prisma.$transaction(async (tx) => {
+  const emailOrganisateur = await prisma.$transaction(async (tx) => {
     const { count } = await tx.jetonReinitialisation.deleteMany({ where: { id: jeton.id } });
-    if (count === 0) return false;
-    await tx.organisateur.update({
+    if (count === 0) return null;
+    const { email } = await tx.organisateur.update({
       where: { id: jeton.organisateurId },
       data: { motDePasseHash },
+      select: { email: true },
     });
     await tx.jetonReinitialisation.deleteMany({
       where: { organisateurId: jeton.organisateurId },
     });
-    return true;
+    return email;
   });
-  if (!reinitialise) return { lienInvalide: true };
+  if (!emailOrganisateur) return { lienInvalide: true };
+
+  const date = new Date();
+  after(() => envoyerEmail(emailAvisMotDePasse(emailOrganisateur, "reinitialise", date)));
 
   redirect("/connexion?reinitialise=1");
 }

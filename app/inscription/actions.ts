@@ -2,12 +2,14 @@
 
 import bcrypt from "bcryptjs";
 import { redirect } from "next/navigation";
+import { after } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { geocoderAdresse } from "@/lib/geocode";
 import { recadrerEtUploaderPhoto } from "@/lib/image";
 import { schemaInscription } from "@/lib/validation/inscription";
 import { signIn } from "@/auth";
 import { TOURS_HASHING } from "@/lib/auth-constantes";
+import { emailBienvenue, envoyerEmail } from "@/lib/email";
 
 export async function inscrireOrganisateur(
   formData: FormData
@@ -57,6 +59,9 @@ export async function inscrireOrganisateur(
       },
     },
   });
+
+  // Envoyé après la réponse ; un échec est journalisé sans bloquer l'inscription.
+  after(() => envoyerEmail(emailBienvenue(email, nomBar)));
 
   await signIn("credentials", { email, motDePasse, redirect: false });
   redirect("/mes-annonces");
