@@ -442,22 +442,22 @@ Un compte peut gérer jusqu'à 10 bars. Sur `/mon-profil`, la section « Mon bar
 
 ### Critères d'acceptation
 
-- [ ] Les comptes existants gardent leur bar et leurs annonces après la migration, sans action de l'organisateur ; les annonces déjà publiées ont un `publieeLe` égal à leur `createdAt`
-- [ ] `/mon-profil` affiche une section « Mes bars » en liste compacte ; un seul bar est déplié à la fois ; un compte d'un seul bar voit sa fiche dépliée d'office
-- [ ] « Ajouter un bar » crée un bar (nom, adresse, photo optionnelle), géocodé comme à l'inscription ; en cas d'échec du géocodage, le bar est créé sans apparaître sur la carte
-- [ ] L'organisateur modifie la photo, le nom et l'adresse de chacun de ses bars, avec les mêmes règles qu'en Phase 11 (re-géocodage si l'adresse change)
-- [ ] Un bar de même nom et même adresse qu'un autre bar du compte (casse et espaces en trop ignorés) est refusé avec « Ce bar existe déjà dans votre compte », à l'ajout comme à la modification ; deux comptes différents peuvent avoir des bars identiques
-- [ ] À 10 bars, « Ajouter un bar » est inactif avec « Limite de 10 bars atteinte » ; un 11e bar est aussi refusé côté serveur
-- [ ] Le formulaire d'annonce commence par un champ « Bar » : présélectionné s'il n'y a qu'un bar, sans choix par défaut sinon
-- [ ] Le bar est obligatoire dès l'enregistrement en brouillon ; une sortie sans bar choisi affiche la fenêtre d'échec « Choisissez un bar pour enregistrer le brouillon » (Rester / Quitter sans enregistrer)
-- [ ] Sur une nouvelle annonce, choisir un bar ne compte pas à lui seul comme une saisie ; sur un brouillon rouvert, changer de bar compte comme une modification
-- [ ] Le bar d'un brouillon est modifiable ; celui d'une annonce Publiée est affiché sans pouvoir être changé, et un changement est refusé côté serveur
-- [ ] Le passage en Publiée écrit `publieeLe` une seule fois
-- [ ] Toute action sur un bar ou une annonce d'un autre compte est refusée côté serveur
-- [ ] Chaque annonce de « Mes annonces » affiche le nom de son bar
-- [ ] Côté musicien, chaque annonce s'affiche à l'adresse de son bar, sans autre changement
-- [ ] Une annonce Publiée ne peut ni repasser en Brouillon ni être republiée côté serveur
-- [ ] Un bar dont l'adresse n'a pas pu être géocodée est signalé à l'ajout et à la modification, et porte la mention « Absent de la carte » dans « Mes bars »
+- [x] Les comptes existants gardent leur bar et leurs annonces après la migration, sans action de l'organisateur ; les annonces déjà publiées ont un `publieeLe` égal à leur `createdAt`
+- [x] `/mon-profil` affiche une section « Mes bars » en liste compacte ; un seul bar est déplié à la fois ; un compte d'un seul bar voit sa fiche dépliée d'office
+- [x] « Ajouter un bar » crée un bar (nom, adresse, photo optionnelle), géocodé comme à l'inscription ; en cas d'échec du géocodage, le bar est créé sans apparaître sur la carte
+- [x] L'organisateur modifie la photo, le nom et l'adresse de chacun de ses bars, avec les mêmes règles qu'en Phase 11 (re-géocodage si l'adresse change)
+- [x] Un bar de même nom et même adresse qu'un autre bar du compte (casse et espaces en trop ignorés) est refusé avec « Ce bar existe déjà dans votre compte », à l'ajout comme à la modification ; deux comptes différents peuvent avoir des bars identiques
+- [x] À 10 bars, « Ajouter un bar » est inactif avec « Limite de 10 bars atteinte » ; un 11e bar est aussi refusé côté serveur
+- [x] Le formulaire d'annonce commence par un champ « Bar » : présélectionné s'il n'y a qu'un bar, sans choix par défaut sinon
+- [x] Le bar est obligatoire dès l'enregistrement en brouillon ; une sortie sans bar choisi affiche la fenêtre d'échec « Choisissez un bar pour enregistrer le brouillon » (Rester / Quitter sans enregistrer)
+- [x] Sur une nouvelle annonce, choisir un bar ne compte pas à lui seul comme une saisie ; sur un brouillon rouvert, changer de bar compte comme une modification
+- [x] Le bar d'un brouillon est modifiable ; celui d'une annonce Publiée est affiché sans pouvoir être changé, et un changement est refusé côté serveur
+- [x] Le passage en Publiée écrit `publieeLe` une seule fois
+- [x] Toute action sur un bar ou une annonce d'un autre compte est refusée côté serveur
+- [x] Chaque annonce de « Mes annonces » affiche le nom de son bar
+- [x] Côté musicien, chaque annonce s'affiche à l'adresse de son bar, sans autre changement
+- [x] Une annonce Publiée ne peut ni repasser en Brouillon ni être republiée côté serveur
+- [x] Un bar dont l'adresse n'a pas pu être géocodée est signalé à l'ajout et à la modification, et porte la mention « Absent de la carte » dans « Mes bars »
 
 ## Bloquée par
 
