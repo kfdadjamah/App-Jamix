@@ -14,7 +14,7 @@ model Organisateur {
   // Toute session émise avant cette date est rejetée ; null = aucune invalidation.
   motDePasseModifieLe DateTime?
   createdAt      DateTime @default(now())
-  bar            Bar?
+  bars           Bar[]
   jetonsReinitialisation JetonReinitialisation[]
 }
 
@@ -37,11 +37,15 @@ model Bar {
   latitude       Float?
   longitude      Float?
   photoUrl       String?
-  organisateurId String       @unique
+  organisateurId String
   organisateur   Organisateur @relation(fields: [organisateurId], references: [id])
   annonces       Annonce[]
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
+
+  // Filet de sécurité : les doublons sont détectés côté application, comparaison normalisée.
+  @@unique([organisateurId, nom, adresse])
+  @@index([organisateurId])
 }
 
 enum StatutAnnonce {
@@ -68,6 +72,8 @@ model Annonce {
   instrumentAutre String?
   photoUrl1      String?
   photoUrl2      String?
+  // Écrit une seule fois, au passage Brouillon → Publiée.
+  publieeLe      DateTime?
   occurrences    OccurrenceJam[]
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt

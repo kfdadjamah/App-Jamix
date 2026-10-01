@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { nettoyerEspaces } from "@/lib/bars";
 
 const TAILLE_MAX_PHOTO_OCTETS = 5 * 1024 * 1024; // 5 Mo
 const TYPES_IMAGE_ACCEPTES = ["image/jpeg", "image/png", "image/webp"];
@@ -19,8 +20,13 @@ const champMotDePasse = z
   .string()
   .min(8, "Le mot de passe doit contenir au moins 8 caractères.");
 const champMotDePasseActuel = z.string().min(1, "Le mot de passe actuel est requis.");
-const champNomBar = z.string().trim().min(1, "Le nom du bar est requis.");
-const champAdresseBar = z.string().trim().min(1, "L'adresse du bar est requise.");
+// Nom et adresse stockés tels que saisis, débarrassés des espaces superflus.
+const champNomBar = z.string().trim().min(1, "Le nom du bar est requis.").transform(nettoyerEspaces);
+const champAdresseBar = z
+  .string()
+  .trim()
+  .min(1, "L'adresse du bar est requise.")
+  .transform(nettoyerEspaces);
 
 export const schemaInscription = z.object({
   email: champEmail,
@@ -52,6 +58,10 @@ export const schemaFicheBar = z.object({
 });
 
 export type ChampsFicheBar = z.infer<typeof schemaFicheBar>;
+
+export const schemaAjoutBar = schemaFicheBar.extend({
+  photo: z.union([schemaPhoto, z.literal(null)]).optional(),
+});
 
 export const schemaChangementEmail = z.object({
   nouvelEmail: champEmail,

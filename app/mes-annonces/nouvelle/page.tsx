@@ -3,8 +3,10 @@ import BoutonRetour from "@/components/bouton-retour";
 import { FournisseurGardeSortie } from "@/components/garde-sortie";
 import FormulaireAnnonce from "../formulaire-annonce";
 import { creerAnnonce } from "../actions";
+import { recupererBarsDeLOrganisateurConnecte } from "@/lib/organisateur";
 
-export default function PageNouvelleAnnonce() {
+export default async function PageNouvelleAnnonce() {
+  const bars = await recupererBarsDeLOrganisateurConnecte();
   const creerBrouillon = creerAnnonce.bind(null, "brouillon");
   const publier = creerAnnonce.bind(null, "publier");
 
@@ -20,6 +22,13 @@ export default function PageNouvelleAnnonce() {
         </h1>
 
         <FormulaireAnnonce
+          nouvelleAnnonce
+          choixBar={{
+            mode: "choix",
+            bars: bars.map(({ id, nom }) => ({ id, nom })),
+            // Un seul bar : présélectionné ; sinon, aucun choix par défaut.
+            barIdInitial: bars.length === 1 ? bars[0].id : "",
+          }}
           afficherPhotos
           actionBrouillon={creerBrouillon}
           actionPublier={publier}

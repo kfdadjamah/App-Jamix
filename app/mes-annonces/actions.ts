@@ -6,7 +6,8 @@ import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { calculerStatutInitial } from "@/lib/annonces";
 import { recadrerEtUploaderPhoto } from "@/lib/image";
-import { recupererBarDeLOrganisateurConnecte } from "@/lib/organisateur";
+import { recupererAnnonceDuCompte, recupererBarDuCompte } from "@/lib/organisateur";
+import { ERREUR_BAR_REQUIS, barApresModification } from "@/lib/bars";
 import {
   schemaAnnonceBrouillon,
   schemaAnnoncePublication,
@@ -16,6 +17,8 @@ import {
 type Resultat = { erreur: string } | { succes: true };
 
 const ERREUR_ENREGISTREMENT = "L'annonce n'a pas pu être enregistrée. Réessayez.";
+const ERREUR_BAR_INTROUVABLE = "Bar introuvable.";
+const ERREUR_DEJA_PUBLIEE = "Cette annonce est déjà publiée.";
 
 async function supprimerPhotos(urls: string[]) {
   await Promise.all(urls.map((url) => del(url).catch(() => undefined)));
@@ -33,10 +36,14 @@ function extraireChampsFormulaire(formData: FormData) {
   };
 }
 
+function lireBarId(formData: FormData): string | null {
+  const barId = formData.get("barId");
+  return typeof barId === "string" && barId ? barId : null;
+}
+
 async function verifierProprietaireAnnonce(annonceId: string) {
-  const bar = await recupererBarDeLOrganisateurConnecte();
-  const annonce = await prisma.annonce.findUnique({ where: { id: annonceId } });
-  if (!annonce || annonce.barId !== bar.id) {
+  const annonce = await recupererAnnonceDuCompte(annonceId);
+  if (!annonce) {
     throw new Error("Annonce introuvable.");
   }
   return annonce;
@@ -105,7 +112,13 @@ export async function creerAnnonce(
     return { erreur: resultat.error.issues[0]?.message ?? "Formulaire invalide." };
   }
 
-  const bar = await recupererBarDeLOrganisateurConnecte();
+  // Le bar est obligatoire dès le brouillon, et doit appartenir au compte.
+  const barId = lireBarId(formData);
+  if (!barId) {
+    return { erreur: action === "publier" ? "Choisissez un bar pour publier l'annonce." : ERREUR_BAR_REQUIS };
+  }
+  const bar = await recupererBarDuCompte(barId);
+  if (!bar) return { erreur: ERREUR_BAR_INTROUVABLE };
   const donnees = resultat.data;
 
   // Si une photo échoue, on retire celle déjà uploadée : aucun enregistrement partiel.
@@ -131,6 +144,7 @@ export async function creerAnnonce(
         data: {
           barId: bar.id,
           statut,
+          publieeLe: statut === "PUBLIEE" ? new Date() : null,
           estRecurrente: donnees.dates.length > 1,
           styles: donnees.styles,
           styleAutre: donnees.styleAutre || null,
@@ -158,6 +172,23 @@ export async function modifierAnnonce(
   formData: FormData
 ): Promise<Resultat> {
   const annonceExistante = await verifierProprietaireAnnonce(annonceId);
+  const annonceEtaitDejaPubliee = annonceExistante.statut === "PUBLIEE";
+
+  // Une annonce publiée ne repasse jamais en brouillon ni ne se republie :
+  // ce serait un moyen de changer son bar, figé une fois publiée.
+  if (annonceEtaitDejaPubliee && action !== "modifier") {
+    return { erreur: ERREUR_DEJA_PUBLIEE };
+  }
+
+  const bar = barApresModification({
+    annonceEstPubliee: annonceEtaitDejaPubliee,
+    barIdActuel: annonceExistante.barId,
+    barIdSoumis: lireBarId(formData),
+  });
+  if ("erreur" in bar) return bar;
+  if (bar.barId !== annonceExistante.barId && !(await recupererBarDuCompte(bar.barId))) {
+    return { erreur: ERREUR_BAR_INTROUVABLE };
+  }
 
   const schema = action === "publier" ? schemaAnnoncePublication : schemaAnnonceBrouillon;
   const resultat = schema.safeParse(extraireChampsFormulaire(formData));
@@ -166,7 +197,6 @@ export async function modifierAnnonce(
   }
   const donnees = resultat.data;
 
-  const annonceEtaitDejaPubliee = annonceExistante.statut === "PUBLIEE";
   const nouveauStatut =
     action === "publier" ? "PUBLIEE" : action === "brouillon" ? "BROUILLON" : annonceExistante.statut;
 
@@ -181,7 +211,13 @@ export async function modifierAnnonce(
       await tx.annonce.update({
         where: { id: annonceId },
         data: {
+          barId: bar.barId,
           statut: nouveauStatut,
+          // Écrite une seule fois, au passage Brouillon → Publiée.
+          publieeLe:
+            nouveauStatut === "PUBLIEE"
+              ? (annonceExistante.publieeLe ?? new Date())
+              : annonceExistante.publieeLe,
           estRecurrente: annonceEtaitDejaPubliee
             ? annonceExistante.estRecurrente
             : donnees.dates.length > 1,
@@ -213,10 +249,8 @@ export async function modifierAnnonce(
 export async function confirmerOccurrence(occurrenceId: string): Promise<Resultat> {
   const occurrence = await prisma.occurrenceJam.findUnique({
     where: { id: occurrenceId },
-    include: { annonce: true },
   });
-  const bar = await recupererBarDeLOrganisateurConnecte();
-  if (!occurrence || occurrence.annonce.barId !== bar.id) {
+  if (!occurrence || !(await recupererAnnonceDuCompte(occurrence.annonceId))) {
     return { erreur: "Occurrence introuvable." };
   }
 
@@ -233,10 +267,8 @@ export async function confirmerOccurrence(occurrenceId: string): Promise<Resulta
 export async function annulerOccurrence(occurrenceId: string): Promise<Resultat> {
   const occurrence = await prisma.occurrenceJam.findUnique({
     where: { id: occurrenceId },
-    include: { annonce: true },
   });
-  const bar = await recupererBarDeLOrganisateurConnecte();
-  if (!occurrence || occurrence.annonce.barId !== bar.id) {
+  if (!occurrence || !(await recupererAnnonceDuCompte(occurrence.annonceId))) {
     return { erreur: "Occurrence introuvable." };
   }
 

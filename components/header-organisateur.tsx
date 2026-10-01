@@ -1,4 +1,4 @@
-import { recupererBarDeLOrganisateurConnecte } from "@/lib/organisateur";
+import { recupererIdOrganisateurConnecte } from "@/lib/organisateur";
 import { compterRelancesActives } from "@/lib/relances";
 import { prisma } from "@/lib/prisma";
 import IconeProfil from "./icone-profil";
@@ -9,9 +9,10 @@ export default async function HeaderOrganisateur({
 }: {
   page: "mes-annonces" | "mon-profil";
 }) {
-  const bar = await recupererBarDeLOrganisateurConnecte();
+  // Relances de tous les bars du compte.
+  const organisateurId = await recupererIdOrganisateurConnecte();
   const occurrences = await prisma.occurrenceJam.findMany({
-    where: { annonce: { barId: bar.id } },
+    where: { annonce: { bar: { organisateurId } } },
     select: { statut: true, confirmationJ7: true },
   });
   const nbRelancesActives = compterRelancesActives(occurrences);

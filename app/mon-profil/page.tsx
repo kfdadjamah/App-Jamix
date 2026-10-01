@@ -3,8 +3,7 @@ import { sessionCourante } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import HeaderOrganisateur from "@/components/header-organisateur";
 import BoutonRetour from "@/components/bouton-retour";
-import GestionPhotoBar from "./gestion-photo-bar";
-import FormulaireFicheBar from "./formulaire-fiche-bar";
+import MesBars from "./mes-bars";
 import FormulaireEmail from "./formulaire-email";
 import FormulaireMotDePasse from "./formulaire-mot-de-passe";
 import SuppressionCompte from "./suppression-compte";
@@ -20,10 +19,14 @@ export default async function PageMonProfil() {
   // Email lu en base, jamais depuis le JWT : celui-ci garde l'ancien email après un changement.
   const organisateur = await prisma.organisateur.findUnique({
     where: { id: session.user.id },
-    select: { email: true, createdAt: true, bar: true },
+    select: {
+      email: true,
+      createdAt: true,
+      bars: { orderBy: { createdAt: "asc" } },
+    },
   });
 
-  if (!organisateur?.bar) {
+  if (!organisateur || organisateur.bars.length === 0) {
     return (
       <main className="mx-auto max-w-md px-6 py-16 text-[var(--color-warm-cream)]">
         Compte introuvable.
@@ -31,7 +34,6 @@ export default async function PageMonProfil() {
     );
   }
 
-  const { bar } = organisateur;
   const dateCreation = organisateur.createdAt.toLocaleDateString("fr-FR", {
     day: "numeric",
     month: "long",
@@ -53,13 +55,15 @@ export default async function PageMonProfil() {
       </div>
 
       <Separateur />
-      <section className="flex flex-col gap-6">
-        <h2 className="text-[24px] font-medium uppercase leading-[1.09] text-[var(--color-warm-cream)]">
-          Mon bar
-        </h2>
-        <GestionPhotoBar photoUrl={bar.photoUrl} />
-        <FormulaireFicheBar nom={bar.nom} adresse={bar.adresse} />
-      </section>
+      <MesBars
+        bars={organisateur.bars.map((bar) => ({
+          id: bar.id,
+          nom: bar.nom,
+          adresse: bar.adresse,
+          photoUrl: bar.photoUrl,
+          surLaCarte: bar.latitude !== null && bar.longitude !== null,
+        }))}
+      />
       <Separateur />
       <FormulaireEmail emailActuel={organisateur.email} />
       <Separateur />

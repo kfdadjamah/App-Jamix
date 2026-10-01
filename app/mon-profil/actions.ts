@@ -11,8 +11,16 @@ import { TOURS_HASHING } from "@/lib/auth-constantes";
 import { emailAvisChangementEmail, emailAvisMotDePasse, envoyerEmail } from "@/lib/email";
 import { recadrerEtUploaderPhoto } from "@/lib/image";
 import { coordonneesApresModification, urlsPhotosDuCompte } from "@/lib/compte";
-import { recupererBarDeLOrganisateurConnecte } from "@/lib/organisateur";
+import { geocoderAdresse } from "@/lib/geocode";
+import { recupererBarDuCompte } from "@/lib/organisateur";
 import {
+  ERREUR_BAR_EN_DOUBLE,
+  ERREUR_LIMITE_BARS,
+  NOMBRE_MAX_BARS,
+  estBarEnDouble,
+} from "@/lib/bars";
+import {
+  schemaAjoutBar,
   schemaChangementEmail,
   schemaChangementMotDePasse,
   schemaFicheBar,
@@ -21,9 +29,12 @@ import {
 } from "@/lib/validation/inscription";
 
 type ResultatAction = { erreur: string } | { succes: true };
+// `adresseIntrouvable` : géocodage échoué, le bar n'apparaît pas sur la carte.
+export type ResultatActionBar = { erreur: string } | { succes: true; adresseIntrouvable: boolean };
 
 const ERREUR_MOT_DE_PASSE = "Mot de passe actuel incorrect.";
 const ERREUR_EMAIL_UTILISE = "Un compte existe déjà avec cet email.";
+const ERREUR_BAR_INTROUVABLE = "Bar introuvable.";
 
 async function recupererIdOrganisateurConnecte() {
   const session = await auth();
@@ -45,9 +56,72 @@ async function verifierMotDePasseActuel(
   return bcrypt.compare(motDePasse, organisateur.motDePasseHash);
 }
 
+function estViolationUnicite(erreur: unknown) {
+  return erreur instanceof Prisma.PrismaClientKnownRequestError && erreur.code === "P2002";
+}
+
+export async function ajouterBar(formData: FormData): Promise<ResultatActionBar> {
+  const photoBrute = formData.get("photo");
+  const resultat = schemaAjoutBar.safeParse({
+    nomBar: formData.get("nomBar"),
+    adresseBar: formData.get("adresseBar"),
+    photo: photoBrute instanceof File && photoBrute.size > 0 ? photoBrute : null,
+  });
+  if (!resultat.success) {
+    return { erreur: resultat.error.issues[0]?.message ?? "Formulaire invalide." };
+  }
+
+  const { nomBar, adresseBar, photo } = resultat.data;
+  const organisateurId = await recupererIdOrganisateurConnecte();
+  const bars = await prisma.bar.findMany({
+    where: { organisateurId },
+    select: { id: true, nom: true, adresse: true },
+  });
+  if (bars.length >= NOMBRE_MAX_BARS) {
+    return { erreur: ERREUR_LIMITE_BARS };
+  }
+  if (estBarEnDouble(bars, { nom: nomBar, adresse: adresseBar })) {
+    return { erreur: ERREUR_BAR_EN_DOUBLE };
+  }
+
+  // Photo refusée : aucun bar créé.
+  let photoUrl: string | null;
+  let coordonnees: Awaited<ReturnType<typeof geocoderAdresse>>;
+  try {
+    [photoUrl, coordonnees] = await Promise.all([
+      photo ? recadrerEtUploaderPhoto(photo, "bars") : Promise.resolve(null),
+      geocoderAdresse(adresseBar),
+    ]);
+  } catch {
+    return { erreur: "La photo n'a pas pu être traitée." };
+  }
+
+  try {
+    await prisma.bar.create({
+      data: {
+        organisateurId,
+        nom: nomBar,
+        adresse: adresseBar,
+        latitude: coordonnees?.latitude ?? null,
+        longitude: coordonnees?.longitude ?? null,
+        photoUrl,
+      },
+    });
+  } catch (erreur) {
+    if (photoUrl) await del(photoUrl).catch(() => undefined);
+    if (estViolationUnicite(erreur)) return { erreur: ERREUR_BAR_EN_DOUBLE };
+    throw erreur;
+  }
+
+  revalidatePath("/mon-profil");
+  revalidatePath("/");
+  return { succes: true, adresseIntrouvable: !coordonnees };
+}
+
 export async function mettreAJourFicheBar(
+  barId: string,
   formData: FormData
-): Promise<ResultatAction> {
+): Promise<ResultatActionBar> {
   const resultat = schemaFicheBar.safeParse({
     nomBar: formData.get("nomBar"),
     adresseBar: formData.get("adresseBar"),
@@ -57,22 +131,37 @@ export async function mettreAJourFicheBar(
   }
 
   const { nomBar, adresseBar } = resultat.data;
-  const bar = await recupererBarDeLOrganisateurConnecte();
+  const bar = await recupererBarDuCompte(barId);
+  if (!bar) return { erreur: ERREUR_BAR_INTROUVABLE };
+
+  const bars = await prisma.bar.findMany({
+    where: { organisateurId: bar.organisateurId },
+    select: { id: true, nom: true, adresse: true },
+  });
+  if (estBarEnDouble(bars, { nom: nomBar, adresse: adresseBar }, bar.id)) {
+    return { erreur: ERREUR_BAR_EN_DOUBLE };
+  }
 
   // Adresse modifiée : re-géocodage ; en cas d'échec, le bar sort de la carte.
   const coordonnees = await coordonneesApresModification(bar.adresse, adresseBar);
 
-  await prisma.bar.update({
-    where: { id: bar.id },
-    data: { nom: nomBar, adresse: adresseBar, ...coordonnees },
-  });
+  try {
+    await prisma.bar.update({
+      where: { id: bar.id },
+      data: { nom: nomBar, adresse: adresseBar, ...coordonnees },
+    });
+  } catch (erreur) {
+    if (estViolationUnicite(erreur)) return { erreur: ERREUR_BAR_EN_DOUBLE };
+    throw erreur;
+  }
 
   revalidatePath("/mon-profil");
   revalidatePath("/");
-  return { succes: true };
+  return { succes: true, adresseIntrouvable: coordonnees.latitude === null };
 }
 
 export async function mettreAJourPhotoBar(
+  barId: string,
   formData: FormData
 ): Promise<ResultatAction> {
   const fichier = formData.get("photo");
@@ -81,7 +170,8 @@ export async function mettreAJourPhotoBar(
     return { erreur: resultat.error.issues[0]?.message ?? "Photo invalide." };
   }
 
-  const bar = await recupererBarDeLOrganisateurConnecte();
+  const bar = await recupererBarDuCompte(barId);
+  if (!bar) return { erreur: ERREUR_BAR_INTROUVABLE };
   const nouvellePhotoUrl = await recadrerEtUploaderPhoto(resultat.data, "bars");
 
   if (bar.photoUrl) {
@@ -97,8 +187,9 @@ export async function mettreAJourPhotoBar(
   return { succes: true };
 }
 
-export async function retirerPhotoBar(): Promise<ResultatAction> {
-  const bar = await recupererBarDeLOrganisateurConnecte();
+export async function retirerPhotoBar(barId: string): Promise<ResultatAction> {
+  const bar = await recupererBarDuCompte(barId);
+  if (!bar) return { erreur: ERREUR_BAR_INTROUVABLE };
 
   if (bar.photoUrl) {
     await del(bar.photoUrl).catch(() => undefined);
@@ -219,26 +310,21 @@ export async function supprimerCompte(formData: FormData): Promise<ResultatActio
     return { erreur: ERREUR_MOT_DE_PASSE };
   }
 
-  const bar = await prisma.bar.findUnique({
+  const bars = await prisma.bar.findMany({
     where: { organisateurId },
     select: {
-      id: true,
       photoUrl: true,
       annonces: { select: { photoUrl1: true, photoUrl2: true } },
     },
   });
 
-  const urlsPhotos = urlsPhotosDuCompte(bar);
+  const urlsPhotos = urlsPhotosDuCompte(bars);
 
   // Pas de cascade Bar→Annonce ni Organisateur→Bar dans le schéma : on supprime
-  // dans l'ordre. Les occurrences partent en cascade avec leur annonce.
+  // dans l'ordre, pour tous les bars du compte. Les occurrences partent en cascade avec leur annonce.
   await prisma.$transaction([
-    ...(bar
-      ? [
-          prisma.annonce.deleteMany({ where: { barId: bar.id } }),
-          prisma.bar.delete({ where: { id: bar.id } }),
-        ]
-      : []),
+    prisma.annonce.deleteMany({ where: { bar: { organisateurId } } }),
+    prisma.bar.deleteMany({ where: { organisateurId } }),
     prisma.organisateur.delete({ where: { id: organisateurId } }),
   ]);
 

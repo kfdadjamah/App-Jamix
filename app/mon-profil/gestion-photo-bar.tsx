@@ -3,7 +3,13 @@
 import { useRef, useState } from "react";
 import { mettreAJourPhotoBar, retirerPhotoBar } from "./actions";
 
-export default function GestionPhotoBar({ photoUrl }: { photoUrl: string | null }) {
+export default function GestionPhotoBar({
+  barId,
+  photoUrl,
+}: {
+  barId: string;
+  photoUrl: string | null;
+}) {
   const refFichier = useRef<HTMLInputElement>(null);
   const [enCours, setEnCours] = useState(false);
   const [erreur, setErreur] = useState<string | null>(null);
@@ -16,7 +22,7 @@ export default function GestionPhotoBar({ photoUrl }: { photoUrl: string | null 
     setEnCours(true);
     const formData = new FormData();
     formData.set("photo", fichier);
-    const resultat = await mettreAJourPhotoBar(formData);
+    const resultat = await mettreAJourPhotoBar(barId, formData);
     setEnCours(false);
     if ("erreur" in resultat) {
       setErreur(resultat.erreur);
@@ -26,7 +32,7 @@ export default function GestionPhotoBar({ photoUrl }: { photoUrl: string | null 
   async function surRetrait() {
     setErreur(null);
     setEnCours(true);
-    const resultat = await retirerPhotoBar();
+    const resultat = await retirerPhotoBar(barId);
     setEnCours(false);
     if ("erreur" in resultat) {
       setErreur(resultat.erreur);

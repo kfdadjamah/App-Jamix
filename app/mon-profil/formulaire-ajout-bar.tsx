@@ -1,25 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type BaseSyntheticEvent } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { schemaFicheBar, type ChampsFicheBar } from "@/lib/validation/inscription";
 import ChampFormulaire from "@/components/champ-formulaire";
-import { AVERTISSEMENT_ADRESSE_INTROUVABLE } from "@/lib/bars";
-import { mettreAJourFicheBar } from "./actions";
+import { ajouterBar } from "./actions";
 
-export default function FormulaireFicheBar({
-  barId,
-  nom,
-  adresse,
+// Nom, adresse et photo optionnelle envoyés en une fois : une photo refusée ne crée aucun bar.
+export default function FormulaireAjoutBar({
+  surAjout,
 }: {
-  barId: string;
-  nom: string;
-  adresse: string;
+  surAjout: (adresseIntrouvable: boolean) => void;
 }) {
   const [erreurServeur, setErreurServeur] = useState<string | null>(null);
-  const [succes, setSucces] = useState(false);
-  const [adresseIntrouvable, setAdresseIntrouvable] = useState(false);
 
   const {
     register,
@@ -27,24 +21,25 @@ export default function FormulaireFicheBar({
     formState: { errors, isSubmitting },
   } = useForm<ChampsFicheBar>({
     resolver: zodResolver(schemaFicheBar),
-    defaultValues: { nomBar: nom, adresseBar: adresse },
+    defaultValues: { nomBar: "", adresseBar: "" },
   });
 
-  async function surSoumission(donnees: ChampsFicheBar) {
+  async function surSoumission(donnees: ChampsFicheBar, evenement?: BaseSyntheticEvent) {
     setErreurServeur(null);
-    setSucces(false);
-    setAdresseIntrouvable(false);
 
     const formData = new FormData();
     formData.set("nomBar", donnees.nomBar);
     formData.set("adresseBar", donnees.adresseBar);
+    const photo = new FormData(evenement?.target as HTMLFormElement).get("photo");
+    if (photo instanceof File && photo.size > 0) {
+      formData.set("photo", photo);
+    }
 
-    const resultat = await mettreAJourFicheBar(barId, formData);
+    const resultat = await ajouterBar(formData);
     if ("erreur" in resultat) {
       setErreurServeur(resultat.erreur);
     } else {
-      setSucces(true);
-      setAdresseIntrouvable(resultat.adresseIntrouvable);
+      surAjout(resultat.adresseIntrouvable);
     }
   }
 
@@ -63,19 +58,18 @@ export default function FormulaireFicheBar({
         />
       </ChampFormulaire>
 
+      <ChampFormulaire label="Photo ou logo (optionnel)">
+        <input
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          name="photo"
+          className="champ-input champ-input--fichier"
+        />
+      </ChampFormulaire>
+
       {erreurServeur && (
         <p className="text-[12px] font-medium uppercase text-[var(--color-gold-elegance)]">
           {erreurServeur}
-        </p>
-      )}
-      {succes && (
-        <p className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)]">
-          Fiche bar enregistrée.
-        </p>
-      )}
-      {adresseIntrouvable && (
-        <p className="text-[12px] font-medium uppercase text-[var(--color-gold-elegance)]">
-          {AVERTISSEMENT_ADRESSE_INTROUVABLE}
         </p>
       )}
 
@@ -84,7 +78,7 @@ export default function FormulaireFicheBar({
         disabled={isSubmitting}
         className="self-start rounded-[22.5px] border border-[var(--color-warm-cream)] px-4 py-[7.5px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)] disabled:opacity-60"
       >
-        {isSubmitting ? "Enregistrement…" : "Enregistrer"}
+        {isSubmitting ? "Ajout…" : "Ajouter"}
       </button>
     </form>
   );

@@ -48,7 +48,15 @@ const valeursVides: ValeursInitialesAnnonce = {
   instrumentAutre: "",
 };
 
+export type ChoixBar =
+  // Nouvelle annonce ou brouillon : bar choisi dans la liste des bars du compte.
+  | { mode: "choix"; bars: { id: string; nom: string }[]; barIdInitial: string }
+  // Annonce publiée : bar figé, affiché sans pouvoir être changé.
+  | { mode: "fige"; nom: string };
+
 export default function FormulaireAnnonce({
+  choixBar,
+  nouvelleAnnonce = false,
   valeursInitiales,
   afficherPhotos,
   datesModifiables = true,
@@ -58,6 +66,9 @@ export default function FormulaireAnnonce({
   actionModifier,
   destinationApresEnregistrement,
 }: {
+  choixBar: ChoixBar;
+  // Sur une nouvelle annonce, choisir un bar ne compte pas à lui seul comme une saisie.
+  nouvelleAnnonce?: boolean;
   valeursInitiales?: ValeursInitialesAnnonce;
   afficherPhotos: boolean;
   datesModifiables?: boolean;
@@ -84,8 +95,11 @@ export default function FormulaireAnnonce({
   const referenceRef = useRef<string | null>(null);
 
   const instantaneCourant = useCallback(
-    () => (formRef.current ? instantane(new FormData(formRef.current)) : null),
-    []
+    () =>
+      formRef.current
+        ? instantane(new FormData(formRef.current), nouvelleAnnonce ? ["barId"] : [])
+        : null,
+    [nouvelleAnnonce]
   );
   const estModifie = useCallback(() => {
     const courant = instantaneCourant();
@@ -223,6 +237,29 @@ export default function FormulaireAnnonce({
           libelleSecondaire="Quitter"
           surSecondaire={() => quitterVers(fenetre.destination)}
         />
+      )}
+
+      {choixBar.mode === "choix" ? (
+        <Champ label="Bar">
+          <select name="barId" defaultValue={choixBar.barIdInitial} className="champ-input">
+            {choixBar.bars.length > 1 && <option value="">Choisir un bar</option>}
+            {choixBar.bars.map((bar) => (
+              <option key={bar.id} value={bar.id}>
+                {bar.nom}
+              </option>
+            ))}
+          </select>
+        </Champ>
+      ) : (
+        <div className="flex flex-col gap-2">
+          <span className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)]">
+            Bar
+          </span>
+          <span className="text-[18px] text-[var(--color-warm-cream)]">{choixBar.nom}</span>
+          <span className="text-[12px] text-[var(--color-driftwood)]">
+            Le bar d&apos;une annonce publiée ne peut plus être changé.
+          </span>
+        </div>
       )}
 
       <div className="flex flex-col gap-3">

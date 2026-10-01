@@ -1,16 +1,16 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
-import { recupererBarDeLOrganisateurConnecte } from "@/lib/organisateur";
+import { recupererIdOrganisateurConnecte } from "@/lib/organisateur";
 import HeaderOrganisateur from "@/components/header-organisateur";
 import { LIBELLES_STATUT_OCCURRENCE } from "@/lib/annonce-constantes";
 import { statutAffiche } from "@/lib/annonces";
 import { messageRelance } from "@/lib/relances";
 
 export default async function PageMesAnnonces() {
-  const bar = await recupererBarDeLOrganisateurConnecte();
+  const organisateurId = await recupererIdOrganisateurConnecte();
   const annonces = await prisma.annonce.findMany({
-    where: { barId: bar.id },
-    include: { occurrences: true },
+    where: { bar: { organisateurId } },
+    include: { occurrences: true, bar: { select: { nom: true } } },
     orderBy: { createdAt: "desc" },
   });
 
@@ -48,6 +48,9 @@ export default async function PageMesAnnonces() {
               href={`/mes-annonces/${annonce.id}`}
               className="flex flex-col gap-2 rounded-[12px] border border-[var(--color-cork-border)] p-4"
             >
+              <span className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)]">
+                {annonce.bar.nom}
+              </span>
               <div className="flex items-center gap-2">
                 <span className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)]">
                   {annonce.statut === "BROUILLON" ? "Brouillon" : "Publiée"}

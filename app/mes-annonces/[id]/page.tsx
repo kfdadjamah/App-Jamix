@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { recupererBarDeLOrganisateurConnecte } from "@/lib/organisateur";
+import { recupererBarsDeLOrganisateurConnecte } from "@/lib/organisateur";
 import HeaderOrganisateur from "@/components/header-organisateur";
 import BoutonRetour from "@/components/bouton-retour";
 import { FournisseurGardeSortie } from "@/components/garde-sortie";
@@ -20,13 +20,14 @@ export default async function PageEditionAnnonce({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const bar = await recupererBarDeLOrganisateurConnecte();
+  const bars = await recupererBarsDeLOrganisateurConnecte();
   const annonce = await prisma.annonce.findUnique({
     where: { id },
     include: { occurrences: true },
   });
+  const barDeLAnnonce = bars.find((bar) => bar.id === annonce?.barId);
 
-  if (!annonce || annonce.barId !== bar.id) {
+  if (!annonce || !barDeLAnnonce) {
     notFound();
   }
 
@@ -101,6 +102,15 @@ export default async function PageEditionAnnonce({
         )}
 
         <FormulaireAnnonce
+          choixBar={
+            estPubliee
+              ? { mode: "fige", nom: barDeLAnnonce.nom }
+              : {
+                  mode: "choix",
+                  bars: bars.map(({ id, nom }) => ({ id, nom })),
+                  barIdInitial: annonce.barId,
+                }
+          }
           afficherPhotos={false}
           datesModifiables={!estPubliee}
           occurrencesPourPortee={

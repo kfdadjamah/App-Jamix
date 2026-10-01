@@ -27,6 +27,9 @@
   - *Reprise* : la dernière annonce d'un bar est l'annonce `PUBLIEE` au `publieeLe` le plus récent, quelles que soient ses dates (passées ou annulées comprises). Les photos reprises ne sont jamais partagées entre deux annonces (`del()` casserait l'autre) : le formulaire transmet l'URL source, et à l'enregistrement le serveur vérifie qu'elle appartient à une annonce d'un des bars de l'organisateur, puis la duplique avec `copy()` de `@vercel/blob` vers un nouveau `annonces/<uuid>.webp`. Un échec de copie est un échec d'enregistrement, sans enregistrement partiel.
   - *Routes* : aucune nouvelle route. Les bars se gèrent sur `/mon-profil` (liste compacte, un bar déplié à la fois) ; le filtre par bar est un état client non persisté de `/mes-annonces`.
   - *Suppression d'un bar* : en une transaction, les annonces (occurrences en cascade) puis le bar ; les photos (bar et annonces) sont retirées du stockage ensuite, sans bloquer, sur le modèle de la suppression de compte. La suppression de compte efface tous les bars du compte.
+  - *Application du schéma (Phase 18)* : `prisma db push` (pas de dossier de migrations), puis `node scripts/remplir-publiee-le.mjs` (idempotent) pour remplir `publieeLe = createdAt` sur les annonces déjà publiées.
+  - *Verrou de statut (Phase 18)* : une annonce Publiée ne peut ni repasser en Brouillon ni être republiée côté serveur (seule l'action « modifier » est acceptée), ce qui empêcherait sinon de contourner le bar figé. Un `barId` différent envoyé pour une annonce Publiée est refusé avec « Le bar d'une annonce publiée ne peut pas être changé. ».
+  - *Géocodage en échec (Phase 18)* : à l'ajout et à la modification d'un bar, un message prévient que l'adresse est introuvable et que le bar n'apparaîtra pas sur la carte ; la ligne compacte d'un bar sans coordonnées porte en permanence la mention « Absent de la carte ».
 
 ---
 
@@ -435,7 +438,7 @@ Aujourd'hui la session est un JWT contenant uniquement l'identifiant de l'organi
 
 ### Ce qu'on livre
 
-Un compte peut gérer jusqu'à 10 bars. Sur `/mon-profil`, la section « Mon bar » devient « Mes bars » : une liste compacte (miniature, nom, adresse, « Modifier ») dont un seul bar est déplié à la fois (photo, nom, adresse), et un bouton « Ajouter un bar » qui déplie un formulaire vide. Un compte d'un seul bar voit sa fiche dépliée d'office. Les doublons dans un même compte et un 11e bar sont refusés. Le formulaire d'annonce commence par un champ « Bar », présélectionné s'il n'y en a qu'un, obligatoire dès le brouillon, modifiable en Brouillon et figé une fois Publiée. Chaque annonce de « Mes annonces » affiche le nom de son bar. Migration : relation 1–N `Organisateur` → `Bar`, contrainte `@@unique([organisateurId, nom, adresse])` et champ `Annonce.publieeLe`.
+Un compte peut gérer jusqu'à 10 bars. Sur `/mon-profil`, la section « Mon bar » devient « Mes bars » : une liste compacte (miniature, nom, adresse, « Modifier ») dont un seul bar est déplié à la fois (photo, nom, adresse), et un bouton « Ajouter un bar » qui déplie un formulaire vide. Un compte d'un seul bar voit sa fiche dépliée d'office. Les doublons dans un même compte et un 11e bar sont refusés. Le formulaire d'annonce commence par un champ « Bar », présélectionné s'il n'y en a qu'un, obligatoire dès le brouillon, modifiable en Brouillon et figé une fois Publiée. Chaque annonce de « Mes annonces » affiche le nom de son bar (première ligne de la carte, même avec un seul bar). La suppression de `recupererBarDeLOrganisateurConnecte` impose dès cette phase que « Mes annonces » liste les annonces de tous les bars, que l'alerte de l'en-tête compte les relances de tous les bars et que la suppression du compte efface tous ses bars (critères correspondants des phases 19 et 20 livrés en avance). Migration : relation 1–N `Organisateur` → `Bar`, contrainte `@@unique([organisateurId, nom, adresse])` et champ `Annonce.publieeLe`.
 
 ### Critères d'acceptation
 
@@ -453,6 +456,8 @@ Un compte peut gérer jusqu'à 10 bars. Sur `/mon-profil`, la section « Mon bar
 - [ ] Toute action sur un bar ou une annonce d'un autre compte est refusée côté serveur
 - [ ] Chaque annonce de « Mes annonces » affiche le nom de son bar
 - [ ] Côté musicien, chaque annonce s'affiche à l'adresse de son bar, sans autre changement
+- [ ] Une annonce Publiée ne peut ni repasser en Brouillon ni être republiée côté serveur
+- [ ] Un bar dont l'adresse n'a pas pu être géocodée est signalé à l'ajout et à la modification, et porte la mention « Absent de la carte » dans « Mes bars »
 
 ## Bloquée par
 

@@ -28,9 +28,12 @@ async function creerOrganisateurAvecBar({ email, motDePasse, nomBar, adresse, la
     update: { motDePasseHash },
     create: { email, motDePasseHash },
   });
+  // Plusieurs bars par compte (phase 18) : on retrouve le bar du seed par sa clé (compte, nom, adresse).
   const bar = await p.bar.upsert({
-    where: { organisateurId: organisateur.id },
-    update: { nom: nomBar, adresse, latitude, longitude },
+    where: {
+      organisateurId_nom_adresse: { organisateurId: organisateur.id, nom: nomBar, adresse },
+    },
+    update: { latitude, longitude },
     create: { nom: nomBar, adresse, latitude, longitude, organisateurId: organisateur.id },
   });
   return { organisateur, bar };
@@ -41,6 +44,7 @@ async function creerAnnonce({ barId, statut, styles, instruments, heureDebut, he
     data: {
       barId,
       statut,
+      publieeLe: statut === "PUBLIEE" ? new Date() : null,
       estRecurrente: dates.length > 1,
       styles,
       instruments,

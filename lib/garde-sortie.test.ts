@@ -31,6 +31,19 @@ describe("instantane", () => {
     expect(instantane(avant)).not.toBe(instantane(apres));
   });
 
+  it("ignore les champs exclus demandés (le bar d'une nouvelle annonce)", () => {
+    const sansBar = formulaire([
+      ["heureDebut", ""],
+      ["barId", ""],
+    ]);
+    const avecBar = formulaire([
+      ["heureDebut", ""],
+      ["barId", "bar-1"],
+    ]);
+    expect(instantane(sansBar, ["barId"])).toBe(instantane(avecBar, ["barId"]));
+    expect(instantane(sansBar)).not.toBe(instantane(avecBar));
+  });
+
   it("ignore le choix de portée", () => {
     const sansPortee = formulaire([
       ["heureDebut", "20:00"],

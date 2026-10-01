@@ -6,11 +6,12 @@ const CHAMPS_EXCLUS = new Set(["porteeOccurrenceId"]);
 /**
  * Sérialise l'état d'un formulaire en chaîne stable, pour le comparer à un état de référence.
  * Un fichier est représenté par nom, taille et date de modification ; un input file vide par "".
+ * `champsExclus` : champs ignorés en plus de la portée (le bar, sur une nouvelle annonce).
  */
-export function instantane(formData: FormData): string {
+export function instantane(formData: FormData, champsExclus: string[] = []): string {
   const entrees: [string, string][] = [];
   for (const [cle, valeur] of formData.entries()) {
-    if (CHAMPS_EXCLUS.has(cle)) continue;
+    if (CHAMPS_EXCLUS.has(cle) || champsExclus.includes(cle)) continue;
     if (typeof valeur === "string") {
       entrees.push([cle, valeur]);
     } else {

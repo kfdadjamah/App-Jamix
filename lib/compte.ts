@@ -21,16 +21,17 @@ export async function coordonneesApresModification(
   };
 }
 
-/** Photos à retirer du stockage à la suppression du compte : bar et annonces. */
+/** Photos à retirer du stockage à la suppression du compte : tous les bars et leurs annonces. */
 export function urlsPhotosDuCompte(
-  bar: {
+  bars: {
     photoUrl: string | null;
     annonces: { photoUrl1: string | null; photoUrl2: string | null }[];
-  } | null
+  }[]
 ): string[] {
-  if (!bar) return [];
-  return [
-    bar.photoUrl,
-    ...bar.annonces.flatMap((annonce) => [annonce.photoUrl1, annonce.photoUrl2]),
-  ].filter((url): url is string => Boolean(url));
+  return bars
+    .flatMap((bar) => [
+      bar.photoUrl,
+      ...bar.annonces.flatMap((annonce) => [annonce.photoUrl1, annonce.photoUrl2]),
+    ])
+    .filter((url): url is string => Boolean(url));
 }

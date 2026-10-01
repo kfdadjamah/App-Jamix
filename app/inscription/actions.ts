@@ -48,7 +48,7 @@ export async function inscrireOrganisateur(
     data: {
       email,
       motDePasseHash,
-      bar: {
+      bars: {
         create: {
           nom: nomBar,
           adresse: adresseBar,

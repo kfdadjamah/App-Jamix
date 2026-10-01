@@ -31,29 +31,40 @@ describe("coordonneesApresModification", () => {
 
 describe("urlsPhotosDuCompte", () => {
   it("renvoie une liste vide sans bar", () => {
-    expect(urlsPhotosDuCompte(null)).toEqual([]);
+    expect(urlsPhotosDuCompte([])).toEqual([]);
   });
 
   it("ignore un bar sans photo et sans annonce", () => {
-    expect(urlsPhotosDuCompte({ photoUrl: null, annonces: [] })).toEqual([]);
+    expect(urlsPhotosDuCompte([{ photoUrl: null, annonces: [] }])).toEqual([]);
   });
 
   it("collecte la photo du bar et les photos des annonces (0, 1 ou 2)", () => {
     expect(
-      urlsPhotosDuCompte({
-        photoUrl: "bar.jpg",
-        annonces: [
-          { photoUrl1: null, photoUrl2: null },
-          { photoUrl1: "a1.jpg", photoUrl2: null },
-          { photoUrl1: "b1.jpg", photoUrl2: "b2.jpg" },
-        ],
-      })
+      urlsPhotosDuCompte([
+        {
+          photoUrl: "bar.jpg",
+          annonces: [
+            { photoUrl1: null, photoUrl2: null },
+            { photoUrl1: "a1.jpg", photoUrl2: null },
+            { photoUrl1: "b1.jpg", photoUrl2: "b2.jpg" },
+          ],
+        },
+      ])
     ).toEqual(["bar.jpg", "a1.jpg", "b1.jpg", "b2.jpg"]);
   });
 
   it("collecte les photos d'annonces même sans photo de bar", () => {
     expect(
-      urlsPhotosDuCompte({ photoUrl: null, annonces: [{ photoUrl1: "a1.jpg", photoUrl2: null }] })
+      urlsPhotosDuCompte([{ photoUrl: null, annonces: [{ photoUrl1: "a1.jpg", photoUrl2: null }] }])
     ).toEqual(["a1.jpg"]);
+  });
+
+  it("collecte les photos de tous les bars du compte", () => {
+    expect(
+      urlsPhotosDuCompte([
+        { photoUrl: "bar1.jpg", annonces: [{ photoUrl1: "a1.jpg", photoUrl2: null }] },
+        { photoUrl: "bar2.jpg", annonces: [{ photoUrl1: null, photoUrl2: "b2.jpg" }] },
+      ])
+    ).toEqual(["bar1.jpg", "a1.jpg", "bar2.jpg", "b2.jpg"]);
   });
 });
