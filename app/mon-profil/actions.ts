@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { after } from "next/server";
 import { del } from "@vercel/blob";
 import { Prisma } from "@prisma/client";
-import { auth, signOut } from "@/auth";
+import { auth, signIn, signOut } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { TOURS_HASHING } from "@/lib/auth-constantes";
 import { emailAvisChangementEmail, emailAvisMotDePasse, envoyerEmail } from "@/lib/email";
@@ -188,9 +188,15 @@ export async function changerMotDePasse(formData: FormData): Promise<ResultatAct
 
   const { email } = await prisma.organisateur.update({
     where: { id: organisateurId },
-    data: { motDePasseHash: await bcrypt.hash(nouveauMotDePasse, TOURS_HASHING) },
+    data: {
+      motDePasseHash: await bcrypt.hash(nouveauMotDePasse, TOURS_HASHING),
+      motDePasseModifieLe: new Date(),
+    },
     select: { email: true },
   });
+
+  // Les autres sessions sont désormais rejetées ; on en réémet une pour cet appareil.
+  await signIn("credentials", { email, motDePasse: nouveauMotDePasse, redirect: false });
 
   const date = new Date();
   after(() => envoyerEmail(emailAvisMotDePasse(email, "modifie", date)));

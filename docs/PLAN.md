@@ -400,15 +400,20 @@ Un lien texte « ← Retour », sous l'en-tête et au-dessus du titre, vers une 
 
 ### Ce qu'on livre
 
-Aujourd'hui la session est un JWT contenant uniquement l'identifiant de l'organisateur : un appareil déjà connecté le reste après un changement (Phase 11) ou une réinitialisation (Phase 13) du mot de passe, y compris celui d'un éventuel intrus. On ajoute un champ `motDePasseModifieLe` sur `Organisateur`, mis à jour à chaque changement ou réinitialisation du mot de passe ; le JWT mémorise sa date d'émission, et toute session émise avant `motDePasseModifieLe` est rejetée (retour à `/connexion`). Après un changement depuis `/mon-profil`, la session courante est réémise pour que l'organisateur reste connecté sur l'appareil utilisé.
+Aujourd'hui la session est un JWT contenant uniquement l'identifiant de l'organisateur : un appareil déjà connecté le reste après un changement (Phase 11) ou une réinitialisation (Phase 13) du mot de passe, y compris celui d'un éventuel intrus. On ajoute un champ `motDePasseModifieLe` sur `Organisateur`, mis à jour à chaque changement ou réinitialisation du mot de passe ; le JWT mémorise sa date d'émission dans un champ `emisLe` écrit une seule fois à la connexion (pas `iat`, renouvelé par Auth.js à chaque rafraîchissement), et toute session émise avant `motDePasseModifieLe` est rejetée (retour à `/connexion`). La vérification se fait dans le callback `jwt`, donc à chaque appel de `auth()` (proxy, pages, server actions, en-tête de `/`) ; après un changement, une session sans `emisLe` est rejetée. Après un changement depuis `/mon-profil`, la session courante est réémise (`signIn` avec le nouveau mot de passe) pour que l'organisateur reste connecté sur l'appareil utilisé. Le changement d'email ne déconnecte aucune session.
 
 ### Critères d'acceptation
 
-- [ ] Après une réinitialisation du mot de passe, toute session ouverte auparavant est déconnectée à sa prochaine requête vers une page protégée
-- [ ] Après un changement de mot de passe depuis `/mon-profil`, les autres sessions sont déconnectées ; la session courante reste active
-- [ ] Un organisateur dont le compte a été supprimé est aussi déconnecté (session rejetée si l'organisateur n'existe plus)
-- [ ] Les sessions existantes avant le déploiement de la phase ne sont pas déconnectées à tort (champ `null` = aucune invalidation)
+- [x] Après une réinitialisation du mot de passe, toute session ouverte auparavant est déconnectée à sa prochaine requête vers une page protégée
+- [x] Après un changement de mot de passe depuis `/mon-profil`, les autres sessions sont déconnectées ; la session courante reste active
+- [x] Un organisateur dont le compte a été supprimé est aussi déconnecté (session rejetée si l'organisateur n'existe plus)
+- [x] Les sessions existantes avant le déploiement de la phase ne sont pas déconnectées à tort (champ `null` = aucune invalidation)
 
 ## Bloquée par
 
 - Phase 13 (réinitialisation du mot de passe)
+
+### Suites à prévoir (hors périmètre de la phase 17)
+
+- Session rejetée pendant une server action (formulaire de `/mon-profil` envoyé depuis un onglet resté ouvert) : aujourd'hui `recupererIdOrganisateurConnecte` lève « Non authentifié. » et Next affiche une page d'erreur. À reprendre : renvoyer une erreur propre au formulaire ou rediriger vers `/connexion`.
+- Aucun message n'explique la déconnexion : l'organisateur arrive sur `/connexion` sans savoir pourquoi. À reprendre : un message du type « Votre mot de passe a été modifié, reconnectez-vous » (nécessite de transmettre la raison du rejet, le cookie de session étant déjà effacé).

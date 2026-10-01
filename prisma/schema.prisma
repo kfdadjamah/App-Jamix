@@ -11,6 +11,8 @@ model Organisateur {
   id             String   @id @default(cuid())
   email          String   @unique
   motDePasseHash String
+  // Toute session émise avant cette date est rejetée ; null = aucune invalidation.
+  motDePasseModifieLe DateTime?
   createdAt      DateTime @default(now())
   bar            Bar?
   jetonsReinitialisation JetonReinitialisation[]

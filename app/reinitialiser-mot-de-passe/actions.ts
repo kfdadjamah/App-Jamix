@@ -36,7 +36,8 @@ export async function reinitialiserMotDePasse(
     if (count === 0) return null;
     const { email } = await tx.organisateur.update({
       where: { id: jeton.organisateurId },
-      data: { motDePasseHash },
+      // Déconnecte toutes les sessions ouvertes avant la réinitialisation.
+      data: { motDePasseHash, motDePasseModifieLe: new Date() },
       select: { email: true },
     });
     await tx.jetonReinitialisation.deleteMany({
