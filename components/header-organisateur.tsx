@@ -1,7 +1,6 @@
 import { recupererIdOrganisateurConnecte } from "@/lib/organisateur";
 import { compterRelancesActives } from "@/lib/relances";
 import { prisma } from "@/lib/prisma";
-import IconeProfil from "./icone-profil";
 import { LienGarde } from "./garde-sortie";
 
 export default async function HeaderOrganisateur({
@@ -19,19 +18,16 @@ export default async function HeaderOrganisateur({
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex items-center justify-between gap-3">
-        <LienGarde
-          href="/mes-annonces"
-          className={`whitespace-nowrap text-[12px] font-medium uppercase ${
-            page === "mes-annonces"
-              ? "text-[var(--color-warm-cream)] underline"
-              : "text-[var(--color-driftwood)]"
-          }`}
-        >
-          Mes annonces
-        </LienGarde>
-        <IconeProfil actif={page === "mon-profil"} />
-      </div>
+      <LienGarde
+        href="/mes-annonces"
+        className={`self-start whitespace-nowrap text-[12px] font-medium uppercase ${
+          page === "mes-annonces"
+            ? "text-[var(--color-warm-cream)] underline"
+            : "text-[var(--color-driftwood)]"
+        }`}
+      >
+        Mes annonces
+      </LienGarde>
       {nbRelancesActives > 0 && (
         <LienGarde
           href="/mes-annonces"

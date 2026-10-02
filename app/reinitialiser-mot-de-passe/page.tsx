@@ -1,5 +1,6 @@
 import { trouverJetonValide } from "@/lib/jeton-reinitialisation";
 import FormulaireReinitialisation from "./formulaire-reinitialisation";
+import Bandeau from "@/components/bandeau";
 import BoutonRetour from "@/components/bouton-retour";
 import LienInvalide from "./lien-invalide";
 
@@ -15,16 +16,19 @@ export default async function PageReinitialiserMotDePasse({
   const jetonValide = await trouverJetonValide(jetonBrut);
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-md flex-col gap-8 px-6 py-16">
-      <BoutonRetour href="/connexion" />
-      <h1 className="text-[41px] font-medium uppercase leading-[0.9] text-[var(--color-warm-cream)]">
-        Nouveau mot de passe
-      </h1>
-      {jetonValide && jetonBrut ? (
-        <FormulaireReinitialisation jeton={jetonBrut} />
-      ) : (
-        <LienInvalide />
-      )}
-    </main>
+    <>
+      <Bandeau page="connexion" />
+      <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-8 px-6 py-8">
+        <BoutonRetour href="/connexion" />
+        <h1 className="text-[41px] font-medium uppercase leading-[0.9] text-[var(--color-warm-cream)]">
+          Nouveau mot de passe
+        </h1>
+        {jetonValide && jetonBrut ? (
+          <FormulaireReinitialisation jeton={jetonBrut} />
+        ) : (
+          <LienInvalide />
+        )}
+      </main>
+    </>
   );
 }

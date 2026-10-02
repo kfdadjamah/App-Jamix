@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { recupererBarsDeLOrganisateurConnecte } from "@/lib/organisateur";
+import Bandeau from "@/components/bandeau";
 import HeaderOrganisateur from "@/components/header-organisateur";
 import BoutonRetour from "@/components/bouton-retour";
 import { FournisseurGardeSortie } from "@/components/garde-sortie";
@@ -45,8 +46,9 @@ export default async function PageEditionAnnonce({
   const enregistrerModifications = modifierAnnonce.bind(null, annonce.id, "modifier");
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-md flex-col gap-8 px-6 py-16">
-      <FournisseurGardeSortie>
+    <FournisseurGardeSortie>
+      <Bandeau page="mes-annonces" />
+      <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-8 px-6 py-8">
         <HeaderOrganisateur page="mes-annonces" />
 
         <BoutonRetour href="/mes-annonces" />
@@ -149,7 +151,7 @@ export default async function PageEditionAnnonce({
             label="Photo 2"
           />
         </div>
-      </FournisseurGardeSortie>
-    </main>
+      </main>
+    </FournisseurGardeSortie>
   );
 }

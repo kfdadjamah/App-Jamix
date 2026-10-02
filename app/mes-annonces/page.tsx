@@ -3,6 +3,7 @@ import Link from "next/link";
 import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { recupererIdOrganisateurConnecte } from "@/lib/organisateur";
+import Bandeau from "@/components/bandeau";
 import HeaderOrganisateur from "@/components/header-organisateur";
 import { LIBELLES_STATUT_OCCURRENCE } from "@/lib/annonce-constantes";
 import { statutAffiche } from "@/lib/annonces";
@@ -30,38 +31,41 @@ export default async function PageMesAnnonces() {
   }));
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-md flex-col gap-8 px-6 py-16">
-      <HeaderOrganisateur page="mes-annonces" />
+    <>
+      <Bandeau page="mes-annonces" />
+      <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-8 px-6 py-8">
+        <HeaderOrganisateur page="mes-annonces" />
 
-      <div className="flex items-center justify-between">
-        <h1 className="text-[41px] font-medium uppercase leading-[0.9] text-[var(--color-warm-cream)]">
-          Mes annonces
-        </h1>
-        <Link
-          href="/mes-annonces/nouvelle"
-          className="rounded-[36px] bg-[var(--color-brass-copper)] px-4 py-[10px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)]"
-        >
-          Nouvelle
-        </Link>
-      </div>
+        <div className="flex items-center justify-between">
+          <h1 className="text-[41px] font-medium uppercase leading-[0.9] text-[var(--color-warm-cream)]">
+            Mes annonces
+          </h1>
+          <Link
+            href="/mes-annonces/nouvelle"
+            className="rounded-[36px] bg-[var(--color-brass-copper)] px-4 py-[10px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)]"
+          >
+            Nouvelle
+          </Link>
+        </div>
 
-      {annonces.length === 0 && (
-        <p className="text-[15px] text-[var(--color-driftwood)]">
-          Aucune annonce pour le moment.
-        </p>
-      )}
+        {annonces.length === 0 && (
+          <p className="text-[15px] text-[var(--color-driftwood)]">
+            Aucune annonce pour le moment.
+          </p>
+        )}
 
-      {annonces.length > 0 &&
-        (bars.length >= 2 ? (
-          <FiltreAnnonces bars={bars} annonces={cartes} />
-        ) : (
-          <div className="flex flex-col gap-4">
-            {cartes.map(({ id, carte }) => (
-              <Fragment key={id}>{carte}</Fragment>
-            ))}
-          </div>
-        ))}
-    </main>
+        {annonces.length > 0 &&
+          (bars.length >= 2 ? (
+            <FiltreAnnonces bars={bars} annonces={cartes} />
+          ) : (
+            <div className="flex flex-col gap-4">
+              {cartes.map(({ id, carte }) => (
+                <Fragment key={id}>{carte}</Fragment>
+              ))}
+            </div>
+          ))}
+      </main>
+    </>
   );
 }
 

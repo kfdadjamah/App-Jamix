@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { recupererAnnoncesPubliees, recupererProchainesDatesDisponibles } from "@/lib/annonces";
-import HeaderPublic from "@/components/header-public";
+import Bandeau from "@/components/bandeau";
 import SelecteurDate from "./selecteur-date";
 import ConsultationMusicien from "./consultation-musicien";
 import type { Vue } from "./toggle-vue";
@@ -34,56 +34,57 @@ export default async function Home({
       : [];
 
   return (
-    <main className="mx-auto flex min-h-screen w-full max-w-md flex-col gap-8 px-6 py-16">
-      <HeaderPublic />
-
-      <div>
-        <h1 className="text-[41px] font-medium uppercase leading-[0.9] text-[color:var(--color-warm-cream)]">
-          Jamix
-        </h1>
-        <p className="mt-2 text-[15px] text-[color:var(--color-driftwood)]">
-          Les jams à Lyon, ce soir.
-        </p>
-      </div>
-
-      <label className="flex flex-col gap-2">
-        <span className="text-[12px] font-medium uppercase text-[color:var(--color-warm-cream)]">
-          Date
-        </span>
-        <SelecteurDate dateSelectionnee={dateSelectionnee} />
-      </label>
-
-      {occurrences.length === 0 ? (
-        <div className="flex flex-col gap-4">
-          <p className="text-[18px] leading-[1.26] text-[color:var(--color-warm-cream)]">
-            Aucune jam publiée à cette date pour le moment.
+    <>
+      <Bandeau page="accueil" />
+      <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-8 px-6 py-8">
+        <div>
+          <h1 className="text-[41px] font-medium uppercase leading-[0.9] text-[color:var(--color-warm-cream)]">
+            Jamix
+          </h1>
+          <p className="mt-2 text-[15px] text-[color:var(--color-driftwood)]">
+            Les jams à Lyon, ce soir.
           </p>
-          {prochainesDates.length > 0 && (
-            <div className="flex flex-col gap-2">
-              <span className="text-[12px] font-medium uppercase text-[color:var(--color-driftwood)]">
-                Prochaines dates
-              </span>
-              <div className="flex flex-wrap gap-4">
-                {prochainesDates.map((date) => (
-                  <Link
-                    key={date}
-                    href={`/?date=${date}`}
-                    className="text-[12px] font-medium uppercase text-[color:var(--color-warm-cream)] underline"
-                  >
-                    {formaterDateCourte(date)}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
-      ) : (
-        <ConsultationMusicien
-          occurrences={occurrences}
-          dateSelectionnee={dateSelectionnee}
-          vue={vueSelectionnee}
-        />
-      )}
-    </main>
+
+        <label className="flex flex-col gap-2">
+          <span className="text-[12px] font-medium uppercase text-[color:var(--color-warm-cream)]">
+            Date
+          </span>
+          <SelecteurDate dateSelectionnee={dateSelectionnee} />
+        </label>
+
+        {occurrences.length === 0 ? (
+          <div className="flex flex-col gap-4">
+            <p className="text-[18px] leading-[1.26] text-[color:var(--color-warm-cream)]">
+              Aucune jam publiée à cette date pour le moment.
+            </p>
+            {prochainesDates.length > 0 && (
+              <div className="flex flex-col gap-2">
+                <span className="text-[12px] font-medium uppercase text-[color:var(--color-driftwood)]">
+                  Prochaines dates
+                </span>
+                <div className="flex flex-wrap gap-4">
+                  {prochainesDates.map((date) => (
+                    <Link
+                      key={date}
+                      href={`/?date=${date}`}
+                      className="text-[12px] font-medium uppercase text-[color:var(--color-warm-cream)] underline"
+                    >
+                      {formaterDateCourte(date)}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        ) : (
+          <ConsultationMusicien
+            occurrences={occurrences}
+            dateSelectionnee={dateSelectionnee}
+            vue={vueSelectionnee}
+          />
+        )}
+      </main>
+    </>
   );
 }

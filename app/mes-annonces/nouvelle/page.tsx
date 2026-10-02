@@ -1,3 +1,4 @@
+import Bandeau from "@/components/bandeau";
 import HeaderOrganisateur from "@/components/header-organisateur";
 import BoutonRetour from "@/components/bouton-retour";
 import { FournisseurGardeSortie } from "@/components/garde-sortie";
@@ -19,8 +20,9 @@ export default async function PageNouvelleAnnonce() {
   const publier = creerAnnonce.bind(null, "publier");
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-md flex-col gap-8 px-6 py-16">
-      <FournisseurGardeSortie>
+    <FournisseurGardeSortie>
+      <Bandeau page="mes-annonces" />
+      <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-8 px-6 py-8">
         <HeaderOrganisateur page="mes-annonces" />
 
         <BoutonRetour href="/mes-annonces" />
@@ -43,7 +45,7 @@ export default async function PageNouvelleAnnonce() {
           actionPublier={publier}
           destinationApresEnregistrement="/mes-annonces"
         />
-      </FournisseurGardeSortie>
-    </main>
+      </main>
+    </FournisseurGardeSortie>
   );
 }

@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { sessionCourante } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { aujourdHuiUTC } from "@/lib/annonces";
+import Bandeau from "@/components/bandeau";
 import HeaderOrganisateur from "@/components/header-organisateur";
 import BoutonRetour from "@/components/bouton-retour";
 import MesBars from "./mes-bars";
@@ -42,9 +43,12 @@ export default async function PageMonProfil() {
 
   if (!organisateur || organisateur.bars.length === 0) {
     return (
-      <main className="mx-auto max-w-md px-6 py-16 text-[var(--color-warm-cream)]">
-        Compte introuvable.
-      </main>
+      <>
+        <Bandeau page="mon-profil" />
+        <main className="mx-auto w-full max-w-md px-6 py-8 text-[var(--color-warm-cream)]">
+          Compte introuvable.
+        </main>
+      </>
     );
   }
 
@@ -55,49 +59,52 @@ export default async function PageMonProfil() {
   });
 
   return (
-    <main className="mx-auto flex min-h-screen max-w-md flex-col gap-8 px-6 py-16">
-      <HeaderOrganisateur page="mon-profil" />
-      <BoutonRetour href="/mes-annonces" />
+    <>
+      <Bandeau page="mon-profil" />
+      <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-8 px-6 py-8">
+        <HeaderOrganisateur page="mon-profil" />
+        <BoutonRetour href="/mes-annonces" />
 
-      <div className="flex flex-col gap-3">
-        <h1 className="text-[41px] font-medium uppercase leading-[0.9] text-[var(--color-warm-cream)]">
-          Mon profil
-        </h1>
-        <span className="text-[12px] font-medium uppercase text-[var(--color-driftwood)]">
-          Compte créé le {dateCreation}
-        </span>
-      </div>
+        <div className="flex flex-col gap-3">
+          <h1 className="text-[41px] font-medium uppercase leading-[0.9] text-[var(--color-warm-cream)]">
+            Mon profil
+          </h1>
+          <span className="text-[12px] font-medium uppercase text-[var(--color-driftwood)]">
+            Compte créé le {dateCreation}
+          </span>
+        </div>
 
-      <Separateur />
-      <MesBars
-        bars={organisateur.bars.map((bar) => ({
-          id: bar.id,
-          nom: bar.nom,
-          adresse: bar.adresse,
-          photoUrl: bar.photoUrl,
-          surLaCarte: bar.latitude !== null && bar.longitude !== null,
-          nombreAnnonces: bar._count.annonces,
-          datesAVenirPubliees: bar.annonces.reduce(
-            (total, annonce) => total + annonce._count.occurrences,
-            0
-          ),
-        }))}
-      />
-      <Separateur />
-      <FormulaireEmail emailActuel={organisateur.email} />
-      <Separateur />
-      <FormulaireMotDePasse />
-      <Separateur />
-      <form action={deconnecterOrganisateur}>
-        <button
-          type="submit"
-          className="rounded-[22.5px] border border-[var(--color-warm-cream)] px-4 py-[7.5px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)]"
-        >
-          Déconnexion
-        </button>
-      </form>
-      <Separateur />
-      <SuppressionCompte />
-    </main>
+        <Separateur />
+        <MesBars
+          bars={organisateur.bars.map((bar) => ({
+            id: bar.id,
+            nom: bar.nom,
+            adresse: bar.adresse,
+            photoUrl: bar.photoUrl,
+            surLaCarte: bar.latitude !== null && bar.longitude !== null,
+            nombreAnnonces: bar._count.annonces,
+            datesAVenirPubliees: bar.annonces.reduce(
+              (total, annonce) => total + annonce._count.occurrences,
+              0
+            ),
+          }))}
+        />
+        <Separateur />
+        <FormulaireEmail emailActuel={organisateur.email} />
+        <Separateur />
+        <FormulaireMotDePasse />
+        <Separateur />
+        <form action={deconnecterOrganisateur}>
+          <button
+            type="submit"
+            className="rounded-[22.5px] border border-[var(--color-warm-cream)] px-4 py-[7.5px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)]"
+          >
+            Déconnexion
+          </button>
+        </form>
+        <Separateur />
+        <SuppressionCompte />
+      </main>
+    </>
   );
 }

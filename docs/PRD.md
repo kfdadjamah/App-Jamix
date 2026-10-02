@@ -6,6 +6,8 @@ Côté organisateur, l'accès à son espace n'est pas évident : la page d'accue
 
 Un organisateur qui anime des jams dans plusieurs bars doit aujourd'hui créer un compte par bar, donc utiliser une adresse email différente pour chacun, et se déconnecter pour passer de l'un à l'autre. À chaque nouvelle annonce, il ressaisit aussi l'horaire, les styles, les instruments et les photos, même quand la jam revient à l'identique.
 
+Où qu'il se trouve dans l'application, l'utilisateur n'a aucun moyen direct de revenir à l'accueil, c'est-à-dire à la carte et aux annonces. Le bouton « Retour » ne mène qu'à la page parente. Un organisateur sur son profil, ou un visiteur sur la page d'inscription, doit enchaîner plusieurs retours ou passer par le navigateur. Le haut des pages varie aussi d'un écran à l'autre et ne ressort pas sur le fond sombre : rien n'indique clairement où naviguer.
+
 ## Solution
 
 L'outil centralise les annonces de jams publiées par les organisateurs des bars lyonnais. Le musicien sélectionne une date et consulte les annonces disponibles ce jour-là : lieu, adresse, distance jusqu'à chez lui, horaire, style musical et instruments mis à disposition sur place. Quand aucune jam n'est publiée à la date choisie, l'outil lui suggère les prochaines dates où des jams ont lieu. À terme, l'outil s'ouvrira aussi au grand public souhaitant assister à une jam.
@@ -13,6 +15,8 @@ L'outil centralise les annonces de jams publiées par les organisateurs des bars
 L'organisateur accède à son espace depuis la page d'accueil, retrouve toutes les informations de ses bars et de son compte sur une page profil unique, et peut réinitialiser son mot de passe par email. Il reçoit aussi par email les avis liés à la sécurité de son compte. Chaque page qui n'est pas un point de départ propose un bouton « Retour » vers sa page parente. Quitter la saisie d'une annonce en cours l'enregistre en brouillon, reprenable plus tard ; quitter une annonce publiée avec des modifications non enregistrées demande confirmation.
 
 Un même compte peut gérer jusqu'à 10 bars, ajoutés, modifiés ou supprimés depuis le profil. Chaque annonce porte sur un bar choisi par l'organisateur ; « Mes annonces » affiche le nom du bar sur chaque annonce et permet de filtrer par bar. Sur une nouvelle annonce, un bouton reprend en un clic l'horaire, les styles, les instruments et les photos de la dernière annonce publiée du bar choisi ; il ne reste qu'à ajouter les dates.
+
+Chaque page affiche en haut un même bandeau, fixé pendant le défilement et souligné d'un filet doré. À gauche, un bouton « Jamix » avec une icône de petite maison ramène à l'accueil, à la date du jour, en vue liste, sans rechargement complet. À droite, on trouve l'icône de profil de l'organisateur connecté ou, sur l'accueil, le bouton « Connexion organisateur ». Dans l'espace organisateur, « Mes annonces » et l'alerte des relances sont placées juste sous le bandeau.
 
 ## Utilisateur cible
 
@@ -51,7 +55,7 @@ US-27. En tant qu'organisateur, je veux supprimer définitivement mon compte, av
 US-28. En tant qu'organisateur non connecté, je veux trouver un bouton « Connexion organisateur » en haut à droite de la page d'accueil, afin d'accéder à mon espace sans connaître l'adresse de la page de connexion.
 US-29. En tant qu'organisateur connecté, je veux voir une icône de profil en haut à droite de chaque page, afin d'accéder à mon profil depuis n'importe où.
 US-30. En tant qu'organisateur, je veux retrouver sur une seule page profil les fiches de mes bars (photo, nom, adresse), mon email, mon mot de passe, la déconnexion et la suppression de mon compte, afin de gérer toutes mes informations au même endroit.
-US-31. En tant qu'organisateur, je veux un en-tête réduit à « Mes annonces », à l'alerte des relances et à l'icône de profil, afin de naviguer sans encombrement.
+US-31. En tant qu'organisateur, je veux un en-tête réduit à « Jamix », à l'icône de profil, puis, sous le bandeau, à « Mes annonces » et à l'alerte des relances, afin de naviguer sans encombrement.
 US-32. En tant qu'organisateur, je veux arriver sur « Mes annonces » après m'être connecté, afin de gérer directement mes jams.
 US-33. En tant qu'organisateur, je veux arriver sur « Mes annonces » après mon inscription, afin de publier ma première annonce sans détour.
 US-34. En tant qu'organisateur qui a oublié son mot de passe, je veux recevoir par email un lien de réinitialisation, afin de récupérer l'accès à mon compte.
@@ -76,11 +80,18 @@ US-52. En tant qu'organisateur, je veux que le bar d'une annonce publiée ne pui
 US-53. En tant qu'organisateur qui crée une nouvelle annonce, je veux un bouton « Reprendre la dernière annonce de ce bar » qui remplit l'horaire, les styles, les instruments, les précisions « Autre » et les photos de la dernière annonce publiée du bar choisi, sans les dates, afin de ne pas tout ressaisir pour une jam qui revient.
 US-54. En tant qu'organisateur dont le bar choisi n'a encore aucune annonce publiée, je ne veux pas voir le bouton de reprise, afin de ne pas proposer une action impossible.
 US-55. En tant qu'organisateur ayant plusieurs bars, je veux voir le nom du bar sur chaque annonce de « Mes annonces » et pouvoir filtrer la liste par bar, afin de m'y retrouver rapidement.
-US-56. En tant qu'organisateur ayant plusieurs bars, je veux que chaque relance s'affiche sur l'annonce qui nomme son bar, et que l'alerte de l'en-tête compte les relances de tous mes bars, afin de savoir quel bar doit confirmer quelle jam.
+US-56. En tant qu'organisateur ayant plusieurs bars, je veux que chaque relance s'affiche sur l'annonce qui nomme son bar, et que l'alerte des relances compte les relances de tous mes bars, afin de savoir quel bar doit confirmer quelle jam.
 US-57. En tant qu'organisateur, je veux supprimer définitivement un de mes bars, avec ses annonces, leurs dates et leurs photos, en saisissant son nom pour confirmer, afin de retirer un lieu où je n'organise plus de jams.
 US-58. En tant qu'organisateur, je veux que mon dernier bar ne puisse pas être supprimé et qu'un message m'oriente vers la suppression du compte, afin que mon compte garde toujours au moins un bar.
 US-59. En tant qu'organisateur, je veux être informé quand j'atteins la limite de 10 bars, afin de comprendre pourquoi je ne peux plus en ajouter.
 US-60. En tant qu'organisateur, je veux qu'un bar portant le même nom et la même adresse qu'un de mes bars soit refusé, afin de ne pas créer de doublon par erreur.
+US-61. En tant que musicien ou organisateur, je veux un bouton « Jamix » avec une icône de maison en haut à gauche de chaque page, afin de revenir à la carte et aux annonces depuis n'importe où.
+US-62. En tant que musicien ou organisateur, je veux que « Jamix » ouvre toujours l'accueil à la date du jour en vue liste, afin de retrouver d'un clic les jams du jour.
+US-63. En tant que musicien sur l'accueil, je veux voir « Jamix » signalé comme page active, et qu'un clic remette la date à aujourd'hui et la vue en liste, afin de repartir de zéro après avoir parcouru d'autres dates.
+US-64. En tant que musicien ou organisateur, je veux que le bandeau reste visible en haut de l'écran pendant que je fais défiler la page, afin d'accéder à l'accueil et au profil sans remonter.
+US-65. En tant que visiteur sur la page de connexion, d'inscription, de mot de passe oublié ou de réinitialisation, je veux trouver le bandeau avec seulement « Jamix », afin de renoncer au parcours de connexion en un clic.
+US-66. En tant qu'organisateur, je veux retrouver « Mes annonces » et l'alerte des relances juste sous le bandeau dans mon espace, afin de garder un bandeau épuré.
+US-67. En tant qu'organisateur qui saisit ou modifie une annonce, je veux qu'un clic sur « Jamix » suive les mêmes règles que les autres sorties (brouillon enregistré et fenêtre d'information, avertissement sur une annonce publiée, sortie directe sans changement), afin de ne jamais perdre ma saisie sans le savoir.
 
 ## Critères de succès
 
@@ -94,6 +105,9 @@ US-60. En tant qu'organisateur, je veux qu'un bar portant le même nom et la mê
 - Le bouton de reprise remplit l'horaire, les styles, les instruments et les photos, et laisse les dates vides.
 - Après la suppression d'un bar, aucune de ses annonces n'est plus visible, ni côté musicien ni dans « Mes annonces ».
 - Sur le premier mois suivant la mise en ligne, au moins un organisateur gère au moins 2 bars.
+- Depuis chacune des pages de l'application, un clic sur « Jamix » ouvre l'accueil à la date du jour, en vue liste, sans rechargement complet de la page.
+- Sur toutes les pages, le bandeau reste visible en haut de l'écran après défilement jusqu'en bas de page.
+- Pendant la saisie d'une nouvelle annonce non vide, un clic sur « Jamix » produit un brouillon visible dans « Mes annonces » ou une fenêtre laissant le choix de rester ou de quitter : jamais de perte silencieuse.
 
 ## Hors périmètre
 
@@ -121,6 +135,12 @@ US-60. En tant qu'organisateur, je veux qu'un bar portant le même nom et la mê
 - Reprise des dates d'une annonce.
 - Mémorisation du filtre par bar de « Mes annonces ».
 - Affichage de l'organisateur côté musicien.
+- Bandeau à fond plein doré.
+- Mémorisation de la dernière date ou de la dernière vue consultée sur l'accueil.
+- « Mes annonces » dans le bandeau lui-même, ou sur l'accueil.
+- Menu déroulant ou menu « burger » dans le bandeau.
+- Logo graphique ou nom de l'application séparé du bouton « Jamix » dans le bandeau.
+- Bouton « Connexion organisateur » sur les pages du parcours de connexion.
 
 ## Décisions d'implémentation
 
@@ -156,15 +176,22 @@ US-60. En tant qu'organisateur, je veux qu'un bar portant le même nom et la mê
 - Changer l'email ou le mot de passe exige la saisie du mot de passe actuel.
 - Après un changement de mot de passe depuis le profil, l'organisateur reste connecté sur l'appareil utilisé et voit la confirmation du changement, sans page d'erreur ; ses autres sessions ouvertes sont déconnectées. Après une réinitialisation par email, toutes les sessions ouvertes auparavant sont déconnectées.
 - La suppression du compte est définitive (pas de corbeille) et exige une confirmation explicite ; elle supprime tous ses bars, leurs annonces, leurs occurrences et toutes les photos associées.
-- Visiteur non connecté : un bouton fantôme « Connexion organisateur » en haut à droite de la page d'accueil. Organisateur connecté : une icône bonhomme au même endroit, sur toutes les pages, qui mène à la page profil.
+- Visiteur non connecté : un bouton fantôme « Connexion organisateur » à droite du bandeau de la page d'accueil. Organisateur connecté : une icône bonhomme à droite du bandeau, sur toutes les pages, qui mène à la page profil.
+- Toutes les pages affichent un même bandeau horizontal en haut de l'écran, fixé pendant le défilement. Il a le fond sombre de l'application et est souligné d'un filet doré fin sur toute sa largeur.
+- À gauche du bandeau, un bouton « Jamix » associe une icône de petite maison au libellé « Jamix », nom de l'application. Il mène toujours à l'accueil, à la date du jour, en vue liste, quels que soient la page et le chemin d'arrivée. Le passage se fait sans rechargement complet de l'application.
+- Sur l'accueil, « Jamix » est signalé comme page active. Un clic remet la date à aujourd'hui et la vue en liste.
+- À droite du bandeau : l'icône de profil si l'organisateur est connecté, sur toutes les pages. Sinon, sur l'accueil uniquement, le bouton « Connexion organisateur ». Sur les pages de connexion, d'inscription, de mot de passe oublié et de réinitialisation, la droite du bandeau est vide.
+- Dans l'espace organisateur (« Mes annonces », nouvelle annonce, modification d'annonce, profil), « Mes annonces » et l'alerte des relances s'affichent sous le bandeau.
+- Pendant la saisie d'une annonce, « Jamix » est une sortie via l'application, au même titre que « Retour », « Mes annonces » et l'icône de profil, et suit les mêmes règles. Après la fenêtre, l'organisateur arrive sur l'accueil.
+- Le bouton « ← Retour » existant reste en place sous le bandeau, avec les mêmes destinations.
 - La page profil unique regroupe les fiches des bars (photo, nom, adresse), l'email, le mot de passe, la déconnexion et la suppression du compte ; elle remplace les pages séparées fiche bar et compte, dont les anciennes adresses redirigent vers elle.
-- L'en-tête de l'espace organisateur ne contient plus que « Mes annonces », l'alerte des relances et l'icône de profil.
+- Le bandeau de l'espace organisateur contient « Jamix » et l'icône de profil ; « Mes annonces » et l'alerte des relances sont placées juste en dessous.
 - Après la connexion comme après l'inscription, l'organisateur arrive sur « Mes annonces ».
 - Mot de passe oublié : l'organisateur saisit son email et reçoit un lien valable 1 heure, à usage unique, invalidé dès qu'un nouveau lien est demandé. Le message affiché est le même que l'adresse soit connue ou non. Après réinitialisation, l'organisateur est renvoyé vers la connexion avec un message de succès.
 - Emails envoyés, uniquement liés au compte : lien de réinitialisation, bienvenue à l'inscription, avis de changement ou de réinitialisation du mot de passe, avis de changement d'email envoyé à l'ancienne adresse. Un échec d'envoi d'un email d'avis ne bloque jamais l'action qui l'a déclenché.
-- Un bouton « Retour » apparaît en haut à gauche, sous l'en-tête et au-dessus du titre de la page, sous forme de lien texte « ← Retour », sur : connexion (→ accueil) ; inscription, mot de passe oublié et réinitialisation du mot de passe (→ connexion) ; profil, nouvelle annonce et modification d'annonce (→ « Mes annonces »). L'accueil et « Mes annonces », points de départ, n'en ont pas.
+- Un bouton « Retour » apparaît en haut à gauche, sous le bandeau et au-dessus du titre de la page, sous forme de lien texte « ← Retour », sur : connexion (→ accueil) ; inscription, mot de passe oublié et réinitialisation du mot de passe (→ connexion) ; profil, nouvelle annonce et modification d'annonce (→ « Mes annonces »). L'accueil et « Mes annonces », points de départ, n'en ont pas.
 - La destination du bouton « Retour » est toujours la même pour une page donnée, quel que soit le chemin d'arrivée (lien direct, favori…). Les liens de l'en-tête gardent leur propre destination.
-- Pendant la saisie d'une annonce, toute sortie via l'application (« Retour », ou « Mes annonces » et icône de profil dans l'en-tête) suit les règles ci-dessous ; l'organisateur arrive ensuite sur la page qu'il a demandée.
+- Pendant la saisie d'une annonce, toute sortie via l'application (« Retour », ou « Jamix », « Mes annonces » et icône de profil) suit les règles ci-dessous ; l'organisateur arrive ensuite sur la page qu'il a demandée.
 - Une modification en cours se mesure par rapport au formulaire vide (nouvelle annonce) ou à l'annonce telle qu'ouverte, puis au dernier enregistrement. Sans changement, la sortie est directe, sans brouillon ni fenêtre, quel que soit le statut de l'annonce. Le choix de portée et les actions déjà enregistrées immédiatement (confirmation, annulation d'une date, photos d'une annonce existante) ne comptent pas comme des modifications.
 - Sur une nouvelle annonce ou un brouillon modifié, quitter enregistre la saisie en brouillon (même incomplète, dates et photos comprises), puis affiche une fenêtre « Annonce enregistrée en brouillon, vous pourrez la reprendre plus tard dans Mes annonces » ; après validation, l'organisateur arrive sur la page demandée.
 - Si cet enregistrement échoue (photo refusée, erreur réseau…), l'organisateur reste sur le formulaire et une fenêtre en donne la raison, avec « Rester » (par défaut) et « Quitter sans enregistrer » ; aucun enregistrement partiel. Pendant l'enregistrement, le bouton est inactif.
@@ -183,7 +210,7 @@ US-60. En tant qu'organisateur, je veux qu'un bar portant le même nom et la mê
 - Sur une nouvelle annonce uniquement, dès qu'un bar est choisi et qu'il a au moins une annonce publiée, un bouton fantôme « Reprendre la dernière annonce de ce bar » apparaît. Il remplit l'horaire, les styles, les instruments, les précisions « Autre » et les photos de l'annonce publiée le plus récemment pour ce bar, même si toutes ses dates sont passées ou annulées ; il écrase ces champs sans confirmation et ne touche jamais aux dates. Changer ensuite de bar ne modifie pas les champs repris ; le bouton suit le bar choisi. La reprise compte comme une saisie pour la sortie de la saisie d'une annonce.
 - Les photos reprises sont dupliquées à l'enregistrement : les deux annonces ne partagent jamais un même fichier. Si la copie échoue, l'enregistrement échoue sans enregistrement partiel.
 - « Mes annonces » affiche une seule liste, avec le nom du bar sur chaque annonce. Dès 2 bars, un filtre « Tous » / un bouton par bar (boutons fantômes, défilement horizontal sur mobile) restreint la liste ; il revient sur « Tous » à chaque visite et n'influence pas le formulaire de nouvelle annonce.
-- L'alerte des relances de l'en-tête compte les relances de tous les bars du compte ; chaque relance s'affiche sur l'annonce, qui nomme son bar.
+- L'alerte des relances compte les relances de tous les bars du compte ; chaque relance s'affiche sur l'annonce, qui nomme son bar.
 - Rien ne change côté musicien : chaque annonce s'affiche avec le nom et l'adresse de son bar.
 
 ## Notes complémentaires
@@ -193,5 +220,7 @@ L'itinéraire dépend d'applications tierces (Google Maps, Plans, Waze, Citymapp
 Les emails de compte dépendent d'un service d'envoi tiers (Resend). En mode test, Resend n'envoie qu'à l'adresse du compte Resend ; un domaine d'expédition vérifié est nécessaire pour la bêta. Les emails peuvent arriver en spam, d'où la mention « Pensez à vérifier vos spams » après une demande de réinitialisation.
 
 Hypothèse : chaque compte existant garde son bar et ses annonces au passage à plusieurs bars, sans action de l'organisateur.
+
+Le filet doré du bandeau est un nouvel usage du Gold elegance : un accent structurel non interactif, alors que DESIGN.md le réserve aujourd'hui aux accents éditoriaux. DESIGN.md devra être complété pour autoriser ce cas précis. Le bandeau plein doré reste exclu.
 
 Piste future : des co-organisateurs, avec des droits sur un bar accordés par un organisateur principal. Restent à cadrer l'invitation par email, le périmètre des droits, le destinataire des relances et le sort des annonces en cas de retrait d'un co-organisateur.

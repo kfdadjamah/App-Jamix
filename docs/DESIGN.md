@@ -111,7 +111,11 @@ The ORYZO visual system treats a single product object like a museum artifact: f
 
 Logo wordmark "ORYZO" left-aligned in Warm Cream at 12–14px weight 500 uppercase. Right-aligned nav items: INTRO (with dashed underline indicator for active), FEATURES, PRODUCT, CONTACT — all 12px weight 500 uppercase, Warm Cream. Transparent background over the hero photograph.
 
-### Vertical Sidebar Label
+### Bandeau d'en-tête (Jamix)
+**Role:** Adaptation Jamix de la Fixed Top Navigation — un même bandeau en haut de toutes les pages
+
+Collé en haut pendant le défilement (`position: sticky`), 56px de haut, fond Walnut Shadow (#100904) opaque, filet inférieur 1px Gold elegance (#fca311) sur toute la largeur, sans ombre. Le fond et le filet occupent toute la largeur ; le contenu est aligné sur la colonne de la page (`max-w-md`, 24px de marge). À gauche : icône de maison 18px (trait 1.5) et « JAMIX » en 14px weight 500 uppercase, Warm Cream, 6px d'écart ; souligné quand l'accueil est la page active. À droite : l'icône de profil (cercle 32px, bordure Warm Cream) si l'organisateur est connecté, sinon le bouton fantôme « Connexion organisateur » sur l'accueil uniquement. Pas de menu déroulant ni de menu « burger ».
+
 **Role:** Edge branding — vertical text running down the right margin
 
 Rotated 90° text "ORYZO 1-MODEL" in Warm Cream, 10–12px uppercase, sits flush right. Functions as a product serial number — a physical-product artifact translated to UI.
@@ -151,6 +155,7 @@ Fallback font (Arial 8px weight 500 uppercase) for things like "* ADOBE ILLUSTRA
 ### Do
 - Set all UI text in #ffedd7 (Warm Cream) — never use pure #fff; the warm tint is the system's signature.
 - Use #fca311 (Gold elegance) only for credit lines, the "Built by" label, and the Lusion studio link — a single accent earns its rarity through restraint.
+- Seul usage structurel autorisé du Gold elegance : le filet inférieur 1px du bandeau d'en-tête de Jamix, sur toute la largeur. Il n'est pas interactif. Le bandeau à fond plein doré et tout autre trait doré (séparateurs, bordures de carte, boutons) restent interdits.
 - Set type in uppercase weight 500 across the entire interface; use weight 400 / mixed case only for the 29px body copy that explains the product.
 - Use 36px border-radius for the one filled CTA and 22.5px for outlined ghost buttons; 12px for cards; 0px for inputs and inline links — these four values are the entire radius vocabulary.
 - Set section gaps at 100vh — each section gets its own full viewport, never compress product reveals into bands.

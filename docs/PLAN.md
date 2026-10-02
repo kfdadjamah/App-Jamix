@@ -19,6 +19,7 @@
 - **Emails d'avis (Phase 14)** : envoyés après la réponse (`after()`), une fois l'écriture en base faite ; `envoyerEmail` journalise un échec sans remonter l'erreur, qui ne bloque donc jamais l'action. Les avis de mot de passe sont datés (heure de Paris, affichage seul) et renvoient vers `/mot-de-passe-oublie`, sans jeton créé d'office. L'avis de changement d'email part vers l'ancienne adresse, nouvelle adresse masquée, et seulement si l'email change réellement. `EMAIL_CONTACT` (optionnelle) sert de `Reply-To` à tous les emails de compte.
 - **Profil et compte (Phase 11)** : aucune migration de schéma. Le géocodage d'une adresse de bar n'est relancé que si l'adresse change ; un échec remet latitude/longitude à `null` (fiche valide, bar absent de la carte, distance non affichée). Session JWT contenant uniquement l'identifiant de l'organisateur : l'email affiché est toujours relu en base, jamais depuis la session. Toute action sensible (email, mot de passe, suppression) revérifie le mot de passe actuel côté serveur. La suppression de compte efface, en une transaction, les annonces (occurrences en cascade), le bar puis le compte, faute de cascade `Organisateur → Bar → Annonce` dans le schéma ; les photos (bar et annonces) sont retirées du stockage ensuite, sans bloquer la suppression en cas d'échec.
 - **Navigation retour (Phases 15 et 16)** : aucune migration de schéma. Un composant unique « ← Retour » (lien texte, destination fixe par page, jamais l'historique du navigateur) placé sous l'en-tête et au-dessus du titre. Sur les formulaires d'annonce, les sorties via l'application (Retour, « Mes annonces » et icône de profil de l'en-tête) passent par une même garde côté client qui compare l'état courant du formulaire à un état de référence (formulaire vide, annonce telle qu'ouverte, puis dernier enregistrement réussi) ; le choix de portée et les actions immédiates (confirmation, annulation d'une date, photos d'une annonce existante) sont exclus de la comparaison. L'enregistrement automatique réutilise l'action d'enregistrement en brouillon existante (même validation, pas d'enregistrement partiel). Sortie par le navigateur : alerte standard `beforeunload` uniquement, sans enregistrement.
+- **Bandeau commun « Jamix » (Phase 22)** : aucune migration de schéma. Un composant unique de bandeau, rendu par chaque page (pas dans `app/layout.tsx`) pour rester à l'intérieur de `FournisseurGardeSortie` sur les formulaires d'annonce ; il remplace `HeaderPublic` et la ligne haute de `HeaderOrganisateur`. Bandeau `position: sticky` en haut, fond Walnut Shadow, filet inférieur 1px Gold elegance (nouvel usage structurel, ajouté à DESIGN.md dans la phase). « Jamix » est un `LienGarde` vers `/` sans paramètre : la date et la vue de l'accueil vivant dans l'URL (`?date=&vue=`), ce lien suffit à revenir à aujourd'hui en vue liste, en navigation client. La partie droite est choisie par une prop de variante (accueil / organisateur / parcours de connexion) et la session. « Mes annonces » et l'alerte des relances restent dans `HeaderOrganisateur`, affiché sous le bandeau.
 - **Plusieurs bars par compte (Phases 18 à 21)** :
   - *Modèle* : `Organisateur` 1–N `Bar` ; on retire `@unique` sur `Bar.organisateurId` et `Organisateur.bar` devient `bars Bar[]`. Contrainte `@@unique([organisateurId, nom, adresse])` en base comme filet ; la détection des doublons se fait côté application avec comparaison normalisée (espaces en début/fin retirés, espaces multiples réduits, casse ignorée), à l'ajout comme à la modification. Nom et adresse sont stockés tels que saisis, débarrassés des espaces superflus. Limite de 10 bars vérifiée côté serveur. Migration sans perte : les données existantes sont déjà conformes.
   - *Date de publication* : nouveau champ `Annonce.publieeLe DateTime?`, écrit une seule fois au passage Brouillon → Publiée, en même temps que le calcul J-7 (Phase 6). Ajouté par la migration de la Phase 18 ; les annonces déjà publiées sont remplies avec `createdAt`.
@@ -559,3 +560,33 @@ Sur une nouvelle annonce, dès qu'un bar est choisi et qu'il a au moins une anno
 - Phase 18 (choix du bar et champ `publieeLe`)
 
 Les phases 19, 20 et 21 sont indépendantes entre elles.
+
+---
+
+## Phase 22 : Bandeau d'en-tête commun « Jamix »
+
+**User stories** : US-61, US-62, US-63, US-64, US-65, US-66, US-67, US-31 (modifiée)
+
+### Ce qu'on livre
+
+Toutes les pages affichent un même bandeau fixé en haut, fond Walnut Shadow et filet doré fin sur toute la largeur. À gauche, « ⌂ Jamix » ramène à l'accueil à la date du jour, en vue liste, sans rechargement complet. À droite : l'icône de profil si l'organisateur est connecté (toutes les pages), sinon « Connexion organisateur » sur l'accueil uniquement ; rien sur les pages du parcours de connexion. Dans l'espace organisateur, « Mes annonces » et l'alerte des relances passent juste sous le bandeau. Sur les formulaires d'annonce, « Jamix » est une sortie gardée comme les autres (Phase 16). DESIGN.md est complété pour autoriser le filet doré structurel.
+
+### Critères d'acceptation
+
+- [x] Le bandeau s'affiche sur `/`, `/connexion`, `/inscription`, `/mot-de-passe-oublie`, `/reinitialiser-mot-de-passe`, `/mes-annonces`, `/mes-annonces/nouvelle`, `/mes-annonces/[id]` et `/mon-profil`
+- [x] Le bandeau reste visible en haut de l'écran après défilement jusqu'en bas de page, sans masquer le contenu
+- [x] Le bandeau a le fond Walnut Shadow et un filet inférieur doré fin sur toute la largeur, sans ombre ni fond plein doré
+- [x] « Jamix » (icône de maison + libellé) est à gauche du bandeau et mène à `/` à la date du jour en vue liste, depuis toutes les pages, sans rechargement complet
+- [x] Sur `/` avec une autre date ou la vue carte, un clic sur « Jamix » remet la date à aujourd'hui et la vue en liste ; « Jamix » est signalé comme page active sur `/`
+- [x] Organisateur connecté : icône de profil à droite du bandeau sur toutes les pages, y compris `/` et les pages de connexion
+- [x] Visiteur non connecté : « Connexion organisateur » à droite du bandeau sur `/` uniquement ; droite vide sur `/connexion`, `/inscription`, `/mot-de-passe-oublie` et `/reinitialiser-mot-de-passe`
+- [x] Dans l'espace organisateur, « Mes annonces » et l'alerte des relances s'affichent sous le bandeau, plus dans le bandeau
+- [x] Le bouton « ← Retour » reste sous le bandeau, avec les mêmes destinations (Phase 15)
+- [x] Sur une nouvelle annonce ou un brouillon modifié, « Jamix » enregistre en brouillon puis affiche la fenêtre ; après validation, l'organisateur arrive sur `/`
+- [x] Sur une annonce Publiée modifiée, « Jamix » affiche la fenêtre Quitter/Rester ; sans changement, la sortie est directe ; pendant l'enregistrement, « Jamix » est inactif
+- [x] DESIGN.md autorise le filet doré du bandeau comme seul usage structurel du Gold elegance
+- [x] Le bandeau tient sur mobile (360px) sans débordement horizontal
+
+## Bloquée par
+
+- Phase 16 (garde de sortie) et Phase 12 (icône de profil et en-tête organisateur)
