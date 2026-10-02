@@ -68,3 +68,66 @@ export async function recupererProchainesDatesDisponibles(
 
   return occurrences.map((occurrence) => occurrence.date.toISOString().slice(0, 10));
 }
+
+/** Valeurs reprises de la dernière annonce publiée d'un bar (phase 21), sans les dates. */
+export type ValeursReprises = {
+  styles: string[];
+  styleAutre: string;
+  instruments: string[];
+  instrumentAutre: string;
+  photoUrl1: string | null;
+  photoUrl2: string | null;
+  heureDebut: string;
+  heureFin: string;
+  publieeLe: string;
+};
+
+type AnnoncePourReprise = {
+  barId: string;
+  statut: "BROUILLON" | "PUBLIEE";
+  publieeLe: Date | null;
+  styles: string[];
+  styleAutre: string | null;
+  instruments: string[];
+  instrumentAutre: string | null;
+  photoUrl1: string | null;
+  photoUrl2: string | null;
+  occurrences: { date: Date; heureDebut: string; heureFin: string | null }[];
+};
+
+/**
+ * Table `barId → valeurs reprises` : pour chaque bar, l'annonce publiée au `publieeLe` le plus
+ * récent, quelles que soient ses dates (passées ou annulées comprises) ; brouillons ignorés.
+ * Horaire : celui de la première occurrence (date la plus ancienne), comme la page de modification.
+ */
+export function valeursReprisesParBar(
+  annonces: AnnoncePourReprise[]
+): Record<string, ValeursReprises> {
+  const dernieres = new Map<string, AnnoncePourReprise & { publieeLe: Date }>();
+  for (const annonce of annonces) {
+    if (annonce.statut !== "PUBLIEE" || !annonce.publieeLe) continue;
+    const actuelle = dernieres.get(annonce.barId);
+    if (!actuelle || annonce.publieeLe.getTime() > actuelle.publieeLe.getTime()) {
+      dernieres.set(annonce.barId, { ...annonce, publieeLe: annonce.publieeLe });
+    }
+  }
+
+  const table: Record<string, ValeursReprises> = {};
+  for (const [barId, annonce] of dernieres) {
+    const premiereOccurrence = [...annonce.occurrences].sort(
+      (a, b) => a.date.getTime() - b.date.getTime()
+    )[0];
+    table[barId] = {
+      styles: annonce.styles,
+      styleAutre: annonce.styleAutre ?? "",
+      instruments: annonce.instruments,
+      instrumentAutre: annonce.instrumentAutre ?? "",
+      photoUrl1: annonce.photoUrl1,
+      photoUrl2: annonce.photoUrl2,
+      heureDebut: premiereOccurrence?.heureDebut ?? "",
+      heureFin: premiereOccurrence?.heureFin ?? "",
+      publieeLe: annonce.publieeLe.toISOString(),
+    };
+  }
+  return table;
+}

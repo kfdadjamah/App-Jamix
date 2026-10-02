@@ -7,6 +7,7 @@ import { NOMBRE_MAX_DATES } from "@/lib/validation/annonce";
 import { decisionSortie, instantane } from "@/lib/garde-sortie";
 import { useGardeSortie } from "@/components/garde-sortie";
 import FenetreSortie from "@/components/fenetre-sortie";
+import type { ValeursReprises } from "@/lib/annonces";
 
 type Resultat = { erreur: string } | { succes: true };
 
@@ -57,6 +58,7 @@ export type ChoixBar =
 export default function FormulaireAnnonce({
   choixBar,
   nouvelleAnnonce = false,
+  reprises,
   valeursInitiales,
   afficherPhotos,
   datesModifiables = true,
@@ -69,6 +71,8 @@ export default function FormulaireAnnonce({
   choixBar: ChoixBar;
   // Sur une nouvelle annonce, choisir un bar ne compte pas à lui seul comme une saisie.
   nouvelleAnnonce?: boolean;
+  // Nouvelle annonce : valeurs reprises de la dernière annonce publiée, par bar (phase 21).
+  reprises?: Record<string, ValeursReprises>;
   valeursInitiales?: ValeursInitialesAnnonce;
   afficherPhotos: boolean;
   datesModifiables?: boolean;
@@ -79,7 +83,18 @@ export default function FormulaireAnnonce({
   // Nouvelle annonce : après « Enregistrer le brouillon » ou « Publier », on quitte le formulaire.
   destinationApresEnregistrement?: string;
 }) {
-  const valeurs = valeursInitiales ?? valeursVides;
+  const [valeurs, setValeurs] = useState(valeursInitiales ?? valeursVides);
+  const [photosReprises, setPhotosReprises] = useState<[string | null, string | null]>([
+    null,
+    null,
+  ]);
+  // Incrémentée à chaque reprise : remonte les champs non contrôlés avec les valeurs reprises.
+  const [cleReprise, setCleReprise] = useState(0);
+  const [barChoisi, setBarChoisi] = useState(
+    choixBar.mode === "choix" ? choixBar.barIdInitial : ""
+  );
+  const [repriseDu, setRepriseDu] = useState<string | null>(null);
+  const reprise = barChoisi ? reprises?.[barChoisi] : undefined;
   const [erreur, setErreur] = useState<string | null>(null);
   const [enCours, setEnCours] = useState(false);
   const [dates, setDates] = useState<string[]>(valeurs.dates);
@@ -163,6 +178,24 @@ export default function FormulaireAnnonce({
     router.push(destination);
   }
 
+  // Écrase horaire, styles, instruments, précisions « Autre » et photos, y compris par du vide ;
+  // les dates ne sont jamais touchées.
+  function reprendre() {
+    if (!reprise) return;
+    setValeurs({
+      dates: [],
+      heureDebut: reprise.heureDebut,
+      heureFin: reprise.heureFin,
+      styles: reprise.styles,
+      styleAutre: reprise.styleAutre,
+      instruments: reprise.instruments,
+      instrumentAutre: reprise.instrumentAutre,
+    });
+    setPhotosReprises([reprise.photoUrl1, reprise.photoUrl2]);
+    setCleReprise((cle) => cle + 1);
+    setRepriseDu(reprise.publieeLe);
+  }
+
   function ajouterDate() {
     if (!nouvelleDate) return;
     if (dates.includes(nouvelleDate)) {
@@ -241,7 +274,15 @@ export default function FormulaireAnnonce({
 
       {choixBar.mode === "choix" ? (
         <Champ label="Bar">
-          <select name="barId" defaultValue={choixBar.barIdInitial} className="champ-input">
+          <select
+            name="barId"
+            defaultValue={choixBar.barIdInitial}
+            onChange={(e) => {
+              setBarChoisi(e.target.value);
+              setRepriseDu(null);
+            }}
+            className="champ-input"
+          >
             {choixBar.bars.length > 1 && <option value="">Choisir un bar</option>}
             {choixBar.bars.map((bar) => (
               <option key={bar.id} value={bar.id}>
@@ -259,6 +300,29 @@ export default function FormulaireAnnonce({
           <span className="text-[12px] text-[var(--color-driftwood)]">
             Le bar d&apos;une annonce publiée ne peut plus être changé.
           </span>
+        </div>
+      )}
+
+      {nouvelleAnnonce && reprise && (
+        <div className="-mt-4 flex flex-col items-start gap-2">
+          <button
+            type="button"
+            onClick={reprendre}
+            className="rounded-[22.5px] border border-[var(--color-warm-cream)] px-4 py-[7.5px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)]"
+          >
+            Reprendre la dernière annonce de ce bar
+          </button>
+          {repriseDu && (
+            <span className="text-[12px] font-medium uppercase text-[var(--color-driftwood)]">
+              Repris de l&apos;annonce publiée le{" "}
+              {new Date(repriseDu).toLocaleDateString("fr-FR", {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              })}{" "}
+              — dates à ajouter
+            </span>
+          )}
         </div>
       )}
 
@@ -322,7 +386,7 @@ export default function FormulaireAnnonce({
         )}
       </div>
 
-      <div className="flex gap-6">
+      <div key={`horaire-${cleReprise}`} className="flex gap-6">
         <Champ label="Heure de début">
           <input
             type="time"
@@ -367,6 +431,7 @@ export default function FormulaireAnnonce({
       )}
 
       <GroupeCases
+        key={`styles-${cleReprise}`}
         label="Style musical"
         nom="styles"
         options={STYLES_MUSICAUX}
@@ -376,6 +441,7 @@ export default function FormulaireAnnonce({
       />
 
       <GroupeCases
+        key={`instruments-${cleReprise}`}
         label="Instruments / backline disponibles"
         nom="instruments"
         options={INSTRUMENTS_BACKLINE}
@@ -385,23 +451,9 @@ export default function FormulaireAnnonce({
       />
 
       {afficherPhotos && (
-        <div className="flex gap-6">
-          <Champ label="Photo 1 (optionnel)">
-            <input
-              type="file"
-              name="photo1"
-              accept="image/jpeg,image/png,image/webp"
-              className="champ-input champ-input--fichier"
-            />
-          </Champ>
-          <Champ label="Photo 2 (optionnel)">
-            <input
-              type="file"
-              name="photo2"
-              accept="image/jpeg,image/png,image/webp"
-              className="champ-input champ-input--fichier"
-            />
-          </Champ>
+        <div key={`photos-${cleReprise}`} className="flex gap-6">
+          <EmplacementPhoto numero={1} photoRepriseInitiale={photosReprises[0]} />
+          <EmplacementPhoto numero={2} photoRepriseInitiale={photosReprises[1]} />
         </div>
       )}
 
@@ -496,6 +548,67 @@ function GroupeCases({
           defaultValue={valeurAutre}
           className="champ-input"
         />
+      )}
+    </div>
+  );
+}
+
+// Emplacement photo d'une nouvelle annonce : fichier choisi, ou photo reprise (URL source
+// transmise en champ caché, dupliquée par le serveur à l'enregistrement).
+function EmplacementPhoto({
+  numero,
+  photoRepriseInitiale,
+}: {
+  numero: 1 | 2;
+  photoRepriseInitiale: string | null;
+}) {
+  const [photoReprise, setPhotoReprise] = useState(photoRepriseInitiale);
+  const refFichier = useRef<HTMLInputElement>(null);
+  const label = `Photo ${numero} (optionnel)`;
+
+  // Structure stable : l'input fichier garde sa place, sinon React le remonterait et
+  // perdrait le fichier choisi via « Remplacer ».
+  return (
+    <div className="flex flex-1 flex-col gap-2">
+      <span className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)]">
+        {label}
+      </span>
+      {photoReprise && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={photoReprise} alt={`Photo ${numero} reprise`} className="h-24 w-24 object-cover" />
+      )}
+      {photoReprise && (
+        <input type="hidden" name={`photoReprise${numero}`} value={photoReprise} />
+      )}
+      <input
+        ref={refFichier}
+        type="file"
+        name={`photo${numero}`}
+        aria-label={label}
+        accept="image/jpeg,image/png,image/webp"
+        // Choisir un fichier remplace la photo reprise de cet emplacement.
+        onChange={(e) => {
+          if (e.target.files?.length) setPhotoReprise(null);
+        }}
+        className={photoReprise ? "hidden" : "champ-input champ-input--fichier"}
+      />
+      {photoReprise && (
+        <div className="flex gap-4">
+          <button
+            type="button"
+            onClick={() => refFichier.current?.click()}
+            className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)] underline"
+          >
+            Remplacer
+          </button>
+          <button
+            type="button"
+            onClick={() => setPhotoReprise(null)}
+            className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)] underline"
+          >
+            Retirer
+          </button>
+        </div>
       )}
     </div>
   );

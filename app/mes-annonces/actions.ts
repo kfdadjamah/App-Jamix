@@ -1,12 +1,16 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { del } from "@vercel/blob";
+import { copy, del } from "@vercel/blob";
 import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { calculerStatutInitial } from "@/lib/annonces";
 import { recadrerEtUploaderPhoto } from "@/lib/image";
-import { recupererAnnonceDuCompte, recupererBarDuCompte } from "@/lib/organisateur";
+import {
+  recupererAnnonceDuCompte,
+  recupererBarDuCompte,
+  recupererIdOrganisateurConnecte,
+} from "@/lib/organisateur";
 import { ERREUR_BAR_REQUIS, barApresModification } from "@/lib/bars";
 import {
   schemaAnnonceBrouillon,
@@ -19,6 +23,8 @@ type Resultat = { erreur: string } | { succes: true };
 const ERREUR_ENREGISTREMENT = "L'annonce n'a pas pu être enregistrée. Réessayez.";
 const ERREUR_BAR_INTROUVABLE = "Bar introuvable.";
 const ERREUR_DEJA_PUBLIEE = "Cette annonce est déjà publiée.";
+const ERREUR_PHOTO_REPRISE_INTROUVABLE = "Photo reprise introuvable.";
+const ERREUR_PHOTO_REPRISE_COPIE = "La photo reprise n'a pas pu être copiée.";
 
 async function supprimerPhotos(urls: string[]) {
   await Promise.all(urls.map((url) => del(url).catch(() => undefined)));
@@ -34,6 +40,30 @@ function extraireChampsFormulaire(formData: FormData) {
     instruments: formData.getAll("instruments"),
     instrumentAutre: formData.get("instrumentAutre") ?? "",
   };
+}
+
+function lirePhotoReprise(formData: FormData, cle: string): string | null {
+  const url = formData.get(cle);
+  return typeof url === "string" && url ? url : null;
+}
+
+/** Une photo reprise doit être celle d'une annonce (tout statut) d'un des bars du compte. */
+async function photoRepriseAppartientAuCompte(url: string): Promise<boolean> {
+  const organisateurId = await recupererIdOrganisateurConnecte();
+  const annonce = await prisma.annonce.findFirst({
+    where: { bar: { organisateurId }, OR: [{ photoUrl1: url }, { photoUrl2: url }] },
+    select: { id: true },
+  });
+  return annonce !== null;
+}
+
+/** Duplique une photo reprise : deux annonces ne partagent jamais un même fichier. */
+async function copierPhotoReprise(url: string): Promise<string> {
+  const resultat = await copy(url, `annonces/${crypto.randomUUID()}.webp`, {
+    access: "public",
+    contentType: "image/webp",
+  });
+  return resultat.url;
 }
 
 function lireBarId(formData: FormData): string | null {
@@ -121,17 +151,37 @@ export async function creerAnnonce(
   if (!bar) return { erreur: ERREUR_BAR_INTROUVABLE };
   const donnees = resultat.data;
 
-  // Si une photo échoue, on retire celle déjà uploadée : aucun enregistrement partiel.
+  // Photos reprises (phase 21) : un fichier choisi pour l'emplacement l'emporte.
+  const reprise1 = photo1 ? null : lirePhotoReprise(formData, "photoReprise1");
+  const reprise2 = photo2 ? null : lirePhotoReprise(formData, "photoReprise2");
+  for (const url of [reprise1, reprise2]) {
+    if (url && !(await photoRepriseAppartientAuCompte(url))) {
+      return { erreur: ERREUR_PHOTO_REPRISE_INTROUVABLE };
+    }
+  }
+
+  // Si une photo échoue (upload ou copie), on retire celles déjà stockées :
+  // aucun enregistrement partiel.
   const uploads = await Promise.allSettled([
-    photo1 ? recadrerEtUploaderPhoto(photo1, "annonces") : Promise.resolve(null),
-    photo2 ? recadrerEtUploaderPhoto(photo2, "annonces") : Promise.resolve(null),
+    photo1
+      ? recadrerEtUploaderPhoto(photo1, "annonces")
+      : reprise1
+        ? copierPhotoReprise(reprise1)
+        : Promise.resolve(null),
+    photo2
+      ? recadrerEtUploaderPhoto(photo2, "annonces")
+      : reprise2
+        ? copierPhotoReprise(reprise2)
+        : Promise.resolve(null),
   ]);
   const urlsUploadees = uploads.flatMap((u) =>
     u.status === "fulfilled" && u.value ? [u.value] : []
   );
-  if (uploads.some((u) => u.status === "rejected")) {
+  const echecs = uploads.flatMap((u, i) => (u.status === "rejected" ? [i] : []));
+  if (echecs.length > 0) {
     await supprimerPhotos(urlsUploadees);
-    return { erreur: "La photo n'a pas pu être traitée." };
+    const echecCopie = echecs.some((i) => [reprise1, reprise2][i]);
+    return { erreur: echecCopie ? ERREUR_PHOTO_REPRISE_COPIE : "La photo n'a pas pu être traitée." };
   }
   const [photoUrl1, photoUrl2] = uploads.map((u) =>
     u.status === "fulfilled" ? u.value : null

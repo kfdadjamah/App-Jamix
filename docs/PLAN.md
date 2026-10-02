@@ -532,16 +532,27 @@ Dans la fiche dépliée d'un bar, « Supprimer ce bar » ouvre une fenêtre qui 
 
 Sur une nouvelle annonce, dès qu'un bar est choisi et qu'il a au moins une annonce publiée, un bouton fantôme « Reprendre la dernière annonce de ce bar » remplit l'horaire, les styles, les instruments, les précisions « Autre » et les photos de son annonce publiée le plus récemment. Les dates restent vides. Les photos reprises sont dupliquées à l'enregistrement.
 
+### Décisions de cadrage
+
+- **Horaire repris** : celui de la première occurrence (date la plus ancienne) de l'annonce source, annulées comprises — même règle que la page de modification (`premiereOccurrence`). `heureFin` absente → champ vide.
+- **Chargement** : préchargé au rendu de `/mes-annonces/nouvelle`, une requête pour les bars du compte (10 max) ; le formulaire reçoit une table `barId → valeurs reprises` (styles, styleAutre, instruments, instrumentAutre, photoUrl1/2, heureDebut/heureFin, publieeLe), limitée aux bars ayant une annonce `PUBLIEE`. Bouton masqué si le bar n'est pas dans la table. Pas de server action au clic. Sélection de la dernière annonce (tri `publieeLe`, brouillons ignorés, première occurrence) en fonction pure dans `lib/annonces.ts`, testée avec Vitest.
+- **Photos reprises** : par emplacement, miniature de la photo source (carrée, sans ombre) + champ caché `photoReprise1` / `photoReprise2` (URL source) + liens texte « Remplacer » (ouvre le sélecteur de fichier) et « Retirer » (vide l'emplacement). Choisir un fichier remplace la photo reprise de cet emplacement (URL cachée retirée).
+- **Écrasement total** : la reprise écrase horaire, styles, instruments, précisions « Autre » et photos, y compris par du vide (un emplacement sans photo dans la source est vidé, même si un fichier y était choisi). Les dates ne sont jamais touchées.
+- **Garde de sortie** : `photoReprise1/2` sont des chaînes du `FormData`, donc comparées par `instantane()` ; la reprise compte comme une saisie sans code dédié.
+- **Bouton** : juste sous le champ « Bar », bouton fantôme (bordure Warm Cream, rayon 22.5px, 12px majuscules, 500). Après le clic, ligne 12px majuscules Driftwood sous le bouton : « Repris de l'annonce publiée le [publieeLe] — dates à ajouter » ; elle disparaît au changement de bar. Le bouton reste actif : recliquer réécrase.
+- **Formulaire** : les champs repris sont non contrôlés (`defaultValue`) ; la reprise les remonte via une `key` incrémentée avec les nouvelles valeurs. L'état des dates n'est pas touché. Changer de bar après reprise ne modifie pas les champs.
+- **Serveur** (`creerAnnonce` seulement) : chaque URL reprise doit être exactement `photoUrl1` ou `photoUrl2` d'une annonce (tout statut) dont le bar appartient au compte connecté, sinon refus « Photo reprise introuvable. ». Copie par `copy(url, "annonces/<uuid>.webp", { access: "public", contentType: "image/webp" })` de `@vercel/blob`. Les copies rejoignent les uploads : en cas d'échec d'une copie ou de la transaction, tout est retiré du stockage, erreur « La photo reprise n'a pas pu être copiée. », sans enregistrement partiel.
+
 ### Critères d'acceptation
 
-- [ ] Le bouton n'apparaît que sur une nouvelle annonce, avec un bar choisi qui a au moins une annonce publiée
-- [ ] La dernière annonce est celle au `publieeLe` le plus récent pour ce bar, même si toutes ses dates sont passées ou annulées ; les brouillons sont ignorés
-- [ ] Le bouton remplit l'horaire, les styles, les instruments, les précisions « Autre » et les photos, en écrasant ces champs sans confirmation ; les dates ne sont jamais touchées
-- [ ] Changer ensuite de bar ne modifie pas les champs repris ; le bouton suit le bar choisi (dernière annonce du nouveau bar, ou masqué)
-- [ ] La reprise compte comme une saisie : quitter ensuite le formulaire crée un brouillon (Phase 16)
-- [ ] À l'enregistrement (brouillon ou publication), chaque photo reprise est dupliquée dans un nouveau fichier, après vérification côté serveur qu'elle appartient à une annonce d'un des bars de l'organisateur ; supprimer ou modifier l'annonce source ne touche jamais les photos de la nouvelle
-- [ ] Si la copie d'une photo échoue, l'enregistrement échoue sans enregistrement partiel (fenêtre d'échec de la Phase 16 en cas de sortie)
-- [ ] Une URL de photo qui n'appartient pas à l'organisateur est refusée
+- [x] Le bouton n'apparaît que sur une nouvelle annonce, avec un bar choisi qui a au moins une annonce publiée
+- [x] La dernière annonce est celle au `publieeLe` le plus récent pour ce bar, même si toutes ses dates sont passées ou annulées ; les brouillons sont ignorés
+- [x] Le bouton remplit l'horaire, les styles, les instruments, les précisions « Autre » et les photos, en écrasant ces champs sans confirmation ; les dates ne sont jamais touchées
+- [x] Changer ensuite de bar ne modifie pas les champs repris ; le bouton suit le bar choisi (dernière annonce du nouveau bar, ou masqué)
+- [x] La reprise compte comme une saisie : quitter ensuite le formulaire crée un brouillon (Phase 16)
+- [x] À l'enregistrement (brouillon ou publication), chaque photo reprise est dupliquée dans un nouveau fichier, après vérification côté serveur qu'elle appartient à une annonce d'un des bars de l'organisateur ; supprimer ou modifier l'annonce source ne touche jamais les photos de la nouvelle
+- [x] Si la copie d'une photo échoue, l'enregistrement échoue sans enregistrement partiel (fenêtre d'échec de la Phase 16 en cas de sortie)
+- [x] Une URL de photo qui n'appartient pas à l'organisateur est refusée
 
 ## Bloquée par
 
