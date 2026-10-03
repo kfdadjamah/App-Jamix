@@ -6,7 +6,7 @@ Côté organisateur, l'accès à son espace n'est pas évident : la page d'accue
 
 Un organisateur qui anime des jams dans plusieurs bars doit aujourd'hui créer un compte par bar, donc utiliser une adresse email différente pour chacun, et se déconnecter pour passer de l'un à l'autre. À chaque nouvelle annonce, il ressaisit aussi l'horaire, les styles, les instruments et les photos, même quand la jam revient à l'identique.
 
-Où qu'il se trouve dans l'application, l'utilisateur n'a aucun moyen direct de revenir à l'accueil, c'est-à-dire à la carte et aux annonces. Le bouton « Retour » ne mène qu'à la page parente. Un organisateur sur son profil, ou un visiteur sur la page d'inscription, doit enchaîner plusieurs retours ou passer par le navigateur. Le haut des pages varie aussi d'un écran à l'autre et ne ressort pas sur le fond sombre : rien n'indique clairement où naviguer.
+Où qu'il se trouve dans l'application, l'utilisateur n'a aucun moyen direct de revenir à l'accueil, c'est-à-dire à la carte et aux annonces. Le bouton « Retour » ne mène qu'à la page parente. Un organisateur sur son profil, ou un visiteur sur la page d'inscription, doit enchaîner plusieurs retours ou passer par le navigateur. Le haut des pages varie aussi d'un écran à l'autre et ne ressort pas sur le fond sombre : rien n'indique clairement où naviguer. Même une fois commun, le bandeau garde le fond sombre du corps de la page et ne s'en détache que par un filet fin : la zone de navigation ne se repère pas d'un coup d'œil.
 
 ## Solution
 
@@ -16,7 +16,7 @@ L'organisateur accède à son espace depuis la page d'accueil, retrouve toutes l
 
 Un même compte peut gérer jusqu'à 10 bars, ajoutés, modifiés ou supprimés depuis le profil. Chaque annonce porte sur un bar choisi par l'organisateur ; « Mes annonces » affiche le nom du bar sur chaque annonce et permet de filtrer par bar. Sur une nouvelle annonce, un bouton reprend en un clic l'horaire, les styles, les instruments et les photos de la dernière annonce publiée du bar choisi ; il ne reste qu'à ajouter les dates.
 
-Chaque page affiche en haut un même bandeau, fixé pendant le défilement et souligné d'un filet doré. À gauche, un bouton « Jamix » avec une icône de petite maison ramène à l'accueil, à la date du jour, en vue liste, sans rechargement complet. À droite, on trouve l'icône de profil de l'organisateur connecté ou, sur l'accueil, le bouton « Connexion organisateur ». Dans l'espace organisateur, « Mes annonces » et l'alerte des relances sont placées juste sous le bandeau.
+Chaque page affiche en haut un même bandeau à fond cuivré, la couleur des boutons pleins, distinct du corps sombre de la page, fixé pendant le défilement et souligné d'un filet doré. À gauche, un bouton « Jamix » avec une icône de petite maison ramène à l'accueil, à la date du jour, en vue liste, sans rechargement complet. À droite, on trouve l'icône de profil de l'organisateur connecté ou, sur l'accueil, le bouton « Connexion organisateur ». Dans l'espace organisateur, « Mes annonces » et l'alerte des relances sont placées juste sous le bandeau.
 
 ## Utilisateur cible
 
@@ -92,6 +92,7 @@ US-64. En tant que musicien ou organisateur, je veux que le bandeau reste visibl
 US-65. En tant que visiteur sur la page de connexion, d'inscription, de mot de passe oublié ou de réinitialisation, je veux trouver le bandeau avec seulement « Jamix », afin de renoncer au parcours de connexion en un clic.
 US-66. En tant qu'organisateur, je veux retrouver « Mes annonces » et l'alerte des relances juste sous le bandeau dans mon espace, afin de garder un bandeau épuré.
 US-67. En tant qu'organisateur qui saisit ou modifie une annonce, je veux qu'un clic sur « Jamix » suive les mêmes règles que les autres sorties (brouillon enregistré et fenêtre d'information, avertissement sur une annonce publiée, sortie directe sans changement), afin de ne jamais perdre ma saisie sans le savoir.
+US-68. En tant que musicien ou organisateur, je veux un bandeau d'une couleur cuivrée, distincte du fond sombre de la page, afin de repérer immédiatement la zone de navigation.
 
 ## Critères de succès
 
@@ -108,6 +109,7 @@ US-67. En tant qu'organisateur qui saisit ou modifie une annonce, je veux qu'un 
 - Depuis chacune des pages de l'application, un clic sur « Jamix » ouvre l'accueil à la date du jour, en vue liste, sans rechargement complet de la page.
 - Sur toutes les pages, le bandeau reste visible en haut de l'écran après défilement jusqu'en bas de page.
 - Pendant la saisie d'une nouvelle annonce non vide, un clic sur « Jamix » produit un brouillon visible dans « Mes annonces » ou une fenêtre laissant le choix de rester ou de quitter : jamais de perte silencieuse.
+- Sur toutes les pages, le bandeau a le fond cuivré des boutons pleins et le corps de la page garde son fond sombre.
 
 ## Hors périmètre
 
@@ -136,6 +138,8 @@ US-67. En tant qu'organisateur qui saisit ou modifie une annonce, je veux qu'un 
 - Mémorisation du filtre par bar de « Mes annonces ».
 - Affichage de l'organisateur côté musicien.
 - Bandeau à fond plein doré.
+- Changement de la couleur de fond du corps des pages.
+- Bandeau d'une autre couleur que le cuivré des boutons pleins (dégradé, transparence, couleur par page).
 - Mémorisation de la dernière date ou de la dernière vue consultée sur l'accueil.
 - « Mes annonces » dans le bandeau lui-même, ou sur l'accueil.
 - Menu déroulant ou menu « burger » dans le bandeau.
@@ -177,7 +181,7 @@ US-67. En tant qu'organisateur qui saisit ou modifie une annonce, je veux qu'un 
 - Après un changement de mot de passe depuis le profil, l'organisateur reste connecté sur l'appareil utilisé et voit la confirmation du changement, sans page d'erreur ; ses autres sessions ouvertes sont déconnectées. Après une réinitialisation par email, toutes les sessions ouvertes auparavant sont déconnectées.
 - La suppression du compte est définitive (pas de corbeille) et exige une confirmation explicite ; elle supprime tous ses bars, leurs annonces, leurs occurrences et toutes les photos associées.
 - Visiteur non connecté : un bouton fantôme « Connexion organisateur » à droite du bandeau de la page d'accueil. Organisateur connecté : une icône bonhomme à droite du bandeau, sur toutes les pages, qui mène à la page profil.
-- Toutes les pages affichent un même bandeau horizontal en haut de l'écran, fixé pendant le défilement. Il a le fond sombre de l'application et est souligné d'un filet doré fin sur toute sa largeur.
+- Toutes les pages affichent un même bandeau horizontal en haut de l'écran, fixé pendant le défilement. Il a le fond cuivré des boutons pleins, distinct du fond sombre du corps de la page, et est souligné d'un filet doré fin sur toute sa largeur. Les éléments du bandeau (« Jamix », icône de profil, « Connexion organisateur ») restent en crème.
 - À gauche du bandeau, un bouton « Jamix » associe une icône de petite maison au libellé « Jamix », nom de l'application. Il mène toujours à l'accueil, à la date du jour, en vue liste, quels que soient la page et le chemin d'arrivée. Le passage se fait sans rechargement complet de l'application.
 - Sur l'accueil, « Jamix » est signalé comme page active. Un clic remet la date à aujourd'hui et la vue en liste.
 - À droite du bandeau : l'icône de profil si l'organisateur est connecté, sur toutes les pages. Sinon, sur l'accueil uniquement, le bouton « Connexion organisateur ». Sur les pages de connexion, d'inscription, de mot de passe oublié et de réinitialisation, la droite du bandeau est vide.
@@ -222,5 +226,7 @@ Les emails de compte dépendent d'un service d'envoi tiers (Resend). En mode tes
 Hypothèse : chaque compte existant garde son bar et ses annonces au passage à plusieurs bars, sans action de l'organisateur.
 
 Le filet doré du bandeau est un nouvel usage du Gold elegance : un accent structurel non interactif, alors que DESIGN.md le réserve aujourd'hui aux accents éditoriaux. DESIGN.md devra être complété pour autoriser ce cas précis. Le bandeau plein doré reste exclu.
+
+Le fond cuivré du bandeau est un nouvel usage du Brass Copper comme surface, alors que DESIGN.md le réserve au bouton plein. Les boutons pleins restent les seuls éléments cuivrés dans le corps des pages, mais leur rôle de signal d'action principale s'en trouve un peu affaibli.
 
 Piste future : des co-organisateurs, avec des droits sur un bar accordés par un organisateur principal. Restent à cadrer l'invitation par email, le périmètre des droits, le destinataire des relances et le sort des annonces en cas de retrait d'un co-organisateur.

@@ -20,6 +20,7 @@
 - **Profil et compte (Phase 11)** : aucune migration de schéma. Le géocodage d'une adresse de bar n'est relancé que si l'adresse change ; un échec remet latitude/longitude à `null` (fiche valide, bar absent de la carte, distance non affichée). Session JWT contenant uniquement l'identifiant de l'organisateur : l'email affiché est toujours relu en base, jamais depuis la session. Toute action sensible (email, mot de passe, suppression) revérifie le mot de passe actuel côté serveur. La suppression de compte efface, en une transaction, les annonces (occurrences en cascade), le bar puis le compte, faute de cascade `Organisateur → Bar → Annonce` dans le schéma ; les photos (bar et annonces) sont retirées du stockage ensuite, sans bloquer la suppression en cas d'échec.
 - **Navigation retour (Phases 15 et 16)** : aucune migration de schéma. Un composant unique « ← Retour » (lien texte, destination fixe par page, jamais l'historique du navigateur) placé sous l'en-tête et au-dessus du titre. Sur les formulaires d'annonce, les sorties via l'application (Retour, « Mes annonces » et icône de profil de l'en-tête) passent par une même garde côté client qui compare l'état courant du formulaire à un état de référence (formulaire vide, annonce telle qu'ouverte, puis dernier enregistrement réussi) ; le choix de portée et les actions immédiates (confirmation, annulation d'une date, photos d'une annonce existante) sont exclus de la comparaison. L'enregistrement automatique réutilise l'action d'enregistrement en brouillon existante (même validation, pas d'enregistrement partiel). Sortie par le navigateur : alerte standard `beforeunload` uniquement, sans enregistrement.
 - **Bandeau commun « Jamix » (Phase 22)** : aucune migration de schéma. Un composant unique de bandeau, rendu par chaque page (pas dans `app/layout.tsx`) pour rester à l'intérieur de `FournisseurGardeSortie` sur les formulaires d'annonce ; il remplace `HeaderPublic` et la ligne haute de `HeaderOrganisateur`. Bandeau `position: sticky` en haut, fond Walnut Shadow, filet inférieur 1px Gold elegance (nouvel usage structurel, ajouté à DESIGN.md dans la phase). « Jamix » est un `LienGarde` vers `/` sans paramètre : la date et la vue de l'accueil vivant dans l'URL (`?date=&vue=`), ce lien suffit à revenir à aujourd'hui en vue liste, en navigation client. La partie droite est choisie par une prop de variante (accueil / organisateur / parcours de connexion) et la session. « Mes annonces » et l'alerte des relances restent dans `HeaderOrganisateur`, affiché sous le bandeau.
+- **Bandeau cuivré (Phase 23)** : aucune migration de schéma. Seul le fond du composant de bandeau commun change (Walnut Shadow → Brass Copper). Le filet Gold elegance, la hauteur, le sticky et le contenu restent inchangés. DESIGN.md autorise le Brass Copper comme fond du bandeau uniquement.
 - **Plusieurs bars par compte (Phases 18 à 21)** :
   - *Modèle* : `Organisateur` 1–N `Bar` ; on retire `@unique` sur `Bar.organisateurId` et `Organisateur.bar` devient `bars Bar[]`. Contrainte `@@unique([organisateurId, nom, adresse])` en base comme filet ; la détection des doublons se fait côté application avec comparaison normalisée (espaces en début/fin retirés, espaces multiples réduits, casse ignorée), à l'ajout comme à la modification. Nom et adresse sont stockés tels que saisis, débarrassés des espaces superflus. Limite de 10 bars vérifiée côté serveur. Migration sans perte : les données existantes sont déjà conformes.
   - *Date de publication* : nouveau champ `Annonce.publieeLe DateTime?`, écrit une seule fois au passage Brouillon → Publiée, en même temps que le calcul J-7 (Phase 6). Ajouté par la migration de la Phase 18 ; les annonces déjà publiées sont remplies avec `createdAt`.
@@ -590,3 +591,27 @@ Toutes les pages affichent un même bandeau fixé en haut, fond Walnut Shadow et
 ## Bloquée par
 
 - Phase 16 (garde de sortie) et Phase 12 (icône de profil et en-tête organisateur)
+
+---
+
+## Phase 23 : Bandeau cuivré
+
+**User stories** : US-68
+
+### Ce qu'on livre
+
+Le bandeau commun « Jamix » prend le fond Brass Copper des boutons pleins, pour se détacher du corps des pages, qui garde son fond Walnut Shadow. Le filet doré, la hauteur, le comportement sticky et le contenu du bandeau (« Jamix », icône de profil, « Connexion organisateur », en Warm Cream) ne changent pas. DESIGN.md est complété pour autoriser ce seul usage du Brass Copper comme surface. Aucune migration de schéma.
+
+### Critères d'acceptation
+
+- [x] Le bandeau a un fond Brass Copper opaque sur `/`, les 4 pages du parcours de connexion, `/mes-annonces`, `/mes-annonces/nouvelle`, `/mes-annonces/[id]` et `/mon-profil`
+- [x] Le corps des pages garde le fond Walnut Shadow, y compris la zone « Mes annonces » / relances sous le bandeau
+- [x] Le filet inférieur 1px Gold elegance reste en place, sans ombre
+- [x] « Jamix », l'icône de profil (active ou non) et « Connexion organisateur » restent en Warm Cream et lisibles
+- [x] Pendant le défilement, le contenu ne transparaît pas sous le bandeau
+- [x] DESIGN.md autorise le Brass Copper comme fond du bandeau, seul usage de surface en dehors du bouton plein
+- [x] Le bandeau tient sur mobile (360px) sans débordement
+
+## Bloquée par
+
+- Phase 22 (bandeau commun « Jamix »)

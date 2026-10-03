@@ -16,7 +16,7 @@ export default async function Bandeau({
   const accueil = page === "accueil";
 
   return (
-    <header className="sticky top-0 z-20 w-full border-b border-[var(--color-gold-elegance)] bg-[var(--color-walnut-shadow)]">
+    <header className="sticky top-0 z-20 w-full border-b border-[var(--color-gold-elegance)] bg-[var(--color-brass-copper)]">
       <div className="mx-auto flex h-14 w-full max-w-md items-center justify-between gap-3 px-6">
         {/* Lien vers / sans paramètre : date du jour et vue liste, en navigation client. */}
         <LienGarde
