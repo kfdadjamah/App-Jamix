@@ -5,6 +5,7 @@ import { aujourdHuiUTC } from "@/lib/annonces";
 import Bandeau from "@/components/bandeau";
 import HeaderOrganisateur from "@/components/header-organisateur";
 import BoutonRetour from "@/components/bouton-retour";
+import SectionDeroulable from "@/components/section-deroulable";
 import MesBars from "./mes-bars";
 import FormulaireEmail from "./formulaire-email";
 import FormulaireMotDePasse from "./formulaire-mot-de-passe";
@@ -66,7 +67,7 @@ export default async function PageMonProfil() {
         <BoutonRetour href="/mes-annonces" />
 
         <div className="flex flex-col gap-3">
-          <h1 className="text-[41px] font-medium uppercase leading-[0.9] text-[var(--color-warm-cream)]">
+          <h1 className="text-[24px] font-medium uppercase leading-[1.09] text-[var(--color-warm-cream)]">
             Mon profil
           </h1>
           <span className="text-[12px] font-medium uppercase text-[var(--color-driftwood)]">
@@ -75,24 +76,35 @@ export default async function PageMonProfil() {
         </div>
 
         <Separateur />
-        <MesBars
-          bars={organisateur.bars.map((bar) => ({
-            id: bar.id,
-            nom: bar.nom,
-            adresse: bar.adresse,
-            photoUrl: bar.photoUrl,
-            surLaCarte: bar.latitude !== null && bar.longitude !== null,
-            nombreAnnonces: bar._count.annonces,
-            datesAVenirPubliees: bar.annonces.reduce(
-              (total, annonce) => total + annonce._count.occurrences,
-              0
-            ),
-          }))}
-        />
+        <SectionDeroulable titre="Mes bars" ouverteParDefaut>
+          <MesBars
+            bars={organisateur.bars.map((bar) => ({
+              id: bar.id,
+              nom: bar.nom,
+              adresse: bar.adresse,
+              photoUrl: bar.photoUrl,
+              surLaCarte: bar.latitude !== null && bar.longitude !== null,
+              nombreAnnonces: bar._count.annonces,
+              datesAVenirPubliees: bar.annonces.reduce(
+                (total, annonce) => total + annonce._count.occurrences,
+                0
+              ),
+            }))}
+          />
+        </SectionDeroulable>
         <Separateur />
-        <FormulaireEmail emailActuel={organisateur.email} />
+        <SectionDeroulable
+          titre="Email"
+          sousTitre={
+            <span className="text-[15px] text-[var(--color-driftwood)]">{organisateur.email}</span>
+          }
+        >
+          <FormulaireEmail />
+        </SectionDeroulable>
         <Separateur />
-        <FormulaireMotDePasse />
+        <SectionDeroulable titre="Mot de passe">
+          <FormulaireMotDePasse />
+        </SectionDeroulable>
         <Separateur />
         <form action={deconnecterOrganisateur}>
           <button
@@ -103,7 +115,9 @@ export default async function PageMonProfil() {
           </button>
         </form>
         <Separateur />
-        <SuppressionCompte />
+        <SectionDeroulable titre="Supprimer mon compte">
+          <SuppressionCompte />
+        </SectionDeroulable>
       </main>
     </>
   );

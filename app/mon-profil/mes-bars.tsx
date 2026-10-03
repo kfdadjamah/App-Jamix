@@ -59,11 +59,7 @@ export default function MesBars({ bars }: { bars: BarDuProfil[] }) {
   }
 
   return (
-    <section className="flex flex-col gap-6">
-      <h2 className="text-[24px] font-medium uppercase leading-[1.09] text-[var(--color-warm-cream)]">
-        Mes bars
-      </h2>
-
+    <>
       <ul className="flex flex-col">
         {bars.map((bar) => {
           const deplie = panneau === bar.id;
@@ -185,6 +181,6 @@ export default function MesBars({ bars }: { bars: BarDuProfil[] }) {
           )}
         </div>
       )}
-    </section>
+    </>
   );
 }

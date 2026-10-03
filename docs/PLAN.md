@@ -711,17 +711,17 @@ Sur `/mon-profil`, « Mes bars », « Email », « Mot de passe » et « Supprim
 
 ### Critères d'acceptation
 
-- [ ] À l'arrivée sur `/mon-profil`, « Mes bars » est déroulée ; les formulaires d'email, de mot de passe et de suppression sont masqués ; l'email actuel et « Déconnexion » sont visibles
-- [ ] Les quatre titres de section portent un chevron fin à droite, vers le bas quand la section est repliée, vers le haut quand elle est déroulée ; les titres gardent leur taille actuelle (24px)
-- [ ] Toute la ligne de titre est cliquable : un clic affiche le contenu, un second le masque, « Mes bars » comprise
-- [ ] Plusieurs sections peuvent être ouvertes en même temps ; aucune n'en referme une autre
-- [ ] Replier « Mes bars » masque la liste, « Ajouter un bar » et les messages ; son comportement interne (un seul bar déplié, fiche dépliée d'office avec un seul bar) est inchangé
-- [ ] Une saisie faite dans une section reste présente après l'avoir refermée puis rouverte ; elle n'est perdue qu'en quittant la page
-- [ ] Après un changement d'email ou de mot de passe (succès ou erreur), la section reste ouverte et affiche le message
-- [ ] « Supprimer mon compte » déroulé montre l'avertissement puis directement le formulaire (mot de passe actuel, mot SUPPRIMER, « Supprimer définitivement ») ; plus de bouton intermédiaire ni de lien « Annuler »
-- [ ] Le titre « Mon profil » a la même taille que « Mes annonces » ; « Compte créé le… » reste en dessous
-- [ ] La page tient à 360px sans débordement horizontal ; pas d'animation de dépliage
-- [ ] Le titre de section est un bouton portant `aria-expanded` et `aria-controls` ; le chevron est masqué aux lecteurs d'écran
+- [x] À l'arrivée sur `/mon-profil`, « Mes bars » est déroulée ; les formulaires d'email, de mot de passe et de suppression sont masqués ; l'email actuel et « Déconnexion » sont visibles
+- [x] Les quatre titres de section portent un chevron fin à droite, vers le bas quand la section est repliée, vers le haut quand elle est déroulée ; les titres gardent leur taille actuelle (24px)
+- [x] Toute la ligne de titre est cliquable : un clic affiche le contenu, un second le masque, « Mes bars » comprise
+- [x] Plusieurs sections peuvent être ouvertes en même temps ; aucune n'en referme une autre
+- [x] Replier « Mes bars » masque la liste, « Ajouter un bar » et les messages ; son comportement interne (un seul bar déplié, fiche dépliée d'office avec un seul bar) est inchangé
+- [x] Une saisie faite dans une section reste présente après l'avoir refermée puis rouverte ; elle n'est perdue qu'en quittant la page
+- [x] Après un changement d'email ou de mot de passe (succès ou erreur), la section reste ouverte et affiche le message
+- [x] « Supprimer mon compte » déroulé montre l'avertissement puis directement le formulaire (mot de passe actuel, mot SUPPRIMER, « Supprimer définitivement ») ; plus de bouton intermédiaire ni de lien « Annuler »
+- [x] Le titre « Mon profil » a la même taille que « Mes annonces » ; « Compte créé le… » reste en dessous
+- [x] La page tient à 360px sans débordement horizontal ; pas d'animation de dépliage
+- [x] Le titre de section est un bouton portant `aria-expanded` et `aria-controls` ; le chevron est masqué aux lecteurs d'écran
 
 ## Bloquée par
 
