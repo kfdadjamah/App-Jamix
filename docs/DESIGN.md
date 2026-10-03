@@ -96,6 +96,8 @@ The ORYZO visual system treats a single product object like a museum artifact: f
 
 22.5px border-radius, transparent background, 1px Warm Cream border, Warm Cream text, 7.5px vertical padding, 0px horizontal padding, weight 500, uppercase, 8–14px. Border does the work; no fill needed.
 
+Seule exception de remplissage Jamix : dans le filtre par bar de « Mes annonces », le bouton actif (« Tous » ou un bar) a un fond Warm Cream léger transparent (~15 %), sans soulignement. Un seul bouton actif à la fois ; les boutons passent à la ligne quand la largeur manque, et un nom trop long est tronqué par « … ». Aucun autre bouton fantôme n'a de fond.
+
 ### Underline Text Link
 **Role:** Inline links and navigation items — borderless, relying on underline
 
@@ -163,6 +165,7 @@ Fallback font (Arial 8px weight 500 uppercase) for things like "* ADOBE ILLUSTRA
 - Seul usage structurel autorisé du Gold elegance : le filet inférieur 1px du bandeau d'en-tête de Jamix, sur toute la largeur. Il n'est pas interactif. Le bandeau à fond plein doré et tout autre trait doré (séparateurs, bordures de carte, boutons) restent interdits.
 - Seul usage de surface du Brass Copper en dehors du bouton plein : le fond du bandeau d'en-tête de Jamix. Aucun autre fond (cartes, sections, fenêtres) n'est cuivré.
 - Set type in uppercase weight 500 across the entire interface; use weight 400 / mixed case only for the 29px body copy that explains the product.
+- Seule exception de remplissage d'un bouton fantôme : le bouton actif du filtre par bar de « Mes annonces », à fond Warm Cream léger transparent (~15 %). Jamais de fond plein, crème ou cuivré, sur un bouton fantôme.
 - Seule exception de graisse Jamix : le libellé « À CONFIRMER » de la ligne sous le bandeau de l'espace organisateur est en 700. Le nombre qui le suit et tout autre texte restent en 400 ou 500.
 - Use 36px border-radius for the one filled CTA and 22.5px for outlined ghost buttons; 12px for cards; 0px for inputs and inline links — these four values are the entire radius vocabulary.
 - Set section gaps at 100vh — each section gets its own full viewport, never compress product reveals into bands.

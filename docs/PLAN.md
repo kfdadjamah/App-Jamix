@@ -685,14 +685,14 @@ Dans « Mes annonces », dès 2 bars, les boutons du filtre « Tous » / un bout
 
 ### Critères d'acceptation
 
-- [ ] Dès 2 bars, les boutons du filtre passent à la ligne quand la largeur manque ; aucun défilement horizontal, à 360px comme sur ordinateur
-- [ ] À 360px, avec 10 bars, tous les boutons sont visibles sans défilement horizontal
-- [ ] Le bouton actif (« Tous » ou un bar) a un fond Warm Cream léger transparent (~15 %), sans soulignement ; un seul bouton est actif à la fois
-- [ ] Les boutons gardent leur forme de bouton fantôme (bordure Warm Cream, rayon 22.5px, 12px majuscules, 500), sans fond plein cuivré ni crème
-- [ ] Un nom de bar plus long que la colonne est tronqué par « … » sur une ligne ; aucun bouton n'est plus large que la colonne ; pas d'infobulle
-- [ ] Avec un seul bar, aucun filtre n'est affiché ; le filtre revient sur « Tous » à chaque visite (inchangé)
-- [ ] `aria-pressed` reste porté par le bouton actif
-- [ ] DESIGN.md consigne le fond crème léger du bouton actif du filtre comme seule exception de remplissage d'un bouton fantôme
+- [x] Dès 2 bars, les boutons du filtre passent à la ligne quand la largeur manque ; aucun défilement horizontal, à 360px comme sur ordinateur
+- [x] À 360px, avec 10 bars, tous les boutons sont visibles sans défilement horizontal
+- [x] Le bouton actif (« Tous » ou un bar) a un fond Warm Cream léger transparent (~15 %), sans soulignement ; un seul bouton est actif à la fois
+- [x] Les boutons gardent leur forme de bouton fantôme (bordure Warm Cream, rayon 22.5px, 12px majuscules, 500), sans fond plein cuivré ni crème
+- [x] Un nom de bar plus long que la colonne est tronqué par « … » sur une ligne ; aucun bouton n'est plus large que la colonne ; pas d'infobulle
+- [x] Avec un seul bar, aucun filtre n'est affiché ; le filtre revient sur « Tous » à chaque visite (inchangé)
+- [x] `aria-pressed` reste porté par le bouton actif
+- [x] DESIGN.md consigne le fond crème léger du bouton actif du filtre comme seule exception de remplissage d'un bouton fantôme
 
 ## Bloquée par
 
