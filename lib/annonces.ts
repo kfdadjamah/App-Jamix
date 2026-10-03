@@ -51,6 +51,23 @@ export async function recupererAnnoncesPubliees(dateIso: string) {
   return occurrences;
 }
 
+/**
+ * Occurrence consultable par un musicien (page d'une jam) : annonce publiée, date à venir
+ * (aujourd'hui compris), annulée comprise. `null` sinon : inexistante, brouillon ou passée.
+ */
+export async function recupererOccurrencePubliee(occurrenceId: string) {
+  return prisma.occurrenceJam.findFirst({
+    where: {
+      id: occurrenceId,
+      date: { gte: aujourdHuiUTC() },
+      annonce: { statut: "PUBLIEE" },
+    },
+    include: {
+      annonce: { include: { bar: true } },
+    },
+  });
+}
+
 export async function recupererProchainesDatesDisponibles(
   dateIso: string,
   limite: number,
@@ -75,6 +92,7 @@ export type ValeursReprises = {
   styleAutre: string;
   instruments: string[];
   instrumentAutre: string;
+  description: string;
   photoUrl1: string | null;
   photoUrl2: string | null;
   heureDebut: string;
@@ -90,6 +108,7 @@ type AnnoncePourReprise = {
   styleAutre: string | null;
   instruments: string[];
   instrumentAutre: string | null;
+  description: string | null;
   photoUrl1: string | null;
   photoUrl2: string | null;
   occurrences: { date: Date; heureDebut: string; heureFin: string | null }[];
@@ -122,6 +141,7 @@ export function valeursReprisesParBar(
       styleAutre: annonce.styleAutre ?? "",
       instruments: annonce.instruments,
       instrumentAutre: annonce.instrumentAutre ?? "",
+      description: annonce.description ?? "",
       photoUrl1: annonce.photoUrl1,
       photoUrl2: annonce.photoUrl2,
       heureDebut: premiereOccurrence?.heureDebut ?? "",

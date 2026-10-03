@@ -65,6 +65,7 @@ describe("valeursReprisesParBar", () => {
       styleAutre: null,
       instruments: ["Batterie"],
       instrumentAutre: null,
+      description: null,
       photoUrl1: null,
       photoUrl2: null,
       occurrences: [{ date: joursApres(5), heureDebut: "20:00", heureFin: "23:00" }],
@@ -139,5 +140,14 @@ describe("valeursReprisesParBar", () => {
       heureDebut: "",
       heureFin: "",
     });
+  });
+
+  it("reprend la description, et une description absente devient vide", () => {
+    const table = valeursReprisesParBar([
+      annonce({ barId: "bar-a", description: "Inscription sur place.\nNiveau libre." }),
+      annonce({ barId: "bar-b", description: null }),
+    ]);
+    expect(table["bar-a"].description).toBe("Inscription sur place.\nNiveau libre.");
+    expect(table["bar-b"].description).toBe("");
   });
 });

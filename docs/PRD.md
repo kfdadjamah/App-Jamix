@@ -30,7 +30,7 @@ Dans « Mes annonces », les boutons du filtre par bar passent à la ligne quand
 
 Sur le profil, les sections « Mes bars », « Email », « Mot de passe » et « Supprimer mon compte » se déroulent et se referment d'un clic sur leur titre, qui porte un chevron. À l'arrivée, seule « Mes bars » est déroulée. « Déconnexion » reste affiché tel quel. Le titre « Mon profil » prend la taille du titre « Mes annonces ».
 
-Dans le formulaire d'annonce, le titre prend la taille de « Mes annonces » et tient sur une ligne. Un champ « Description », facultatif et limité à 500 caractères, permet d'ajouter des précisions libres, affichées au musicien sous les instruments. Une case « Tous les styles » remplace en un clic la liste des styles. Les instruments s'intitulent « Instruments disponibles » dans le formulaire et « Instruments » côté musicien : le mot « backline » disparaît de l'écran.
+Dans le formulaire d'annonce, le titre prend la taille de « Mes annonces » et tient sur une ligne. Un champ « Description », facultatif et limité à 500 caractères, permet d'ajouter des précisions libres, affichées au musicien sous les instruments. Dans la liste, le musicien en voit le début et ouvre, d'un clic sur la carte, la page de la jam qui montre toute l'annonce. Une case « Tous les styles » remplace en un clic la liste des styles. Les instruments s'intitulent « Instruments disponibles » dans le formulaire et « Instruments » côté musicien : le mot « backline » disparaît de l'écran.
 
 ## Utilisateur cible
 
@@ -129,7 +129,7 @@ US-87. En tant qu'organisateur, je veux que le titre du formulaire d'annonce («
 US-88. En tant qu'organisateur, je veux ajouter une description libre à mon annonce, afin de donner aux musiciens les précisions qui n'entrent dans aucun autre champ.
 US-89. En tant qu'organisateur, je veux que la description soit facultative, pour un brouillon comme pour une publication, afin de ne pas être bloqué si je n'ai rien à ajouter.
 US-90. En tant qu'organisateur, je veux voir combien de caractères il me reste sur les 500 autorisés, afin de ne pas être surpris par la limite.
-US-91. En tant que musicien, je veux lire la description d'une annonce sous ses instruments, dans la liste comme dans la fiche de la carte, afin de connaître les précisions de l'organisateur avant de me déplacer.
+US-91. En tant que musicien, je veux lire la description d'une annonce sous ses instruments : le début dans la liste, en entier dans la fiche de la carte et sur la page de la jam, afin de connaître les précisions de l'organisateur avant de me déplacer.
 US-92. En tant que musicien, je veux que les retours à la ligne de la description soient conservés, afin de la lire telle que l'organisateur l'a écrite.
 US-93. En tant qu'organisateur, je veux que « Reprendre la dernière annonce de ce bar » reprenne aussi la description, afin de ne pas la ressaisir pour une jam qui revient.
 US-94. En tant qu'organisateur, je veux modifier la description d'une annonce publiée, appliquée à toutes ses dates comme les styles et les instruments, afin de garder l'information à jour.
@@ -137,6 +137,10 @@ US-95. En tant qu'organisateur dont la jam est ouverte à tous les styles, je ve
 US-96. En tant qu'organisateur, je veux que cocher « Tous les styles » décoche et désactive les autres styles et « Autre », et que la décocher les réactive, afin de ne jamais publier une combinaison contradictoire.
 US-97. En tant que musicien, je veux voir « Tous styles » sur une annonce ouverte à tous les styles, afin de savoir que je peux y venir quel que soit mon style.
 US-98. En tant que musicien ou organisateur, je veux lire « Instruments disponibles » dans le formulaire et « Instruments » sur les annonces, au lieu de « backline », afin de comprendre sans jargon ce qui est fourni sur place.
+US-99. En tant que musicien, je veux ouvrir d'un clic sur une carte de la liste la page de cette jam, afin de voir toute l'annonce : description complète, photos en grand, statut et date.
+US-100. En tant que musicien sur la page d'une jam, je veux un bouton « Retour » vers la liste du jour de cette jam, afin de reprendre ma recherche là où je l'ai laissée.
+US-101. En tant que musicien qui ouvre la page d'une jam passée, supprimée ou retirée, je veux un message clair « Cette jam n'est plus disponible », afin de ne pas tomber sur une page d'erreur.
+US-102. En tant qu'organisateur, je veux voir le début de la description sur chaque annonce de « Mes annonces », afin de la reconnaître d'un coup d'œil.
 
 ## Critères de succès
 
@@ -169,7 +173,9 @@ US-98. En tant que musicien ou organisateur, je veux lire « Instruments disponi
 - Les titres « Mon profil » et « Mes annonces » ont la même taille.
 - À 360px de large, les titres « Nouvelle annonce », « Modifier l'annonce » et « Modifier le brouillon » tiennent sur une ligne et ont la taille du titre « Mes annonces ».
 - Une annonce sans description se publie ; une description de plus de 500 caractères est refusée.
-- Une description saisie avec des retours à la ligne s'affiche côté musicien, dans la liste comme dans la fiche de la carte, avec ses retours à la ligne.
+- Une description saisie avec des retours à la ligne s'affiche côté musicien avec ses retours à la ligne : ses 3 premières lignes dans la liste, en entier dans la fiche de la carte et sur la page de la jam.
+- Depuis la liste de l'accueil, un clic sur une carte (hors « Itinéraire ») ouvre la page de la jam ; « Retour » y ramène à la liste de la date de la jam.
+- La page d'une jam passée, en brouillon ou supprimée affiche « Cette jam n'est plus disponible » ; une jam annulée à venir reste consultable avec son statut.
 - Le bouton de reprise remplit la description, y compris par du vide quand l'annonce source n'en a pas.
 - Une annonce avec « Tous les styles » seule se publie et affiche « Tous styles » côté musicien et dans « Mes annonces ».
 - « Tous les styles » ne peut jamais être enregistrée avec un autre style ou une précision « Autre ».
@@ -228,6 +234,8 @@ US-98. En tant que musicien ou organisateur, je veux lire « Instruments disponi
 - Case « Tous les instruments » ou option « Aucun instrument ».
 - Filtre par style côté musicien.
 - Description sur la fiche d'un bar.
+- Lien vers la page d'une jam depuis la fiche ouverte par un marqueur de la carte.
+- Partage de la page d'une jam, et liste des autres dates de la même annonce sur cette page.
 
 ## Décisions d'implémentation
 
@@ -314,7 +322,9 @@ US-98. En tant que musicien ou organisateur, je veux lire « Instruments disponi
 - Le titre « Mon profil » passe à la taille du titre « Mes annonces » ; la mention « Compte créé le… » reste en dessous.
 - Les titres du formulaire d'annonce (« Nouvelle annonce », « Modifier l'annonce », « Modifier le brouillon ») prennent la taille du titre « Mes annonces » et tiennent sur une ligne à 360px.
 - Le formulaire d'annonce propose un champ « Description (optionnel) », placé après les instruments et avant les photos : zone de texte de 4 lignes, soulignée sans cadre comme les autres champs, avec un compteur « N/500 » en petit, à droite. Texte brut, 500 caractères maximum, refusé au-delà côté serveur.
-- La description est facultative pour le brouillon comme pour la publication. Côté musicien, elle s'affiche sous les instruments et au-dessus des photos, dans la liste comme dans la fiche ouverte depuis un marqueur, avec ses retours à la ligne ; sans description, rien ne s'affiche.
+- La description est facultative pour le brouillon comme pour la publication. Côté musicien, elle s'affiche sous les instruments et au-dessus des photos, avec ses retours à la ligne, en texte courant (casse mixte, 15px, Warm Cream) ; sans description, rien ne s'affiche. Dans la liste, seules ses 3 premières lignes s'affichent, coupées par « … » ; dans la fiche ouverte depuis un marqueur, elle s'affiche en entier, et la fiche ne mène pas à la page de la jam.
+- Dans la liste de l'accueil, toute la carte d'une jam est un lien vers sa page (`/jams/[id]`, une page par date), sauf le bouton « Itinéraire ». La page reprend le bandeau commun, « ← Retour » vers l'accueil à la date de la jam en vue liste, puis le nom du bar en titre, la date, le statut, l'adresse, la distance si la géolocalisation est acceptée, l'horaire, les styles, les instruments, la description complète, les photos en pleine largeur et « Itinéraire ». Une jam passée, en brouillon ou inexistante affiche « Cette jam n'est plus disponible » et un lien « Voir les jams du jour » ; une jam annulée à venir reste consultable.
+- Dans « Mes annonces », chaque annonce affiche les 2 premières lignes de sa description, en petit et en Driftwood.
 - La description est modifiable sur un brouillon comme sur une annonce publiée ; sur une annonce publiée, elle s'applique à toutes ses dates, comme les styles et les instruments.
 - « Reprendre la dernière annonce de ce bar » reprend aussi la description, en écrasant celle en cours, y compris par du vide. Saisir une description compte comme une saisie pour la sortie de la saisie d'une annonce.
 - Une case « Tous les styles » est la première de la liste des styles, sur sa propre ligne. Cochée, elle décoche et désactive les autres styles et « Autre » (précision comprise) ; décochée, elle les réactive, vides. Une annonce ne peut jamais porter « Tous les styles » avec un autre style ou une précision « Autre » : la combinaison est refusée côté serveur.

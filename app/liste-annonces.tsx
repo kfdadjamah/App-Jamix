@@ -29,7 +29,12 @@ export default function ListeAnnonces({
   return (
     <div className="flex flex-col gap-4">
       {occurrencesAvecDistance.map(({ occurrence, distanceKm }) => (
-        <CarteAnnonce key={occurrence.id} occurrence={occurrence} distanceKm={distanceKm} />
+        <CarteAnnonce
+          key={occurrence.id}
+          occurrence={occurrence}
+          distanceKm={distanceKm}
+          mode="liste"
+        />
       ))}
     </div>
   );

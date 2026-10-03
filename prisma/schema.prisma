@@ -70,6 +70,8 @@ model Annonce {
   styleAutre     String?
   instruments    String[]
   instrumentAutre String?
+  // Texte brut, 500 caractères maximum (phase 29).
+  description    String?
   photoUrl1      String?
   photoUrl2      String?
   // Écrit une seule fois, au passage Brouillon → Publiée.

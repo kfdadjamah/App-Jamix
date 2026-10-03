@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import dynamic from "next/dynamic";
 import { type recupererAnnoncesPubliees } from "@/lib/annonces";
+import { usePositionMusicien } from "@/lib/position-musicien";
 import ListeAnnonces from "./liste-annonces";
 import ToggleVue, { type Vue } from "./toggle-vue";
 import BottomSheetBar from "./bottom-sheet-bar";
@@ -20,25 +21,8 @@ export default function ConsultationMusicien({
   dateSelectionnee: string;
   vue: Vue;
 }) {
-  const [positionMusicien, setPositionMusicien] = useState<{
-    latitude: number;
-    longitude: number;
-  } | null>(null);
+  const positionMusicien = usePositionMusicien();
   const [barSelectionneId, setBarSelectionneId] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!navigator.geolocation) return;
-
-    navigator.geolocation.getCurrentPosition(
-      (position) =>
-        setPositionMusicien({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        }),
-      () => setPositionMusicien(null),
-      { enableHighAccuracy: false, timeout: 10_000, maximumAge: 5 * 60_000 },
-    );
-  }, []);
 
   const occurrencesDuBarSelectionne = barSelectionneId
     ? occurrences.filter((occurrence) => occurrence.annonce.bar.id === barSelectionneId)

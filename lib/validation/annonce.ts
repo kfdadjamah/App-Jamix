@@ -16,6 +16,23 @@ const schemaDates = z
     message: "Une même date ne peut pas être ajoutée deux fois.",
   });
 
+export const LONGUEUR_MAX_DESCRIPTION = 500;
+
+// Le navigateur compte un retour à la ligne pour 1 caractère (maxLength) mais l'envoie en \r\n :
+// on normalise avant de compter. Espaces de début et de fin retirés ; vide → absente.
+const schemaDescription = z
+  .string()
+  .optional()
+  .transform((texte) => (texte ?? "").replace(/\r\n?/g, "\n").trim())
+  .pipe(
+    z
+      .string()
+      .max(
+        LONGUEUR_MAX_DESCRIPTION,
+        `La description ne peut pas dépasser ${LONGUEUR_MAX_DESCRIPTION} caractères.`
+      )
+  );
+
 const champsCommuns = {
   dates: schemaDates.default([]),
   heureDebut: z.string().regex(regexHeure, "Heure invalide.").optional().or(z.literal("")),
@@ -24,6 +41,7 @@ const champsCommuns = {
   styleAutre: z.string().trim().optional(),
   instruments: z.array(z.enum(INSTRUMENTS_BACKLINE)).default([]),
   instrumentAutre: z.string().trim().optional(),
+  description: schemaDescription,
   photo1: schemaPhotoAnnonce,
   photo2: schemaPhotoAnnonce,
 };

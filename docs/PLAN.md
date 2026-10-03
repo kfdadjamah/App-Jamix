@@ -36,7 +36,8 @@
 - **Filtre par bar sur plusieurs lignes (Phase 26)** : aucune migration de schéma. Seul le rendu de `app/mes-annonces/filtre-annonces.tsx` change : conteneur `flex-wrap` au lieu du défilement horizontal, bouton actif à fond Warm Cream léger transparent (~15 %) au lieu du soulignement, nom tronqué (`truncate`) dans un bouton limité à la largeur de la colonne. `aria-pressed` conservé. DESIGN.md consigne l'exception de remplissage pour ce seul filtre.
 - **Sections déroulables du profil (Phase 27)** : aucune migration de schéma ni nouvelle route. Un composant client unique de section déroulable (`components/section-deroulable.tsx`) : toute la ligne de titre est un bouton (`aria-expanded`, `aria-controls`) avec un chevron `ChevronDown` de `lucide-react` qui pivote quand la section est déroulée, et un sous-titre optionnel toujours visible (email actuel). Aucun état mémorisé : « Mes bars » ouverte et les autres repliées à chaque visite. Le contenu replié reste monté mais masqué (`hidden`), si bien que la saisie et l'état interne de « Mes bars » sont conservés, y compris au re-rendu de `/mon-profil` après un changement de mot de passe (Phase 17). Les titres internes de `MesBars`, `FormulaireEmail`, `FormulaireMotDePasse` et `SuppressionCompte` passent dans la section ; `SuppressionCompte` perd son état d'ouverture, son bouton intermédiaire et « Annuler ».
 - **Libellé des instruments et titres du formulaire (Phase 28)** : aucune migration de schéma. Le titre d'un brouillon devient « Modifier le brouillon » (« Compléter le brouillon » mesurait 325px en 24px, pour une colonne de 312px à 360px). Seuls les libellés changent (« Instruments disponibles » dans le formulaire, « Instruments : » dans `app/carte-annonce.tsx`) ; la valeur stockée `Annonce.instruments` et la liste `INSTRUMENTS_BACKLINE` (`lib/annonce-constantes.ts`) restent inchangées.
-- **Description d'une annonce (Phase 29)** : nouveau champ `Annonce.description String?` (texte brut, 500 caractères maximum, validé côté serveur dans le schéma zod de l'annonce, brouillon comme publication ; chaîne vide → `null`). Appliqué par `prisma db push` (pas de dossier de migrations) ; les annonces existantes restent à `null`, aucun script. Champ de l'annonce, donc commun à toutes ses occurrences : la portée ciblée/globale ne concerne que l'horaire (`synchroniserOccurrences`, `app/mes-annonces/actions.ts`). Ajouté à `ValeursReprises` / `valeursReprisesParBar` (`lib/annonces.ts`). Garde de sortie : le `<textarea name="description">` est lu par `instantane()` via le `FormData`, sans code dédié. Côté musicien, un seul composant d'affichage (`app/carte-annonce.tsx`, utilisé par la liste et la fiche de la carte), en `whitespace-pre-line`.
+- **Description d'une annonce (Phase 29)** : nouveau champ `Annonce.description String?` (texte brut, 500 caractères maximum, validé côté serveur dans le schéma zod de l'annonce, brouillon comme publication ; chaîne vide → `null`). Appliqué par `prisma db push` (pas de dossier de migrations) ; les annonces existantes restent à `null`, aucun script. Champ de l'annonce, donc commun à toutes ses occurrences : la portée ciblée/globale ne concerne que l'horaire (`synchroniserOccurrences`, `app/mes-annonces/actions.ts`). Ajouté à `ValeursReprises` / `valeursReprisesParBar` (`lib/annonces.ts`). Garde de sortie : le `<textarea name="description">` est lu par `instantane()` via le `FormData`, sans code dédié. Le navigateur envoie les retours à la ligne en `\r\n` alors que `maxLength` les compte pour 1 : le schéma les normalise en `\n` et retire les espaces de début et de fin avant de compter. Côté musicien, un seul composant de carte (`app/carte-annonce.tsx`) avec une prop `mode` : `"liste"` (extrait `line-clamp-3`, nom du bar en lien étendu à toute la carte par un pseudo-élément, « Itinéraire » au-dessus en `relative z-10`) et `"fiche"` (marqueur de la carte : description complète, sans lien). Description en `whitespace-pre-line`, 15px, 400, casse mixte, Warm Cream. Dans « Mes annonces », extrait `line-clamp-2` en 12px Driftwood.
+- **Page d'une jam (Phase 29)** : nouvelle route publique `/jams/[id]`, une page par occurrence (hors `matcher` du proxy). Lecture par `recupererOccurrencePubliee` (`lib/annonces.ts`) : annonce `PUBLIEE`, date ≥ `aujourdHuiUTC()`, annulées comprises ; sinon `notFound()` et `app/jams/[id]/not-found.tsx` (« Cette jam n'est plus disponible », code 404). « ← Retour » vers `/?date=<date de l'occurrence>`. Distance calculée côté client par le hook `usePositionMusicien` (`lib/position-musicien.ts`), extrait de `app/consultation-musicien.tsx` et partagé ; jamais de position dans l'URL. Variante `"jam"` du bandeau (droite : icône de profil si connecté, sinon vide).
 - **« Tous les styles » (Phase 30)** : aucune migration de schéma. Valeur `"Tous les styles"` ajoutée en tête de `STYLES_MUSICAUX` (`lib/annonce-constantes.ts`) et stockée dans `Annonce.styles`. Exclusivité vérifiée côté serveur (refine zod : « Tous les styles » seule, sans autre style ni précision « Autre ») et côté client (autres cases décochées et désactivées). Compte pour le `min(1)` de la publication. Affichée « Tous styles » côté musicien et dans « Mes annonces ».
 
 ---
@@ -756,24 +757,30 @@ Aucune — démarrable immédiatement
 
 ## Phase 29 : Description d'une annonce
 
-**User stories** : US-88, US-89, US-90, US-91, US-92, US-93, US-94
+**User stories** : US-88, US-89, US-90, US-91, US-92, US-93, US-94, US-99, US-100, US-101, US-102
 
 ### Ce qu'on livre
 
-Le formulaire d'annonce propose un champ « Description (optionnel) », texte brut de 500 caractères maximum avec compteur, placé après les instruments et avant les photos. La description s'affiche côté musicien sous les instruments, avec ses retours à la ligne. Elle est modifiable sur un brouillon comme sur une annonce publiée (toutes les dates), reprise par « Reprendre la dernière annonce de ce bar » et suivie par la garde de sortie. Migration : champ `Annonce.description String?`.
+Le formulaire d'annonce propose un champ « Description (optionnel) », texte brut de 500 caractères maximum avec compteur, placé après les instruments et avant les photos. La description s'affiche côté musicien sous les instruments, avec ses retours à la ligne : ses 3 premières lignes dans la liste, en entier dans la fiche de la carte. Un clic sur une carte de la liste ouvre la nouvelle page publique de la jam (`/jams/[id]`), qui montre toute l'annonce. « Mes annonces » affiche les 2 premières lignes de la description. Elle est modifiable sur un brouillon comme sur une annonce publiée (toutes les dates), reprise par « Reprendre la dernière annonce de ce bar » et suivie par la garde de sortie. Migration : champ `Annonce.description String?`.
 
 ### Critères d'acceptation
 
-- [ ] Le formulaire affiche « Description (optionnel) » après les instruments et avant les photos : zone de texte de 4 lignes, soulignée sans cadre (DESIGN.md), `maxLength` 500
-- [ ] Un compteur « N/500 » en 12px Driftwood s'affiche à droite, sous la zone de texte, et suit la saisie
-- [ ] Une description de plus de 500 caractères est refusée côté serveur, brouillon comme publication ; une description vide est enregistrée comme absente
-- [ ] Une annonce sans description s'enregistre en brouillon et se publie
-- [ ] Côté musicien (liste et fiche de la carte), la description s'affiche sous les instruments et au-dessus des photos, retours à la ligne conservés ; rien ne s'affiche sans description
-- [ ] La description est modifiable sur un brouillon et sur une annonce publiée ; sur une annonce publiée, elle s'applique à toutes ses dates, quelle que soit la portée choisie
-- [ ] « Reprendre la dernière annonce de ce bar » remplit la description, en écrasant celle en cours, y compris par du vide
-- [ ] Saisir ou modifier une description compte comme une saisie pour la garde de sortie (Phase 16)
-- [ ] Les annonces existantes n'ont pas de description et s'affichent comme avant
-- [ ] Tests Vitest : validation (500 caractères, chaîne vide → absente) et reprise de la description
+- [x] Le formulaire affiche « Description (optionnel) » après les instruments et avant les photos : zone de texte de 4 lignes, soulignée sans cadre (DESIGN.md), `maxLength` 500
+- [x] Un compteur « N/500 » en 12px Driftwood s'affiche à droite, sous la zone de texte, et suit la saisie
+- [x] Une description de plus de 500 caractères est refusée côté serveur, brouillon comme publication ; une description vide est enregistrée comme absente
+- [x] Une annonce sans description s'enregistre en brouillon et se publie
+- [x] Côté musicien, la description s'affiche sous les instruments et au-dessus des photos, retours à la ligne conservés, en 15px casse mixte Warm Cream ; rien ne s'affiche sans description
+- [x] Dans la liste, la description est limitée à 3 lignes coupées par « … » ; dans la fiche de la carte, elle est complète et la fiche ne mène pas à la page de la jam
+- [x] Dans la liste, un clic n'importe où sur la carte ouvre `/jams/[id]`, sauf sur « Itinéraire » et son menu ; le lien est accessible au clavier
+- [x] `/jams/[id]` affiche le bandeau, « ← Retour » vers `/?date=<date de la jam>`, le nom du bar en titre (24px), la date en clair, le statut, l'échéance J-7 le cas échéant, l'adresse, la distance si la géolocalisation est acceptée, l'horaire, les styles, les instruments, la description complète, les photos en pleine largeur et « Itinéraire »
+- [x] Une jam annulée à venir reste consultable ; une jam passée, en brouillon ou inexistante affiche « Cette jam n'est plus disponible » et « Voir les jams du jour », avec un code 404
+- [x] Dans « Mes annonces », chaque annonce affiche les 2 premières lignes de sa description, en 12px Driftwood
+- [x] La page tient à 360px sans débordement horizontal
+- [x] La description est modifiable sur un brouillon et sur une annonce publiée ; sur une annonce publiée, elle s'applique à toutes ses dates, quelle que soit la portée choisie
+- [x] « Reprendre la dernière annonce de ce bar » remplit la description, en écrasant celle en cours, y compris par du vide
+- [x] Saisir ou modifier une description compte comme une saisie pour la garde de sortie (Phase 16)
+- [x] Les annonces existantes n'ont pas de description et s'affichent comme avant
+- [x] Tests Vitest : validation (500 caractères, chaîne vide → absente) et reprise de la description
 
 ## Bloquée par
 

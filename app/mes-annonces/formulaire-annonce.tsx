@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { STYLES_MUSICAUX, INSTRUMENTS_BACKLINE } from "@/lib/annonce-constantes";
-import { NOMBRE_MAX_DATES } from "@/lib/validation/annonce";
+import { LONGUEUR_MAX_DESCRIPTION, NOMBRE_MAX_DATES } from "@/lib/validation/annonce";
 import { decisionSortie, instantane } from "@/lib/garde-sortie";
 import { useGardeSortie } from "@/components/garde-sortie";
 import FenetreSortie from "@/components/fenetre-sortie";
@@ -37,6 +37,7 @@ export type ValeursInitialesAnnonce = {
   styleAutre: string;
   instruments: string[];
   instrumentAutre: string;
+  description: string;
 };
 
 const valeursVides: ValeursInitialesAnnonce = {
@@ -47,6 +48,7 @@ const valeursVides: ValeursInitialesAnnonce = {
   styleAutre: "",
   instruments: [],
   instrumentAutre: "",
+  description: "",
 };
 
 export type ChoixBar =
@@ -178,8 +180,8 @@ export default function FormulaireAnnonce({
     router.push(destination);
   }
 
-  // Écrase horaire, styles, instruments, précisions « Autre » et photos, y compris par du vide ;
-  // les dates ne sont jamais touchées.
+  // Écrase horaire, styles, instruments, précisions « Autre », description et photos,
+  // y compris par du vide ; les dates ne sont jamais touchées.
   function reprendre() {
     if (!reprise) return;
     setValeurs({
@@ -190,6 +192,7 @@ export default function FormulaireAnnonce({
       styleAutre: reprise.styleAutre,
       instruments: reprise.instruments,
       instrumentAutre: reprise.instrumentAutre,
+      description: reprise.description,
     });
     setPhotosReprises([reprise.photoUrl1, reprise.photoUrl2]);
     setCleReprise((cle) => cle + 1);
@@ -450,6 +453,8 @@ export default function FormulaireAnnonce({
         valeurAutre={valeurs.instrumentAutre}
       />
 
+      <ChampDescription key={`description-${cleReprise}`} valeurInitiale={valeurs.description} />
+
       {afficherPhotos && (
         <div key={`photos-${cleReprise}`} className="flex gap-6">
           <EmplacementPhoto numero={1} photoRepriseInitiale={photosReprises[0]} />
@@ -611,6 +616,29 @@ function EmplacementPhoto({
         </div>
       )}
     </div>
+  );
+}
+
+function ChampDescription({ valeurInitiale }: { valeurInitiale: string }) {
+  const [longueur, setLongueur] = useState(valeurInitiale.length);
+
+  return (
+    <label className="flex flex-col gap-2">
+      <span className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)]">
+        Description (optionnel)
+      </span>
+      <textarea
+        name="description"
+        rows={4}
+        maxLength={LONGUEUR_MAX_DESCRIPTION}
+        defaultValue={valeurInitiale}
+        onChange={(e) => setLongueur(e.target.value.length)}
+        className="champ-input resize-none"
+      />
+      <span className="self-end text-[12px] text-[var(--color-driftwood)]">
+        {longueur}/{LONGUEUR_MAX_DESCRIPTION}
+      </span>
+    </label>
   );
 }
 

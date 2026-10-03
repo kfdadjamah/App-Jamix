@@ -138,6 +138,12 @@ function CarteAnnonce({ annonce }: { annonce: AnnonceAvecDetails }) {
           {annonce.styles.join(", ")}
         </span>
       )}
+
+      {annonce.description && (
+        <p className="line-clamp-2 whitespace-pre-line text-[12px] text-[var(--color-driftwood)]">
+          {annonce.description}
+        </p>
+      )}
     </Link>
   );
 }

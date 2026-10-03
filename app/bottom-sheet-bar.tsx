@@ -35,7 +35,14 @@ export default function BottomSheetBar({
       </div>
       {occurrences.map((occurrence) => {
         const distanceKm = distanceJusquAuBar(positionMusicien, occurrence.annonce.bar);
-        return <CarteAnnonce key={occurrence.id} occurrence={occurrence} distanceKm={distanceKm} />;
+        return (
+          <CarteAnnonce
+            key={occurrence.id}
+            occurrence={occurrence}
+            distanceKm={distanceKm}
+            mode="fiche"
+          />
+        );
       })}
     </div>
   );
