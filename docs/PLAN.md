@@ -19,8 +19,9 @@
 - **Emails d'avis (Phase 14)** : envoyés après la réponse (`after()`), une fois l'écriture en base faite ; `envoyerEmail` journalise un échec sans remonter l'erreur, qui ne bloque donc jamais l'action. Les avis de mot de passe sont datés (heure de Paris, affichage seul) et renvoient vers `/mot-de-passe-oublie`, sans jeton créé d'office. L'avis de changement d'email part vers l'ancienne adresse, nouvelle adresse masquée, et seulement si l'email change réellement. `EMAIL_CONTACT` (optionnelle) sert de `Reply-To` à tous les emails de compte.
 - **Profil et compte (Phase 11)** : aucune migration de schéma. Le géocodage d'une adresse de bar n'est relancé que si l'adresse change ; un échec remet latitude/longitude à `null` (fiche valide, bar absent de la carte, distance non affichée). Session JWT contenant uniquement l'identifiant de l'organisateur : l'email affiché est toujours relu en base, jamais depuis la session. Toute action sensible (email, mot de passe, suppression) revérifie le mot de passe actuel côté serveur. La suppression de compte efface, en une transaction, les annonces (occurrences en cascade), le bar puis le compte, faute de cascade `Organisateur → Bar → Annonce` dans le schéma ; les photos (bar et annonces) sont retirées du stockage ensuite, sans bloquer la suppression en cas d'échec.
 - **Navigation retour (Phases 15 et 16)** : aucune migration de schéma. Un composant unique « ← Retour » (lien texte, destination fixe par page, jamais l'historique du navigateur) placé sous l'en-tête et au-dessus du titre. Sur les formulaires d'annonce, les sorties via l'application (Retour, « Mes annonces » et icône de profil de l'en-tête) passent par une même garde côté client qui compare l'état courant du formulaire à un état de référence (formulaire vide, annonce telle qu'ouverte, puis dernier enregistrement réussi) ; le choix de portée et les actions immédiates (confirmation, annulation d'une date, photos d'une annonce existante) sont exclus de la comparaison. L'enregistrement automatique réutilise l'action d'enregistrement en brouillon existante (même validation, pas d'enregistrement partiel). Sortie par le navigateur : alerte standard `beforeunload` uniquement, sans enregistrement.
-- **Bandeau commun « Jamix » (Phase 22)** : aucune migration de schéma. Un composant unique de bandeau, rendu par chaque page (pas dans `app/layout.tsx`) pour rester à l'intérieur de `FournisseurGardeSortie` sur les formulaires d'annonce ; il remplace `HeaderPublic` et la ligne haute de `HeaderOrganisateur`. Bandeau `position: sticky` en haut, fond Walnut Shadow (Brass Copper depuis la Phase 23), filet inférieur 1px Gold elegance (nouvel usage structurel, ajouté à DESIGN.md dans la phase). « Jamix » est un `LienGarde` vers `/` sans paramètre : la date et la vue de l'accueil vivant dans l'URL (`?date=&vue=`), ce lien suffit à revenir à aujourd'hui en vue liste, en navigation client. La partie droite est choisie par une prop de variante (accueil / organisateur / parcours de connexion) et la session. « Mes annonces » et l'alerte des relances restent dans `HeaderOrganisateur`, affiché sous le bandeau.
+- **Bandeau commun « Jamix » (Phase 22)** : aucune migration de schéma. Un composant unique de bandeau, rendu par chaque page (pas dans `app/layout.tsx`) pour rester à l'intérieur de `FournisseurGardeSortie` sur les formulaires d'annonce ; il remplace `HeaderPublic` et la ligne haute de `HeaderOrganisateur`. Bandeau `position: sticky` en haut, fond Walnut Shadow (Brass Copper depuis la Phase 23), filet inférieur 1px Gold elegance (nouvel usage structurel, ajouté à DESIGN.md dans la phase). « Jamix » est un `LienGarde` vers `/` sans paramètre : la date et la vue de l'accueil vivant dans l'URL (`?date=&vue=`), ce lien suffit à revenir à aujourd'hui en vue liste, en navigation client. La partie droite est choisie par une prop de variante (accueil / organisateur / parcours de connexion) et la session. « Mes annonces » et l'alerte des relances restent dans `HeaderOrganisateur`, affiché sous le bandeau (remplacés par la ligne « À confirmer » en Phase 25).
 - **Bandeau cuivré (Phase 23)** : aucune migration de schéma. Seul le fond du composant de bandeau commun change (Walnut Shadow → Brass Copper). Le filet Gold elegance, la hauteur, le sticky et le contenu restent inchangés. DESIGN.md autorise le Brass Copper comme fond du bandeau uniquement.
+- **Accès aux annonces (Phases 24 et 25)** : aucune migration de schéma. Le bouton « Accéder à mes annonces » de l'accueil est rendu côté serveur selon `sessionCourante()`, comme la partie droite de `components/bandeau.tsx`. `HeaderOrganisateur` (`components/header-organisateur.tsx`) est réduit à une ligne « À confirmer » ; le nombre vient de `compterRelancesActives` (`lib/relances.ts`), déjà utilisé pour l'alerte. Il reçoit une variante distincte pour « Mes annonces » (ligne non cliquable), les formulaires d'annonce et le profil (lien vers `/mes-annonces`) ; aujourd'hui les formulaires passent `page="mes-annonces"`. Sur les formulaires, le lien passe par `LienGarde` (`components/garde-sortie.tsx`) pour suivre la garde de sortie.
 - **Plusieurs bars par compte (Phases 18 à 21)** :
   - *Modèle* : `Organisateur` 1–N `Bar` ; on retire `@unique` sur `Bar.organisateurId` et `Organisateur.bar` devient `bars Bar[]`. Contrainte `@@unique([organisateurId, nom, adresse])` en base comme filet ; la détection des doublons se fait côté application avec comparaison normalisée (espaces en début/fin retirés, espaces multiples réduits, casse ignorée), à l'ajout comme à la modification. Nom et adresse sont stockés tels que saisis, débarrassés des espaces superflus. Limite de 10 bars vérifiée côté serveur. Migration sans perte : les données existantes sont déjà conformes.
   - *Date de publication* : nouveau champ `Annonce.publieeLe DateTime?`, écrit une seule fois au passage Brouillon → Publiée, en même temps que le calcul J-7 (Phase 6). Ajouté par la migration de la Phase 18 ; les annonces déjà publiées sont remplies avec `createdAt`.
@@ -615,3 +616,50 @@ Le bandeau commun « Jamix » prend le fond Brass Copper des boutons pleins, pou
 ## Bloquée par
 
 - Phase 22 (bandeau commun « Jamix »)
+
+---
+
+## Phase 24 : Bouton « Accéder à mes annonces » sur l'accueil
+
+**User stories** : US-69, US-70
+
+### Ce qu'on livre
+
+Sur l'accueil, un organisateur connecté voit un bouton plein « Accéder à mes annonces », sur toute la largeur de la colonne, entre le sous-titre et le champ « Date ». Il mène à `/mes-annonces` en un clic. Un visiteur non connecté ne le voit pas. Aucune migration de schéma.
+
+### Critères d'acceptation
+
+- [ ] Organisateur connecté : bouton plein Brass Copper, texte Warm Cream, rayon 36px, pleine largeur de colonne, entre le sous-titre et « Date », sur `/`
+- [ ] Un clic mène à `/mes-annonces`
+- [ ] Visiteur non connecté : aucun bouton
+- [ ] Seul bouton plein de l'accueil ; tient à 360px sans débordement
+
+## Bloquée par
+
+- Phase 23 (bandeau cuivré)
+
+---
+
+## Phase 25 : Ligne « À confirmer » et titre « Mes annonces » sur une ligne
+
+**User stories** : US-31, US-66, US-67 (modifiées), US-71, US-72, US-73, US-74
+
+### Ce qu'on livre
+
+Dans l'espace organisateur, la ligne sous le bandeau ne contient plus que « 🔔 À CONFIRMER » en gras suivi du nombre de jams à confirmer de tous les bars, affiché même à 0, puis un trait pointillé. Elle mène à « Mes annonces » depuis le profil et les formulaires d'annonce, où elle suit la garde de sortie. Le titre « Mes annonces » est réduit pour tenir sur une ligne avec « Nouvelle » sur mobile. DESIGN.md consigne l'exception de graisse. Aucune migration de schéma.
+
+### Critères d'acceptation
+
+- [ ] Sous le bandeau de `/mes-annonces`, `/mes-annonces/nouvelle`, `/mes-annonces/[id]` et `/mon-profil` : une seule ligne « 🔔 À CONFIRMER · N » (cloche, libellé en gras 700, Warm Cream), plus de lien « Mes annonces » ni de ligne « ⚠ … en attente »
+- [ ] N = jams en attente de confirmation de tous les bars du compte ; affiché à 0
+- [ ] Lien vers `/mes-annonces` sur le profil et les formulaires, non cliquable sur `/mes-annonces`
+- [ ] Sur les formulaires, « À confirmer » suit la garde de sortie (brouillon et fenêtre, avertissement si Publiée, sortie directe sans changement)
+- [ ] Trait 1px pointillé Cork Border sur toute la largeur de la colonne sous la ligne
+- [ ] Titre « Mes annonces » en 24px, sur une ligne avec « Nouvelle » (inchangé) à 360px
+- [ ] DESIGN.md consigne l'exception gras pour ce seul libellé
+
+## Bloquée par
+
+- Phase 22 (bandeau commun et `HeaderOrganisateur` sous le bandeau)
+
+Les phases 24 et 25 sont indépendantes entre elles.
