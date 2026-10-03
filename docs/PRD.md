@@ -12,6 +12,8 @@ Un organisateur connecté qui arrive sur l'accueil n'a aucun accès direct à se
 
 Dans « Mes annonces », le filtre par bar tient sur une seule ligne qui défile horizontalement : sur mobile, une partie des bars reste cachée hors de l'écran et le haut de la liste paraît coupé. Le bar choisi n'est signalé que par un soulignement, trop discret pour savoir d'un coup d'œil quelles annonces sont affichées.
 
+La page profil de l'organisateur empile tous les formulaires dépliés les uns sous les autres : changement d'email, changement de mot de passe, suppression du compte. Elle est trop longue et oblige à faire défiler pour trouver la partie voulue. Son titre « Mon profil » est aussi nettement plus grand que le titre « Mes annonces », alors que les deux pages font partie du même espace.
+
 ## Solution
 
 L'outil centralise les annonces de jams publiées par les organisateurs des bars lyonnais. Le musicien sélectionne une date et consulte les annonces disponibles ce jour-là : lieu, adresse, distance jusqu'à chez lui, horaire, style musical et instruments mis à disposition sur place. Quand aucune jam n'est publiée à la date choisie, l'outil lui suggère les prochaines dates où des jams ont lieu. À terme, l'outil s'ouvrira aussi au grand public souhaitant assister à une jam.
@@ -23,6 +25,8 @@ Un même compte peut gérer jusqu'à 10 bars, ajoutés, modifiés ou supprimés 
 Chaque page affiche en haut un même bandeau à fond cuivré, la couleur des boutons pleins, distinct du corps sombre de la page, fixé pendant le défilement et souligné d'un filet doré. À gauche, un bouton « Jamix » avec une icône de petite maison ramène à l'accueil, à la date du jour, en vue liste, sans rechargement complet. À droite, on trouve l'icône de profil de l'organisateur connecté ou, sur l'accueil, le bouton « Connexion organisateur ». Sur l'accueil, l'organisateur connecté trouve un bouton « Accéder à mes annonces » qui l'y mène en un clic. Dans son espace, une seule ligne sous le bandeau, « 🔔 À confirmer » en gras suivi du nombre de jams à confirmer, puis un trait, remplace le lien « Mes annonces » et l'alerte des relances. Le titre « Mes annonces » tient sur une ligne à côté de « Nouvelle », y compris sur mobile.
 
 Dans « Mes annonces », les boutons du filtre par bar passent à la ligne quand la largeur manque, sans défilement horizontal. Le bouton actif se distingue par un fond crème léger, sans soulignement. Un nom de bar trop long est tronqué par « … » et ne dépasse jamais la colonne.
+
+Sur le profil, les sections « Mes bars », « Email », « Mot de passe » et « Supprimer mon compte » se déroulent et se referment d'un clic sur leur titre, qui porte un chevron. À l'arrivée, seule « Mes bars » est déroulée. « Déconnexion » reste affiché tel quel. Le titre « Mon profil » prend la taille du titre « Mes annonces ».
 
 ## Utilisateur cible
 
@@ -108,6 +112,15 @@ US-74. En tant qu'organisateur sur mobile, je veux que le titre « Mes annonces 
 US-75. En tant qu'organisateur ayant plusieurs bars, je veux que les boutons du filtre par bar passent à la ligne quand la largeur manque, afin de voir tous mes bars sans faire défiler horizontalement.
 US-76. En tant qu'organisateur ayant plusieurs bars, je veux que le bouton du filtre actif (« Tous » ou un bar) ait un fond crème léger, afin de savoir d'un coup d'œil quelles annonces sont affichées.
 US-77. En tant qu'organisateur ayant un bar au nom très long, je veux que ce nom soit tronqué par « … » dans le filtre, afin que le filtre ne dépasse jamais la largeur de l'écran.
+US-78. En tant qu'organisateur, je veux trouver « Mes bars » déroulée et les sections « Email », « Mot de passe » et « Supprimer mon compte » repliées en arrivant sur mon profil, afin d'avoir une page courte qui montre d'abord mes bars.
+US-79. En tant qu'organisateur, je veux dérouler une section d'un clic sur son titre et la refermer d'un nouveau clic, « Mes bars » comprise, afin d'ouvrir seulement ce dont j'ai besoin.
+US-80. En tant qu'organisateur, je veux pouvoir ouvrir plusieurs sections en même temps, afin de ne pas perdre ce que j'ai ouvert.
+US-81. En tant qu'organisateur, je veux qu'un chevron sur chaque titre de section indique si elle est repliée ou déroulée, afin de savoir que je peux la déplier moi-même.
+US-82. En tant qu'organisateur, je veux voir mon email actuel sous le titre « Email » même quand la section est repliée, afin de le vérifier sans la dérouler.
+US-83. En tant qu'organisateur, je veux retrouver ma saisie en rouvrant une section que j'avais refermée, afin de ne pas tout retaper.
+US-84. En tant qu'organisateur, je veux voir directement le formulaire de suppression en déroulant « Supprimer mon compte », afin de ne pas cliquer deux fois sur le même libellé.
+US-85. En tant qu'organisateur, je veux que la section reste ouverte après un changement d'email ou de mot de passe, afin de voir le message de confirmation ou d'erreur.
+US-86. En tant qu'organisateur, je veux que le titre « Mon profil » ait la même taille que le titre « Mes annonces », afin que les pages de mon espace soient cohérentes.
 
 ## Critères de succès
 
@@ -132,6 +145,12 @@ US-77. En tant qu'organisateur ayant un bar au nom très long, je veux que ce no
 - À 360px de large, avec 10 bars, tous les boutons du filtre par bar sont visibles sans défilement horizontal.
 - Dans le filtre par bar, un seul bouton à la fois a le fond crème léger : « Tous » ou le bar choisi.
 - Aucun bouton du filtre par bar n'est plus large que la colonne, quelle que soit la longueur du nom du bar.
+- À l'arrivée sur le profil, « Mes bars » est déroulée ; les formulaires d'email, de mot de passe et de suppression sont masqués ; l'email actuel et « Déconnexion » sont visibles.
+- Les quatre titres de section du profil portent un chevron.
+- Un clic sur un titre de section du profil, « Mes bars » comprise, affiche son contenu ; un second clic le masque.
+- Une saisie faite dans une section du profil reste présente après l'avoir refermée puis rouverte.
+- Après un changement de mot de passe ou d'email réussi, la section est ouverte et affiche le message de succès.
+- Les titres « Mon profil » et « Mes annonces » ont la même taille.
 
 ## Hors périmètre
 
@@ -175,6 +194,11 @@ US-77. En tant qu'organisateur ayant un bar au nom très long, je veux que ce no
 - Liste déroulante pour le filtre par bar.
 - Affichage du nom complet d'un bar tronqué au survol (infobulle).
 - Fond cuivré ou crème plein pour le bouton actif du filtre par bar.
+- Repli de « Déconnexion » sur le profil.
+- Mémorisation des sections ouvertes du profil d'une visite à l'autre.
+- Ouverture d'une seule section du profil à la fois (fermeture automatique des autres).
+- Confirmation avant de refermer une section du profil avec une saisie non enregistrée.
+- Animation de dépliage des sections du profil.
 
 ## Décisions d'implémentation
 
@@ -252,6 +276,13 @@ US-77. En tant qu'organisateur ayant un bar au nom très long, je veux que ce no
 - La ligne est suivie d'un trait 1px pointillé Cork Border sur toute la largeur de la colonne. Elle remplace le lien « Mes annonces » et l'alerte « en attente » sous le bandeau.
 - Le titre « Mes annonces » est réduit pour tenir sur une ligne à côté du bouton « Nouvelle », qui ne change pas, y compris sur mobile (360px).
 - Les boutons du filtre par bar gardent leur forme de bouton fantôme (bordure Warm Cream, rayon 22.5px) et passent à la ligne quand la largeur de la colonne ne suffit pas, sans défilement horizontal. Le bouton actif (« Tous » ou un bar) a un fond Warm Cream léger transparent (environ 15 %), sans soulignement ; un seul bouton est actif à la fois. Un nom plus long que la colonne est tronqué par « … » sur une ligne, sans infobulle.
+- Sur le profil, « Mes bars », « Email », « Mot de passe » et « Supprimer mon compte » sont des sections déroulables, qui s'ouvrent indépendamment les unes des autres. À chaque visite, « Mes bars » est déroulée et les trois autres sont repliées.
+- Toute la ligne de titre d'une section est cliquable. Un chevron fin à droite pointe vers le bas quand la section est repliée, vers le haut quand elle est déroulée. Les titres de section gardent leur taille actuelle, celle de « Mes annonces ».
+- Replier « Mes bars » masque la liste des bars, le bouton « Ajouter un bar » et les messages. Son comportement interne (un seul bar déplié à la fois, fiche dépliée d'office avec un seul bar) ne change pas.
+- L'email actuel reste affiché sous le titre « Email », section repliée ou non.
+- Replier une section masque son contenu sans effacer la saisie ; celle-ci n'est perdue qu'en quittant la page, comme aujourd'hui. Après un envoi (succès ou erreur), la section reste ouverte pour afficher le message.
+- « Supprimer mon compte » déroulé montre l'avertissement puis directement le formulaire (mot de passe actuel, mot SUPPRIMER, « Supprimer définitivement »). Le bouton intermédiaire « Supprimer mon compte » et le lien « Annuler » sont retirés : on renonce en refermant la section.
+- Le titre « Mon profil » passe à la taille du titre « Mes annonces » ; la mention « Compte créé le… » reste en dessous.
 
 ## Notes complémentaires
 

@@ -34,6 +34,7 @@
   - *Verrou de statut (Phase 18)* : une annonce Publiée ne peut ni repasser en Brouillon ni être republiée côté serveur (seule l'action « modifier » est acceptée), ce qui empêcherait sinon de contourner le bar figé. Un `barId` différent envoyé pour une annonce Publiée est refusé avec « Le bar d'une annonce publiée ne peut pas être changé. ».
   - *Géocodage en échec (Phase 18)* : à l'ajout et à la modification d'un bar, un message prévient que l'adresse est introuvable et que le bar n'apparaîtra pas sur la carte ; la ligne compacte d'un bar sans coordonnées porte en permanence la mention « Absent de la carte ».
 - **Filtre par bar sur plusieurs lignes (Phase 26)** : aucune migration de schéma. Seul le rendu de `app/mes-annonces/filtre-annonces.tsx` change : conteneur `flex-wrap` au lieu du défilement horizontal, bouton actif à fond Warm Cream léger transparent (~15 %) au lieu du soulignement, nom tronqué (`truncate`) dans un bouton limité à la largeur de la colonne. `aria-pressed` conservé. DESIGN.md consigne l'exception de remplissage pour ce seul filtre.
+- **Sections déroulables du profil (Phase 27)** : aucune migration de schéma ni nouvelle route. Un composant client unique de section déroulable (`components/section-deroulable.tsx`) : toute la ligne de titre est un bouton (`aria-expanded`, `aria-controls`) avec un chevron `ChevronDown` de `lucide-react` qui pivote quand la section est déroulée, et un sous-titre optionnel toujours visible (email actuel). Aucun état mémorisé : « Mes bars » ouverte et les autres repliées à chaque visite. Le contenu replié reste monté mais masqué (`hidden`), si bien que la saisie et l'état interne de « Mes bars » sont conservés, y compris au re-rendu de `/mon-profil` après un changement de mot de passe (Phase 17). Les titres internes de `MesBars`, `FormulaireEmail`, `FormulaireMotDePasse` et `SuppressionCompte` passent dans la section ; `SuppressionCompte` perd son état d'ouverture, son bouton intermédiaire et « Annuler ».
 
 ---
 
@@ -697,3 +698,31 @@ Dans « Mes annonces », dès 2 bars, les boutons du filtre « Tous » / un bout
 ## Bloquée par
 
 - Phase 19 (filtre par bar)
+
+---
+
+## Phase 27 : Sections déroulables du profil
+
+**User stories** : US-78, US-79, US-80, US-81, US-82, US-83, US-84, US-85, US-86
+
+### Ce qu'on livre
+
+Sur `/mon-profil`, « Mes bars », « Email », « Mot de passe » et « Supprimer mon compte » deviennent des sections déroulables : un clic sur la ligne de titre, qui porte un chevron, déroule ou replie la section, indépendamment des autres. À chaque visite, seule « Mes bars » est déroulée. L'email actuel reste visible sous « Email ». Replier une section n'efface pas la saisie. « Supprimer mon compte » déroulé montre directement le formulaire de suppression. « Déconnexion » ne change pas. Le titre « Mon profil » passe à la taille de « Mes annonces » (24px). Aucune migration de schéma.
+
+### Critères d'acceptation
+
+- [ ] À l'arrivée sur `/mon-profil`, « Mes bars » est déroulée ; les formulaires d'email, de mot de passe et de suppression sont masqués ; l'email actuel et « Déconnexion » sont visibles
+- [ ] Les quatre titres de section portent un chevron fin à droite, vers le bas quand la section est repliée, vers le haut quand elle est déroulée ; les titres gardent leur taille actuelle (24px)
+- [ ] Toute la ligne de titre est cliquable : un clic affiche le contenu, un second le masque, « Mes bars » comprise
+- [ ] Plusieurs sections peuvent être ouvertes en même temps ; aucune n'en referme une autre
+- [ ] Replier « Mes bars » masque la liste, « Ajouter un bar » et les messages ; son comportement interne (un seul bar déplié, fiche dépliée d'office avec un seul bar) est inchangé
+- [ ] Une saisie faite dans une section reste présente après l'avoir refermée puis rouverte ; elle n'est perdue qu'en quittant la page
+- [ ] Après un changement d'email ou de mot de passe (succès ou erreur), la section reste ouverte et affiche le message
+- [ ] « Supprimer mon compte » déroulé montre l'avertissement puis directement le formulaire (mot de passe actuel, mot SUPPRIMER, « Supprimer définitivement ») ; plus de bouton intermédiaire ni de lien « Annuler »
+- [ ] Le titre « Mon profil » a la même taille que « Mes annonces » ; « Compte créé le… » reste en dessous
+- [ ] La page tient à 360px sans débordement horizontal ; pas d'animation de dépliage
+- [ ] Le titre de section est un bouton portant `aria-expanded` et `aria-controls` ; le chevron est masqué aux lecteurs d'écran
+
+## Bloquée par
+
+- Phase 20 (suppression d'un bar, contenu de « Mes bars ») et Phase 25 (titre « Mes annonces » à 24px)
