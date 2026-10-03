@@ -629,10 +629,10 @@ Sur l'accueil, un organisateur connecté voit un bouton plein « Accéder à mes
 
 ### Critères d'acceptation
 
-- [ ] Organisateur connecté : bouton plein Brass Copper, texte Warm Cream, rayon 36px, pleine largeur de colonne, entre le sous-titre et « Date », sur `/`
-- [ ] Un clic mène à `/mes-annonces`
-- [ ] Visiteur non connecté : aucun bouton
-- [ ] Seul bouton plein de l'accueil ; tient à 360px sans débordement
+- [x] Organisateur connecté : bouton plein Brass Copper, texte Warm Cream, rayon 36px, pleine largeur de colonne, entre le sous-titre et « Date », sur `/`
+- [x] Un clic mène à `/mes-annonces`
+- [x] Visiteur non connecté : aucun bouton
+- [x] Seul bouton d'action plein de l'accueil (le toggle Liste/Carte actif reste plein) ; tient à 360px sans débordement
 
 ## Bloquée par
 

@@ -169,7 +169,7 @@ Fallback font (Arial 8px weight 500 uppercase) for things like "* ADOBE ILLUSTRA
 - Never use lowercase or sentence-case for headings, nav, or labels; the only mixed-case text is the 29px body description.
 - Never add drop shadows to cards, buttons, or sections — depth comes from the two-step surface stack (#100904 → #a8451f), not from blur.
 - Never use border-radius below 12px on containers — the geometry is deliberately chunky, not sharp.
-- Never use more than one filled button per section; restraint is the design language.
+- Never use more than one filled action button per section; restraint is the design language. Exception Jamix : l'option active d'un sélecteur d'état (toggle Liste/Carte de l'accueil) peut être pleine Brass Copper ; ce n'est pas une action.
 - Never center-align body copy — headings and body text are always left-aligned, even when flanking a centered image.
 
 ## Surfaces

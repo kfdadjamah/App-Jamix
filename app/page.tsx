@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { sessionCourante } from "@/auth";
 import { recupererAnnoncesPubliees, recupererProchainesDatesDisponibles } from "@/lib/annonces";
 import Bandeau from "@/components/bandeau";
 import SelecteurDate from "./selecteur-date";
@@ -27,6 +28,7 @@ export default async function Home({
   const { date, vue } = await searchParams;
   const dateSelectionnee = date ?? aujourdHuiIso();
   const vueSelectionnee: Vue = vue === "carte" ? "carte" : "liste";
+  const session = await sessionCourante();
   const occurrences = await recupererAnnoncesPubliees(dateSelectionnee);
   const prochainesDates =
     occurrences.length === 0
@@ -45,6 +47,15 @@ export default async function Home({
             Les jams à Lyon, ce soir.
           </p>
         </div>
+
+        {session?.user?.id && (
+          <Link
+            href="/mes-annonces"
+            className="w-full rounded-[36px] bg-[var(--color-brass-copper)] px-6 py-[14px] text-center text-[12px] font-medium uppercase text-[var(--color-warm-cream)]"
+          >
+            Accéder à mes annonces
+          </Link>
+        )}
 
         <label className="flex flex-col gap-2">
           <span className="text-[12px] font-medium uppercase text-[color:var(--color-warm-cream)]">
