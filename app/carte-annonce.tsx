@@ -53,7 +53,7 @@ export default function CarteAnnonce({
       )}
       {occurrence.annonce.instruments.length > 0 && (
         <span className="text-[12px] text-[var(--color-driftwood)]">
-          Backline : {occurrence.annonce.instruments.join(", ")}
+          Instruments : {occurrence.annonce.instruments.join(", ")}
           {occurrence.annonce.instrumentAutre ? ` (${occurrence.annonce.instrumentAutre})` : ""}
         </span>
       )}

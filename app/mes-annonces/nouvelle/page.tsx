@@ -27,7 +27,7 @@ export default async function PageNouvelleAnnonce() {
 
         <BoutonRetour href="/mes-annonces" />
 
-        <h1 className="text-[41px] font-medium uppercase leading-[0.9] text-[var(--color-warm-cream)]">
+        <h1 className="text-[24px] font-medium uppercase leading-[1.09] text-[var(--color-warm-cream)]">
           Nouvelle annonce
         </h1>
 

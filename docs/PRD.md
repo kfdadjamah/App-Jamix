@@ -125,7 +125,7 @@ US-83. En tant qu'organisateur, je veux retrouver ma saisie en rouvrant une sect
 US-84. En tant qu'organisateur, je veux voir directement le formulaire de suppression en déroulant « Supprimer mon compte », afin de ne pas cliquer deux fois sur le même libellé.
 US-85. En tant qu'organisateur, je veux que la section reste ouverte après un changement d'email ou de mot de passe, afin de voir le message de confirmation ou d'erreur.
 US-86. En tant qu'organisateur, je veux que le titre « Mon profil » ait la même taille que le titre « Mes annonces », afin que les pages de mon espace soient cohérentes.
-US-87. En tant qu'organisateur, je veux que le titre du formulaire d'annonce (« Nouvelle annonce », « Modifier l'annonce », « Compléter le brouillon ») ait la taille du titre « Mes annonces » et tienne sur une ligne, y compris sur mobile, afin d'avoir un haut de page lisible.
+US-87. En tant qu'organisateur, je veux que le titre du formulaire d'annonce (« Nouvelle annonce », « Modifier l'annonce », « Modifier le brouillon ») ait la taille du titre « Mes annonces » et tienne sur une ligne, y compris sur mobile, afin d'avoir un haut de page lisible.
 US-88. En tant qu'organisateur, je veux ajouter une description libre à mon annonce, afin de donner aux musiciens les précisions qui n'entrent dans aucun autre champ.
 US-89. En tant qu'organisateur, je veux que la description soit facultative, pour un brouillon comme pour une publication, afin de ne pas être bloqué si je n'ai rien à ajouter.
 US-90. En tant qu'organisateur, je veux voir combien de caractères il me reste sur les 500 autorisés, afin de ne pas être surpris par la limite.
@@ -167,7 +167,7 @@ US-98. En tant que musicien ou organisateur, je veux lire « Instruments disponi
 - Une saisie faite dans une section du profil reste présente après l'avoir refermée puis rouverte.
 - Après un changement de mot de passe ou d'email réussi, la section est ouverte et affiche le message de succès.
 - Les titres « Mon profil » et « Mes annonces » ont la même taille.
-- À 360px de large, les titres « Nouvelle annonce », « Modifier l'annonce » et « Compléter le brouillon » tiennent sur une ligne et ont la taille du titre « Mes annonces ».
+- À 360px de large, les titres « Nouvelle annonce », « Modifier l'annonce » et « Modifier le brouillon » tiennent sur une ligne et ont la taille du titre « Mes annonces ».
 - Une annonce sans description se publie ; une description de plus de 500 caractères est refusée.
 - Une description saisie avec des retours à la ligne s'affiche côté musicien, dans la liste comme dans la fiche de la carte, avec ses retours à la ligne.
 - Le bouton de reprise remplit la description, y compris par du vide quand l'annonce source n'en a pas.
@@ -312,7 +312,7 @@ US-98. En tant que musicien ou organisateur, je veux lire « Instruments disponi
 - Replier une section masque son contenu sans effacer la saisie ; celle-ci n'est perdue qu'en quittant la page, comme aujourd'hui. Après un envoi (succès ou erreur), la section reste ouverte pour afficher le message.
 - « Supprimer mon compte » déroulé montre l'avertissement puis directement le formulaire (mot de passe actuel, mot SUPPRIMER, « Supprimer définitivement »). Le bouton intermédiaire « Supprimer mon compte » et le lien « Annuler » sont retirés : on renonce en refermant la section.
 - Le titre « Mon profil » passe à la taille du titre « Mes annonces » ; la mention « Compte créé le… » reste en dessous.
-- Les titres du formulaire d'annonce (« Nouvelle annonce », « Modifier l'annonce », « Compléter le brouillon ») prennent la taille du titre « Mes annonces » et tiennent sur une ligne à 360px.
+- Les titres du formulaire d'annonce (« Nouvelle annonce », « Modifier l'annonce », « Modifier le brouillon ») prennent la taille du titre « Mes annonces » et tiennent sur une ligne à 360px.
 - Le formulaire d'annonce propose un champ « Description (optionnel) », placé après les instruments et avant les photos : zone de texte de 4 lignes, soulignée sans cadre comme les autres champs, avec un compteur « N/500 » en petit, à droite. Texte brut, 500 caractères maximum, refusé au-delà côté serveur.
 - La description est facultative pour le brouillon comme pour la publication. Côté musicien, elle s'affiche sous les instruments et au-dessus des photos, dans la liste comme dans la fiche ouverte depuis un marqueur, avec ses retours à la ligne ; sans description, rien ne s'affiche.
 - La description est modifiable sur un brouillon comme sur une annonce publiée ; sur une annonce publiée, elle s'applique à toutes ses dates, comme les styles et les instruments.

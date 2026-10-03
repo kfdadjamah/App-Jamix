@@ -442,7 +442,7 @@ export default function FormulaireAnnonce({
 
       <GroupeCases
         key={`instruments-${cleReprise}`}
-        label="Instruments / backline disponibles"
+        label="Instruments disponibles"
         nom="instruments"
         options={INSTRUMENTS_BACKLINE}
         valeursCochees={valeurs.instruments}

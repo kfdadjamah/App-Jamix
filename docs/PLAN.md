@@ -35,7 +35,7 @@
   - *Géocodage en échec (Phase 18)* : à l'ajout et à la modification d'un bar, un message prévient que l'adresse est introuvable et que le bar n'apparaîtra pas sur la carte ; la ligne compacte d'un bar sans coordonnées porte en permanence la mention « Absent de la carte ».
 - **Filtre par bar sur plusieurs lignes (Phase 26)** : aucune migration de schéma. Seul le rendu de `app/mes-annonces/filtre-annonces.tsx` change : conteneur `flex-wrap` au lieu du défilement horizontal, bouton actif à fond Warm Cream léger transparent (~15 %) au lieu du soulignement, nom tronqué (`truncate`) dans un bouton limité à la largeur de la colonne. `aria-pressed` conservé. DESIGN.md consigne l'exception de remplissage pour ce seul filtre.
 - **Sections déroulables du profil (Phase 27)** : aucune migration de schéma ni nouvelle route. Un composant client unique de section déroulable (`components/section-deroulable.tsx`) : toute la ligne de titre est un bouton (`aria-expanded`, `aria-controls`) avec un chevron `ChevronDown` de `lucide-react` qui pivote quand la section est déroulée, et un sous-titre optionnel toujours visible (email actuel). Aucun état mémorisé : « Mes bars » ouverte et les autres repliées à chaque visite. Le contenu replié reste monté mais masqué (`hidden`), si bien que la saisie et l'état interne de « Mes bars » sont conservés, y compris au re-rendu de `/mon-profil` après un changement de mot de passe (Phase 17). Les titres internes de `MesBars`, `FormulaireEmail`, `FormulaireMotDePasse` et `SuppressionCompte` passent dans la section ; `SuppressionCompte` perd son état d'ouverture, son bouton intermédiaire et « Annuler ».
-- **Libellé des instruments (Phase 28)** : aucune migration de schéma. Seuls les libellés changent (« Instruments disponibles » dans le formulaire, « Instruments : » dans `app/carte-annonce.tsx`) ; la valeur stockée `Annonce.instruments` et la liste `INSTRUMENTS_BACKLINE` (`lib/annonce-constantes.ts`) restent inchangées.
+- **Libellé des instruments et titres du formulaire (Phase 28)** : aucune migration de schéma. Le titre d'un brouillon devient « Modifier le brouillon » (« Compléter le brouillon » mesurait 325px en 24px, pour une colonne de 312px à 360px). Seuls les libellés changent (« Instruments disponibles » dans le formulaire, « Instruments : » dans `app/carte-annonce.tsx`) ; la valeur stockée `Annonce.instruments` et la liste `INSTRUMENTS_BACKLINE` (`lib/annonce-constantes.ts`) restent inchangées.
 - **Description d'une annonce (Phase 29)** : nouveau champ `Annonce.description String?` (texte brut, 500 caractères maximum, validé côté serveur dans le schéma zod de l'annonce, brouillon comme publication ; chaîne vide → `null`). Appliqué par `prisma db push` (pas de dossier de migrations) ; les annonces existantes restent à `null`, aucun script. Champ de l'annonce, donc commun à toutes ses occurrences : la portée ciblée/globale ne concerne que l'horaire (`synchroniserOccurrences`, `app/mes-annonces/actions.ts`). Ajouté à `ValeursReprises` / `valeursReprisesParBar` (`lib/annonces.ts`). Garde de sortie : le `<textarea name="description">` est lu par `instantane()` via le `FormData`, sans code dédié. Côté musicien, un seul composant d'affichage (`app/carte-annonce.tsx`, utilisé par la liste et la fiche de la carte), en `whitespace-pre-line`.
 - **« Tous les styles » (Phase 30)** : aucune migration de schéma. Valeur `"Tous les styles"` ajoutée en tête de `STYLES_MUSICAUX` (`lib/annonce-constantes.ts`) et stockée dans `Annonce.styles`. Exclusivité vérifiée côté serveur (refine zod : « Tous les styles » seule, sans autre style ni précision « Autre ») et côté client (autres cases décochées et désactivées). Compte pour le `min(1)` de la publication. Affichée « Tous styles » côté musicien et dans « Mes annonces ».
 
@@ -738,15 +738,15 @@ Sur `/mon-profil`, « Mes bars », « Email », « Mot de passe » et « Supprim
 
 ### Ce qu'on livre
 
-Les titres du formulaire d'annonce (« Nouvelle annonce », « Modifier l'annonce », « Compléter le brouillon ») passent à la taille du titre « Mes annonces » et tiennent sur une ligne sur mobile. Le champ des instruments s'intitule « Instruments disponibles » et la ligne côté musicien « Instruments : » au lieu de « Backline : ». Le mot « backline » disparaît de l'écran. Aucune migration de schéma.
+Les titres du formulaire d'annonce (« Nouvelle annonce », « Modifier l'annonce », « Compléter le brouillon », renommé « Modifier le brouillon » pour tenir à 360px) passent à la taille du titre « Mes annonces » et tiennent sur une ligne sur mobile. Le champ des instruments s'intitule « Instruments disponibles » et la ligne côté musicien « Instruments : » au lieu de « Backline : ». Le mot « backline » disparaît de l'écran. Aucune migration de schéma.
 
 ### Critères d'acceptation
 
-- [ ] Les titres de `/mes-annonces/nouvelle` et `/mes-annonces/[id]` (« Nouvelle annonce », « Modifier l'annonce », « Compléter le brouillon ») sont en 24px, leading 1.09, comme « Mes annonces »
-- [ ] À 360px, chacun de ces titres tient sur une ligne, sans débordement horizontal
-- [ ] Le champ des instruments du formulaire s'intitule « Instruments disponibles »
-- [ ] Côté musicien (liste et fiche de la carte), la ligne des instruments commence par « Instruments : »
-- [ ] Le mot « backline » n'apparaît plus nulle part à l'écran ; la liste des instruments proposés et les annonces existantes sont inchangées
+- [x] Les titres de `/mes-annonces/nouvelle` et `/mes-annonces/[id]` (« Nouvelle annonce », « Modifier l'annonce », « Modifier le brouillon ») sont en 24px, leading 1.09, comme « Mes annonces »
+- [x] À 360px, chacun de ces titres tient sur une ligne, sans débordement horizontal
+- [x] Le champ des instruments du formulaire s'intitule « Instruments disponibles »
+- [x] Côté musicien (liste et fiche de la carte), la ligne des instruments commence par « Instruments : »
+- [x] Le mot « backline » n'apparaît plus nulle part à l'écran ; la liste des instruments proposés et les annonces existantes sont inchangées
 
 ## Bloquée par
 

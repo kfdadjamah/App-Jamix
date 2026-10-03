@@ -53,8 +53,8 @@ export default async function PageEditionAnnonce({
 
         <BoutonRetour href="/mes-annonces" />
 
-        <h1 className="text-[41px] font-medium uppercase leading-[0.9] text-[var(--color-warm-cream)]">
-          {estPubliee ? "Modifier l'annonce" : "Compléter le brouillon"}
+        <h1 className="text-[24px] font-medium uppercase leading-[1.09] text-[var(--color-warm-cream)]">
+          {estPubliee ? "Modifier l'annonce" : "Modifier le brouillon"}
         </h1>
 
         {estPubliee && (
