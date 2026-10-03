@@ -10,6 +10,8 @@ Où qu'il se trouve dans l'application, l'utilisateur n'a aucun moyen direct de 
 
 Un organisateur connecté qui arrive sur l'accueil n'a aucun accès direct à ses annonces : il doit passer par son profil, puis par le lien placé sous le bandeau. Dans son espace, cette ligne sous le bandeau répète « Mes annonces », déjà titre de la page, et noie le nombre de jams à confirmer, la seule information qui demande une action. Sur mobile, le titre « Mes annonces » passe sur deux lignes à côté du bouton « Nouvelle ».
 
+Dans « Mes annonces », le filtre par bar tient sur une seule ligne qui défile horizontalement : sur mobile, une partie des bars reste cachée hors de l'écran et le haut de la liste paraît coupé. Le bar choisi n'est signalé que par un soulignement, trop discret pour savoir d'un coup d'œil quelles annonces sont affichées.
+
 ## Solution
 
 L'outil centralise les annonces de jams publiées par les organisateurs des bars lyonnais. Le musicien sélectionne une date et consulte les annonces disponibles ce jour-là : lieu, adresse, distance jusqu'à chez lui, horaire, style musical et instruments mis à disposition sur place. Quand aucune jam n'est publiée à la date choisie, l'outil lui suggère les prochaines dates où des jams ont lieu. À terme, l'outil s'ouvrira aussi au grand public souhaitant assister à une jam.
@@ -19,6 +21,8 @@ L'organisateur accède à son espace depuis la page d'accueil, retrouve toutes l
 Un même compte peut gérer jusqu'à 10 bars, ajoutés, modifiés ou supprimés depuis le profil. Chaque annonce porte sur un bar choisi par l'organisateur ; « Mes annonces » affiche le nom du bar sur chaque annonce et permet de filtrer par bar. Sur une nouvelle annonce, un bouton reprend en un clic l'horaire, les styles, les instruments et les photos de la dernière annonce publiée du bar choisi ; il ne reste qu'à ajouter les dates.
 
 Chaque page affiche en haut un même bandeau à fond cuivré, la couleur des boutons pleins, distinct du corps sombre de la page, fixé pendant le défilement et souligné d'un filet doré. À gauche, un bouton « Jamix » avec une icône de petite maison ramène à l'accueil, à la date du jour, en vue liste, sans rechargement complet. À droite, on trouve l'icône de profil de l'organisateur connecté ou, sur l'accueil, le bouton « Connexion organisateur ». Sur l'accueil, l'organisateur connecté trouve un bouton « Accéder à mes annonces » qui l'y mène en un clic. Dans son espace, une seule ligne sous le bandeau, « 🔔 À confirmer » en gras suivi du nombre de jams à confirmer, puis un trait, remplace le lien « Mes annonces » et l'alerte des relances. Le titre « Mes annonces » tient sur une ligne à côté de « Nouvelle », y compris sur mobile.
+
+Dans « Mes annonces », les boutons du filtre par bar passent à la ligne quand la largeur manque, sans défilement horizontal. Le bouton actif se distingue par un fond crème léger, sans soulignement. Un nom de bar trop long est tronqué par « … » et ne dépasse jamais la colonne.
 
 ## Utilisateur cible
 
@@ -101,6 +105,9 @@ US-71. En tant qu'organisateur, je veux voir sous le bandeau de mon espace une l
 US-72. En tant qu'organisateur, je veux que cette ligne reste affichée avec 0 quand rien n'est à confirmer, afin de savoir que tout est à jour.
 US-73. En tant qu'organisateur sur mon profil ou dans la saisie d'une annonce, je veux que « À confirmer » me mène à « Mes annonces », afin d'y confirmer mes jams.
 US-74. En tant qu'organisateur sur mobile, je veux que le titre « Mes annonces » tienne sur une ligne à côté du bouton « Nouvelle », afin d'avoir un haut de page lisible.
+US-75. En tant qu'organisateur ayant plusieurs bars, je veux que les boutons du filtre par bar passent à la ligne quand la largeur manque, afin de voir tous mes bars sans faire défiler horizontalement.
+US-76. En tant qu'organisateur ayant plusieurs bars, je veux que le bouton du filtre actif (« Tous » ou un bar) ait un fond crème léger, afin de savoir d'un coup d'œil quelles annonces sont affichées.
+US-77. En tant qu'organisateur ayant un bar au nom très long, je veux que ce nom soit tronqué par « … » dans le filtre, afin que le filtre ne dépasse jamais la largeur de l'écran.
 
 ## Critères de succès
 
@@ -122,6 +129,9 @@ US-74. En tant qu'organisateur sur mobile, je veux que le titre « Mes annonces 
 - Un visiteur non connecté ne voit jamais le bouton « Accéder à mes annonces ».
 - Sur chaque page de l'espace organisateur, la ligne « À confirmer » affiche le nombre exact de jams à confirmer de tous les bars du compte, 0 compris.
 - À 360px de large, le titre « Mes annonces » et le bouton « Nouvelle » tiennent sur une seule ligne.
+- À 360px de large, avec 10 bars, tous les boutons du filtre par bar sont visibles sans défilement horizontal.
+- Dans le filtre par bar, un seul bouton à la fois a le fond crème léger : « Tous » ou le bar choisi.
+- Aucun bouton du filtre par bar n'est plus large que la colonne, quelle que soit la longueur du nom du bar.
 
 ## Hors périmètre
 
@@ -161,6 +171,10 @@ US-74. En tant qu'organisateur sur mobile, je veux que le titre « Mes annonces 
 - Lien « Mes annonces » sous le bandeau, en plus de la ligne « À confirmer ».
 - Masquage de la ligne « À confirmer » quand rien n'est à confirmer.
 - Bouton « Accéder à mes annonces » ailleurs que sur l'accueil.
+- Défilement horizontal du filtre par bar.
+- Liste déroulante pour le filtre par bar.
+- Affichage du nom complet d'un bar tronqué au survol (infobulle).
+- Fond cuivré ou crème plein pour le bouton actif du filtre par bar.
 
 ## Décisions d'implémentation
 
@@ -229,7 +243,7 @@ US-74. En tant qu'organisateur sur mobile, je veux que le titre « Mes annonces 
 - Sur une nouvelle annonce, choisir un bar ne compte pas à lui seul comme une saisie : sans autre champ rempli, la sortie est directe. Sur un brouillon rouvert, changer de bar compte comme une modification.
 - Sur une nouvelle annonce uniquement, dès qu'un bar est choisi et qu'il a au moins une annonce publiée, un bouton fantôme « Reprendre la dernière annonce de ce bar » apparaît. Il remplit l'horaire, les styles, les instruments, les précisions « Autre » et les photos de l'annonce publiée le plus récemment pour ce bar, même si toutes ses dates sont passées ou annulées ; il écrase ces champs sans confirmation et ne touche jamais aux dates. Changer ensuite de bar ne modifie pas les champs repris ; le bouton suit le bar choisi. La reprise compte comme une saisie pour la sortie de la saisie d'une annonce.
 - Les photos reprises sont dupliquées à l'enregistrement : les deux annonces ne partagent jamais un même fichier. Si la copie échoue, l'enregistrement échoue sans enregistrement partiel.
-- « Mes annonces » affiche une seule liste, avec le nom du bar sur chaque annonce. Dès 2 bars, un filtre « Tous » / un bouton par bar (boutons fantômes, défilement horizontal sur mobile) restreint la liste ; il revient sur « Tous » à chaque visite et n'influence pas le formulaire de nouvelle annonce.
+- « Mes annonces » affiche une seule liste, avec le nom du bar sur chaque annonce. Dès 2 bars, un filtre « Tous » / un bouton par bar (boutons fantômes, passage à la ligne quand la largeur manque) restreint la liste ; il revient sur « Tous » à chaque visite et n'influence pas le formulaire de nouvelle annonce.
 - L'alerte des relances compte les relances de tous les bars du compte ; chaque relance s'affiche sur l'annonce, qui nomme son bar.
 - Rien ne change côté musicien : chaque annonce s'affiche avec le nom et l'adresse de son bar.
 - Sur l'accueil, un organisateur connecté voit un bouton plein « Accéder à mes annonces » (Brass Copper, texte Warm Cream, rayon 36px), sur toute la largeur de la colonne, entre le sous-titre et le champ « Date ». Il mène à « Mes annonces » et reste le seul bouton d'action plein de l'accueil ; l'option active du toggle Liste/Carte reste pleine. Un visiteur non connecté ne le voit pas.
@@ -237,6 +251,7 @@ US-74. En tant qu'organisateur sur mobile, je veux que le titre « Mes annonces 
 - Sur le profil, la nouvelle annonce et la modification d'annonce, « À confirmer » est un lien vers « Mes annonces » ; sur « Mes annonces », la ligne n'est pas cliquable.
 - La ligne est suivie d'un trait 1px pointillé Cork Border sur toute la largeur de la colonne. Elle remplace le lien « Mes annonces » et l'alerte « en attente » sous le bandeau.
 - Le titre « Mes annonces » est réduit pour tenir sur une ligne à côté du bouton « Nouvelle », qui ne change pas, y compris sur mobile (360px).
+- Les boutons du filtre par bar gardent leur forme de bouton fantôme (bordure Warm Cream, rayon 22.5px) et passent à la ligne quand la largeur de la colonne ne suffit pas, sans défilement horizontal. Le bouton actif (« Tous » ou un bar) a un fond Warm Cream léger transparent (environ 15 %), sans soulignement ; un seul bouton est actif à la fois. Un nom plus long que la colonne est tronqué par « … » sur une ligne, sans infobulle.
 
 ## Notes complémentaires
 
@@ -253,6 +268,8 @@ Le fond cuivré du bandeau est un nouvel usage du Brass Copper comme surface, al
 Le libellé « À CONFIRMER » en gras est une exception à DESIGN.md, qui limite la typographie aux graisses 400 et 500. DESIGN.md devra la consigner pour ce seul libellé.
 
 Sur l'accueil d'un organisateur connecté, le bandeau cuivré et le bouton plein « Accéder à mes annonces » se suivent : deux éléments cuivrés rapprochés en haut de page.
+
+Le fond crème léger du bouton actif du filtre par bar est une exception à DESIGN.md, où les boutons fantômes n'ont aucun remplissage. DESIGN.md devra la consigner pour ce seul filtre.
 
 Piste future : un accès direct aux seules annonces à confirmer depuis la ligne « À confirmer » (filtre ou ancre dans « Mes annonces »).
 

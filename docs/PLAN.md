@@ -33,6 +33,7 @@
   - *Application du schéma (Phase 18)* : `prisma db push` (pas de dossier de migrations), puis `node scripts/remplir-publiee-le.mjs` (idempotent) pour remplir `publieeLe = createdAt` sur les annonces déjà publiées.
   - *Verrou de statut (Phase 18)* : une annonce Publiée ne peut ni repasser en Brouillon ni être republiée côté serveur (seule l'action « modifier » est acceptée), ce qui empêcherait sinon de contourner le bar figé. Un `barId` différent envoyé pour une annonce Publiée est refusé avec « Le bar d'une annonce publiée ne peut pas être changé. ».
   - *Géocodage en échec (Phase 18)* : à l'ajout et à la modification d'un bar, un message prévient que l'adresse est introuvable et que le bar n'apparaîtra pas sur la carte ; la ligne compacte d'un bar sans coordonnées porte en permanence la mention « Absent de la carte ».
+- **Filtre par bar sur plusieurs lignes (Phase 26)** : aucune migration de schéma. Seul le rendu de `app/mes-annonces/filtre-annonces.tsx` change : conteneur `flex-wrap` au lieu du défilement horizontal, bouton actif à fond Warm Cream léger transparent (~15 %) au lieu du soulignement, nom tronqué (`truncate`) dans un bouton limité à la largeur de la colonne. `aria-pressed` conservé. DESIGN.md consigne l'exception de remplissage pour ce seul filtre.
 
 ---
 
@@ -479,7 +480,7 @@ Dès 2 bars, « Mes annonces » propose un filtre « Tous » / un bouton par bar
 ### Critères d'acceptation
 
 - [x] Avec un seul bar, aucun filtre n'est affiché
-- [x] Dès 2 bars, un filtre « Tous » / un bouton par bar s'affiche au-dessus de la liste : boutons fantômes compacts, défilement horizontal sur mobile, bouton actif souligné, sans liste déroulante (DESIGN.md)
+- [x] Dès 2 bars, un filtre « Tous » / un bouton par bar s'affiche au-dessus de la liste : boutons fantômes compacts, défilement horizontal sur mobile, bouton actif souligné, sans liste déroulante (DESIGN.md) — remplacé par la Phase 26 : passage à la ligne et fond crème léger sur le bouton actif
 - [x] Choisir un bar restreint la liste à ses annonces, brouillons compris ; « Tous » affiche toutes les annonces
 - [x] Le filtre revient sur « Tous » à chaque visite de « Mes annonces » et n'influence pas le formulaire de nouvelle annonce
 - [x] L'alerte de l'en-tête compte les relances de tous les bars du compte
@@ -671,3 +672,28 @@ Dans l'espace organisateur, la ligne sous le bandeau ne contient plus que « �
 - Phase 22 (bandeau commun et `HeaderOrganisateur` sous le bandeau)
 
 Les phases 24 et 25 sont indépendantes entre elles.
+
+---
+
+## Phase 26 : Filtre par bar sur plusieurs lignes
+
+**User stories** : US-75, US-76, US-77
+
+### Ce qu'on livre
+
+Dans « Mes annonces », dès 2 bars, les boutons du filtre « Tous » / un bouton par bar passent à la ligne quand la largeur de la colonne manque, au lieu de défiler horizontalement. Le bouton actif a un fond Warm Cream léger transparent, sans soulignement. Un nom de bar trop long est tronqué par « … » sans dépasser la colonne. Le comportement du filtre (Phase 19) ne change pas. DESIGN.md consigne l'exception de remplissage. Aucune migration de schéma.
+
+### Critères d'acceptation
+
+- [ ] Dès 2 bars, les boutons du filtre passent à la ligne quand la largeur manque ; aucun défilement horizontal, à 360px comme sur ordinateur
+- [ ] À 360px, avec 10 bars, tous les boutons sont visibles sans défilement horizontal
+- [ ] Le bouton actif (« Tous » ou un bar) a un fond Warm Cream léger transparent (~15 %), sans soulignement ; un seul bouton est actif à la fois
+- [ ] Les boutons gardent leur forme de bouton fantôme (bordure Warm Cream, rayon 22.5px, 12px majuscules, 500), sans fond plein cuivré ni crème
+- [ ] Un nom de bar plus long que la colonne est tronqué par « … » sur une ligne ; aucun bouton n'est plus large que la colonne ; pas d'infobulle
+- [ ] Avec un seul bar, aucun filtre n'est affiché ; le filtre revient sur « Tous » à chaque visite (inchangé)
+- [ ] `aria-pressed` reste porté par le bouton actif
+- [ ] DESIGN.md consigne le fond crème léger du bouton actif du filtre comme seule exception de remplissage d'un bouton fantôme
+
+## Bloquée par
+
+- Phase 19 (filtre par bar)
