@@ -116,6 +116,11 @@ Logo wordmark "ORYZO" left-aligned in Warm Cream at 12–14px weight 500 upperca
 
 Collé en haut pendant le défilement (`position: sticky`), 56px de haut, fond Brass Copper (#a8451f) opaque, distinct du canvas Walnut Shadow du corps, filet inférieur 1px Gold elegance (#fca311) sur toute la largeur, sans ombre. Le fond et le filet occupent toute la largeur ; le contenu est aligné sur la colonne de la page (`max-w-md`, 24px de marge). À gauche : icône de maison 18px (trait 1.5) et « JAMIX » en 14px weight 500 uppercase, Warm Cream, 6px d'écart ; souligné quand l'accueil est la page active. À droite : l'icône de profil (cercle 32px, bordure Warm Cream) si l'organisateur est connecté, sinon le bouton fantôme « Connexion organisateur » sur l'accueil uniquement. Pas de menu déroulant ni de menu « burger ».
 
+### Ligne « À confirmer » (Jamix)
+**Role:** Seule ligne sous le bandeau dans l'espace organisateur — nombre de jams à confirmer
+
+« 🔔 À CONFIRMER · N » en 12px uppercase Warm Cream, libellé en 700 (exception), nombre en 500, affichée même à 0. Trait 1px pointillé Cork Border sur toute la largeur de la colonne, 12px sous le texte. Même rendu partout ; lien vers « Mes annonces » (souligné au survol et au focus) sur le profil et les formulaires d'annonce, simple texte sur « Mes annonces ».
+
 **Role:** Edge branding — vertical text running down the right margin
 
 Rotated 90° text "ORYZO 1-MODEL" in Warm Cream, 10–12px uppercase, sits flush right. Functions as a product serial number — a physical-product artifact translated to UI.
@@ -158,6 +163,7 @@ Fallback font (Arial 8px weight 500 uppercase) for things like "* ADOBE ILLUSTRA
 - Seul usage structurel autorisé du Gold elegance : le filet inférieur 1px du bandeau d'en-tête de Jamix, sur toute la largeur. Il n'est pas interactif. Le bandeau à fond plein doré et tout autre trait doré (séparateurs, bordures de carte, boutons) restent interdits.
 - Seul usage de surface du Brass Copper en dehors du bouton plein : le fond du bandeau d'en-tête de Jamix. Aucun autre fond (cartes, sections, fenêtres) n'est cuivré.
 - Set type in uppercase weight 500 across the entire interface; use weight 400 / mixed case only for the 29px body copy that explains the product.
+- Seule exception de graisse Jamix : le libellé « À CONFIRMER » de la ligne sous le bandeau de l'espace organisateur est en 700. Le nombre qui le suit et tout autre texte restent en 400 ou 500.
 - Use 36px border-radius for the one filled CTA and 22.5px for outlined ghost buttons; 12px for cards; 0px for inputs and inline links — these four values are the entire radius vocabulary.
 - Set section gaps at 100vh — each section gets its own full viewport, never compress product reveals into bands.
 - Use 1px dashed lines in #40372 for section dividers; avoid solid dividers and avoid any divider thicker than 2px.

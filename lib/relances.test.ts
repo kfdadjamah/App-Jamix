@@ -72,6 +72,14 @@ describe("messageRelance", () => {
     expect(message).toBe("Dernier rappel : confirmez aujourd'hui");
   });
 
+  it("date passée (J+1) -> null", () => {
+    const message = messageRelance(
+      { statut: "PROGRAMMEE", confirmationJ7: joursApres(-8), date: joursApres(-1) },
+      AUJOURDHUI
+    );
+    expect(message).toBeNull();
+  });
+
   it("PROGRAMMEE non échue (confirmationJ7 dans le futur) -> null", () => {
     const message = messageRelance(
       { statut: "PROGRAMMEE", confirmationJ7: joursApres(1), date: joursApres(8) },
@@ -100,13 +108,21 @@ describe("messageRelance", () => {
 describe("compterRelancesActives", () => {
   it("compte uniquement les occurrences EN_ATTENTE_CONFIRMATION", () => {
     const occurrences = [
-      { statut: "PROGRAMMEE" as const, confirmationJ7: joursApres(-1) },
-      { statut: "PROGRAMMEE" as const, confirmationJ7: joursApres(1) },
-      { statut: "CONFIRMEE" as const, confirmationJ7: null },
-      { statut: "ANNULEE" as const, confirmationJ7: null },
-      { statut: "PROGRAMMEE" as const, confirmationJ7: joursApres(-5) },
+      { statut: "PROGRAMMEE" as const, confirmationJ7: joursApres(-1), date: joursApres(6) },
+      { statut: "PROGRAMMEE" as const, confirmationJ7: joursApres(1), date: joursApres(8) },
+      { statut: "CONFIRMEE" as const, confirmationJ7: null, date: joursApres(3) },
+      { statut: "ANNULEE" as const, confirmationJ7: null, date: joursApres(3) },
+      { statut: "PROGRAMMEE" as const, confirmationJ7: joursApres(-5), date: joursApres(2) },
     ];
     expect(compterRelancesActives(occurrences, AUJOURDHUI)).toBe(2);
+  });
+
+  it("exclut une date passée et compte une date du jour (J0)", () => {
+    const occurrences = [
+      { statut: "PROGRAMMEE" as const, confirmationJ7: joursApres(-8), date: joursApres(-1) },
+      { statut: "PROGRAMMEE" as const, confirmationJ7: joursApres(-7), date: joursApres(0) },
+    ];
+    expect(compterRelancesActives(occurrences, AUJOURDHUI)).toBe(1);
   });
 
   it("retourne 0 sur un tableau vide", () => {

@@ -136,7 +136,7 @@ export default function FormulaireAnnonce({
     return () => window.removeEventListener("beforeunload", surAvantDechargement);
   }, [estModifie]);
 
-  // Sorties via l'application (Retour, « Mes annonces », alerte des relances, icône de profil).
+  // Sorties via l'application (Retour, « Jamix », « À confirmer », icône de profil).
   const gererSortie = useCallback(
     async (destination: string) => {
       const decision = decisionSortie({

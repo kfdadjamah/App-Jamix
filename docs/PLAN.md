@@ -648,15 +648,23 @@ Sur l'accueil, un organisateur connecté voit un bouton plein « Accéder à mes
 
 Dans l'espace organisateur, la ligne sous le bandeau ne contient plus que « 🔔 À CONFIRMER » en gras suivi du nombre de jams à confirmer de tous les bars, affiché même à 0, puis un trait pointillé. Elle mène à « Mes annonces » depuis le profil et les formulaires d'annonce, où elle suit la garde de sortie. Le titre « Mes annonces » est réduit pour tenir sur une ligne avec « Nouvelle » sur mobile. DESIGN.md consigne l'exception de graisse. Aucune migration de schéma.
 
+### Décisions de cadrage
+
+- **Cloche** : emoji « 🔔 » (choix validé, plutôt qu'une icône lucide), masqué aux lecteurs d'écran ; chiffre seul après « · », étiquette accessible « N jams à confirmer » / « Aucune jam à confirmer ».
+- **Rendu** : identique sur les 4 pages (Warm Cream). Sur le profil et les formulaires, la ligne est un `LienGarde` souligné au survol et au focus ; seul le texte est cliquable.
+- **Trait** : bordure pointillée du bloc de la ligne, 12px sous le texte ; l'écart de 32px avec la suite de la page est inchangé.
+- **Variante** : `HeaderOrganisateur` prend `page: "mes-annonces" | "formulaire" | "mon-profil"` ; les formulaires passent `"formulaire"`.
+- **Dates passées** : `compterRelancesActives` et `messageRelance` ignorent les occurrences antérieures à aujourd'hui (UTC, J0 compris) ; sans cela, une jam passée non confirmée resterait comptée indéfiniment. La requête de l'en-tête filtre aussi `date >= aujourdHuiUTC()` et les annonces `PUBLIEE`.
+
 ### Critères d'acceptation
 
-- [ ] Sous le bandeau de `/mes-annonces`, `/mes-annonces/nouvelle`, `/mes-annonces/[id]` et `/mon-profil` : une seule ligne « 🔔 À CONFIRMER · N » (cloche, libellé en gras 700, Warm Cream), plus de lien « Mes annonces » ni de ligne « ⚠ … en attente »
-- [ ] N = jams en attente de confirmation de tous les bars du compte ; affiché à 0
-- [ ] Lien vers `/mes-annonces` sur le profil et les formulaires, non cliquable sur `/mes-annonces`
-- [ ] Sur les formulaires, « À confirmer » suit la garde de sortie (brouillon et fenêtre, avertissement si Publiée, sortie directe sans changement)
-- [ ] Trait 1px pointillé Cork Border sur toute la largeur de la colonne sous la ligne
-- [ ] Titre « Mes annonces » en 24px, sur une ligne avec « Nouvelle » (inchangé) à 360px
-- [ ] DESIGN.md consigne l'exception gras pour ce seul libellé
+- [x] Sous le bandeau de `/mes-annonces`, `/mes-annonces/nouvelle`, `/mes-annonces/[id]` et `/mon-profil` : une seule ligne « 🔔 À CONFIRMER · N » (cloche, libellé en gras 700, Warm Cream), plus de lien « Mes annonces » ni de ligne « ⚠ … en attente »
+- [x] N = jams en attente de confirmation de tous les bars du compte, dates passées exclues ; affiché à 0
+- [x] Lien vers `/mes-annonces` sur le profil et les formulaires, non cliquable sur `/mes-annonces`
+- [x] Sur les formulaires, « À confirmer » suit la garde de sortie (brouillon et fenêtre, avertissement si Publiée, sortie directe sans changement)
+- [x] Trait 1px pointillé Cork Border sur toute la largeur de la colonne sous la ligne
+- [x] Titre « Mes annonces » en 24px, sur une ligne avec « Nouvelle » (inchangé) à 360px
+- [x] DESIGN.md consigne l'exception gras pour ce seul libellé
 
 ## Bloquée par
 

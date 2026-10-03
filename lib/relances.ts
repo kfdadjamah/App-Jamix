@@ -16,6 +16,10 @@ export function messageRelance(
   }
 
   const joursRestants = joursAvantDate(occurrence.date, aujourdHui);
+  // Pas de relance sur une date passée : la jam a eu lieu (ou non), plus rien à confirmer.
+  if (joursRestants < 0) {
+    return null;
+  }
 
   if (joursRestants >= 6) {
     return "En attente de confirmation";
@@ -29,11 +33,11 @@ export function messageRelance(
   return "Dernier rappel : confirmez aujourd'hui";
 }
 
+// Dates passées exclues, J0 compris : même règle que messageRelance.
 export function compterRelancesActives(
-  occurrences: { statut: StatutOccurrence; confirmationJ7: Date | null }[],
+  occurrences: { statut: StatutOccurrence; confirmationJ7: Date | null; date: Date }[],
   aujourdHui: Date = aujourdHuiUTC()
 ): number {
-  return occurrences.filter(
-    (occurrence) => statutAffiche(occurrence, aujourdHui) === "EN_ATTENTE_CONFIRMATION"
-  ).length;
+  return occurrences.filter((occurrence) => messageRelance(occurrence, aujourdHui) !== null)
+    .length;
 }

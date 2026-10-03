@@ -36,8 +36,8 @@ export default async function PageMesAnnonces() {
       <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-8 px-6 py-8">
         <HeaderOrganisateur page="mes-annonces" />
 
-        <div className="flex items-center justify-between">
-          <h1 className="text-[41px] font-medium uppercase leading-[0.9] text-[var(--color-warm-cream)]">
+        <div className="flex items-center justify-between gap-3">
+          <h1 className="text-[24px] font-medium uppercase leading-[1.09] text-[var(--color-warm-cream)]">
             Mes annonces
           </h1>
           <Link
