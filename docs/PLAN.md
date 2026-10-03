@@ -35,6 +35,9 @@
   - *Géocodage en échec (Phase 18)* : à l'ajout et à la modification d'un bar, un message prévient que l'adresse est introuvable et que le bar n'apparaîtra pas sur la carte ; la ligne compacte d'un bar sans coordonnées porte en permanence la mention « Absent de la carte ».
 - **Filtre par bar sur plusieurs lignes (Phase 26)** : aucune migration de schéma. Seul le rendu de `app/mes-annonces/filtre-annonces.tsx` change : conteneur `flex-wrap` au lieu du défilement horizontal, bouton actif à fond Warm Cream léger transparent (~15 %) au lieu du soulignement, nom tronqué (`truncate`) dans un bouton limité à la largeur de la colonne. `aria-pressed` conservé. DESIGN.md consigne l'exception de remplissage pour ce seul filtre.
 - **Sections déroulables du profil (Phase 27)** : aucune migration de schéma ni nouvelle route. Un composant client unique de section déroulable (`components/section-deroulable.tsx`) : toute la ligne de titre est un bouton (`aria-expanded`, `aria-controls`) avec un chevron `ChevronDown` de `lucide-react` qui pivote quand la section est déroulée, et un sous-titre optionnel toujours visible (email actuel). Aucun état mémorisé : « Mes bars » ouverte et les autres repliées à chaque visite. Le contenu replié reste monté mais masqué (`hidden`), si bien que la saisie et l'état interne de « Mes bars » sont conservés, y compris au re-rendu de `/mon-profil` après un changement de mot de passe (Phase 17). Les titres internes de `MesBars`, `FormulaireEmail`, `FormulaireMotDePasse` et `SuppressionCompte` passent dans la section ; `SuppressionCompte` perd son état d'ouverture, son bouton intermédiaire et « Annuler ».
+- **Libellé des instruments (Phase 28)** : aucune migration de schéma. Seuls les libellés changent (« Instruments disponibles » dans le formulaire, « Instruments : » dans `app/carte-annonce.tsx`) ; la valeur stockée `Annonce.instruments` et la liste `INSTRUMENTS_BACKLINE` (`lib/annonce-constantes.ts`) restent inchangées.
+- **Description d'une annonce (Phase 29)** : nouveau champ `Annonce.description String?` (texte brut, 500 caractères maximum, validé côté serveur dans le schéma zod de l'annonce, brouillon comme publication ; chaîne vide → `null`). Appliqué par `prisma db push` (pas de dossier de migrations) ; les annonces existantes restent à `null`, aucun script. Champ de l'annonce, donc commun à toutes ses occurrences : la portée ciblée/globale ne concerne que l'horaire (`synchroniserOccurrences`, `app/mes-annonces/actions.ts`). Ajouté à `ValeursReprises` / `valeursReprisesParBar` (`lib/annonces.ts`). Garde de sortie : le `<textarea name="description">` est lu par `instantane()` via le `FormData`, sans code dédié. Côté musicien, un seul composant d'affichage (`app/carte-annonce.tsx`, utilisé par la liste et la fiche de la carte), en `whitespace-pre-line`.
+- **« Tous les styles » (Phase 30)** : aucune migration de schéma. Valeur `"Tous les styles"` ajoutée en tête de `STYLES_MUSICAUX` (`lib/annonce-constantes.ts`) et stockée dans `Annonce.styles`. Exclusivité vérifiée côté serveur (refine zod : « Tous les styles » seule, sans autre style ni précision « Autre ») et côté client (autres cases décochées et désactivées). Compte pour le `min(1)` de la publication. Affichée « Tous styles » côté musicien et dans « Mes annonces ».
 
 ---
 
@@ -726,3 +729,78 @@ Sur `/mon-profil`, « Mes bars », « Email », « Mot de passe » et « Supprim
 ## Bloquée par
 
 - Phase 20 (suppression d'un bar, contenu de « Mes bars ») et Phase 25 (titre « Mes annonces » à 24px)
+
+---
+
+## Phase 28 : Titres du formulaire d'annonce et libellé « Instruments disponibles »
+
+**User stories** : US-87, US-98
+
+### Ce qu'on livre
+
+Les titres du formulaire d'annonce (« Nouvelle annonce », « Modifier l'annonce », « Compléter le brouillon ») passent à la taille du titre « Mes annonces » et tiennent sur une ligne sur mobile. Le champ des instruments s'intitule « Instruments disponibles » et la ligne côté musicien « Instruments : » au lieu de « Backline : ». Le mot « backline » disparaît de l'écran. Aucune migration de schéma.
+
+### Critères d'acceptation
+
+- [ ] Les titres de `/mes-annonces/nouvelle` et `/mes-annonces/[id]` (« Nouvelle annonce », « Modifier l'annonce », « Compléter le brouillon ») sont en 24px, leading 1.09, comme « Mes annonces »
+- [ ] À 360px, chacun de ces titres tient sur une ligne, sans débordement horizontal
+- [ ] Le champ des instruments du formulaire s'intitule « Instruments disponibles »
+- [ ] Côté musicien (liste et fiche de la carte), la ligne des instruments commence par « Instruments : »
+- [ ] Le mot « backline » n'apparaît plus nulle part à l'écran ; la liste des instruments proposés et les annonces existantes sont inchangées
+
+## Bloquée par
+
+Aucune — démarrable immédiatement
+
+---
+
+## Phase 29 : Description d'une annonce
+
+**User stories** : US-88, US-89, US-90, US-91, US-92, US-93, US-94
+
+### Ce qu'on livre
+
+Le formulaire d'annonce propose un champ « Description (optionnel) », texte brut de 500 caractères maximum avec compteur, placé après les instruments et avant les photos. La description s'affiche côté musicien sous les instruments, avec ses retours à la ligne. Elle est modifiable sur un brouillon comme sur une annonce publiée (toutes les dates), reprise par « Reprendre la dernière annonce de ce bar » et suivie par la garde de sortie. Migration : champ `Annonce.description String?`.
+
+### Critères d'acceptation
+
+- [ ] Le formulaire affiche « Description (optionnel) » après les instruments et avant les photos : zone de texte de 4 lignes, soulignée sans cadre (DESIGN.md), `maxLength` 500
+- [ ] Un compteur « N/500 » en 12px Driftwood s'affiche à droite, sous la zone de texte, et suit la saisie
+- [ ] Une description de plus de 500 caractères est refusée côté serveur, brouillon comme publication ; une description vide est enregistrée comme absente
+- [ ] Une annonce sans description s'enregistre en brouillon et se publie
+- [ ] Côté musicien (liste et fiche de la carte), la description s'affiche sous les instruments et au-dessus des photos, retours à la ligne conservés ; rien ne s'affiche sans description
+- [ ] La description est modifiable sur un brouillon et sur une annonce publiée ; sur une annonce publiée, elle s'applique à toutes ses dates, quelle que soit la portée choisie
+- [ ] « Reprendre la dernière annonce de ce bar » remplit la description, en écrasant celle en cours, y compris par du vide
+- [ ] Saisir ou modifier une description compte comme une saisie pour la garde de sortie (Phase 16)
+- [ ] Les annonces existantes n'ont pas de description et s'affichent comme avant
+- [ ] Tests Vitest : validation (500 caractères, chaîne vide → absente) et reprise de la description
+
+## Bloquée par
+
+Aucune — démarrable immédiatement
+
+---
+
+## Phase 30 : Case « Tous les styles »
+
+**User stories** : US-95, US-96, US-97
+
+### Ce qu'on livre
+
+La liste des styles du formulaire d'annonce commence par une case « Tous les styles », sur sa propre ligne. Cochée, elle décoche et désactive les autres styles et « Autre » ; décochée, elle les réactive. Elle suffit pour publier. Une annonce « Tous les styles » affiche « Tous styles » côté musicien et dans « Mes annonces ». Aucune migration de schéma.
+
+### Critères d'acceptation
+
+- [ ] « Tous les styles » est la première case des styles, seule sur sa ligne
+- [ ] La cocher décoche et désactive les autres styles et « Autre », précision comprise ; la décocher les réactive, vides
+- [ ] Une annonce portant « Tous les styles » avec un autre style ou une précision « Autre » est refusée côté serveur
+- [ ] « Tous les styles » seule suffit pour publier ; un brouillon peut toujours n'avoir aucun style
+- [ ] Une annonce « Tous les styles » affiche « TOUS STYLES » à la place de la liste des styles, côté musicien (liste et fiche de la carte) et dans « Mes annonces »
+- [ ] La reprise et la modification d'une annonce (brouillon ou publiée) traitent « Tous les styles » comme un style ordinaire ; à la réouverture, la case est cochée et les autres désactivées
+- [ ] Tests Vitest de la validation (exclusivité, publication avec « Tous les styles » seule)
+
+## Bloquée par
+
+Aucune — démarrable immédiatement
+
+Les phases 28, 29 et 30 sont indépendantes entre elles.

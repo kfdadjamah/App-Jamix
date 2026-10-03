@@ -14,6 +14,8 @@ Dans « Mes annonces », le filtre par bar tient sur une seule ligne qui défile
 
 La page profil de l'organisateur empile tous les formulaires dépliés les uns sous les autres : changement d'email, changement de mot de passe, suppression du compte. Elle est trop longue et oblige à faire défiler pour trouver la partie voulue. Son titre « Mon profil » est aussi nettement plus grand que le titre « Mes annonces », alors que les deux pages font partie du même espace.
 
+Dans le formulaire d'annonce, le titre (« Nouvelle annonce », « Modifier l'annonce », « Compléter le brouillon ») est bien plus grand que celui de « Mes annonces » et passe sur deux lignes sur mobile. L'organisateur n'a aucun endroit pour donner des précisions libres sur sa jam (déroulé, niveau attendu, inscription sur place, consignes) : il doit les glisser dans les champs « Autre » ou y renoncer. Une jam ouverte à tous les styles l'oblige à cocher les styles un par un. Le libellé « Instruments / backline disponibles », et « Backline » côté musicien, emploie un jargon que tous les musiciens ne comprennent pas.
+
 ## Solution
 
 L'outil centralise les annonces de jams publiées par les organisateurs des bars lyonnais. Le musicien sélectionne une date et consulte les annonces disponibles ce jour-là : lieu, adresse, distance jusqu'à chez lui, horaire, style musical et instruments mis à disposition sur place. Quand aucune jam n'est publiée à la date choisie, l'outil lui suggère les prochaines dates où des jams ont lieu. À terme, l'outil s'ouvrira aussi au grand public souhaitant assister à une jam.
@@ -27,6 +29,8 @@ Chaque page affiche en haut un même bandeau à fond cuivré, la couleur des bou
 Dans « Mes annonces », les boutons du filtre par bar passent à la ligne quand la largeur manque, sans défilement horizontal. Le bouton actif se distingue par un fond crème léger, sans soulignement. Un nom de bar trop long est tronqué par « … » et ne dépasse jamais la colonne.
 
 Sur le profil, les sections « Mes bars », « Email », « Mot de passe » et « Supprimer mon compte » se déroulent et se referment d'un clic sur leur titre, qui porte un chevron. À l'arrivée, seule « Mes bars » est déroulée. « Déconnexion » reste affiché tel quel. Le titre « Mon profil » prend la taille du titre « Mes annonces ».
+
+Dans le formulaire d'annonce, le titre prend la taille de « Mes annonces » et tient sur une ligne. Un champ « Description », facultatif et limité à 500 caractères, permet d'ajouter des précisions libres, affichées au musicien sous les instruments. Une case « Tous les styles » remplace en un clic la liste des styles. Les instruments s'intitulent « Instruments disponibles » dans le formulaire et « Instruments » côté musicien : le mot « backline » disparaît de l'écran.
 
 ## Utilisateur cible
 
@@ -87,7 +91,7 @@ US-49. En tant qu'organisateur ayant plusieurs bars, je veux choisir le bar de c
 US-50. En tant qu'organisateur n'ayant qu'un bar, je veux que ce bar soit présélectionné dans le formulaire d'annonce, afin de ne pas avoir à le choisir à chaque fois.
 US-51. En tant qu'organisateur, je veux pouvoir changer le bar d'une annonce tant qu'elle est en brouillon, afin de corriger une erreur avant publication.
 US-52. En tant qu'organisateur, je veux que le bar d'une annonce publiée ne puisse plus être changé, afin que les musiciens ne voient jamais une jam changer de lieu.
-US-53. En tant qu'organisateur qui crée une nouvelle annonce, je veux un bouton « Reprendre la dernière annonce de ce bar » qui remplit l'horaire, les styles, les instruments, les précisions « Autre » et les photos de la dernière annonce publiée du bar choisi, sans les dates, afin de ne pas tout ressaisir pour une jam qui revient.
+US-53. En tant qu'organisateur qui crée une nouvelle annonce, je veux un bouton « Reprendre la dernière annonce de ce bar » qui remplit l'horaire, les styles, les instruments, les précisions « Autre », la description et les photos de la dernière annonce publiée du bar choisi, sans les dates, afin de ne pas tout ressaisir pour une jam qui revient.
 US-54. En tant qu'organisateur dont le bar choisi n'a encore aucune annonce publiée, je ne veux pas voir le bouton de reprise, afin de ne pas proposer une action impossible.
 US-55. En tant qu'organisateur ayant plusieurs bars, je veux voir le nom du bar sur chaque annonce de « Mes annonces » et pouvoir filtrer la liste par bar, afin de m'y retrouver rapidement.
 US-56. En tant qu'organisateur ayant plusieurs bars, je veux que chaque relance s'affiche sur l'annonce qui nomme son bar, et que l'alerte des relances compte les relances de tous mes bars, afin de savoir quel bar doit confirmer quelle jam.
@@ -121,6 +125,18 @@ US-83. En tant qu'organisateur, je veux retrouver ma saisie en rouvrant une sect
 US-84. En tant qu'organisateur, je veux voir directement le formulaire de suppression en déroulant « Supprimer mon compte », afin de ne pas cliquer deux fois sur le même libellé.
 US-85. En tant qu'organisateur, je veux que la section reste ouverte après un changement d'email ou de mot de passe, afin de voir le message de confirmation ou d'erreur.
 US-86. En tant qu'organisateur, je veux que le titre « Mon profil » ait la même taille que le titre « Mes annonces », afin que les pages de mon espace soient cohérentes.
+US-87. En tant qu'organisateur, je veux que le titre du formulaire d'annonce (« Nouvelle annonce », « Modifier l'annonce », « Compléter le brouillon ») ait la taille du titre « Mes annonces » et tienne sur une ligne, y compris sur mobile, afin d'avoir un haut de page lisible.
+US-88. En tant qu'organisateur, je veux ajouter une description libre à mon annonce, afin de donner aux musiciens les précisions qui n'entrent dans aucun autre champ.
+US-89. En tant qu'organisateur, je veux que la description soit facultative, pour un brouillon comme pour une publication, afin de ne pas être bloqué si je n'ai rien à ajouter.
+US-90. En tant qu'organisateur, je veux voir combien de caractères il me reste sur les 500 autorisés, afin de ne pas être surpris par la limite.
+US-91. En tant que musicien, je veux lire la description d'une annonce sous ses instruments, dans la liste comme dans la fiche de la carte, afin de connaître les précisions de l'organisateur avant de me déplacer.
+US-92. En tant que musicien, je veux que les retours à la ligne de la description soient conservés, afin de la lire telle que l'organisateur l'a écrite.
+US-93. En tant qu'organisateur, je veux que « Reprendre la dernière annonce de ce bar » reprenne aussi la description, afin de ne pas la ressaisir pour une jam qui revient.
+US-94. En tant qu'organisateur, je veux modifier la description d'une annonce publiée, appliquée à toutes ses dates comme les styles et les instruments, afin de garder l'information à jour.
+US-95. En tant qu'organisateur dont la jam est ouverte à tous les styles, je veux cocher une seule case « Tous les styles », afin de ne pas cocher chaque style un par un.
+US-96. En tant qu'organisateur, je veux que cocher « Tous les styles » décoche et désactive les autres styles et « Autre », et que la décocher les réactive, afin de ne jamais publier une combinaison contradictoire.
+US-97. En tant que musicien, je veux voir « Tous styles » sur une annonce ouverte à tous les styles, afin de savoir que je peux y venir quel que soit mon style.
+US-98. En tant que musicien ou organisateur, je veux lire « Instruments disponibles » dans le formulaire et « Instruments » sur les annonces, au lieu de « backline », afin de comprendre sans jargon ce qui est fourni sur place.
 
 ## Critères de succès
 
@@ -131,7 +147,7 @@ US-86. En tant qu'organisateur, je veux que le titre « Mon profil » ait la mê
 - Toute sortie via l'application pendant la saisie d'une nouvelle annonce non vide produit soit un brouillon visible dans « Mes annonces », soit un message laissant le choix de rester ou de quitter : jamais de perte silencieuse.
 - Un organisateur publie des annonces pour 2 bars depuis un seul compte, sans se déconnecter.
 - Une annonce s'affiche côté musicien à l'adresse du bar choisi.
-- Le bouton de reprise remplit l'horaire, les styles, les instruments et les photos, et laisse les dates vides.
+- Le bouton de reprise remplit l'horaire, les styles, les instruments, la description et les photos, et laisse les dates vides.
 - Après la suppression d'un bar, aucune de ses annonces n'est plus visible, ni côté musicien ni dans « Mes annonces ».
 - Sur le premier mois suivant la mise en ligne, au moins un organisateur gère au moins 2 bars.
 - Depuis chacune des pages de l'application, un clic sur « Jamix » ouvre l'accueil à la date du jour, en vue liste, sans rechargement complet de la page.
@@ -151,6 +167,13 @@ US-86. En tant qu'organisateur, je veux que le titre « Mon profil » ait la mê
 - Une saisie faite dans une section du profil reste présente après l'avoir refermée puis rouverte.
 - Après un changement de mot de passe ou d'email réussi, la section est ouverte et affiche le message de succès.
 - Les titres « Mon profil » et « Mes annonces » ont la même taille.
+- À 360px de large, les titres « Nouvelle annonce », « Modifier l'annonce » et « Compléter le brouillon » tiennent sur une ligne et ont la taille du titre « Mes annonces ».
+- Une annonce sans description se publie ; une description de plus de 500 caractères est refusée.
+- Une description saisie avec des retours à la ligne s'affiche côté musicien, dans la liste comme dans la fiche de la carte, avec ses retours à la ligne.
+- Le bouton de reprise remplit la description, y compris par du vide quand l'annonce source n'en a pas.
+- Une annonce avec « Tous les styles » seule se publie et affiche « Tous styles » côté musicien et dans « Mes annonces ».
+- « Tous les styles » ne peut jamais être enregistrée avec un autre style ou une précision « Autre ».
+- Le mot « backline » n'apparaît plus nulle part à l'écran.
 
 ## Hors périmètre
 
@@ -199,6 +222,12 @@ US-86. En tant qu'organisateur, je veux que le titre « Mon profil » ait la mê
 - Ouverture d'une seule section du profil à la fois (fermeture automatique des autres).
 - Confirmation avant de refermer une section du profil avec une saisie non enregistrée.
 - Animation de dépliage des sections du profil.
+- Mise en forme de la description (gras, listes, liens cliquables) : texte brut uniquement.
+- Description différente selon la date d'une annonce récurrente.
+- Recherche ou filtre par mot de la description côté musicien.
+- Case « Tous les instruments » ou option « Aucun instrument ».
+- Filtre par style côté musicien.
+- Description sur la fiche d'un bar.
 
 ## Décisions d'implémentation
 
@@ -218,7 +247,7 @@ US-86. En tant qu'organisateur, je veux que le titre « Mon profil » ait la mê
 - Si l'organisateur ne confirme pas une date à J-7, cette occurrence reste visible avec le statut « en attente de confirmation » (pas de suppression ni d'annulation automatique).
 - Tant qu'une date n'est pas confirmée après J-7, l'organisateur reçoit des relances in-app (dans son espace organisateur uniquement : les relances J-7 ne passent jamais par email ni SMS, l'email étant réservé aux messages de compte) à J-5, J-3, J-2, J-1 et le jour J.
 - L'organisateur peut modifier ou annuler manuellement une annonce à tout moment, indépendamment du mécanisme de confirmation à J-7. Pour une annonce récurrente, la modification comme l'annulation s'appliquent, au choix de l'organisateur, uniquement à la date sélectionnée ou à toutes les dates.
-- Chaque annonce affiche : nom et adresse du bar, distance jusqu'au musicien, horaire, style musical, instruments/backline disponibles sur place, et ses éventuelles photos.
+- Chaque annonce affiche : nom et adresse du bar, distance jusqu'au musicien, horaire, style musical, instruments disponibles sur place, sa description éventuelle et ses éventuelles photos.
 - La distance est calculée à partir de la géolocalisation du navigateur du musicien, demandée au moment de la consultation.
 - Si le musicien refuse la géolocalisation, les annonces s'affichent normalement, sans la distance.
 - Si aucune jam n'est publiée à la date sélectionnée, l'application affiche un message clair et propose les prochaines dates où des jams sont publiées.
@@ -265,7 +294,7 @@ US-86. En tant qu'organisateur, je veux que le titre « Mon profil » ait la mê
 - Le formulaire d'annonce commence par un champ « Bar ». S'il n'y a qu'un bar, il est présélectionné ; sinon, aucun bar n'est choisi par défaut. Le bar est obligatoire dès l'enregistrement, brouillon compris : une sortie sans bar choisi affiche la fenêtre d'échec d'enregistrement (« Choisissez un bar pour enregistrer le brouillon »). Une annonce porte sur un seul bar.
 - Le bar d'une annonce est modifiable tant qu'elle est en Brouillon et figé une fois Publiée.
 - Sur une nouvelle annonce, choisir un bar ne compte pas à lui seul comme une saisie : sans autre champ rempli, la sortie est directe. Sur un brouillon rouvert, changer de bar compte comme une modification.
-- Sur une nouvelle annonce uniquement, dès qu'un bar est choisi et qu'il a au moins une annonce publiée, un bouton fantôme « Reprendre la dernière annonce de ce bar » apparaît. Il remplit l'horaire, les styles, les instruments, les précisions « Autre » et les photos de l'annonce publiée le plus récemment pour ce bar, même si toutes ses dates sont passées ou annulées ; il écrase ces champs sans confirmation et ne touche jamais aux dates. Changer ensuite de bar ne modifie pas les champs repris ; le bouton suit le bar choisi. La reprise compte comme une saisie pour la sortie de la saisie d'une annonce.
+- Sur une nouvelle annonce uniquement, dès qu'un bar est choisi et qu'il a au moins une annonce publiée, un bouton fantôme « Reprendre la dernière annonce de ce bar » apparaît. Il remplit l'horaire, les styles, les instruments, les précisions « Autre », la description et les photos de l'annonce publiée le plus récemment pour ce bar, même si toutes ses dates sont passées ou annulées ; il écrase ces champs sans confirmation et ne touche jamais aux dates. Changer ensuite de bar ne modifie pas les champs repris ; le bouton suit le bar choisi. La reprise compte comme une saisie pour la sortie de la saisie d'une annonce.
 - Les photos reprises sont dupliquées à l'enregistrement : les deux annonces ne partagent jamais un même fichier. Si la copie échoue, l'enregistrement échoue sans enregistrement partiel.
 - « Mes annonces » affiche une seule liste, avec le nom du bar sur chaque annonce. Dès 2 bars, un filtre « Tous » / un bouton par bar (boutons fantômes, passage à la ligne quand la largeur manque) restreint la liste ; il revient sur « Tous » à chaque visite et n'influence pas le formulaire de nouvelle annonce.
 - L'alerte des relances compte les relances de tous les bars du compte ; chaque relance s'affiche sur l'annonce, qui nomme son bar.
@@ -283,6 +312,15 @@ US-86. En tant qu'organisateur, je veux que le titre « Mon profil » ait la mê
 - Replier une section masque son contenu sans effacer la saisie ; celle-ci n'est perdue qu'en quittant la page, comme aujourd'hui. Après un envoi (succès ou erreur), la section reste ouverte pour afficher le message.
 - « Supprimer mon compte » déroulé montre l'avertissement puis directement le formulaire (mot de passe actuel, mot SUPPRIMER, « Supprimer définitivement »). Le bouton intermédiaire « Supprimer mon compte » et le lien « Annuler » sont retirés : on renonce en refermant la section.
 - Le titre « Mon profil » passe à la taille du titre « Mes annonces » ; la mention « Compte créé le… » reste en dessous.
+- Les titres du formulaire d'annonce (« Nouvelle annonce », « Modifier l'annonce », « Compléter le brouillon ») prennent la taille du titre « Mes annonces » et tiennent sur une ligne à 360px.
+- Le formulaire d'annonce propose un champ « Description (optionnel) », placé après les instruments et avant les photos : zone de texte de 4 lignes, soulignée sans cadre comme les autres champs, avec un compteur « N/500 » en petit, à droite. Texte brut, 500 caractères maximum, refusé au-delà côté serveur.
+- La description est facultative pour le brouillon comme pour la publication. Côté musicien, elle s'affiche sous les instruments et au-dessus des photos, dans la liste comme dans la fiche ouverte depuis un marqueur, avec ses retours à la ligne ; sans description, rien ne s'affiche.
+- La description est modifiable sur un brouillon comme sur une annonce publiée ; sur une annonce publiée, elle s'applique à toutes ses dates, comme les styles et les instruments.
+- « Reprendre la dernière annonce de ce bar » reprend aussi la description, en écrasant celle en cours, y compris par du vide. Saisir une description compte comme une saisie pour la sortie de la saisie d'une annonce.
+- Une case « Tous les styles » est la première de la liste des styles, sur sa propre ligne. Cochée, elle décoche et désactive les autres styles et « Autre » (précision comprise) ; décochée, elle les réactive, vides. Une annonce ne peut jamais porter « Tous les styles » avec un autre style ou une précision « Autre » : la combinaison est refusée côté serveur.
+- « Tous les styles » compte comme un style pour la publication ; un brouillon peut toujours n'avoir aucun style coché.
+- Une annonce « Tous les styles » affiche « Tous styles » à la place de la liste des styles, côté musicien (liste et carte) comme dans « Mes annonces ». La reprise et la modification la traitent comme un style ordinaire.
+- Le champ des instruments s'intitule « Instruments disponibles » ; côté musicien, la ligne commence par « Instruments : ». Le mot « backline » n'apparaît plus à l'écran ; la liste des instruments proposés ne change pas.
 
 ## Notes complémentaires
 
@@ -305,3 +343,7 @@ Le fond crème léger du bouton actif du filtre par bar est une exception à DES
 Piste future : un accès direct aux seules annonces à confirmer depuis la ligne « À confirmer » (filtre ou ancre dans « Mes annonces »).
 
 Piste future : des co-organisateurs, avec des droits sur un bar accordés par un organisateur principal. Restent à cadrer l'invitation par email, le périmètre des droits, le destinataire des relances et le sort des annonces en cas de retrait d'un co-organisateur.
+
+Hypothèse : les annonces existantes n'ont pas de description et s'affichent comme aujourd'hui, sans action de l'organisateur.
+
+Piste future : une option « Rien » / « Aucun instrument » pour signaler qu'aucun instrument n'est fourni sur place. Reste à cadrer son affichage côté musicien et son exclusivité avec les autres instruments.
