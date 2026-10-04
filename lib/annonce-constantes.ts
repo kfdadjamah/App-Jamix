@@ -1,4 +1,8 @@
+export const TOUS_LES_STYLES = "Tous les styles";
+
+// « Tous les styles » est exclusive : jamais avec un autre style ni une précision « Autre ».
 export const STYLES_MUSICAUX = [
+  TOUS_LES_STYLES,
   "Jazz",
   "Blues",
   "Rock",
@@ -12,6 +16,11 @@ export const STYLES_MUSICAUX = [
   "Impro",
   "Autre",
 ] as const;
+
+/** Ligne des styles affichée sur une annonce : « Tous styles » remplace la liste. */
+export function libelleStyles(styles: string[]): string {
+  return styles.includes(TOUS_LES_STYLES) ? "Tous styles" : styles.join(", ");
+}
 
 export const INSTRUMENTS_BACKLINE = [
   "Batterie complète",

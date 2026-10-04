@@ -46,3 +46,41 @@ describe("description d'une annonce", () => {
     expect(resultat.success && resultat.data.description).toBe("Déroulé :\n\n1. Bœuf");
   });
 });
+
+describe("« Tous les styles »", () => {
+  it("suffit seule pour publier", () => {
+    const resultat = schemaAnnoncePublication.safeParse({
+      ...publicationMinimale,
+      styles: ["Tous les styles"],
+    });
+    expect(resultat.success).toBe(true);
+  });
+
+  it("est refusée avec un autre style, brouillon comme publication", () => {
+    for (const schema of [schemaAnnonceBrouillon, schemaAnnoncePublication]) {
+      const refus = schema.safeParse({
+        ...publicationMinimale,
+        styles: ["Tous les styles", "Jazz"],
+      });
+      expect(refus.success).toBe(false);
+      expect(!refus.success && refus.error.issues[0]?.message).toBe(
+        '"Tous les styles" ne peut pas être combiné avec un autre style.'
+      );
+    }
+  });
+
+  it("est refusée avec une précision « Autre »", () => {
+    for (const schema of [schemaAnnonceBrouillon, schemaAnnoncePublication]) {
+      const refus = schema.safeParse({
+        ...publicationMinimale,
+        styles: ["Tous les styles"],
+        styleAutre: "Manouche",
+      });
+      expect(refus.success).toBe(false);
+    }
+  });
+
+  it("un brouillon peut toujours n'avoir aucun style", () => {
+    expect(schemaAnnonceBrouillon.safeParse({ styles: [] }).success).toBe(true);
+  });
+});

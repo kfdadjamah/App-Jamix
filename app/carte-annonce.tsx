@@ -1,7 +1,11 @@
 import Link from "next/link";
 import { formaterDistance } from "@/lib/distance";
 import BoutonItineraire from "./bouton-itineraire";
-import { LIBELLES_STATUT_OCCURRENCE, formaterDateCourte } from "@/lib/annonce-constantes";
+import {
+  LIBELLES_STATUT_OCCURRENCE,
+  formaterDateCourte,
+  libelleStyles,
+} from "@/lib/annonce-constantes";
 import { statutAffiche, type recupererAnnoncesPubliees } from "@/lib/annonces";
 
 type Occurrence = Awaited<ReturnType<typeof recupererAnnoncesPubliees>>[number];
@@ -62,7 +66,7 @@ export default function CarteAnnonce({
       )}
       {occurrence.annonce.styles.length > 0 && (
         <span className="text-[12px] uppercase text-[var(--color-driftwood)]">
-          {occurrence.annonce.styles.join(", ")}
+          {libelleStyles(occurrence.annonce.styles)}
           {occurrence.annonce.styleAutre ? ` (${occurrence.annonce.styleAutre})` : ""}
         </span>
       )}

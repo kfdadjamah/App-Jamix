@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { schemaPhoto } from "@/lib/validation/inscription";
-import { STYLES_MUSICAUX, INSTRUMENTS_BACKLINE } from "@/lib/annonce-constantes";
+import { STYLES_MUSICAUX, INSTRUMENTS_BACKLINE, TOUS_LES_STYLES } from "@/lib/annonce-constantes";
 
 const regexHeure = /^([01]\d|2[0-3]):([0-5]\d)$/;
 const regexDate = /^\d{4}-\d{2}-\d{2}$/;
@@ -46,7 +46,16 @@ const champsCommuns = {
   photo2: schemaPhotoAnnonce,
 };
 
-export const schemaAnnonceBrouillon = z.object(champsCommuns);
+const ERREUR_TOUS_LES_STYLES = `"${TOUS_LES_STYLES}" ne peut pas être combiné avec un autre style.`;
+
+function stylesExclusifs(champs: { styles: string[]; styleAutre?: string }) {
+  if (!champs.styles.includes(TOUS_LES_STYLES)) return true;
+  return champs.styles.length === 1 && !champs.styleAutre;
+}
+
+export const schemaAnnonceBrouillon = z
+  .object(champsCommuns)
+  .refine(stylesExclusifs, { message: ERREUR_TOUS_LES_STYLES });
 export type ChampsAnnonceBrouillon = z.infer<typeof schemaAnnonceBrouillon>;
 
 export const schemaAnnoncePublication = z.object({
@@ -54,5 +63,5 @@ export const schemaAnnoncePublication = z.object({
   dates: schemaDates.min(1, "Au moins une date est requise."),
   heureDebut: z.string().regex(regexHeure, "L'heure de début est requise."),
   styles: z.array(z.enum(STYLES_MUSICAUX)).min(1, "Sélectionnez au moins un style musical."),
-});
+}).refine(stylesExclusifs, { message: ERREUR_TOUS_LES_STYLES });
 export type ChampsAnnoncePublication = z.infer<typeof schemaAnnoncePublication>;

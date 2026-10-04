@@ -38,7 +38,7 @@
 - **Libellé des instruments et titres du formulaire (Phase 28)** : aucune migration de schéma. Le titre d'un brouillon devient « Modifier le brouillon » (« Compléter le brouillon » mesurait 325px en 24px, pour une colonne de 312px à 360px). Seuls les libellés changent (« Instruments disponibles » dans le formulaire, « Instruments : » dans `app/carte-annonce.tsx`) ; la valeur stockée `Annonce.instruments` et la liste `INSTRUMENTS_BACKLINE` (`lib/annonce-constantes.ts`) restent inchangées.
 - **Description d'une annonce (Phase 29)** : nouveau champ `Annonce.description String?` (texte brut, 500 caractères maximum, validé côté serveur dans le schéma zod de l'annonce, brouillon comme publication ; chaîne vide → `null`). Appliqué par `prisma db push` (pas de dossier de migrations) ; les annonces existantes restent à `null`, aucun script. Champ de l'annonce, donc commun à toutes ses occurrences : la portée ciblée/globale ne concerne que l'horaire (`synchroniserOccurrences`, `app/mes-annonces/actions.ts`). Ajouté à `ValeursReprises` / `valeursReprisesParBar` (`lib/annonces.ts`). Garde de sortie : le `<textarea name="description">` est lu par `instantane()` via le `FormData`, sans code dédié. Le navigateur envoie les retours à la ligne en `\r\n` alors que `maxLength` les compte pour 1 : le schéma les normalise en `\n` et retire les espaces de début et de fin avant de compter. Côté musicien, un seul composant de carte (`app/carte-annonce.tsx`) avec une prop `mode` : `"liste"` (extrait `line-clamp-3`, nom du bar en lien étendu à toute la carte par un pseudo-élément, « Itinéraire » au-dessus en `relative z-10`) et `"fiche"` (marqueur de la carte : description complète, sans lien). Description en `whitespace-pre-line`, 15px, 400, casse mixte, Warm Cream. Dans « Mes annonces », extrait `line-clamp-2` en 12px Driftwood.
 - **Page d'une jam (Phase 29)** : nouvelle route publique `/jams/[id]`, une page par occurrence (hors `matcher` du proxy). Lecture par `recupererOccurrencePubliee` (`lib/annonces.ts`) : annonce `PUBLIEE`, date ≥ `aujourdHuiUTC()`, annulées comprises ; sinon `notFound()` et `app/jams/[id]/not-found.tsx` (« Cette jam n'est plus disponible », code 404). « ← Retour » vers `/?date=<date de l'occurrence>`. Distance calculée côté client par le hook `usePositionMusicien` (`lib/position-musicien.ts`), extrait de `app/consultation-musicien.tsx` et partagé ; jamais de position dans l'URL. Variante `"jam"` du bandeau (droite : icône de profil si connecté, sinon vide).
-- **« Tous les styles » (Phase 30)** : aucune migration de schéma. Valeur `"Tous les styles"` ajoutée en tête de `STYLES_MUSICAUX` (`lib/annonce-constantes.ts`) et stockée dans `Annonce.styles`. Exclusivité vérifiée côté serveur (refine zod : « Tous les styles » seule, sans autre style ni précision « Autre ») et côté client (autres cases décochées et désactivées). Compte pour le `min(1)` de la publication. Affichée « Tous styles » côté musicien et dans « Mes annonces ».
+- **« Tous les styles » (Phase 30)** : aucune migration de schéma. Valeur `"Tous les styles"` ajoutée en tête de `STYLES_MUSICAUX` (`lib/annonce-constantes.ts`) et stockée dans `Annonce.styles`. Exclusivité vérifiée côté serveur (refine zod : « Tous les styles » seule, sans autre style ni précision « Autre ») et côté client (autres cases décochées et désactivées). Compte pour le `min(1)` de la publication. Affichée « Tous styles » côté musicien et dans « Mes annonces » via `libelleStyles` (`lib/annonce-constantes.ts`). Conversion des données existantes : `node scripts/convertir-tous-styles.mjs` (idempotent), qui passe toute annonce (brouillons compris) cochant les 11 styles nommés à `["Tous les styles"]`, « Autre » et sa précision retirés.
 
 ---
 
@@ -794,17 +794,18 @@ Aucune — démarrable immédiatement
 
 ### Ce qu'on livre
 
-La liste des styles du formulaire d'annonce commence par une case « Tous les styles », sur sa propre ligne. Cochée, elle décoche et désactive les autres styles et « Autre » ; décochée, elle les réactive. Elle suffit pour publier. Une annonce « Tous les styles » affiche « Tous styles » côté musicien et dans « Mes annonces ». Aucune migration de schéma.
+La liste des styles du formulaire d'annonce commence par une case « Tous les styles », sur sa propre ligne. Cochée, elle décoche et désactive les autres styles et « Autre » ; décochée, elle les réactive. Elle suffit pour publier. Une annonce « Tous les styles » affiche « Tous styles » côté musicien et dans « Mes annonces ». Aucune migration de schéma ; un script convertit les annonces existantes qui cochaient les 11 styles.
 
 ### Critères d'acceptation
 
-- [ ] « Tous les styles » est la première case des styles, seule sur sa ligne
-- [ ] La cocher décoche et désactive les autres styles et « Autre », précision comprise ; la décocher les réactive, vides
-- [ ] Une annonce portant « Tous les styles » avec un autre style ou une précision « Autre » est refusée côté serveur
-- [ ] « Tous les styles » seule suffit pour publier ; un brouillon peut toujours n'avoir aucun style
-- [ ] Une annonce « Tous les styles » affiche « TOUS STYLES » à la place de la liste des styles, côté musicien (liste et fiche de la carte) et dans « Mes annonces »
-- [ ] La reprise et la modification d'une annonce (brouillon ou publiée) traitent « Tous les styles » comme un style ordinaire ; à la réouverture, la case est cochée et les autres désactivées
-- [ ] Tests Vitest de la validation (exclusivité, publication avec « Tous les styles » seule)
+- [x] « Tous les styles » est la première case des styles, seule sur sa ligne
+- [x] La cocher décoche et désactive les autres styles et « Autre », précision comprise ; la décocher les réactive, vides
+- [x] Une annonce portant « Tous les styles » avec un autre style ou une précision « Autre » est refusée côté serveur
+- [x] « Tous les styles » seule suffit pour publier ; un brouillon peut toujours n'avoir aucun style
+- [x] Une annonce « Tous les styles » affiche « TOUS STYLES » à la place de la liste des styles, côté musicien (liste et fiche de la carte) et dans « Mes annonces »
+- [x] La reprise et la modification d'une annonce (brouillon ou publiée) traitent « Tous les styles » comme un style ordinaire ; à la réouverture, la case est cochée et les autres désactivées
+- [x] Les annonces existantes cochant les 11 styles nommés sont converties en « Tous les styles » par `scripts/convertir-tous-styles.mjs`
+- [x] Tests Vitest de la validation (exclusivité, publication avec « Tous les styles » seule)
 
 ## Bloquée par
 

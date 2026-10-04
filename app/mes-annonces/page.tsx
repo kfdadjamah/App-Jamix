@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { recupererIdOrganisateurConnecte } from "@/lib/organisateur";
 import Bandeau from "@/components/bandeau";
 import HeaderOrganisateur from "@/components/header-organisateur";
-import { LIBELLES_STATUT_OCCURRENCE } from "@/lib/annonce-constantes";
+import { LIBELLES_STATUT_OCCURRENCE, libelleStyles } from "@/lib/annonce-constantes";
 import { statutAffiche } from "@/lib/annonces";
 import { messageRelance } from "@/lib/relances";
 import FiltreAnnonces from "./filtre-annonces";
@@ -135,7 +135,7 @@ function CarteAnnonce({ annonce }: { annonce: AnnonceAvecDetails }) {
 
       {annonce.styles.length > 0 && (
         <span className="text-[12px] uppercase text-[var(--color-driftwood)]">
-          {annonce.styles.join(", ")}
+          {libelleStyles(annonce.styles)}
         </span>
       )}
 

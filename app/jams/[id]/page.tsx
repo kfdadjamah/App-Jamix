@@ -4,7 +4,11 @@ import { notFound } from "next/navigation";
 import Bandeau from "@/components/bandeau";
 import BoutonRetour from "@/components/bouton-retour";
 import BoutonItineraire from "@/app/bouton-itineraire";
-import { LIBELLES_STATUT_OCCURRENCE, formaterDateCourte } from "@/lib/annonce-constantes";
+import {
+  LIBELLES_STATUT_OCCURRENCE,
+  formaterDateCourte,
+  libelleStyles,
+} from "@/lib/annonce-constantes";
 import { recupererOccurrencePubliee, statutAffiche } from "@/lib/annonces";
 import DistanceJam from "./distance-jam";
 
@@ -81,7 +85,7 @@ export default async function PageJam({ params }: { params: Promise<{ id: string
           </span>
           {annonce.styles.length > 0 && (
             <span className="text-[12px] uppercase text-[var(--color-driftwood)]">
-              {annonce.styles.join(", ")}
+              {libelleStyles(annonce.styles)}
               {annonce.styleAutre ? ` (${annonce.styleAutre})` : ""}
             </span>
           )}

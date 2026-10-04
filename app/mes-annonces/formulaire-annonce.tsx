@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { STYLES_MUSICAUX, INSTRUMENTS_BACKLINE } from "@/lib/annonce-constantes";
+import { STYLES_MUSICAUX, INSTRUMENTS_BACKLINE, TOUS_LES_STYLES } from "@/lib/annonce-constantes";
 import { LONGUEUR_MAX_DESCRIPTION, NOMBRE_MAX_DATES } from "@/lib/validation/annonce";
 import { decisionSortie, instantane } from "@/lib/garde-sortie";
 import { useGardeSortie } from "@/components/garde-sortie";
@@ -438,6 +438,7 @@ export default function FormulaireAnnonce({
         label="Style musical"
         nom="styles"
         options={STYLES_MUSICAUX}
+        optionExclusive={TOUS_LES_STYLES}
         valeursCochees={valeurs.styles}
         nomAutre="styleAutre"
         valeurAutre={valeurs.styleAutre}
@@ -508,6 +509,7 @@ function GroupeCases({
   label,
   nom,
   options,
+  optionExclusive,
   valeursCochees,
   nomAutre,
   valeurAutre,
@@ -515,31 +517,61 @@ function GroupeCases({
   label: string;
   nom: string;
   options: readonly string[];
+  // Cochée, elle décoche et désactive toutes les autres cases ; décochée, elle les réactive, vides.
+  optionExclusive?: string;
   valeursCochees: string[];
   nomAutre: string;
   valeurAutre: string;
 }) {
+  const [exclusiveCochee, setExclusiveCochee] = useState(
+    optionExclusive !== undefined && valeursCochees.includes(optionExclusive)
+  );
+  // Après un clic sur l'option exclusive, les autres cases sont remontées vides (key).
+  const [basculements, setBasculements] = useState(0);
   const [autreCoche, setAutreCoche] = useState(valeursCochees.includes("Autre"));
+  const autres = options.filter((option) => option !== optionExclusive);
+
+  function basculerExclusive(cochee: boolean) {
+    setExclusiveCochee(cochee);
+    setBasculements((n) => n + 1);
+    setAutreCoche(false);
+  }
 
   return (
     <div className="flex flex-col gap-3">
       <span className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)]">
         {label}
       </span>
-      <div className="flex flex-wrap gap-x-5 gap-y-2">
-        {options.map((option) => (
+      {optionExclusive !== undefined && (
+        <label className="flex items-center gap-2 text-[12px] uppercase text-[var(--color-warm-cream)]">
+          <input
+            type="checkbox"
+            name={nom}
+            value={optionExclusive}
+            defaultChecked={exclusiveCochee}
+            onChange={(e) => basculerExclusive(e.target.checked)}
+          />
+          {optionExclusive}
+        </label>
+      )}
+      <div key={basculements} className="flex flex-wrap gap-x-5 gap-y-2">
+        {autres.map((option) => (
           <label
             key={option}
-            className="flex items-center gap-2 text-[12px] uppercase text-[var(--color-warm-cream)]"
+            className={`flex items-center gap-2 text-[12px] uppercase text-[var(--color-warm-cream)] ${
+              exclusiveCochee ? "cursor-not-allowed opacity-60" : ""
+            }`}
           >
             <input
               type="checkbox"
               name={nom}
               value={option}
-              defaultChecked={valeursCochees.includes(option)}
+              disabled={exclusiveCochee}
+              defaultChecked={basculements === 0 && valeursCochees.includes(option)}
               onChange={
                 option === "Autre" ? (e) => setAutreCoche(e.target.checked) : undefined
               }
+              className="disabled:cursor-not-allowed"
             />
             {option}
           </label>
@@ -550,7 +582,7 @@ function GroupeCases({
           type="text"
           name={nomAutre}
           placeholder="Précisez (optionnel)"
-          defaultValue={valeurAutre}
+          defaultValue={basculements === 0 ? valeurAutre : ""}
           className="champ-input"
         />
       )}
@@ -558,8 +590,6 @@ function GroupeCases({
   );
 }
 
-// Emplacement photo d'une nouvelle annonce : fichier choisi, ou photo reprise (URL source
-// transmise en champ caché, dupliquée par le serveur à l'enregistrement).
 function EmplacementPhoto({
   numero,
   photoRepriseInitiale,
