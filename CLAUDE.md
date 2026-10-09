@@ -5,9 +5,9 @@ Next.js (TypeScript), Postgres.
 
 ## Documents projet
 Toujours lire ces documents avant de coder :
-- @docs/PRD.md — pourquoi et quoi du produit
-- @docs/PLAN.md — phases d'implémentation et user stories
-- @docs/DESIGN.md — système design et direction visuelle
+- docs/PRD.md — pourquoi et quoi du produit
+- docs/PLAN.md — phases d'implémentation et user stories
+- docs/DESIGN.md — système design et direction visuelle
 
 ## Système design
 Toujours lire DESIGN.md avant toute décision visuelle ou UI. Polices, couleurs, espacements et direction esthétique y sont définis. Ne pas dévier sans validation explicite. En mode QA, signaler tout code qui ne respecte pas DESIGN.md.
