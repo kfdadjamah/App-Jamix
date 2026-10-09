@@ -19,12 +19,10 @@ Toujours lire DESIGN.md avant toute décision visuelle ou UI. Polices, couleurs,
 - Email (Resend) réservé aux messages de compte : réinitialisation du mot de passe, bienvenue, avis de changement de mot de passe ou d'email. Jamais de SMS.
 - Modification/annulation d'une annonce récurrente : l'organisateur choisit explicitement la portée (date seule vs toutes les dates).
 - Un compte organisateur peut être rattaché à 1 à 10 bars ; une annonce porte sur un seul bar, figé une fois publiée. Pas de bar partagé entre plusieurs comptes.
+- Pour toute API ou librairie externe, consulte le CLI Context7 avant d'écrire. Pas d'invention de signature de mémoire.
+- Tout écran nouveau ou modifié doit être validé par un test Playwright avant que tu déclares "terminé".
 
 ## Jargon métier
 - Occurrence : une date précise d'une annonce, avec son propre statut, distincte de l'annonce elle-même.
 - J-7 : échéance de confirmation, 7 jours avant une date d'occurrence.
 - Portée (ciblée/globale) : appliquer une modif/annulation à une occurrence seule ou à toutes celles de l'annonce récurrente.
-
-##Conventions
-- Pour toute API ou librairie externe, consulte le CLI Context7 avant d'écrire. Pas d'invention de signature de mémoire.
-- Tout écran nouveau ou modifié doit être validé par un test Playwright avant que tu déclares "terminé".
