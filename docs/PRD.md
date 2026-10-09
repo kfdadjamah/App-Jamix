@@ -16,6 +16,8 @@ La page profil de l'organisateur empile tous les formulaires dépliés les uns s
 
 Dans le formulaire d'annonce, le titre (« Nouvelle annonce », « Modifier l'annonce », « Compléter le brouillon ») est bien plus grand que celui de « Mes annonces » et passe sur deux lignes sur mobile. L'organisateur n'a aucun endroit pour donner des précisions libres sur sa jam (déroulé, niveau attendu, inscription sur place, consignes) : il doit les glisser dans les champs « Autre » ou y renoncer. Une jam ouverte à tous les styles l'oblige à cocher les styles un par un. Le libellé « Instruments / backline disponibles », et « Backline » côté musicien, emploie un jargon que tous les musiciens ne comprennent pas.
 
+Un visiteur ou un organisateur qui veut poser une question, signaler une annonce ou un problème n'a aucun moyen de joindre l'équipe Jamix. L'application n'affiche ni règles d'utilisation, ni information sur les données personnelles collectées, ni mentions légales, alors qu'un service ouvert au public doit les présenter.
+
 ## Solution
 
 L'outil centralise les annonces de jams publiées par les organisateurs des bars lyonnais. Le musicien sélectionne une date et consulte les annonces disponibles ce jour-là : lieu, adresse, distance jusqu'à chez lui, horaire, style musical et instruments mis à disposition sur place. Quand aucune jam n'est publiée à la date choisie, l'outil lui suggère les prochaines dates où des jams ont lieu. À terme, l'outil s'ouvrira aussi au grand public souhaitant assister à une jam.
@@ -31,6 +33,8 @@ Dans « Mes annonces », les boutons du filtre par bar passent à la ligne quand
 Sur le profil, les sections « Mes bars », « Email », « Mot de passe » et « Supprimer mon compte » se déroulent et se referment d'un clic sur leur titre, qui porte un chevron. À l'arrivée, seule « Mes bars » est déroulée. « Déconnexion » reste affiché tel quel. Le titre « Mon profil » prend la taille du titre « Mes annonces ».
 
 Dans le formulaire d'annonce, le titre prend la taille de « Mes annonces » et tient sur une ligne. Un champ « Description », facultatif et limité à 500 caractères, permet d'ajouter des précisions libres, affichées au musicien sous les instruments. Dans la liste, le musicien en voit le début et ouvre, d'un clic sur la carte, la page de la jam qui montre toute l'annonce. Une case « Tous les styles » remplace en un clic la liste des styles. Les instruments s'intitulent « Instruments disponibles » dans le formulaire et « Instruments » côté musicien : le mot « backline » disparaît de l'écran.
+
+Chaque page se termine par un pied de page discret : les liens « CGU » et « Contact », puis « © <année> Jamix · Tous droits réservés · v<version> ». « CGU » ouvre une page courte qui réunit les informations clés : mentions légales, règles d'usage d'un service gratuit, données personnelles. « Contact » ouvre un formulaire (nom, adresse mail, message) ; la réponse de l'équipe arrive par email. L'éditeur, un particulier, reste anonyme : aucun nom de personne n'apparaît dans l'application.
 
 ## Utilisateur cible
 
@@ -141,6 +145,15 @@ US-99. En tant que musicien, je veux ouvrir d'un clic sur une carte de la liste 
 US-100. En tant que musicien sur la page d'une jam, je veux un bouton « Retour » vers la liste du jour de cette jam, afin de reprendre ma recherche là où je l'ai laissée.
 US-101. En tant que musicien qui ouvre la page d'une jam passée, supprimée ou retirée, je veux un message clair « Cette jam n'est plus disponible », afin de ne pas tomber sur une page d'erreur.
 US-102. En tant qu'organisateur, je veux voir le début de la description sur chaque annonce de « Mes annonces », afin de la reconnaître d'un coup d'œil.
+US-103. En tant que visiteur, je veux voir en bas de chaque page les liens « CGU » et « Contact », le copyright et la version de l'application, afin de trouver ces informations au même endroit partout.
+US-104. En tant que visiteur, je veux lire des CGU courtes qui présentent les informations clés (éditeur, hébergeur, gratuité du service, règles d'usage, responsabilité des annonces, données personnelles), afin de savoir à quoi je m'engage.
+US-105. En tant que visiteur, je veux savoir comment exercer mes droits sur mes données (accès, rectification, suppression), afin de garder la maîtrise de mes informations.
+US-106. En tant que visiteur, je veux envoyer un message à l'équipe via un formulaire (nom, adresse mail, message), afin de poser une question ou signaler un problème.
+US-107. En tant qu'organisateur connecté, je veux trouver mon email déjà rempli dans le formulaire Contact, afin de gagner du temps.
+US-108. En tant que visiteur, je veux voir un message clair sous un champ invalide, afin de corriger ma saisie sans la perdre.
+US-109. En tant que visiteur, je veux une confirmation après l'envoi, afin d'être sûr que mon message est parti.
+US-110. En tant que visiteur dont l'envoi échoue, je veux un message d'erreur et retrouver ma saisie intacte, afin de réessayer sans tout retaper.
+US-111. En tant qu'organisateur qui saisit une annonce, je veux que les liens du pied de page suivent les mêmes règles que les autres sorties (brouillon enregistré ou confirmation), afin de ne pas perdre ma saisie.
 
 ## Critères de succès
 
@@ -180,6 +193,11 @@ US-102. En tant qu'organisateur, je veux voir le début de la description sur ch
 - Une annonce avec « Tous les styles » seule se publie et affiche « Tous styles » côté musicien et dans « Mes annonces ».
 - « Tous les styles » ne peut jamais être enregistrée avec un autre style ou une précision « Autre ».
 - Le mot « backline » n'apparaît plus nulle part à l'écran.
+- Le pied de page s'affiche sur toutes les pages, sans débordement horizontal à 360px.
+- La version affichée dans le pied de page est celle de l'application déployée ; l'année du copyright est l'année en cours.
+- La page CGU s'ouvre sans compte et ne contient aucun nom de personne.
+- Un message valide envoyé depuis le formulaire Contact arrive à l'adresse de contact, et « Répondre » vise l'adresse saisie par l'expéditeur.
+- Le 6ᵉ envoi en moins d'une heure depuis une même connexion est refusé avec un message.
 
 ## Hors périmètre
 
@@ -192,7 +210,7 @@ US-102. En tant qu'organisateur, je veux voir le début de la description sur ch
 - Itinéraire calculé dans l'application (le trajet est délégué à l'application de cartographie externe).
 - Affichage d'un temps de trajet.
 - Mémorisation de l'application de cartographie choisie par le musicien.
-- Relances J-7, notifications d'annonce et tout email autre que les messages de compte (réinitialisation, bienvenue, avis de changement de mot de passe ou d'email).
+- Relances J-7, notifications d'annonce et tout email autre que les messages de compte (réinitialisation, bienvenue, avis de changement de mot de passe ou d'email) et le message du formulaire Contact envoyé à l'équipe.
 - Vérification de l'adresse email à l'inscription ou au changement d'email.
 - Connexion via un fournisseur tiers (Google, Apple…) et authentification à deux facteurs.
 - Retour vers la page précédemment visitée (historique de navigation) : la destination du bouton « Retour » est toujours la page parente fixe.
@@ -236,6 +254,13 @@ US-102. En tant qu'organisateur, je veux voir le début de la description sur ch
 - Description sur la fiche d'un bar.
 - Lien vers la page d'une jam depuis la fiche ouverte par un marqueur de la carte.
 - Partage de la page d'une jam, et liste des autres dates de la même annonce sur cette page.
+- Accusé de réception envoyé par email à l'expéditeur d'un message Contact.
+- Champ « Objet », pièce jointe, historique des messages, et écran de lecture ou d'administration des messages dans l'application.
+- Pages séparées « Mentions légales » et « Confidentialité », et bannière de cookies (seuls des cookies techniques de session sont utilisés).
+- Acceptation explicite des CGU (case à cocher) à l'inscription ou au contact.
+- Affichage du nom ou de l'adresse postale de l'éditeur.
+- Utilisation payante, publicité, cagnotte ou dons (la cagnotte est une piste future).
+- Pied de page fixé en bas de l'écran.
 
 ## Décisions d'implémentation
 
@@ -283,7 +308,7 @@ US-102. En tant qu'organisateur, je veux voir le début de la description sur ch
 - Le bandeau de l'espace organisateur contient « Jamix » et l'icône de profil ; la ligne « À confirmer » est placée juste en dessous.
 - Après la connexion comme après l'inscription, l'organisateur arrive sur « Mes annonces ».
 - Mot de passe oublié : l'organisateur saisit son email et reçoit un lien valable 1 heure, à usage unique, invalidé dès qu'un nouveau lien est demandé. Le message affiché est le même que l'adresse soit connue ou non. Après réinitialisation, l'organisateur est renvoyé vers la connexion avec un message de succès.
-- Emails envoyés, uniquement liés au compte : lien de réinitialisation, bienvenue à l'inscription, avis de changement ou de réinitialisation du mot de passe, avis de changement d'email envoyé à l'ancienne adresse. Un échec d'envoi d'un email d'avis ne bloque jamais l'action qui l'a déclenché.
+- Emails envoyés, liés au compte : lien de réinitialisation, bienvenue à l'inscription, avis de changement ou de réinitialisation du mot de passe, avis de changement d'email envoyé à l'ancienne adresse. Un échec d'envoi d'un email d'avis ne bloque jamais l'action qui l'a déclenché. Seule exception hors compte : le message du formulaire Contact, envoyé à l'équipe (jamais à l'expéditeur).
 - Un bouton « Retour » apparaît en haut à gauche, sous le bandeau et au-dessus du titre de la page, sous forme de lien texte « ← Retour », sur : connexion (→ accueil) ; inscription, mot de passe oublié et réinitialisation du mot de passe (→ connexion) ; profil, nouvelle annonce et modification d'annonce (→ « Mes annonces »). L'accueil et « Mes annonces », points de départ, n'en ont pas.
 - La destination du bouton « Retour » est toujours la même pour une page donnée, quel que soit le chemin d'arrivée (lien direct, favori…). Les liens de l'en-tête gardent leur propre destination.
 - Pendant la saisie d'une annonce, toute sortie via l'application (« Retour », ou « Jamix », « À confirmer » et icône de profil) suit les règles ci-dessous ; l'organisateur arrive ensuite sur la page qu'il a demandée.
@@ -331,6 +356,12 @@ US-102. En tant qu'organisateur, je veux voir le début de la description sur ch
 - « Tous les styles » compte comme un style pour la publication ; un brouillon peut toujours n'avoir aucun style coché.
 - Une annonce « Tous les styles » affiche « Tous styles » à la place de la liste des styles, côté musicien (liste et carte) comme dans « Mes annonces ». La reprise et la modification la traitent comme un style ordinaire.
 - Le champ des instruments s'intitule « Instruments disponibles » ; côté musicien, la ligne commence par « Instruments : ». Le mot « backline » n'apparaît plus à l'écran ; la liste des instruments proposés ne change pas.
+- Chaque page se termine par un pied de page, placé après le contenu (non fixé à l'écran) : un filet pointillé au-dessus, puis une ligne « CGU · Contact » et une ligne « © 2026 Jamix · Tous droits réservés · v0.1.0 », en petit texte crème atténué. L'année suit l'année en cours, la version suit chaque mise à jour de l'application.
+- Sur les formulaires d'annonce, « CGU » et « Contact » sont des sorties via l'application, au même titre que « Jamix » et « Retour », et suivent les mêmes règles.
+- La page CGU est publique, avec « ← Retour » vers l'accueil, et tient en sections courtes, dans cet ordre : éditeur (particulier non professionnel, joignable via le formulaire Contact, sans nom affiché) ; hébergeur (nom et adresse) ; objet du service et gratuité ; accès (consultation libre, compte réservé aux organisateurs) ; responsabilités (chaque organisateur est responsable de ses annonces, Jamix ne garantit pas la tenue des jams) ; propriété des photos et textes publiés ; données personnelles (données collectées, finalités, durée de conservation, droits d'accès, de rectification et de suppression, recours auprès de la CNIL) ; cookies (session uniquement) ; droit français ; date de mise à jour.
+- La page Contact est publique, avec « ← Retour » vers l'accueil. Le formulaire a 3 champs obligatoires : nom (100 caractères maximum), adresse mail (format valide), message (10 à 2000 caractères, avec un compteur « N/2000 »). Un organisateur connecté trouve son email prérempli, modifiable. Une phrase sous le bouton explique l'usage des données, avec un lien vers les CGU, sans case à cocher.
+- Après l'envoi : « Message envoyé, nous vous répondrons par email. » et le formulaire se vide. En cas d'échec : un message d'erreur et la saisie conservée. Une erreur de saisie s'affiche sous le champ concerné, la saisie conservée.
+- Au-delà de 5 envois en une heure depuis une même connexion : « Trop de messages envoyés, réessayez plus tard. »
 
 ## Notes complémentaires
 
@@ -357,3 +388,13 @@ Piste future : des co-organisateurs, avec des droits sur un bar accordés par un
 Hypothèse : les annonces existantes n'ont pas de description et s'affichent comme aujourd'hui, sans action de l'organisateur.
 
 Piste future : une option « Rien » / « Aucun instrument » pour signaler qu'aucun instrument n'est fourni sur place. Reste à cadrer son affichage côté musicien et son exclusivité avec les autres instruments.
+
+Le pied de page est une exception à DESIGN.md, qui exclut tout pied de page (« no footer chrome ») : DESIGN.md devra l'autoriser, discret et sur fond sombre.
+
+Le formulaire Contact dépend de l'adresse de contact de l'équipe, toujours à renseigner : sans elle, aucun message ne peut être envoyé. Pour préserver l'anonymat de l'éditeur, cette adresse doit être dédiée, sans son nom, et les réponses doivent partir de cette boîte.
+
+Hypothèse : l'anonymat d'un éditeur non professionnel suppose que son identité soit connue de l'hébergeur (compte d'hébergement à son nom).
+
+Le texte des CGU est un modèle à faire relire avant l'ouverture au grand public.
+
+Piste future : une cagnotte de dons libres pour soutenir la maintenance de l'infrastructure ; les CGU devront alors la mentionner.

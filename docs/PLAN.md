@@ -39,6 +39,13 @@
 - **Description d'une annonce (Phase 29)** : nouveau champ `Annonce.description String?` (texte brut, 500 caractères maximum, validé côté serveur dans le schéma zod de l'annonce, brouillon comme publication ; chaîne vide → `null`). Appliqué par `prisma db push` (pas de dossier de migrations) ; les annonces existantes restent à `null`, aucun script. Champ de l'annonce, donc commun à toutes ses occurrences : la portée ciblée/globale ne concerne que l'horaire (`synchroniserOccurrences`, `app/mes-annonces/actions.ts`). Ajouté à `ValeursReprises` / `valeursReprisesParBar` (`lib/annonces.ts`). Garde de sortie : le `<textarea name="description">` est lu par `instantane()` via le `FormData`, sans code dédié. Le navigateur envoie les retours à la ligne en `\r\n` alors que `maxLength` les compte pour 1 : le schéma les normalise en `\n` et retire les espaces de début et de fin avant de compter. Côté musicien, un seul composant de carte (`app/carte-annonce.tsx`) avec une prop `mode` : `"liste"` (extrait `line-clamp-3`, nom du bar en lien étendu à toute la carte par un pseudo-élément, « Itinéraire » au-dessus en `relative z-10`) et `"fiche"` (marqueur de la carte : description complète, sans lien). Description en `whitespace-pre-line`, 15px, 400, casse mixte, Warm Cream. Dans « Mes annonces », extrait `line-clamp-2` en 12px Driftwood.
 - **Page d'une jam (Phase 29)** : nouvelle route publique `/jams/[id]`, une page par occurrence (hors `matcher` du proxy). Lecture par `recupererOccurrencePubliee` (`lib/annonces.ts`) : annonce `PUBLIEE`, date ≥ `aujourdHuiUTC()`, annulées comprises ; sinon `notFound()` et `app/jams/[id]/not-found.tsx` (« Cette jam n'est plus disponible », code 404). « ← Retour » vers `/?date=<date de l'occurrence>`. Distance calculée côté client par le hook `usePositionMusicien` (`lib/position-musicien.ts`), extrait de `app/consultation-musicien.tsx` et partagé ; jamais de position dans l'URL. Variante `"jam"` du bandeau (droite : icône de profil si connecté, sinon vide).
 - **« Tous les styles » (Phase 30)** : aucune migration de schéma. Valeur `"Tous les styles"` ajoutée en tête de `STYLES_MUSICAUX` (`lib/annonce-constantes.ts`) et stockée dans `Annonce.styles`. Exclusivité vérifiée côté serveur (refine zod : « Tous les styles » seule, sans autre style ni précision « Autre ») et côté client (autres cases décochées et désactivées). Compte pour le `min(1)` de la publication. Affichée « Tous styles » côté musicien et dans « Mes annonces » via `libelleStyles` (`lib/annonce-constantes.ts`). Conversion des données existantes : `node scripts/convertir-tous-styles.mjs` (idempotent), qui passe toute annonce (brouillons compris) cochant les 11 styles nommés à `["Tous les styles"]`, « Autre » et sa précision retirés.
+- **Pied de page, CGU et Contact (Phases 31 et 32)** :
+  - *Routes* : `/cgu` et `/contact`, publiques, hors du `matcher` de `proxy.ts`. « ← Retour » vers `/` sur les deux.
+  - *Pied de page* : un composant unique `components/pied-de-page.tsx`, rendu par chaque page à la suite du contenu, comme `components/bandeau.tsx` (pas dans `app/layout.tsx`), pour rester dans `FournisseurGardeSortie` : sur les formulaires d'annonce, ses liens sont des `LienGarde` (`components/garde-sortie.tsx`). Version lue depuis `package.json` au build ; année calculée à l'affichage. DESIGN.md autorise le pied de page (fond Walnut Shadow, filet pointillé Cork Border, texte Warm Cream atténué 12px).
+  - *Email de contact* : seule exception à la règle « email = messages de compte ». Envoi par `envoyerEmail` (`lib/email.ts`), étendu d'un `replyTo` optionnel qui remplace `adresseContact()` ; destinataire `adresseContact()` (`EMAIL_CONTACT`), `replyTo` = email saisi. Sans `EMAIL_CONTACT`, l'envoi est refusé avec l'erreur générique. Contrairement aux avis de compte, l'envoi est attendu (pas d'`after()`) pour afficher le succès ou l'échec. Jamais d'accusé de réception à l'expéditeur.
+  - *Limite d'envois* : nouveau modèle `EnvoiContact` (`id`, `empreinteIp` = hash SHA-256 de l'IP, jamais l'IP brute, `creeLe`), appliqué par `prisma db push`. Au plus 5 envois par empreinte sur une heure glissante ; les lignes de plus de 24 h sont purgées à chaque envoi. Champ piège invisible : rempli, il renvoie un faux succès sans rien envoyer ni enregistrer.
+  - *Validation* : schéma zod `lib/validation/contact.ts`, sur le modèle de `lib/validation/inscription.ts` (nom 1–100, email valide, message 10–2000 après normalisation `\r\n` → `\n` et trim, comme la description de la Phase 29).
+  - *Anonymat* : aucun nom de personne dans `/cgu` ni ailleurs ; l'éditeur est « un particulier non professionnel », joignable via `/contact`.
 
 ---
 
@@ -812,3 +819,56 @@ La liste des styles du formulaire d'annonce commence par une case « Tous les st
 Aucune — démarrable immédiatement
 
 Les phases 28, 29 et 30 sont indépendantes entre elles.
+
+---
+
+## Phase 31 : Pied de page commun et page CGU
+
+**User stories** : US-103, US-104, US-105, US-111
+
+### Ce qu'on livre
+
+Toutes les pages se terminent par un pied de page discret : un filet pointillé, une ligne « CGU · Contact », puis « © <année en cours> Jamix · Tous droits réservés · v<version> ». « CGU » mène à la page publique `/cgu`, courte et structurée en sections (éditeur anonyme, hébergeur, objet et gratuité, accès, responsabilités, propriété des contenus, données personnelles et droits, cookies, droit applicable, date de mise à jour). Le lien « Contact » est masqué jusqu'à la Phase 32. Sur les formulaires d'annonce, les liens du pied de page sont des sorties gardées. DESIGN.md est complété pour autoriser le pied de page.
+
+### Critères d'acceptation
+
+- [ ] Le pied de page s'affiche après le contenu sur `/`, `/jams/[id]`, `/connexion`, `/inscription`, `/mot-de-passe-oublie`, `/reinitialiser-mot-de-passe`, `/mes-annonces`, `/mes-annonces/nouvelle`, `/mes-annonces/[id]`, `/mon-profil` et `/cgu`
+- [ ] Il affiche « © <année en cours> Jamix · Tous droits réservés · v<version de l'application> »
+- [ ] `/cgu` est accessible sans compte, avec « ← Retour » vers `/`, et présente les sections dans l'ordre du PRD
+- [ ] Aucun nom de personne n'apparaît sur `/cgu` ; l'éditeur y est un particulier non professionnel joignable via le formulaire Contact
+- [ ] Sur une nouvelle annonce ou un brouillon modifié, « CGU » enregistre en brouillon puis affiche la fenêtre ; sur une annonce Publiée modifiée, la fenêtre Quitter/Rester ; sans changement, sortie directe
+- [ ] Le pied de page tient à 360px sans débordement horizontal
+- [ ] DESIGN.md autorise le pied de page (fond Walnut Shadow, filet pointillé Cork Border, texte Warm Cream atténué)
+- [ ] Tests Playwright : pied de page présent sur chaque page, navigation vers `/cgu`, sortie gardée depuis un formulaire d'annonce
+
+## Bloquée par
+
+Aucune — démarrable immédiatement
+
+---
+
+## Phase 32 : Formulaire Contact
+
+**User stories** : US-106, US-107, US-108, US-109, US-110
+
+### Ce qu'on livre
+
+Le lien « Contact » du pied de page apparaît et mène à la page publique `/contact` : un formulaire nom, adresse mail, message. Un envoi valide part par email vers l'adresse de contact de l'équipe, avec la réponse dirigée vers l'expéditeur. L'organisateur connecté trouve son email prérempli. Les envois sont limités à 5 par heure depuis une même connexion, et un champ piège écarte les robots.
+
+### Critères d'acceptation
+
+- [ ] « Contact » s'affiche dans le pied de page de toutes les pages et mène à `/contact`, avec « ← Retour » vers `/`
+- [ ] Nom (1 à 100 caractères), adresse mail (format valide) et message (10 à 2000 caractères, compteur « N/2000 ») sont obligatoires ; une erreur s'affiche sous le champ concerné, la saisie conservée
+- [ ] Un organisateur connecté trouve son email prérempli et modifiable ; un visiteur trouve le champ vide
+- [ ] Un envoi réussi affiche « Message envoyé, nous vous répondrons par email. » et vide le formulaire
+- [ ] L'email reçu à l'adresse de contact contient le nom, l'email et le message ; « Répondre » vise l'email de l'expéditeur ; aucun email n'est envoyé à l'expéditeur
+- [ ] Un échec d'envoi, ou une adresse de contact absente, affiche un message d'erreur et conserve la saisie
+- [ ] Le 6ᵉ envoi en moins d'une heure depuis une même connexion affiche « Trop de messages envoyés, réessayez plus tard. » ; l'IP n'est jamais stockée en clair
+- [ ] Un envoi avec le champ piège rempli n'envoie rien et n'est pas enregistré
+- [ ] Une phrase sous le bouton explique l'usage des données, avec un lien vers `/cgu`
+- [ ] Sur un formulaire d'annonce, « Contact » suit les mêmes règles de sortie que « CGU »
+- [ ] Tests Vitest de la validation, de la limite d'envois et du `replyTo` d'`envoyerEmail` ; test Playwright de l'envoi, des erreurs et du préremplissage
+
+## Bloquée par
+
+- Phase 31 (pied de page commun)
