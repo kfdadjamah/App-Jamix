@@ -334,7 +334,7 @@ Depuis la page de connexion, un lien « Mot de passe oublié » mène à `/mot-d
 
 - [x] La page de connexion propose un lien « Mot de passe oublié »
 - [x] La demande affiche toujours le même message, que l'email soit connu ou non
-- [ ] Un email contenant le lien de réinitialisation est envoyé si le compte existe
+- [x] Un email contenant le lien de réinitialisation est envoyé si le compte existe
 - [ ] Le lien expire au bout d'1 h
 - [x] Le lien ne fonctionne qu'une fois ; un lien déjà utilisé, expiré ou remplacé affiche un message clair et propose d'en demander un nouveau
 - [ ] Une nouvelle demande invalide le lien précédent
