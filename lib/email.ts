@@ -1,6 +1,6 @@
 import { Resend } from "resend";
 
-const EXPEDITEUR_PAR_DEFAUT = "Jamix <onboarding@resend.dev>";
+const EXPEDITEUR_PAR_DEFAUT = "Jammix <onboarding@resend.dev>";
 const EN_DEVELOPPEMENT = process.env.NODE_ENV !== "production";
 
 type Email = {
@@ -112,13 +112,13 @@ export function gabaritEmail({
     ? `<p style="margin:24px 0"><a href="${echapperHtml(bouton.url)}" style="display:inline-block;background:#a8451f;color:#ffedd7;text-decoration:none;padding:14px 24px;border-radius:36px;font-weight:500;text-transform:uppercase;font-size:13px">${echapperHtml(bouton.libelle)}</a></p>`
     : "";
 
-  const html = `<!doctype html><html lang="fr"><body style="margin:0;padding:24px;background:#ffffff;color:#1c1917;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;font-size:15px;line-height:1.5"><div style="max-width:520px">${blocParagraphes(paragraphes)}${blocBouton}${blocParagraphes(finale ?? [])}<p style="margin:32px 0 0;color:#6c5f51;font-size:13px">Jamix — les jams à Lyon</p></div></body></html>`;
+  const html = `<!doctype html><html lang="fr"><body style="margin:0;padding:24px;background:#ffffff;color:#1c1917;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;font-size:15px;line-height:1.5"><div style="max-width:520px">${blocParagraphes(paragraphes)}${blocBouton}${blocParagraphes(finale ?? [])}<p style="margin:32px 0 0;color:#6c5f51;font-size:13px">Jammix — les jams à Lyon</p></div></body></html>`;
 
   const texte = [
     ...paragraphes.map(texteParagraphe),
     ...(bouton ? [`${bouton.libelle} : ${bouton.url}`] : []),
     ...(finale ?? []).map(texteParagraphe),
-    "Jamix — les jams à Lyon",
+    "Jammix — les jams à Lyon",
   ].join("\n\n");
 
   return { html, texte };
@@ -127,11 +127,11 @@ export function gabaritEmail({
 export function emailReinitialisationMotDePasse(destinataire: string, lien: string): Email {
   return {
     destinataire,
-    sujet: "Réinitialisation de votre mot de passe Jamix",
+    sujet: "Réinitialisation de votre mot de passe Jammix",
     ...gabaritEmail({
       paragraphes: [
         "Bonjour,",
-        "Vous avez demandé à réinitialiser le mot de passe de votre compte organisateur Jamix.",
+        "Vous avez demandé à réinitialiser le mot de passe de votre compte organisateur Jammix.",
       ],
       bouton: { libelle: "Choisir un nouveau mot de passe", url: lien },
       finale: [
@@ -146,7 +146,7 @@ export function emailBienvenue(destinataire: string, nomBar: string): Email {
   const url = urlApplication();
   return {
     destinataire,
-    sujet: "Bienvenue sur Jamix",
+    sujet: "Bienvenue sur Jammix",
     ...gabaritEmail({
       paragraphes: [
         "Bonjour,",
@@ -170,11 +170,11 @@ export function emailAvisMotDePasse(
   const action = origine === "modifie" ? "modifié" : "réinitialisé";
   return {
     destinataire,
-    sujet: `Votre mot de passe Jamix a été ${action}`,
+    sujet: `Votre mot de passe Jammix a été ${action}`,
     ...gabaritEmail({
       paragraphes: [
         "Bonjour,",
-        `Le mot de passe de votre compte organisateur Jamix a été ${action} le ${formaterDateHeure(date)}.`,
+        `Le mot de passe de votre compte organisateur Jammix a été ${action} le ${formaterDateHeure(date)}.`,
         "Si vous êtes à l'origine de ce changement, vous n'avez rien à faire. Sinon, réinitialisez votre mot de passe sans attendre.",
       ],
       bouton: {
@@ -193,14 +193,14 @@ export function emailAvisChangementEmail(
 ): Email {
   const recours = adresseContact()
     ? "Si vous n'êtes pas à l'origine de ce changement, répondez à cet email."
-    : "Si vous n'êtes pas à l'origine de ce changement, contactez l'équipe Jamix.";
+    : "Si vous n'êtes pas à l'origine de ce changement, contactez l'équipe Jammix.";
   return {
     destinataire: ancienneAdresse,
-    sujet: "L'email de votre compte Jamix a été modifié",
+    sujet: "L'email de votre compte Jammix a été modifié",
     ...gabaritEmail({
       paragraphes: [
         "Bonjour,",
-        `L'adresse email de votre compte organisateur Jamix a été remplacée par ${masquerEmail(nouvelleAdresse)} le ${formaterDateHeure(date)}. Cette adresse-ci ne recevra plus les messages du compte.`,
+        `L'adresse email de votre compte organisateur Jammix a été remplacée par ${masquerEmail(nouvelleAdresse)} le ${formaterDateHeure(date)}. Cette adresse-ci ne recevra plus les messages du compte.`,
         recours,
       ],
     }),
@@ -218,7 +218,7 @@ export function emailMessageContact(
   return {
     destinataire,
     replyTo: message.email,
-    sujet: `Message Contact Jamix — ${message.nom}`,
+    sujet: `Message Contact Jammix — ${message.nom}`,
     ...gabaritEmail({
       paragraphes: [
         `Nom : ${message.nom}`,

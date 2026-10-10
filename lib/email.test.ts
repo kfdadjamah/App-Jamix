@@ -47,13 +47,13 @@ describe("formaterDateHeure", () => {
 
 describe("emailBienvenue", () => {
   it("nomme le bar, propose de publier une jam et le recours par mot de passe oublié", () => {
-    vi.stubEnv("URL_APP", "https://jamix.test");
+    vi.stubEnv("URL_APP", "https://jammix.test");
     const email = emailBienvenue("orga@bar.fr", "Le Sirius");
     expect(email.destinataire).toBe("orga@bar.fr");
-    expect(email.sujet).toBe("Bienvenue sur Jamix");
+    expect(email.sujet).toBe("Bienvenue sur Jammix");
     expect(email.texte).toContain("Le Sirius");
-    expect(email.texte).toContain("Publier une jam : https://jamix.test/mes-annonces/nouvelle");
-    expect(email.texte).toContain("Mot de passe oublié : https://jamix.test/mot-de-passe-oublie");
+    expect(email.texte).toContain("Publier une jam : https://jammix.test/mes-annonces/nouvelle");
+    expect(email.texte).toContain("Mot de passe oublié : https://jammix.test/mot-de-passe-oublie");
   });
 
   it("échappe le nom du bar dans le HTML", () => {
@@ -64,18 +64,18 @@ describe("emailBienvenue", () => {
 
 describe("emailAvisMotDePasse", () => {
   it("annonce un changement daté avec un lien vers mot de passe oublié", () => {
-    vi.stubEnv("URL_APP", "https://jamix.test");
+    vi.stubEnv("URL_APP", "https://jammix.test");
     const email = emailAvisMotDePasse("orga@bar.fr", "modifie", date);
-    expect(email.sujet).toBe("Votre mot de passe Jamix a été modifié");
+    expect(email.sujet).toBe("Votre mot de passe Jammix a été modifié");
     expect(email.texte).toContain("modifié le 1 octobre 2026 à 14:05");
     expect(email.texte).toContain(
-      "Réinitialiser mon mot de passe : https://jamix.test/mot-de-passe-oublie"
+      "Réinitialiser mon mot de passe : https://jammix.test/mot-de-passe-oublie"
     );
   });
 
   it("utilise le même gabarit pour une réinitialisation", () => {
     const email = emailAvisMotDePasse("orga@bar.fr", "reinitialise", date);
-    expect(email.sujet).toBe("Votre mot de passe Jamix a été réinitialisé");
+    expect(email.sujet).toBe("Votre mot de passe Jammix a été réinitialisé");
     expect(email.texte).toContain("réinitialisé le 1 octobre 2026 à 14:05");
   });
 });
@@ -92,7 +92,7 @@ describe("emailAvisChangementEmail", () => {
   it("renvoie vers l'équipe tant qu'aucune adresse de contact n'est définie", () => {
     vi.stubEnv("EMAIL_CONTACT", "");
     const email = emailAvisChangementEmail("ancien@bar.fr", "nouveau@bar.fr", date);
-    expect(email.texte).toContain("contactez l'équipe Jamix");
+    expect(email.texte).toContain("contactez l'équipe Jammix");
     expect(email.texte).not.toContain("répondez à cet email");
   });
 
@@ -108,18 +108,18 @@ describe("envoyerEmail", () => {
 
   it("répond par défaut à l'adresse de contact", async () => {
     vi.stubEnv("RESEND_API_KEY", "re_test");
-    vi.stubEnv("EMAIL_CONTACT", "equipe@jamix.test");
+    vi.stubEnv("EMAIL_CONTACT", "equipe@jammix.test");
     envoiResend.mockResolvedValue({ error: null });
 
     expect(await envoyerEmail(email)).toBe(true);
     expect(envoiResend).toHaveBeenCalledWith(
-      expect.objectContaining({ to: "orga@bar.fr", replyTo: "equipe@jamix.test" })
+      expect.objectContaining({ to: "orga@bar.fr", replyTo: "equipe@jammix.test" })
     );
   });
 
   it("un replyTo explicite remplace l'adresse de contact", async () => {
     vi.stubEnv("RESEND_API_KEY", "re_test");
-    vi.stubEnv("EMAIL_CONTACT", "equipe@jamix.test");
+    vi.stubEnv("EMAIL_CONTACT", "equipe@jammix.test");
     envoiResend.mockResolvedValue({ error: null });
 
     await envoyerEmail({ ...email, replyTo: "musicien@exemple.fr" });
@@ -149,14 +149,14 @@ describe("envoyerEmail", () => {
 
 describe("emailMessageContact", () => {
   it("part vers l'équipe, répond à l'expéditeur et contient nom, email et message", () => {
-    const email = emailMessageContact("equipe@jamix.test", {
+    const email = emailMessageContact("equipe@jammix.test", {
       nom: "Alex <b>",
       email: "alex@exemple.fr",
       message: "Ligne 1\n\nLigne 2",
     });
-    expect(email.destinataire).toBe("equipe@jamix.test");
+    expect(email.destinataire).toBe("equipe@jammix.test");
     expect(email.replyTo).toBe("alex@exemple.fr");
-    expect(email.sujet).toBe("Message Contact Jamix — Alex <b>");
+    expect(email.sujet).toBe("Message Contact Jammix — Alex <b>");
     expect(email.texte).toContain("Nom : Alex <b>");
     expect(email.texte).toContain("Email : alex@exemple.fr");
     expect(email.texte).toContain("Ligne 1\n\nLigne 2");

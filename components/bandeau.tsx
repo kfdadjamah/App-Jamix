@@ -5,7 +5,7 @@ import IconeProfil from "./icone-profil";
 import { LienGarde } from "./garde-sortie";
 
 // Bandeau commun, rendu par chaque page (pas dans le layout) pour rester dans
-// FournisseurGardeSortie sur les formulaires d'annonce : « Jamix » y est une sortie gardée.
+// FournisseurGardeSortie sur les formulaires d'annonce : « Jammix » y est une sortie gardée.
 // sessionCourante() plutôt qu'auth() : à jour sur /mon-profil après un changement de mot de passe.
 export default async function Bandeau({
   page,
@@ -25,7 +25,7 @@ export default async function Bandeau({
           className="flex items-center gap-[6px] text-[14px] font-medium uppercase text-[var(--color-warm-cream)]"
         >
           <House size={18} strokeWidth={1.5} aria-hidden="true" />
-          <span className={accueil ? "underline" : undefined}>Jamix</span>
+          <span className={accueil ? "underline" : undefined}>Jammix</span>
         </LienGarde>
         {session?.user?.id ? (
           <IconeProfil actif={page === "mon-profil"} />

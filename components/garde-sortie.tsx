@@ -15,7 +15,7 @@ type ContexteGardeSortie = {
 const Contexte = createContext<ContexteGardeSortie | null>(null);
 
 // Entoure l'en-tête et le formulaire d'annonce : les sorties via l'application
-// (Retour, « Jamix », « À confirmer », icône de profil) passent par la garde.
+// (Retour, « Jammix », « À confirmer », icône de profil) passent par la garde.
 export function FournisseurGardeSortie({ children }: { children: React.ReactNode }) {
   const gardeRef = useRef<Garde | null>(null);
   const [occupe, setOccupe] = useState(false);

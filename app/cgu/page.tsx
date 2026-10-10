@@ -40,7 +40,7 @@ export default function PageCgu() {
 
         <Section titre="Éditeur">
           <p>
-            Jamix est édité par un particulier, à titre non professionnel. Comme la loi le permet,
+            Jammix est édité par un particulier, à titre non professionnel. Comme la loi le permet,
             son identité n&apos;est pas publiée : elle est connue de l&apos;hébergeur.
           </p>
           <p>L&apos;éditeur est joignable via le formulaire Contact.</p>
@@ -62,7 +62,7 @@ export default function PageCgu() {
 
         <Section titre="Objet du service et gratuité">
           <p>
-            Jamix recense les jams musicales de Lyon : les bars y publient leurs dates, les
+            Jammix recense les jams musicales de Lyon : les bars y publient leurs dates, les
             musiciens les consultent.
           </p>
           <p>
@@ -89,7 +89,7 @@ export default function PageCgu() {
             leur mise à jour.
           </p>
           <p>
-            Jamix ne garantit pas la tenue des jams annoncées, ni leurs horaires. Un contenu
+            Jammix ne garantit pas la tenue des jams annoncées, ni leurs horaires. Un contenu
             manifestement illicite peut être signalé via le formulaire Contact et être retiré.
           </p>
         </Section>
@@ -99,7 +99,7 @@ export default function PageCgu() {
         <Section titre="Propriété des contenus">
           <p>
             Les photos et textes publiés restent la propriété de leurs auteurs. En les publiant,
-            l&apos;organisateur garantit en détenir les droits et autorise Jamix à les afficher
+            l&apos;organisateur garantit en détenir les droits et autorise Jammix à les afficher
             gratuitement tant qu&apos;ils sont en ligne.
           </p>
         </Section>
@@ -149,7 +149,7 @@ export default function PageCgu() {
 
         <Section titre="Cookies">
           <p>
-            Jamix n&apos;utilise que des cookies techniques de session, nécessaires à la connexion
+            Jammix n&apos;utilise que des cookies techniques de session, nécessaires à la connexion
             des organisateurs. Aucun cookie de mesure d&apos;audience ni de publicité.
           </p>
         </Section>

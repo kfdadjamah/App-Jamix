@@ -33,9 +33,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { id } = await params;
   const occurrence = await occurrenceDeLaPage(id);
-  if (!occurrence) return { title: "Jamix" };
+  if (!occurrence) return { title: "Jammix" };
   return {
-    title: `${occurrence.annonce.bar.nom} · ${formaterDateCourte(occurrence.date)} — Jamix`,
+    title: `${occurrence.annonce.bar.nom} · ${formaterDateCourte(occurrence.date)} — Jammix`,
   };
 }
 

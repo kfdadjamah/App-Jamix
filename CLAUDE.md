@@ -1,4 +1,4 @@
-# App-Jamix
+# App-Jammix
 
 ## Stack
 Next.js (TypeScript), Postgres.

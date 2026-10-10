@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Jamix",
+  title: "Jammix",
   description: "Les jams à Lyon, ce soir.",
 };
 

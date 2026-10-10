@@ -13,7 +13,7 @@ The ORYZO visual system treats a single product object like a museum artifact: f
 |------|-------|-------|------|
 | Warm Cream | `#ffedd7` | `--color-warm-cream` | Light text on dark surfaces, inverse labels, and high-contrast captions. |
 | Walnut Shadow | `#100904` | `--color-walnut-shadow` | Page canvas and deepest background — warm near-black, not pure black. The void behind every product reveal |
-| Brass Copper | `#a8451f` | `--color-brass-copper` | Elevated surface and filled button background — the one chromatic step above the canvas, used for the single solid CTA, et fond du bandeau d'en-tête de Jamix |
+| Brass Copper | `#a8451f` | `--color-brass-copper` | Elevated surface and filled button background — the one chromatic step above the canvas, used for the single solid CTA, et fond du bandeau d'en-tête de Jammix |
 | Cork Border | `#40372e` | `--color-cork-border` | Hairline dividers, dashed section separators, subtle container borders — warmer than the canvas by one step |
 | Driftwood | `#6c5f51` | `--color-driftwood` | Mid-tone warm gray for secondary dividers and muted structural elements — the bridge between Bark and Cream |
 | Gold elegance | `#fca311` | `--color-gold-elegance` | Orange text accent for links, tags, and emphasized short phrases. |
@@ -96,7 +96,7 @@ The ORYZO visual system treats a single product object like a museum artifact: f
 
 22.5px border-radius, transparent background, 1px Warm Cream border, Warm Cream text, 7.5px vertical padding, 0px horizontal padding, weight 500, uppercase, 8–14px. Border does the work; no fill needed.
 
-Seule exception de remplissage Jamix : dans le filtre par bar de « Mes annonces », le bouton actif (« Tous » ou un bar) a un fond Warm Cream léger transparent (~15 %), sans soulignement. Un seul bouton actif à la fois ; les boutons passent à la ligne quand la largeur manque, et un nom trop long est tronqué par « … ». Aucun autre bouton fantôme n'a de fond.
+Seule exception de remplissage Jammix : dans le filtre par bar de « Mes annonces », le bouton actif (« Tous » ou un bar) a un fond Warm Cream léger transparent (~15 %), sans soulignement. Un seul bouton actif à la fois ; les boutons passent à la ligne quand la largeur manque, et un nom trop long est tronqué par « … ». Aucun autre bouton fantôme n'a de fond.
 
 ### Underline Text Link
 **Role:** Inline links and navigation items — borderless, relying on underline
@@ -113,20 +113,20 @@ Seule exception de remplissage Jamix : dans le filtre par bar de « Mes annonces
 
 Logo wordmark "ORYZO" left-aligned in Warm Cream at 12–14px weight 500 uppercase. Right-aligned nav items: INTRO (with dashed underline indicator for active), FEATURES, PRODUCT, CONTACT — all 12px weight 500 uppercase, Warm Cream. Transparent background over the hero photograph.
 
-### Bandeau d'en-tête (Jamix)
-**Role:** Adaptation Jamix de la Fixed Top Navigation — un même bandeau en haut de toutes les pages
+### Bandeau d'en-tête (Jammix)
+**Role:** Adaptation Jammix de la Fixed Top Navigation — un même bandeau en haut de toutes les pages
 
-Collé en haut pendant le défilement (`position: sticky`), 56px de haut, fond Brass Copper (#a8451f) opaque, distinct du canvas Walnut Shadow du corps, filet inférieur 1px Gold elegance (#fca311) sur toute la largeur, sans ombre. Le fond et le filet occupent toute la largeur ; le contenu est aligné sur la colonne de la page (`max-w-md`, 24px de marge). À gauche : icône de maison 18px (trait 1.5) et « JAMIX » en 14px weight 500 uppercase, Warm Cream, 6px d'écart ; souligné quand l'accueil est la page active. À droite : l'icône de profil (cercle 32px, bordure Warm Cream) si l'organisateur est connecté, sinon le bouton fantôme « Connexion organisateur » sur l'accueil uniquement. Pas de menu déroulant ni de menu « burger ».
+Collé en haut pendant le défilement (`position: sticky`), 56px de haut, fond Brass Copper (#a8451f) opaque, distinct du canvas Walnut Shadow du corps, filet inférieur 1px Gold elegance (#fca311) sur toute la largeur, sans ombre. Le fond et le filet occupent toute la largeur ; le contenu est aligné sur la colonne de la page (`max-w-md`, 24px de marge). À gauche : icône de maison 18px (trait 1.5) et « JAMMIX » en 14px weight 500 uppercase, Warm Cream, 6px d'écart ; souligné quand l'accueil est la page active. À droite : l'icône de profil (cercle 32px, bordure Warm Cream) si l'organisateur est connecté, sinon le bouton fantôme « Connexion organisateur » sur l'accueil uniquement. Pas de menu déroulant ni de menu « burger ».
 
-### Ligne « À confirmer » (Jamix)
+### Ligne « À confirmer » (Jammix)
 **Role:** Seule ligne sous le bandeau dans l'espace organisateur — nombre de jams à confirmer
 
 « 🔔 À CONFIRMER · N » en 12px uppercase Warm Cream, libellé en 700 (exception), nombre en 500, affichée même à 0. Trait 1px pointillé Cork Border sur toute la largeur de la colonne, 12px sous le texte. Même rendu partout ; lien vers « Mes annonces » (souligné au survol et au focus) sur le profil et les formulaires d'annonce, simple texte sur « Mes annonces ».
 
-### Pied de page (Jamix)
-**Role:** Exception Jamix à « no footer chrome » — un même pied de page discret en bas de toutes les pages
+### Pied de page (Jammix)
+**Role:** Exception Jammix à « no footer chrome » — un même pied de page discret en bas de toutes les pages
 
-Placé après le contenu, jamais fixé à l'écran. Fond Walnut Shadow (#100904), dans la continuité du corps. Contenu aligné sur la colonne de la page (`max-w-md`, 24px de marge) : filet 1px pointillé Cork Border (#40372e) sur toute la largeur de la colonne, puis 24px plus bas deux lignes centrées en 11px weight 500 uppercase, 8px d'écart : « CGU · Contact » puis « © <année en cours> Jamix · Tous droits réservés · v<version> », 24px de marge basse. Texte en Warm Cream atténué (Warm Cream à 60 % d'opacité, contraste AA sur Walnut Shadow) ; les liens en Warm Cream plein, soulignés au survol, au focus et sur leur page active. Sur les formulaires d'annonce, ses liens sont des sorties gardées.
+Placé après le contenu, jamais fixé à l'écran. Fond Walnut Shadow (#100904), dans la continuité du corps. Contenu aligné sur la colonne de la page (`max-w-md`, 24px de marge) : filet 1px pointillé Cork Border (#40372e) sur toute la largeur de la colonne, puis 24px plus bas deux lignes centrées en 11px weight 500 uppercase, 8px d'écart : « CGU · Contact » puis « © <année en cours> Jammix · Tous droits réservés · v<version> », 24px de marge basse. Texte en Warm Cream atténué (Warm Cream à 60 % d'opacité, contraste AA sur Walnut Shadow) ; les liens en Warm Cream plein, soulignés au survol, au focus et sur leur page active. Sur les formulaires d'annonce, ses liens sont des sorties gardées.
 
 **Role:** Edge branding — vertical text running down the right margin
 
@@ -167,12 +167,12 @@ Fallback font (Arial 8px weight 500 uppercase) for things like "* ADOBE ILLUSTRA
 ### Do
 - Set all UI text in #ffedd7 (Warm Cream) — never use pure #fff; the warm tint is the system's signature.
 - Use #fca311 (Gold elegance) only for credit lines, the "Built by" label, and the Lusion studio link — a single accent earns its rarity through restraint.
-- Seul usage structurel autorisé du Gold elegance : le filet inférieur 1px du bandeau d'en-tête de Jamix, sur toute la largeur. Il n'est pas interactif. Le bandeau à fond plein doré et tout autre trait doré (séparateurs, bordures de carte, boutons) restent interdits.
-- Seul usage de surface du Brass Copper en dehors du bouton plein : le fond du bandeau d'en-tête de Jamix. Aucun autre fond (cartes, sections, fenêtres) n'est cuivré.
+- Seul usage structurel autorisé du Gold elegance : le filet inférieur 1px du bandeau d'en-tête de Jammix, sur toute la largeur. Il n'est pas interactif. Le bandeau à fond plein doré et tout autre trait doré (séparateurs, bordures de carte, boutons) restent interdits.
+- Seul usage de surface du Brass Copper en dehors du bouton plein : le fond du bandeau d'en-tête de Jammix. Aucun autre fond (cartes, sections, fenêtres) n'est cuivré.
 - Set type in uppercase weight 500 across the entire interface; use weight 400 / mixed case only for the 29px body copy that explains the product.
 - Seule exception de remplissage d'un bouton fantôme : le bouton actif du filtre par bar de « Mes annonces », à fond Warm Cream léger transparent (~15 %). Jamais de fond plein, crème ou cuivré, sur un bouton fantôme.
-- Seul pied de page autorisé : le pied de page Jamix (fond Walnut Shadow, filet pointillé Cork Border, texte Warm Cream atténué à 60 %), placé après le contenu, jamais fixé à l'écran. Aucun autre « footer chrome ».
-- Seule exception de graisse Jamix : le libellé « À CONFIRMER » de la ligne sous le bandeau de l'espace organisateur est en 700. Le nombre qui le suit et tout autre texte restent en 400 ou 500.
+- Seul pied de page autorisé : le pied de page Jammix (fond Walnut Shadow, filet pointillé Cork Border, texte Warm Cream atténué à 60 %), placé après le contenu, jamais fixé à l'écran. Aucun autre « footer chrome ».
+- Seule exception de graisse Jammix : le libellé « À CONFIRMER » de la ligne sous le bandeau de l'espace organisateur est en 700. Le nombre qui le suit et tout autre texte restent en 400 ou 500.
 - Use 36px border-radius for the one filled CTA and 22.5px for outlined ghost buttons; 12px for cards; 0px for inputs and inline links — these four values are the entire radius vocabulary.
 - Set section gaps at 100vh — each section gets its own full viewport, never compress product reveals into bands.
 - Use 1px dashed lines in #40372 for section dividers; avoid solid dividers and avoid any divider thicker than 2px.
@@ -184,7 +184,7 @@ Fallback font (Arial 8px weight 500 uppercase) for things like "* ADOBE ILLUSTRA
 - Never use lowercase or sentence-case for headings, nav, or labels; the only mixed-case text is the 29px body description.
 - Never add drop shadows to cards, buttons, or sections — depth comes from the two-step surface stack (#100904 → #a8451f), not from blur.
 - Never use border-radius below 12px on containers — the geometry is deliberately chunky, not sharp.
-- Never use more than one filled action button per section; restraint is the design language. Exception Jamix : l'option active d'un sélecteur d'état (toggle Liste/Carte de l'accueil) peut être pleine Brass Copper ; ce n'est pas une action.
+- Never use more than one filled action button per section; restraint is the design language. Exception Jammix : l'option active d'un sélecteur d'état (toggle Liste/Carte de l'accueil) peut être pleine Brass Copper ; ce n'est pas une action.
 - Never center-align body copy — headings and body text are always left-aligned, even when flanking a centered image.
 
 ## Surfaces
@@ -198,7 +198,7 @@ Fallback font (Arial 8px weight 500 uppercase) for things like "* ADOBE ILLUSTRA
 
 ## Elevation
 
-The system rejects shadow-based elevation entirely. Depth is achieved through a two-step surface stack: #100904 (canvas) → #a8451f (elevated solid). There are no blur, no offset, no opacity-based shadows — only a 1–2 value luminance step. This keeps the interface flat and editorial, letting the 3D product renders provide all visual depth in void-mode sections. Le bandeau d'en-tête de Jamix utilise la même marche de surface #100904 → #a8451f (corps → bandeau), toujours sans ombre.
+The system rejects shadow-based elevation entirely. Depth is achieved through a two-step surface stack: #100904 (canvas) → #a8451f (elevated solid). There are no blur, no offset, no opacity-based shadows — only a 1–2 value luminance step. This keeps the interface flat and editorial, letting the 3D product renders provide all visual depth in void-mode sections. Le bandeau d'en-tête de Jammix utilise la même marche de surface #100904 → #a8451f (corps → bandeau), toujours sans ombre.
 
 ## Imagery
 
@@ -206,7 +206,7 @@ Photography is editorial, top-down, and in-context: the cork coaster sits on a g
 
 ## Layout
 
-Full-bleed throughout — no max-width container, every section spans 100vw. Hero: full-viewport top-down photograph with a massive ORYZO wordmark (51px+) in the upper-left, tagline above, fixed minimal nav upper-right, vertical sidebar label running down the right edge, semi-transparent info card lower-left, video thumbnail lower-right. Subsequent sections: full-viewport Walnut Shadow canvas with a centered 3D product render flanked by left-aligned heading and right-aligned body copy — a three-column grid (text / object / text) with generous 18px gutters. Section transitions are seamless dark-on-dark; the only breaks are hairline dashed dividers. Navigation is fixed, transparent, and 4 items max. No sidebar, no footer chrome (seule exception Jamix : le pied de page discret décrit plus haut), no cards-within-cards — every screen is a single statement.
+Full-bleed throughout — no max-width container, every section spans 100vw. Hero: full-viewport top-down photograph with a massive ORYZO wordmark (51px+) in the upper-left, tagline above, fixed minimal nav upper-right, vertical sidebar label running down the right edge, semi-transparent info card lower-left, video thumbnail lower-right. Subsequent sections: full-viewport Walnut Shadow canvas with a centered 3D product render flanked by left-aligned heading and right-aligned body copy — a three-column grid (text / object / text) with generous 18px gutters. Section transitions are seamless dark-on-dark; the only breaks are hairline dashed dividers. Navigation is fixed, transparent, and 4 items max. No sidebar, no footer chrome (seule exception Jammix : le pied de page discret décrit plus haut), no cards-within-cards — every screen is a single statement.
 
 ## Typography Voice
 

@@ -42,7 +42,7 @@ export default async function Home({
       <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-8 px-6 py-8">
         <div>
           <h1 className="text-[41px] font-medium uppercase leading-[0.9] text-[color:var(--color-warm-cream)]">
-            Jamix
+            Jammix
           </h1>
           <p className="mt-2 text-[15px] text-[color:var(--color-driftwood)]">
             Les jams à Lyon, ce soir.

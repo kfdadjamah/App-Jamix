@@ -65,8 +65,8 @@ describe("demandeTropRapprochee", () => {
 
 describe("lienReinitialisation", () => {
   it("pointe vers la page de réinitialisation avec le jeton", () => {
-    expect(lienReinitialisation("https://jamix.fr", "abc-_1")).toBe(
-      "https://jamix.fr/reinitialiser-mot-de-passe?jeton=abc-_1"
+    expect(lienReinitialisation("https://jammix.fr", "abc-_1")).toBe(
+      "https://jammix.fr/reinitialiser-mot-de-passe?jeton=abc-_1"
     );
   });
 });

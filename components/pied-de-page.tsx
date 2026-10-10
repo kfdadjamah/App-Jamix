@@ -31,7 +31,7 @@ export default function PiedDePage({ page }: { page?: "cgu" | "contact" }) {
             </LienGarde>
           </nav>
           <p>
-            © {annee} Jamix · Tous droits réservés · v{paquet.version}
+            © {annee} Jammix · Tous droits réservés · v{paquet.version}
           </p>
         </div>
       </div>

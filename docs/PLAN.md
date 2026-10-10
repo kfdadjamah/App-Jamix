@@ -1,4 +1,4 @@
-# Plan : App-Jamix — annonces de jams à Lyon
+# Plan : App-Jammix — annonces de jams à Lyon
 
 > PRD source : `docs/PRD.md`
 
@@ -19,7 +19,7 @@
 - **Emails d'avis (Phase 14)** : envoyés après la réponse (`after()`), une fois l'écriture en base faite ; `envoyerEmail` journalise un échec sans remonter l'erreur, qui ne bloque donc jamais l'action. Les avis de mot de passe sont datés (heure de Paris, affichage seul) et renvoient vers `/mot-de-passe-oublie`, sans jeton créé d'office. L'avis de changement d'email part vers l'ancienne adresse, nouvelle adresse masquée, et seulement si l'email change réellement. `EMAIL_CONTACT` (optionnelle) sert de `Reply-To` à tous les emails de compte.
 - **Profil et compte (Phase 11)** : aucune migration de schéma. Le géocodage d'une adresse de bar n'est relancé que si l'adresse change ; un échec remet latitude/longitude à `null` (fiche valide, bar absent de la carte, distance non affichée). Session JWT contenant uniquement l'identifiant de l'organisateur : l'email affiché est toujours relu en base, jamais depuis la session. Toute action sensible (email, mot de passe, suppression) revérifie le mot de passe actuel côté serveur. La suppression de compte efface, en une transaction, les annonces (occurrences en cascade), le bar puis le compte, faute de cascade `Organisateur → Bar → Annonce` dans le schéma ; les photos (bar et annonces) sont retirées du stockage ensuite, sans bloquer la suppression en cas d'échec.
 - **Navigation retour (Phases 15 et 16)** : aucune migration de schéma. Un composant unique « ← Retour » (lien texte, destination fixe par page, jamais l'historique du navigateur) placé sous l'en-tête et au-dessus du titre. Sur les formulaires d'annonce, les sorties via l'application (Retour, « Mes annonces » et icône de profil de l'en-tête) passent par une même garde côté client qui compare l'état courant du formulaire à un état de référence (formulaire vide, annonce telle qu'ouverte, puis dernier enregistrement réussi) ; le choix de portée et les actions immédiates (confirmation, annulation d'une date, photos d'une annonce existante) sont exclus de la comparaison. L'enregistrement automatique réutilise l'action d'enregistrement en brouillon existante (même validation, pas d'enregistrement partiel). Sortie par le navigateur : alerte standard `beforeunload` uniquement, sans enregistrement.
-- **Bandeau commun « Jamix » (Phase 22)** : aucune migration de schéma. Un composant unique de bandeau, rendu par chaque page (pas dans `app/layout.tsx`) pour rester à l'intérieur de `FournisseurGardeSortie` sur les formulaires d'annonce ; il remplace `HeaderPublic` et la ligne haute de `HeaderOrganisateur`. Bandeau `position: sticky` en haut, fond Walnut Shadow (Brass Copper depuis la Phase 23), filet inférieur 1px Gold elegance (nouvel usage structurel, ajouté à DESIGN.md dans la phase). « Jamix » est un `LienGarde` vers `/` sans paramètre : la date et la vue de l'accueil vivant dans l'URL (`?date=&vue=`), ce lien suffit à revenir à aujourd'hui en vue liste, en navigation client. La partie droite est choisie par une prop de variante (accueil / organisateur / parcours de connexion) et la session. « Mes annonces » et l'alerte des relances restent dans `HeaderOrganisateur`, affiché sous le bandeau (remplacés par la ligne « À confirmer » en Phase 25).
+- **Bandeau commun « Jammix » (Phase 22)** : aucune migration de schéma. Un composant unique de bandeau, rendu par chaque page (pas dans `app/layout.tsx`) pour rester à l'intérieur de `FournisseurGardeSortie` sur les formulaires d'annonce ; il remplace `HeaderPublic` et la ligne haute de `HeaderOrganisateur`. Bandeau `position: sticky` en haut, fond Walnut Shadow (Brass Copper depuis la Phase 23), filet inférieur 1px Gold elegance (nouvel usage structurel, ajouté à DESIGN.md dans la phase). « Jammix » est un `LienGarde` vers `/` sans paramètre : la date et la vue de l'accueil vivant dans l'URL (`?date=&vue=`), ce lien suffit à revenir à aujourd'hui en vue liste, en navigation client. La partie droite est choisie par une prop de variante (accueil / organisateur / parcours de connexion) et la session. « Mes annonces » et l'alerte des relances restent dans `HeaderOrganisateur`, affiché sous le bandeau (remplacés par la ligne « À confirmer » en Phase 25).
 - **Bandeau cuivré (Phase 23)** : aucune migration de schéma. Seul le fond du composant de bandeau commun change (Walnut Shadow → Brass Copper). Le filet Gold elegance, la hauteur, le sticky et le contenu restent inchangés. DESIGN.md autorise le Brass Copper comme fond du bandeau uniquement.
 - **Accès aux annonces (Phases 24 et 25)** : aucune migration de schéma. Le bouton « Accéder à mes annonces » de l'accueil est rendu côté serveur selon `sessionCourante()`, comme la partie droite de `components/bandeau.tsx`. `HeaderOrganisateur` (`components/header-organisateur.tsx`) est réduit à une ligne « À confirmer » ; le nombre vient de `compterRelancesActives` (`lib/relances.ts`), déjà utilisé pour l'alerte. Il reçoit une variante distincte pour « Mes annonces » (ligne non cliquable), les formulaires d'annonce et le profil (lien vers `/mes-annonces`) ; aujourd'hui les formulaires passent `page="mes-annonces"`. Sur les formulaires, le lien passe par `LienGarde` (`components/garde-sortie.tsx`) pour suivre la garde de sortie.
 - **Plusieurs bars par compte (Phases 18 à 21)** :
@@ -578,27 +578,27 @@ Les phases 19, 20 et 21 sont indépendantes entre elles.
 
 ---
 
-## Phase 22 : Bandeau d'en-tête commun « Jamix »
+## Phase 22 : Bandeau d'en-tête commun « Jammix »
 
 **User stories** : US-61, US-62, US-63, US-64, US-65, US-66, US-67, US-31 (modifiée)
 
 ### Ce qu'on livre
 
-Toutes les pages affichent un même bandeau fixé en haut, fond Walnut Shadow et filet doré fin sur toute la largeur. À gauche, « ⌂ Jamix » ramène à l'accueil à la date du jour, en vue liste, sans rechargement complet. À droite : l'icône de profil si l'organisateur est connecté (toutes les pages), sinon « Connexion organisateur » sur l'accueil uniquement ; rien sur les pages du parcours de connexion. Dans l'espace organisateur, « Mes annonces » et l'alerte des relances passent juste sous le bandeau. Sur les formulaires d'annonce, « Jamix » est une sortie gardée comme les autres (Phase 16). DESIGN.md est complété pour autoriser le filet doré structurel.
+Toutes les pages affichent un même bandeau fixé en haut, fond Walnut Shadow et filet doré fin sur toute la largeur. À gauche, « ⌂ Jammix » ramène à l'accueil à la date du jour, en vue liste, sans rechargement complet. À droite : l'icône de profil si l'organisateur est connecté (toutes les pages), sinon « Connexion organisateur » sur l'accueil uniquement ; rien sur les pages du parcours de connexion. Dans l'espace organisateur, « Mes annonces » et l'alerte des relances passent juste sous le bandeau. Sur les formulaires d'annonce, « Jammix » est une sortie gardée comme les autres (Phase 16). DESIGN.md est complété pour autoriser le filet doré structurel.
 
 ### Critères d'acceptation
 
 - [x] Le bandeau s'affiche sur `/`, `/connexion`, `/inscription`, `/mot-de-passe-oublie`, `/reinitialiser-mot-de-passe`, `/mes-annonces`, `/mes-annonces/nouvelle`, `/mes-annonces/[id]` et `/mon-profil`
 - [x] Le bandeau reste visible en haut de l'écran après défilement jusqu'en bas de page, sans masquer le contenu
 - [x] Le bandeau a le fond Walnut Shadow et un filet inférieur doré fin sur toute la largeur, sans ombre ni fond plein doré
-- [x] « Jamix » (icône de maison + libellé) est à gauche du bandeau et mène à `/` à la date du jour en vue liste, depuis toutes les pages, sans rechargement complet
-- [x] Sur `/` avec une autre date ou la vue carte, un clic sur « Jamix » remet la date à aujourd'hui et la vue en liste ; « Jamix » est signalé comme page active sur `/`
+- [x] « Jammix » (icône de maison + libellé) est à gauche du bandeau et mène à `/` à la date du jour en vue liste, depuis toutes les pages, sans rechargement complet
+- [x] Sur `/` avec une autre date ou la vue carte, un clic sur « Jammix » remet la date à aujourd'hui et la vue en liste ; « Jammix » est signalé comme page active sur `/`
 - [x] Organisateur connecté : icône de profil à droite du bandeau sur toutes les pages, y compris `/` et les pages de connexion
 - [x] Visiteur non connecté : « Connexion organisateur » à droite du bandeau sur `/` uniquement ; droite vide sur `/connexion`, `/inscription`, `/mot-de-passe-oublie` et `/reinitialiser-mot-de-passe`
 - [x] Dans l'espace organisateur, « Mes annonces » et l'alerte des relances s'affichent sous le bandeau, plus dans le bandeau
 - [x] Le bouton « ← Retour » reste sous le bandeau, avec les mêmes destinations (Phase 15)
-- [x] Sur une nouvelle annonce ou un brouillon modifié, « Jamix » enregistre en brouillon puis affiche la fenêtre ; après validation, l'organisateur arrive sur `/`
-- [x] Sur une annonce Publiée modifiée, « Jamix » affiche la fenêtre Quitter/Rester ; sans changement, la sortie est directe ; pendant l'enregistrement, « Jamix » est inactif
+- [x] Sur une nouvelle annonce ou un brouillon modifié, « Jammix » enregistre en brouillon puis affiche la fenêtre ; après validation, l'organisateur arrive sur `/`
+- [x] Sur une annonce Publiée modifiée, « Jammix » affiche la fenêtre Quitter/Rester ; sans changement, la sortie est directe ; pendant l'enregistrement, « Jammix » est inactif
 - [x] DESIGN.md autorise le filet doré du bandeau comme seul usage structurel du Gold elegance
 - [x] Le bandeau tient sur mobile (360px) sans débordement horizontal
 
@@ -614,21 +614,21 @@ Toutes les pages affichent un même bandeau fixé en haut, fond Walnut Shadow et
 
 ### Ce qu'on livre
 
-Le bandeau commun « Jamix » prend le fond Brass Copper des boutons pleins, pour se détacher du corps des pages, qui garde son fond Walnut Shadow. Le filet doré, la hauteur, le comportement sticky et le contenu du bandeau (« Jamix », icône de profil, « Connexion organisateur », en Warm Cream) ne changent pas. DESIGN.md est complété pour autoriser ce seul usage du Brass Copper comme surface. Aucune migration de schéma.
+Le bandeau commun « Jammix » prend le fond Brass Copper des boutons pleins, pour se détacher du corps des pages, qui garde son fond Walnut Shadow. Le filet doré, la hauteur, le comportement sticky et le contenu du bandeau (« Jammix », icône de profil, « Connexion organisateur », en Warm Cream) ne changent pas. DESIGN.md est complété pour autoriser ce seul usage du Brass Copper comme surface. Aucune migration de schéma.
 
 ### Critères d'acceptation
 
 - [x] Le bandeau a un fond Brass Copper opaque sur `/`, les 4 pages du parcours de connexion, `/mes-annonces`, `/mes-annonces/nouvelle`, `/mes-annonces/[id]` et `/mon-profil`
 - [x] Le corps des pages garde le fond Walnut Shadow, y compris la zone « Mes annonces » / relances sous le bandeau
 - [x] Le filet inférieur 1px Gold elegance reste en place, sans ombre
-- [x] « Jamix », l'icône de profil (active ou non) et « Connexion organisateur » restent en Warm Cream et lisibles
+- [x] « Jammix », l'icône de profil (active ou non) et « Connexion organisateur » restent en Warm Cream et lisibles
 - [x] Pendant le défilement, le contenu ne transparaît pas sous le bandeau
 - [x] DESIGN.md autorise le Brass Copper comme fond du bandeau, seul usage de surface en dehors du bouton plein
 - [x] Le bandeau tient sur mobile (360px) sans débordement
 
 ## Bloquée par
 
-- Phase 22 (bandeau commun « Jamix »)
+- Phase 22 (bandeau commun « Jammix »)
 
 ---
 
@@ -828,12 +828,12 @@ Les phases 28, 29 et 30 sont indépendantes entre elles.
 
 ### Ce qu'on livre
 
-Toutes les pages se terminent par un pied de page discret : un filet pointillé, une ligne « CGU · Contact », puis « © <année en cours> Jamix · Tous droits réservés · v<version> ». « CGU » mène à la page publique `/cgu`, courte et structurée en sections (éditeur anonyme, hébergeur, objet et gratuité, accès, responsabilités, propriété des contenus, données personnelles et droits, cookies, droit applicable, date de mise à jour). Le lien « Contact » est masqué jusqu'à la Phase 32. Sur les formulaires d'annonce, les liens du pied de page sont des sorties gardées. DESIGN.md est complété pour autoriser le pied de page.
+Toutes les pages se terminent par un pied de page discret : un filet pointillé, une ligne « CGU · Contact », puis « © <année en cours> Jammix · Tous droits réservés · v<version> ». « CGU » mène à la page publique `/cgu`, courte et structurée en sections (éditeur anonyme, hébergeur, objet et gratuité, accès, responsabilités, propriété des contenus, données personnelles et droits, cookies, droit applicable, date de mise à jour). Le lien « Contact » est masqué jusqu'à la Phase 32. Sur les formulaires d'annonce, les liens du pied de page sont des sorties gardées. DESIGN.md est complété pour autoriser le pied de page.
 
 ### Critères d'acceptation
 
 - [x] Le pied de page s'affiche après le contenu sur `/`, `/jams/[id]`, `/connexion`, `/inscription`, `/mot-de-passe-oublie`, `/reinitialiser-mot-de-passe`, `/mes-annonces`, `/mes-annonces/nouvelle`, `/mes-annonces/[id]`, `/mon-profil` et `/cgu`
-- [x] Il affiche « © <année en cours> Jamix · Tous droits réservés · v<version de l'application> »
+- [x] Il affiche « © <année en cours> Jammix · Tous droits réservés · v<version de l'application> »
 - [x] `/cgu` est accessible sans compte, avec « ← Retour » vers `/`, et présente les sections dans l'ordre du PRD
 - [x] Aucun nom de personne n'apparaît sur `/cgu` ; l'éditeur y est un particulier non professionnel joignable via le formulaire Contact
 - [x] Sur une nouvelle annonce ou un brouillon modifié, « CGU » enregistre en brouillon puis affiche la fenêtre ; sur une annonce Publiée modifiée, la fenêtre Quitter/Rester ; sans changement, sortie directe

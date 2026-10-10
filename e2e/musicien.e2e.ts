@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 test("l'accueil affiche le titre et le choix de la date", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByRole("heading", { level: 1, name: "Jamix" })).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "Jammix" })).toBeVisible();
   await expect(page.getByRole("textbox", { name: "Date" })).toBeVisible();
   await expect(page.getByRole("link", { name: "Connexion organisateur" })).toBeVisible();
 });

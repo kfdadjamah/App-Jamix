@@ -3,7 +3,7 @@ import { expect, test, type Page } from "@playwright/test";
 import { seConnecter } from "./connexion";
 
 const { version } = JSON.parse(readFileSync("package.json", "utf8")) as { version: string };
-const MENTION = `© ${new Date().getFullYear()} Jamix · Tous droits réservés · v${version}`;
+const MENTION = `© ${new Date().getFullYear()} Jammix · Tous droits réservés · v${version}`;
 
 // Pied de page présent, avec copyright et version, et placé après le contenu.
 async function verifierPiedDePage(page: Page) {
