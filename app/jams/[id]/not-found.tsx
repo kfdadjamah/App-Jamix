@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Bandeau from "@/components/bandeau";
 import BoutonRetour from "@/components/bouton-retour";
+import PiedDePage from "@/components/pied-de-page";
 
 // Jam inexistante, en brouillon ou passée : même message, sans détailler la raison.
 export default function JamIndisponible() {
@@ -19,6 +20,7 @@ export default function JamIndisponible() {
           Voir les jams du jour
         </Link>
       </main>
+      <PiedDePage />
     </>
   );
 }

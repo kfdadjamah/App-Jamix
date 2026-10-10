@@ -3,6 +3,7 @@ import FormulaireReinitialisation from "./formulaire-reinitialisation";
 import Bandeau from "@/components/bandeau";
 import BoutonRetour from "@/components/bouton-retour";
 import LienInvalide from "./lien-invalide";
+import PiedDePage from "@/components/pied-de-page";
 
 export default async function PageReinitialiserMotDePasse({
   searchParams,
@@ -29,6 +30,7 @@ export default async function PageReinitialiserMotDePasse({
           <LienInvalide />
         )}
       </main>
+      <PiedDePage />
     </>
   );
 }

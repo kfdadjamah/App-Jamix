@@ -11,6 +11,7 @@ import FormulaireEmail from "./formulaire-email";
 import FormulaireMotDePasse from "./formulaire-mot-de-passe";
 import SuppressionCompte from "./suppression-compte";
 import { deconnecterOrganisateur } from "./actions";
+import PiedDePage from "@/components/pied-de-page";
 
 function Separateur() {
   return <hr className="border-0 border-t border-dashed border-[var(--color-cork-border)]" />;
@@ -49,6 +50,7 @@ export default async function PageMonProfil() {
         <main className="mx-auto w-full max-w-md px-6 py-8 text-[var(--color-warm-cream)]">
           Compte introuvable.
         </main>
+        <PiedDePage />
       </>
     );
   }
@@ -119,6 +121,7 @@ export default async function PageMonProfil() {
           <SuppressionCompte />
         </SectionDeroulable>
       </main>
+      <PiedDePage />
     </>
   );
 }

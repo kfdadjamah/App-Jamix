@@ -14,6 +14,7 @@ import AnnulerAnnonce from "./annuler-annonce";
 import { statutAffiche } from "@/lib/annonces";
 import { messageRelance } from "@/lib/relances";
 import { LIBELLES_STATUT_OCCURRENCE, formaterDateCourte } from "@/lib/annonce-constantes";
+import PiedDePage from "@/components/pied-de-page";
 
 export default async function PageEditionAnnonce({
   params,
@@ -153,6 +154,7 @@ export default async function PageEditionAnnonce({
           />
         </div>
       </main>
+      <PiedDePage />
     </FournisseurGardeSortie>
   );
 }

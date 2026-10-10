@@ -1,5 +1,6 @@
 import Bandeau from "@/components/bandeau";
 import FormulaireConnexion from "./formulaire-connexion";
+import PiedDePage from "@/components/pied-de-page";
 
 export default async function PageConnexion({
   searchParams,
@@ -12,6 +13,7 @@ export default async function PageConnexion({
     <>
       <Bandeau page="connexion" />
       <FormulaireConnexion reinitialise={reinitialise} />
+      <PiedDePage />
     </>
   );
 }

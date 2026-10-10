@@ -9,6 +9,7 @@ import { LIBELLES_STATUT_OCCURRENCE, libelleStyles } from "@/lib/annonce-constan
 import { statutAffiche } from "@/lib/annonces";
 import { messageRelance } from "@/lib/relances";
 import FiltreAnnonces from "./filtre-annonces";
+import PiedDePage from "@/components/pied-de-page";
 
 export default async function PageMesAnnonces() {
   const organisateurId = await recupererIdOrganisateurConnecte();
@@ -65,6 +66,7 @@ export default async function PageMesAnnonces() {
             </div>
           ))}
       </main>
+      <PiedDePage />
     </>
   );
 }

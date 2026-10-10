@@ -7,6 +7,7 @@ import { creerAnnonce } from "../actions";
 import { recupererBarsDeLOrganisateurConnecte } from "@/lib/organisateur";
 import { prisma } from "@/lib/prisma";
 import { valeursReprisesParBar } from "@/lib/annonces";
+import PiedDePage from "@/components/pied-de-page";
 
 export default async function PageNouvelleAnnonce() {
   const bars = await recupererBarsDeLOrganisateurConnecte();
@@ -46,6 +47,7 @@ export default async function PageNouvelleAnnonce() {
           destinationApresEnregistrement="/mes-annonces"
         />
       </main>
+      <PiedDePage />
     </FournisseurGardeSortie>
   );
 }

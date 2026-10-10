@@ -123,6 +123,11 @@ Collé en haut pendant le défilement (`position: sticky`), 56px de haut, fond B
 
 « 🔔 À CONFIRMER · N » en 12px uppercase Warm Cream, libellé en 700 (exception), nombre en 500, affichée même à 0. Trait 1px pointillé Cork Border sur toute la largeur de la colonne, 12px sous le texte. Même rendu partout ; lien vers « Mes annonces » (souligné au survol et au focus) sur le profil et les formulaires d'annonce, simple texte sur « Mes annonces ».
 
+### Pied de page (Jamix)
+**Role:** Exception Jamix à « no footer chrome » — un même pied de page discret en bas de toutes les pages
+
+Placé après le contenu, jamais fixé à l'écran. Fond Walnut Shadow (#100904), dans la continuité du corps. Contenu aligné sur la colonne de la page (`max-w-md`, 24px de marge) : filet 1px pointillé Cork Border (#40372e) sur toute la largeur de la colonne, puis 24px plus bas deux lignes centrées en 11px weight 500 uppercase, 8px d'écart : « CGU · Contact » puis « © <année en cours> Jamix · Tous droits réservés · v<version> », 24px de marge basse. Texte en Warm Cream atténué (Warm Cream à 60 % d'opacité, contraste AA sur Walnut Shadow) ; les liens en Warm Cream plein, soulignés au survol, au focus et sur leur page active. Sur les formulaires d'annonce, ses liens sont des sorties gardées.
+
 **Role:** Edge branding — vertical text running down the right margin
 
 Rotated 90° text "ORYZO 1-MODEL" in Warm Cream, 10–12px uppercase, sits flush right. Functions as a product serial number — a physical-product artifact translated to UI.
@@ -166,6 +171,7 @@ Fallback font (Arial 8px weight 500 uppercase) for things like "* ADOBE ILLUSTRA
 - Seul usage de surface du Brass Copper en dehors du bouton plein : le fond du bandeau d'en-tête de Jamix. Aucun autre fond (cartes, sections, fenêtres) n'est cuivré.
 - Set type in uppercase weight 500 across the entire interface; use weight 400 / mixed case only for the 29px body copy that explains the product.
 - Seule exception de remplissage d'un bouton fantôme : le bouton actif du filtre par bar de « Mes annonces », à fond Warm Cream léger transparent (~15 %). Jamais de fond plein, crème ou cuivré, sur un bouton fantôme.
+- Seul pied de page autorisé : le pied de page Jamix (fond Walnut Shadow, filet pointillé Cork Border, texte Warm Cream atténué à 60 %), placé après le contenu, jamais fixé à l'écran. Aucun autre « footer chrome ».
 - Seule exception de graisse Jamix : le libellé « À CONFIRMER » de la ligne sous le bandeau de l'espace organisateur est en 700. Le nombre qui le suit et tout autre texte restent en 400 ou 500.
 - Use 36px border-radius for the one filled CTA and 22.5px for outlined ghost buttons; 12px for cards; 0px for inputs and inline links — these four values are the entire radius vocabulary.
 - Set section gaps at 100vh — each section gets its own full viewport, never compress product reveals into bands.
@@ -200,7 +206,7 @@ Photography is editorial, top-down, and in-context: the cork coaster sits on a g
 
 ## Layout
 
-Full-bleed throughout — no max-width container, every section spans 100vw. Hero: full-viewport top-down photograph with a massive ORYZO wordmark (51px+) in the upper-left, tagline above, fixed minimal nav upper-right, vertical sidebar label running down the right edge, semi-transparent info card lower-left, video thumbnail lower-right. Subsequent sections: full-viewport Walnut Shadow canvas with a centered 3D product render flanked by left-aligned heading and right-aligned body copy — a three-column grid (text / object / text) with generous 18px gutters. Section transitions are seamless dark-on-dark; the only breaks are hairline dashed dividers. Navigation is fixed, transparent, and 4 items max. No sidebar, no footer chrome, no cards-within-cards — every screen is a single statement.
+Full-bleed throughout — no max-width container, every section spans 100vw. Hero: full-viewport top-down photograph with a massive ORYZO wordmark (51px+) in the upper-left, tagline above, fixed minimal nav upper-right, vertical sidebar label running down the right edge, semi-transparent info card lower-left, video thumbnail lower-right. Subsequent sections: full-viewport Walnut Shadow canvas with a centered 3D product render flanked by left-aligned heading and right-aligned body copy — a three-column grid (text / object / text) with generous 18px gutters. Section transitions are seamless dark-on-dark; the only breaks are hairline dashed dividers. Navigation is fixed, transparent, and 4 items max. No sidebar, no footer chrome (seule exception Jamix : le pied de page discret décrit plus haut), no cards-within-cards — every screen is a single statement.
 
 ## Typography Voice
 

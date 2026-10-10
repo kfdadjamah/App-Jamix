@@ -11,6 +11,7 @@ import {
 } from "@/lib/annonce-constantes";
 import { recupererOccurrencePubliee, statutAffiche } from "@/lib/annonces";
 import DistanceJam from "./distance-jam";
+import PiedDePage from "@/components/pied-de-page";
 
 // Une seule requête pour le titre d'onglet et la page.
 const occurrenceDeLaPage = cache(recupererOccurrencePubliee);
@@ -119,6 +120,7 @@ export default async function PageJam({ params }: { params: Promise<{ id: string
 
         <BoutonItineraire bar={annonce.bar} />
       </main>
+      <PiedDePage />
     </>
   );
 }

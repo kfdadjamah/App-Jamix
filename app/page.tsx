@@ -5,6 +5,7 @@ import Bandeau from "@/components/bandeau";
 import SelecteurDate from "./selecteur-date";
 import ConsultationMusicien from "./consultation-musicien";
 import type { Vue } from "./toggle-vue";
+import PiedDePage from "@/components/pied-de-page";
 
 const NOMBRE_DATES_SUGGEREES = 3;
 
@@ -96,6 +97,7 @@ export default async function Home({
           />
         )}
       </main>
+      <PiedDePage />
     </>
   );
 }

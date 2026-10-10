@@ -832,14 +832,14 @@ Toutes les pages se terminent par un pied de page discret : un filet pointillé,
 
 ### Critères d'acceptation
 
-- [ ] Le pied de page s'affiche après le contenu sur `/`, `/jams/[id]`, `/connexion`, `/inscription`, `/mot-de-passe-oublie`, `/reinitialiser-mot-de-passe`, `/mes-annonces`, `/mes-annonces/nouvelle`, `/mes-annonces/[id]`, `/mon-profil` et `/cgu`
-- [ ] Il affiche « © <année en cours> Jamix · Tous droits réservés · v<version de l'application> »
-- [ ] `/cgu` est accessible sans compte, avec « ← Retour » vers `/`, et présente les sections dans l'ordre du PRD
-- [ ] Aucun nom de personne n'apparaît sur `/cgu` ; l'éditeur y est un particulier non professionnel joignable via le formulaire Contact
-- [ ] Sur une nouvelle annonce ou un brouillon modifié, « CGU » enregistre en brouillon puis affiche la fenêtre ; sur une annonce Publiée modifiée, la fenêtre Quitter/Rester ; sans changement, sortie directe
-- [ ] Le pied de page tient à 360px sans débordement horizontal
-- [ ] DESIGN.md autorise le pied de page (fond Walnut Shadow, filet pointillé Cork Border, texte Warm Cream atténué)
-- [ ] Tests Playwright : pied de page présent sur chaque page, navigation vers `/cgu`, sortie gardée depuis un formulaire d'annonce
+- [x] Le pied de page s'affiche après le contenu sur `/`, `/jams/[id]`, `/connexion`, `/inscription`, `/mot-de-passe-oublie`, `/reinitialiser-mot-de-passe`, `/mes-annonces`, `/mes-annonces/nouvelle`, `/mes-annonces/[id]`, `/mon-profil` et `/cgu`
+- [x] Il affiche « © <année en cours> Jamix · Tous droits réservés · v<version de l'application> »
+- [x] `/cgu` est accessible sans compte, avec « ← Retour » vers `/`, et présente les sections dans l'ordre du PRD
+- [x] Aucun nom de personne n'apparaît sur `/cgu` ; l'éditeur y est un particulier non professionnel joignable via le formulaire Contact
+- [x] Sur une nouvelle annonce ou un brouillon modifié, « CGU » enregistre en brouillon puis affiche la fenêtre ; sur une annonce Publiée modifiée, la fenêtre Quitter/Rester ; sans changement, sortie directe
+- [x] Le pied de page tient à 360px sans débordement horizontal
+- [x] DESIGN.md autorise le pied de page (fond Walnut Shadow, filet pointillé Cork Border, texte Warm Cream atténué)
+- [x] Tests Playwright : pied de page présent sur chaque page, navigation vers `/cgu`, sortie gardée depuis un formulaire d'annonce
 
 ## Bloquée par
 
