@@ -91,6 +91,7 @@ function CarteAnnonce({ annonce }: { annonce: AnnonceAvecDetails }) {
               weekday: "short",
               day: "numeric",
               month: "long",
+              timeZone: "UTC",
             }),
           }))
       : [];

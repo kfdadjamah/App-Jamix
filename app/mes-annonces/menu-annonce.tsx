@@ -95,7 +95,7 @@ export default function MenuAnnonce({
         </div>
       )}
 
-      {fenetreOuverte && (
+      {fenetreOuverte && peutAnnuler && (
         <FenetreAnnulation
           annonceId={annonceId}
           datesAnnulables={datesAnnulables}
@@ -123,7 +123,7 @@ function FenetreAnnulation({
 }) {
   const fenetre = useRef<HTMLDialogElement>(null);
   const [portee, setPortee] = useState<Portee>("date");
-  const [occurrenceId, setOccurrenceId] = useState(datesAnnulables[0].id);
+  const [occurrenceId, setOccurrenceId] = useState(datesAnnulables[0]?.id ?? "");
   const [enCours, setEnCours] = useState(false);
   const [erreur, setErreur] = useState<string | null>(null);
 
@@ -137,14 +137,21 @@ function FenetreAnnulation({
   async function confirmer() {
     setErreur(null);
     setEnCours(true);
-    const resultat: Resultat =
-      choixDePortee && portee === "date"
-        ? await annulerOccurrence(occurrenceId)
-        : await annulerAnnonce(annonceId);
-    setEnCours(false);
-    if ("erreur" in resultat) {
-      setErreur(resultat.erreur);
+    try {
+      const resultat: Resultat =
+        choixDePortee && portee === "date"
+          ? await annulerOccurrence(occurrenceId)
+          : await annulerAnnonce(annonceId);
+      if ("erreur" in resultat) {
+        setErreur(resultat.erreur);
+        return;
+      }
+    } catch {
+      // Réseau coupé, erreur serveur ou annonce supprimée entre-temps.
+      setErreur("L'annulation a échoué. Réessayez.");
       return;
+    } finally {
+      setEnCours(false);
     }
     surFermeture();
   }
@@ -207,7 +214,7 @@ function FenetreAnnulation({
           <p className="text-[12px] font-medium uppercase text-[color:var(--color-texte-secondaire)]">
             {datesAnnulables.length > 1
               ? "Toutes les dates seront annulées."
-              : `Date annulée : ${datesAnnulables[0].libelle}.`}
+              : `Date annulée : ${datesAnnulables[0]?.libelle ?? ""}.`}
           </p>
         )}
 
