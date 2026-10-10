@@ -981,15 +981,15 @@ Un menu d'actions sur chaque carte de `/mes-annonces`, sans changement de schém
 
 ### Critères d'acceptation
 
-- [ ] Chaque carte affiche un bouton « ⋯ » en haut à droite, hors du lien de la carte ; cliquer dessus n'ouvre pas l'annonce
-- [ ] « Modifier » ouvre `/mes-annonces/[id]`
-- [ ] Brouillon : seule l'entrée « Modifier » est proposée
-- [ ] Annonce publiée ponctuelle : « Annuler » → confirmation → date « annulée » dans la liste
-- [ ] Annonce récurrente : la fenêtre propose « Cette date seulement » (liste des dates non annulées) ou « Toutes les dates » ; seule la portée choisie est annulée
-- [ ] « Annuler » absent si toutes les dates sont déjà annulées
-- [ ] Échap / clic extérieur ferme le menu ; Échap / « Retour » ferme la fenêtre sans rien annuler ; focus géré, `aria-haspopup`/`aria-expanded`
-- [ ] Respect de DESIGN.md (couleurs, 12px/uppercase, bordures), tenue à 360px
-- [ ] Tests Playwright (`e2e/menu-annonce.e2e.ts`) : menu sur brouillon et publiée, modification, annulation ponctuelle, portée ciblée vs globale sur récurrente, abandon ; `npm run lint` et `npm run build` passent
+- [x] Chaque carte affiche un bouton « ⋯ » en haut à droite, hors du lien de la carte ; cliquer dessus n'ouvre pas l'annonce
+- [x] « Modifier » ouvre `/mes-annonces/[id]`
+- [x] Brouillon : seule l'entrée « Modifier » est proposée
+- [x] Annonce publiée ponctuelle : « Annuler » → confirmation → date « annulée » dans la liste
+- [x] Annonce récurrente : la fenêtre propose « Cette date seulement » (liste des dates non annulées) ou « Toutes les dates » ; seule la portée choisie est annulée
+- [x] « Annuler » absent si toutes les dates sont déjà annulées
+- [x] Échap / clic extérieur ferme le menu ; Échap / « Retour » ferme la fenêtre sans rien annuler ; focus géré, `aria-haspopup`/`aria-expanded`
+- [x] Respect de DESIGN.md (couleurs, 12px/uppercase, bordures), tenue à 360px
+- [x] Tests Playwright (`e2e/menu-annonce.e2e.ts`) : menu sur brouillon et publiée, modification, annulation ponctuelle, portée ciblée vs globale sur récurrente, abandon ; `npm run lint` et `npm run build` passent
 
 ## Bloquée par
 

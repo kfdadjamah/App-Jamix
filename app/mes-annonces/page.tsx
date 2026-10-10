@@ -9,6 +9,7 @@ import { LIBELLES_STATUT_OCCURRENCE, libelleStyles } from "@/lib/annonce-constan
 import { statutAffiche } from "@/lib/annonces";
 import { messageRelance } from "@/lib/relances";
 import FiltreAnnonces from "./filtre-annonces";
+import MenuAnnonce from "./menu-annonce";
 import PiedDePage from "@/components/pied-de-page";
 
 export default async function PageMesAnnonces() {
@@ -80,72 +81,92 @@ function CarteAnnonce({ annonce }: { annonce: AnnonceAvecDetails }) {
     (a, b) => a.date.getTime() - b.date.getTime()
   );
   const premiereOccurrence = occurrencesTriees[0];
+  const datesAnnulables =
+    annonce.statut === "PUBLIEE"
+      ? occurrencesTriees
+          .filter((occurrence) => occurrence.statut !== "ANNULEE")
+          .map((occurrence) => ({
+            id: occurrence.id,
+            libelle: new Date(occurrence.date).toLocaleDateString("fr-FR", {
+              weekday: "short",
+              day: "numeric",
+              month: "long",
+            }),
+          }))
+      : [];
   return (
-    <Link
-      href={`/mes-annonces/${annonce.id}`}
-      className="flex flex-col gap-2 rounded-[12px] border border-[var(--color-cork-border)] p-4"
-    >
-      <span className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)]">
-        {annonce.bar.nom}
-      </span>
-      <div className="flex items-center gap-2">
-        <span className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)]">
-          {annonce.statut === "BROUILLON" ? "Brouillon" : "Publiée"}
+    <div className="relative">
+      <Link
+        href={`/mes-annonces/${annonce.id}`}
+        className="flex flex-col gap-2 rounded-[12px] border border-[var(--color-cork-border)] p-4"
+      >
+        <span className="pr-12 text-[12px] font-medium uppercase text-[var(--color-warm-cream)]">
+          {annonce.bar.nom}
         </span>
-        {annonce.estRecurrente && (
-          <span className="rounded-[9999px] border border-[var(--color-driftwood)] px-2 py-[2px] text-[10px] font-medium uppercase text-[color:var(--color-texte-secondaire)]">
-            Récurrente
+        <div className="flex items-center gap-2 pr-12">
+          <span className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)]">
+            {annonce.statut === "BROUILLON" ? "Brouillon" : "Publiée"}
+          </span>
+          {annonce.estRecurrente && (
+            <span className="rounded-[9999px] border border-[var(--color-driftwood)] px-2 py-[2px] text-[10px] font-medium uppercase text-[color:var(--color-texte-secondaire)]">
+              Récurrente
+            </span>
+          )}
+        </div>
+
+        {premiereOccurrence ? (
+          <span className="text-[18px] text-[var(--color-warm-cream)]">
+            {premiereOccurrence.heureDebut}
+            {premiereOccurrence.heureFin ? ` – ${premiereOccurrence.heureFin}` : ""}
+          </span>
+        ) : (
+          <span className="text-[15px] text-[color:var(--color-texte-secondaire)]">
+            Aucune date renseignée
           </span>
         )}
-      </div>
 
-      {premiereOccurrence ? (
-        <span className="text-[18px] text-[var(--color-warm-cream)]">
-          {premiereOccurrence.heureDebut}
-          {premiereOccurrence.heureFin ? ` – ${premiereOccurrence.heureFin}` : ""}
-        </span>
-      ) : (
-        <span className="text-[15px] text-[color:var(--color-texte-secondaire)]">
-          Aucune date renseignée
-        </span>
-      )}
+        {occurrencesTriees.length > 0 && (
+          <ul className="flex flex-wrap gap-2">
+            {occurrencesTriees.map((occurrence) => {
+              const relance = messageRelance(occurrence);
+              return (
+                <li
+                  key={occurrence.id}
+                  className="flex flex-col rounded-[9999px] border border-[var(--color-cork-border)] px-3 py-1 text-[10px] font-medium uppercase text-[var(--color-warm-cream)]"
+                >
+                  <span>
+                    {new Date(occurrence.date).toLocaleDateString("fr-FR", {
+                      day: "numeric",
+                      month: "short",
+                    })}{" "}
+                    · {LIBELLES_STATUT_OCCURRENCE[statutAffiche(occurrence)]}
+                  </span>
+                  {relance && (
+                    <span className="text-[var(--color-gold-elegance)]">{relance}</span>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        )}
 
-      {occurrencesTriees.length > 0 && (
-        <ul className="flex flex-wrap gap-2">
-          {occurrencesTriees.map((occurrence) => {
-            const relance = messageRelance(occurrence);
-            return (
-              <li
-                key={occurrence.id}
-                className="flex flex-col rounded-[9999px] border border-[var(--color-cork-border)] px-3 py-1 text-[10px] font-medium uppercase text-[var(--color-warm-cream)]"
-              >
-                <span>
-                  {new Date(occurrence.date).toLocaleDateString("fr-FR", {
-                    day: "numeric",
-                    month: "short",
-                  })}{" "}
-                  · {LIBELLES_STATUT_OCCURRENCE[statutAffiche(occurrence)]}
-                </span>
-                {relance && (
-                  <span className="text-[var(--color-gold-elegance)]">{relance}</span>
-                )}
-              </li>
-            );
-          })}
-        </ul>
-      )}
+        {annonce.styles.length > 0 && (
+          <span className="text-[12px] uppercase text-[color:var(--color-texte-secondaire)]">
+            {libelleStyles(annonce.styles)}
+          </span>
+        )}
 
-      {annonce.styles.length > 0 && (
-        <span className="text-[12px] uppercase text-[color:var(--color-texte-secondaire)]">
-          {libelleStyles(annonce.styles)}
-        </span>
-      )}
-
-      {annonce.description && (
-        <p className="line-clamp-2 whitespace-pre-line text-[12px] text-[color:var(--color-texte-secondaire)]">
-          {annonce.description}
-        </p>
-      )}
-    </Link>
+        {annonce.description && (
+          <p className="line-clamp-2 whitespace-pre-line text-[12px] text-[color:var(--color-texte-secondaire)]">
+            {annonce.description}
+          </p>
+        )}
+      </Link>
+      <MenuAnnonce
+        annonceId={annonce.id}
+        datesAnnulables={datesAnnulables}
+        estRecurrente={annonce.estRecurrente}
+      />
+    </div>
   );
 }
