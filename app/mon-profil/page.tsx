@@ -71,10 +71,10 @@ export default async function PageMonProfil() {
         <BoutonRetour href="/mes-annonces" />
 
         <div className="flex flex-col gap-3">
-          <h1 className="text-[24px] font-medium uppercase leading-[1.09] text-[var(--color-warm-cream)]">
+          <h1 className="titre-page">
             Mon profil
           </h1>
-          <span className="text-[12px] font-medium uppercase text-[var(--color-driftwood)]">
+          <span className="text-[12px] font-medium uppercase text-[color:var(--color-texte-secondaire)]">
             Compte créé le {dateCreation}
           </span>
         </div>
@@ -104,7 +104,7 @@ export default async function PageMonProfil() {
         <SectionDeroulable
           titre="Email"
           sousTitre={
-            <span className="text-[15px] text-[var(--color-driftwood)]">{organisateur.email}</span>
+            <span className="text-[15px] text-[color:var(--color-texte-secondaire)]">{organisateur.email}</span>
           }
         >
           <FormulaireEmail />

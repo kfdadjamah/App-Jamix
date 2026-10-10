@@ -41,7 +41,7 @@ export default function GestionPhotoBar({
 
   return (
     <div className="flex flex-col gap-3">
-      <span className="text-[12px] font-medium uppercase text-[var(--color-driftwood)]">
+      <span className="text-[12px] font-medium uppercase text-[color:var(--color-texte-secondaire)]">
         Photo ou logo
       </span>
 
@@ -53,7 +53,7 @@ export default function GestionPhotoBar({
           className="h-32 w-32 rounded-[12px] object-cover"
         />
       ) : (
-        <div className="flex h-32 w-32 items-center justify-center rounded-[12px] border border-dashed border-[var(--color-cork-border)] text-[10px] uppercase text-[var(--color-driftwood)]">
+        <div className="flex h-32 w-32 items-center justify-center rounded-[12px] border border-dashed border-[var(--color-cork-border)] text-[10px] uppercase text-[color:var(--color-texte-secondaire)]">
           Aucune photo
         </div>
       )}

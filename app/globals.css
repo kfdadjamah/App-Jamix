@@ -7,6 +7,7 @@
   --color-cork-border: #40372e;
   --color-driftwood: #6c5f51;
   --color-gold-elegance: #fca311;
+  --color-texte-secondaire: color-mix(in srgb, var(--color-warm-cream) 70%, transparent);
 
   --background: var(--color-walnut-shadow);
   --foreground: var(--color-warm-cream);
@@ -24,6 +25,18 @@ body {
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
+/* Titre de page unique (DESIGN.md) */
+.titre-page {
+  font-size: 24px;
+  font-weight: 500;
+  text-transform: uppercase;
+  line-height: 1.09;
+  color: var(--color-warm-cream);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /* Carte */
 .jam-map {
   width: 100%;
@@ -32,10 +45,10 @@ body {
 
 .maplibregl-ctrl-attrib {
   background: rgba(16, 9, 4, 0.7) !important;
-  color: var(--color-driftwood) !important;
+  color: var(--color-texte-secondaire) !important;
 }
 .maplibregl-ctrl-attrib a {
-  color: var(--color-driftwood) !important;
+  color: var(--color-texte-secondaire) !important;
 }
 
 /* Sticker */

@@ -300,7 +300,7 @@ export default function FormulaireAnnonce({
             Bar
           </span>
           <span className="text-[18px] text-[var(--color-warm-cream)]">{choixBar.nom}</span>
-          <span className="text-[12px] text-[var(--color-driftwood)]">
+          <span className="text-[12px] text-[color:var(--color-texte-secondaire)]">
             Le bar d&apos;une annonce publiée ne peut plus être changé.
           </span>
         </div>
@@ -316,7 +316,7 @@ export default function FormulaireAnnonce({
             Reprendre la dernière annonce de ce bar
           </button>
           {repriseDu && (
-            <span className="text-[12px] font-medium uppercase text-[var(--color-driftwood)]">
+            <span className="text-[12px] font-medium uppercase text-[color:var(--color-texte-secondaire)]">
               Repris de l&apos;annonce publiée le{" "}
               {new Date(repriseDu).toLocaleDateString("fr-FR", {
                 day: "numeric",
@@ -351,7 +351,7 @@ export default function FormulaireAnnonce({
                     type="button"
                     onClick={() => retirerDate(date)}
                     aria-label={`Retirer le ${date}`}
-                    className="text-[var(--color-driftwood)]"
+                    className="text-[color:var(--color-texte-secondaire)]"
                   >
                     ×
                   </button>
@@ -382,7 +382,7 @@ export default function FormulaireAnnonce({
           </div>
         ) : (
           dates.length === 0 && (
-            <span className="text-[15px] text-[var(--color-driftwood)]">
+            <span className="text-[15px] text-[color:var(--color-texte-secondaire)]">
               Aucune date renseignée
             </span>
           )
@@ -665,7 +665,7 @@ function ChampDescription({ valeurInitiale }: { valeurInitiale: string }) {
         onChange={(e) => setLongueur(e.target.value.length)}
         className="champ-input resize-none"
       />
-      <span className="self-end text-[12px] text-[var(--color-driftwood)]">
+      <span className="self-end text-[12px] text-[color:var(--color-texte-secondaire)]">
         {longueur}/{LONGUEUR_MAX_DESCRIPTION}
       </span>
     </label>

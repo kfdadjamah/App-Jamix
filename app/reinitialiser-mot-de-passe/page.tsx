@@ -21,7 +21,7 @@ export default async function PageReinitialiserMotDePasse({
       <Bandeau page="connexion" />
       <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-8 px-6 py-8">
         <BoutonRetour href="/connexion" />
-        <h1 className="text-[41px] font-medium uppercase leading-[0.9] text-[var(--color-warm-cream)]">
+        <h1 className="titre-page">
           Nouveau mot de passe
         </h1>
         {jetonValide && jetonBrut ? (

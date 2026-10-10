@@ -39,7 +39,7 @@ export default function FiltreAnnonces({
       </div>
 
       {annoncesFiltrees.length === 0 && barChoisi && (
-        <p className="break-words text-[15px] text-[var(--color-driftwood)]">
+        <p className="break-words text-[15px] text-[color:var(--color-texte-secondaire)]">
           Aucune annonce pour {barChoisi.nom}.
         </p>
       )}

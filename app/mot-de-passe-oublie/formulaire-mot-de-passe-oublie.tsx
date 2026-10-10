@@ -44,11 +44,11 @@ export default function FormulaireMotDePasseOublie() {
     <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-8 px-6 py-8">
       <BoutonRetour href="/connexion" />
       <div>
-        <h1 className="text-[41px] font-medium uppercase leading-[0.9] text-[var(--color-warm-cream)]">
+        <h1 className="titre-page">
           Mot de passe oublié
         </h1>
         {!envoye && (
-          <p className="mt-3 text-[18px] leading-tight text-[var(--color-driftwood)]">
+          <p className="mt-3 text-[18px] leading-tight text-[color:var(--color-texte-secondaire)]">
             Saisissez l&apos;email de votre compte, nous vous enverrons un lien pour choisir un
             nouveau mot de passe.
           </p>

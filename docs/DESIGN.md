@@ -171,7 +171,10 @@ Fallback font (Arial 8px weight 500 uppercase) for things like "* ADOBE ILLUSTRA
 - Seul usage de surface du Brass Copper en dehors du bouton plein : le fond du bandeau d'en-tête de Jammix. Aucun autre fond (cartes, sections, fenêtres) n'est cuivré.
 - Set type in uppercase weight 500 across the entire interface; use weight 400 / mixed case only for the 29px body copy that explains the product.
 - Seule exception de remplissage d'un bouton fantôme : le bouton actif du filtre par bar de « Mes annonces », à fond Warm Cream léger transparent (~15 %). Jamais de fond plein, crème ou cuivré, sur un bouton fantôme.
-- Seul pied de page autorisé : le pied de page Jammix (fond Walnut Shadow, filet pointillé Cork Border, texte Warm Cream atténué à 60 %), placé après le contenu, jamais fixé à l'écran. Aucun autre « footer chrome ».
+- Seul pied de page autorisé : le pied de page Jammix (fond Walnut Shadow, filet pointillé Cork Border, texte Warm Cream atténué à 70 %), placé après le contenu, jamais fixé à l'écran. Aucun autre « footer chrome ».
+- Titre de page unique (`h1`, classe `.titre-page`) : 24px, graisse 500, majuscules, interligne 1.09, sur une seule ligne, tronqué par « … » en cas de débordement. Le 41px reste réservé aux sections éditoriales, jamais aux titres de page.
+- Texte secondaire : Warm Cream à 70 % (`--color-texte-secondaire`). Le Driftwood est réservé aux séparateurs et bordures structurels, jamais au texte.
+- Bouton « ← Retour » : fantôme, graisse 500, bordure 2px Warm Cream, texte Warm Cream.
 - Seule exception de graisse Jammix : le libellé « À CONFIRMER » de la ligne sous le bandeau de l'espace organisateur est en 700. Le nombre qui le suit et tout autre texte restent en 400 ou 500.
 - Use 36px border-radius for the one filled CTA and 22.5px for outlined ghost buttons; 12px for cards; 0px for inputs and inline links — these four values are the entire radius vocabulary.
 - Set section gaps at 100vh — each section gets its own full viewport, never compress product reveals into bands.

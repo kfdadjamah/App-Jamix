@@ -65,10 +65,10 @@ export default function FormulaireContact({ emailInitial }: { emailInitial: stri
     <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-8 px-6 py-8">
       <BoutonRetour href="/" />
       <div>
-        <h1 className="text-[41px] font-medium uppercase leading-[0.9] text-[var(--color-warm-cream)]">
+        <h1 className="titre-page">
           Contact
         </h1>
-        <p className="mt-3 text-[18px] leading-tight text-[var(--color-driftwood)]">
+        <p className="mt-3 text-[18px] leading-tight text-[color:var(--color-texte-secondaire)]">
           Une question, une remarque ? Écrivez-nous, nous vous répondrons par email.
         </p>
       </div>
@@ -95,7 +95,7 @@ export default function FormulaireContact({ emailInitial }: { emailInitial: stri
             {...register("message")}
             className="champ-input resize-none"
           />
-          <span className="self-end text-[12px] text-[var(--color-driftwood)]">
+          <span className="self-end text-[12px] text-[color:var(--color-texte-secondaire)]">
             {longueurMessage}/{LONGUEUR_MAX_MESSAGE_CONTACT}
           </span>
         </ChampFormulaire>
@@ -134,7 +134,7 @@ export default function FormulaireContact({ emailInitial }: { emailInitial: stri
           {enCours ? "Envoi…" : "Envoyer"}
         </button>
 
-        <p className="text-[12px] leading-[1.4] text-[color-mix(in_srgb,var(--color-warm-cream)_60%,transparent)]">
+        <p className="text-[12px] leading-[1.4] text-[color-mix(in_srgb,var(--color-warm-cream)_70%,transparent)]">
           Votre nom, votre email et votre message servent uniquement à vous répondre ; ils ne sont
           pas enregistrés dans l&apos;application. En savoir plus dans les{" "}
           <Link

@@ -54,7 +54,7 @@ export default async function PageEditionAnnonce({
 
         <BoutonRetour href="/mes-annonces" />
 
-        <h1 className="text-[24px] font-medium uppercase leading-[1.09] text-[var(--color-warm-cream)]">
+        <h1 className="titre-page">
           {estPubliee ? "Modifier l'annonce" : "Modifier le brouillon"}
         </h1>
 
@@ -73,12 +73,12 @@ export default async function PageEditionAnnonce({
                     <span className="text-[15px] text-[var(--color-warm-cream)]">
                       {formaterDateCourte(new Date(occurrence.date))}
                     </span>
-                    <span className="text-[10px] font-medium uppercase text-[var(--color-driftwood)]">
+                    <span className="text-[10px] font-medium uppercase text-[color:var(--color-texte-secondaire)]">
                       {LIBELLES_STATUT_OCCURRENCE[statut]}
                     </span>
                   </div>
                   {statut === "PROGRAMMEE" && occurrence.confirmationJ7 && (
-                    <span className="text-[12px] text-[var(--color-driftwood)]">
+                    <span className="text-[12px] text-[color:var(--color-texte-secondaire)]">
                       Sera confirmée le {formaterDateCourte(new Date(occurrence.confirmationJ7))}
                     </span>
                   )}

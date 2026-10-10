@@ -59,7 +59,7 @@ export default async function PageJam({ params }: { params: Promise<{ id: string
         <BoutonRetour href={`/?date=${occurrence.date.toISOString().slice(0, 10)}`} />
 
         <div className="flex flex-col gap-3">
-          <h1 className="text-[24px] font-medium uppercase leading-[1.09] text-[var(--color-warm-cream)]">
+          <h1 className="titre-page">
             {annonce.bar.nom}
           </h1>
           <span className="text-[15px] text-[var(--color-warm-cream)]">
@@ -69,7 +69,7 @@ export default async function PageJam({ params }: { params: Promise<{ id: string
             {LIBELLES_STATUT_OCCURRENCE[statut]}
           </span>
           {afficherEcheance && (
-            <span className="text-[12px] text-[var(--color-driftwood)]">
+            <span className="text-[12px] text-[color:var(--color-texte-secondaire)]">
               Sera confirmée le {formaterDateCourte(new Date(occurrence.confirmationJ7!))}
             </span>
           )}
@@ -77,7 +77,7 @@ export default async function PageJam({ params }: { params: Promise<{ id: string
 
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between gap-2">
-            <span className="text-[12px] text-[var(--color-driftwood)]">{annonce.bar.adresse}</span>
+            <span className="text-[12px] text-[color:var(--color-texte-secondaire)]">{annonce.bar.adresse}</span>
             <DistanceJam bar={annonce.bar} />
           </div>
           <span className="text-[15px] text-[var(--color-warm-cream)]">
@@ -85,13 +85,13 @@ export default async function PageJam({ params }: { params: Promise<{ id: string
             {occurrence.heureFin ? ` – ${occurrence.heureFin}` : ""}
           </span>
           {annonce.styles.length > 0 && (
-            <span className="text-[12px] uppercase text-[var(--color-driftwood)]">
+            <span className="text-[12px] uppercase text-[color:var(--color-texte-secondaire)]">
               {libelleStyles(annonce.styles)}
               {annonce.styleAutre ? ` (${annonce.styleAutre})` : ""}
             </span>
           )}
           {annonce.instruments.length > 0 && (
-            <span className="text-[12px] text-[var(--color-driftwood)]">
+            <span className="text-[12px] text-[color:var(--color-texte-secondaire)]">
               Instruments : {annonce.instruments.join(", ")}
               {annonce.instrumentAutre ? ` (${annonce.instrumentAutre})` : ""}
             </span>

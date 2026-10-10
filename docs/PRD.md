@@ -166,6 +166,11 @@ US-116. En tant qu'organisateur, je veux saisir mon nom et prénom à l'inscript
 US-117. En tant que visiteur sur l'inscription, je veux un message clair sous « Nom et prénom » s'il est vide ou trop long, afin de corriger sans perdre ma saisie.
 US-118. En tant qu'organisateur, je veux modifier mon nom et prénom depuis mon profil, afin de le corriger.
 US-119. En tant qu'organisateur déjà inscrit sans nom, je veux pouvoir le renseigner depuis mon profil sans y être contraint, afin de continuer à utiliser mon compte.
+US-120. En tant que visiteur ou organisateur, je veux que le titre de chaque page ait la même taille et tienne sur une ligne, afin de naviguer dans une interface homogène.
+US-121. En tant qu'utilisateur, je veux des textes secondaires assez clairs sur fond sombre, afin de les lire sans effort.
+US-122. En tant qu'utilisateur, je veux un bouton « ← Retour » bien visible, afin de le repérer et de le toucher facilement.
+US-123. En tant qu'organisateur, je veux que des adresses complètes (numéro, rue, code postal, ville) me soient suggérées pendant la saisie de l'adresse d'un bar, à l'inscription, à l'ajout et à la modification d'un bar, afin de saisir une adresse exacte sans effort.
+US-124. En tant qu'organisateur, je veux pouvoir saisir librement une adresse si aucune suggestion ne convient, afin de ne jamais être bloqué.
 
 ## Critères de succès
 
@@ -212,6 +217,10 @@ US-119. En tant qu'organisateur déjà inscrit sans nom, je veux pouvoir le rens
 - Un message valide envoyé depuis le formulaire Contact arrive à l'adresse de contact, et « Répondre » vise l'adresse saisie par l'expéditeur.
 - Le 6ᵉ envoi en moins d'une heure depuis une même connexion est refusé avec un message.
 - Un compte créé avec un nom et prénom le retrouve prérempli dans son profil ; sans nom, l'inscription est refusée avec un message sous le champ ; un compte ancien sans nom se connecte normalement.
+- Aucun `h1` n'occupe plus d'une ligne à 390px, et tous les `h1` ont la même taille calculée (24px) sur toutes les pages ; un titre trop long est tronqué par « … ».
+- Les textes secondaires sont en crème à environ 70 % d'opacité, plus aucun en Driftwood ; le bouton « ← Retour » a une bordure de 2px et une graisse 500.
+- Dès 3 caractères saisis dans l'adresse d'un bar (inscription, ajout, modification), jusqu'à 5 suggestions s'affichent ; un clic remplit le champ avec l'adresse complète (« n° rue, code postal ville »).
+- Une adresse saisie librement, sans suggestion choisie, est acceptée comme avant ; si le service de suggestions est indisponible, le champ reste un champ libre sans message d'erreur.
 
 ## Hors périmètre
 
@@ -279,6 +288,8 @@ US-119. En tant qu'organisateur déjà inscrit sans nom, je veux pouvoir le rens
 - Nom et prénom exigés des comptes existants.
 - Champs prénom et nom séparés.
 - Nom de l'organisateur dans l'email de bienvenue.
+- Changement de taille des sous-titres `h2` et des titres du bandeau.
+- Suggestions d'adresse côté musicien, y compris pour l'adresse de recherche.
 
 ## Décisions d'implémentation
 
@@ -382,6 +393,10 @@ US-119. En tant qu'organisateur déjà inscrit sans nom, je veux pouvoir le rens
 - Après l'envoi : « Message envoyé, nous vous répondrons par email. » et le formulaire se vide. En cas d'échec : un message d'erreur et la saisie conservée. Une erreur de saisie s'affiche sous le champ concerné, la saisie conservée.
 - Au-delà de 5 envois en une heure depuis une même connexion : « Trop de messages envoyés, réessayez plus tard. »
 - « Nom et prénom » est un champ unique, obligatoire à l'inscription, de 1 à 80 caractères (espaces de début et de fin ignorés), placé en premier du formulaire. Une erreur s'affiche sous le champ, la saisie conservée. Au profil, une section repliée « Nom et prénom » (même comportement que les autres sections) enregistre la modification et confirme son succès. Le champ n'est facultatif que pour les comptes existants, qui n'ont pas de nom tant qu'ils n'en saisissent pas.
+- Tous les titres de page (`h1`) font 24px, graisse 500, majuscules, sur une seule ligne ; un débordement est tronqué par « … ». Les titres de 41px (accueil, contact, connexion, inscription, mot de passe) passent à 24px.
+- Les textes secondaires utilisent un crème à environ 70 % d'opacité ; le Driftwood est réservé aux séparateurs et bordures structurels. Les textes à 60 % d'opacité passent à 70 %.
+- « ← Retour » reste un bouton fantôme, avec une bordure de 2px, une graisse 500 et une couleur crème.
+- Le champ d'adresse d'un bar propose une liste déroulante après 3 caractères (5 suggestions au maximum), utilisable au clavier et fermée par Échap. La valeur envoyée est le texte du champ ; le géocodage serveur est inchangé (un échec laisse le bar absent de la carte).
 
 ## Notes complémentaires
 
@@ -420,3 +435,5 @@ Le texte des CGU et des mentions légales est un modèle à faire relire avant l
 Piste future : une cagnotte de dons libres pour soutenir la maintenance de l'infrastructure ; les CGU devront alors la mentionner.
 
 Le nom et prénom de l'organisateur est une donnée personnelle : la page CGU doit le mentionner parmi les données collectées. La convention « éditeur anonyme » ne concerne que l'éditeur du service, pas les organisateurs.
+
+Les suggestions d'adresse dépendent de l'API Adresse (data.gouv.fr). En cas d'indisponibilité, le champ reste un champ libre. DESIGN.md devra consigner le titre de page unique, le texte secondaire en crème 70 % et le bouton « Retour » à bordure de 2px.

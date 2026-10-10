@@ -943,3 +943,28 @@ L'inscription demande « Nom et prénom » en premier champ (obligatoire, 1 à 8
 ## Bloquée par
 
 - Phase 34 (mentions légales)
+
+---
+
+## Phase 36 : Lisibilité des titres, sous-textes, retour et suggestions d'adresse
+
+**User stories** : US-120, US-121, US-122, US-123, US-124
+
+### Ce qu'on livre
+
+Tous les titres de page passent à 24px sur une ligne (classe commune `.titre-page`, tronquée par « … »). Les textes secondaires passent du Driftwood à un crème à 70 % (variable `--color-texte-secondaire`). Le bouton « ← Retour » gagne une bordure de 2px et une graisse 500. L'adresse d'un bar (inscription, ajout, modification) propose des suggestions complètes via un composant `champ-adresse` alimenté par une route `app/api/adresses` qui interroge l'API Adresse ; la saisie libre reste possible. DESIGN.md est complété.
+
+### Critères d'acceptation
+
+- [x] Sur toutes les pages, le `h1` tient sur une ligne à 390px et a la même taille calculée (24px) ; un titre trop long est tronqué par « … »
+- [x] Les textes secondaires sont en crème ~70 % (plus de `--color-driftwood` en texte) ; le Driftwood reste sur les séparateurs et bordures
+- [x] « ← Retour » a une bordure de 2px et une graisse 500
+- [x] À l'inscription, à l'ajout et à la modification d'un bar, des suggestions (5 maximum) apparaissent dès 3 caractères ; un clic remplit « n° rue, code postal ville »
+- [x] Le champ d'adresse est accessible (`role="combobox"`, navigation clavier, Échap) et accepte la saisie libre ; une panne de l'API Adresse n'affiche aucune erreur
+- [x] Le géocodage serveur (`lib/geocode.ts`) est inchangé
+- [x] DESIGN.md documente le titre unique, le texte secondaire et le bouton Retour
+- [x] Tests Vitest de la normalisation des suggestions ; tests Playwright : `h1` sur une ligne et de même taille sur chaque page, suggestions aux trois écrans, saisie libre (API mockée) ; `npm run lint` et `npm run build` passent
+
+## Bloquée par
+
+- Phase 35 (nom et prénom de l'organisateur)

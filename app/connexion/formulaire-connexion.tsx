@@ -38,10 +38,10 @@ export default function FormulaireConnexion({ reinitialise }: { reinitialise?: s
     <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-8 px-6 py-8">
       <BoutonRetour href="/" />
       <div>
-        <h1 className="text-[41px] font-medium uppercase leading-[0.9] text-[var(--color-warm-cream)]">
+        <h1 className="titre-page">
           Connexion
         </h1>
-        <p className="mt-3 text-[18px] leading-tight text-[var(--color-driftwood)]">
+        <p className="mt-3 text-[18px] leading-tight text-[color:var(--color-texte-secondaire)]">
           Accédez à l&apos;espace de gestion de votre bar.
         </p>
       </div>
@@ -109,7 +109,7 @@ export default function FormulaireConnexion({ reinitialise }: { reinitialise?: s
         </button>
       </form>
 
-      <p className="text-[12px] uppercase text-[var(--color-driftwood)]">
+      <p className="text-[12px] uppercase text-[color:var(--color-texte-secondaire)]">
         Pas encore de compte ?{" "}
         <a href="/inscription" className="text-[var(--color-warm-cream)] underline">
           S&apos;inscrire

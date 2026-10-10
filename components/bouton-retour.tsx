@@ -7,7 +7,7 @@ export default function BoutonRetour({ href }: { href: string }) {
     <LienGarde
       href={href}
       libelleOccupe="Enregistrement…"
-      className="self-start text-[12px] font-medium uppercase text-[var(--color-driftwood)] hover:text-[var(--color-warm-cream)] hover:underline focus-visible:text-[var(--color-warm-cream)] focus-visible:underline"
+      className="self-start rounded-[22.5px] border-2 border-[var(--color-warm-cream)] px-4 py-[7.5px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)] hover:underline focus-visible:underline"
     >
       ← Retour
     </LienGarde>

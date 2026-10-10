@@ -12,7 +12,7 @@ export default function PiedDePage({ page }: { page?: "cgu" | "mentions-legales"
   return (
     <footer className="w-full bg-[var(--color-walnut-shadow)]">
       <div className="mx-auto w-full max-w-md px-6 pb-6">
-        <div className="flex flex-col items-center gap-2 border-t border-dashed border-[var(--color-cork-border)] pt-6 text-center text-[11px] font-medium uppercase leading-[1.2] text-[color-mix(in_srgb,var(--color-warm-cream)_60%,transparent)]">
+        <div className="flex flex-col items-center gap-2 border-t border-dashed border-[var(--color-cork-border)] pt-6 text-center text-[11px] font-medium uppercase leading-[1.2] text-[color-mix(in_srgb,var(--color-warm-cream)_70%,transparent)]">
           <nav aria-label="Informations légales">
             <LienGarde
               href="/cgu"

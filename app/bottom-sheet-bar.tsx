@@ -28,7 +28,7 @@ export default function BottomSheetBar({
         <button
           type="button"
           onClick={onFermer}
-          className="text-[12px] font-medium uppercase text-[var(--color-driftwood)]"
+          className="text-[12px] font-medium uppercase text-[color:var(--color-texte-secondaire)]"
         >
           Fermer
         </button>

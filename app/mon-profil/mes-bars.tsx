@@ -83,7 +83,7 @@ export default function MesBars({ bars }: { bars: BarDuProfil[] }) {
                   <span className="truncate text-[14px] font-medium uppercase text-[var(--color-warm-cream)]">
                     {bar.nom}
                   </span>
-                  <span className="truncate text-[12px] text-[var(--color-driftwood)]">
+                  <span className="truncate text-[12px] text-[color:var(--color-texte-secondaire)]">
                     {bar.adresse}
                   </span>
                   {!bar.surLaCarte && (
@@ -123,7 +123,7 @@ export default function MesBars({ bars }: { bars: BarDuProfil[] }) {
                       }
                     />
                     {bars.length === 1 && (
-                      <span className="text-[12px] font-medium uppercase text-[var(--color-driftwood)]">
+                      <span className="text-[12px] font-medium uppercase text-[color:var(--color-texte-secondaire)]">
                         {MENTION_DERNIER_BAR}
                       </span>
                     )}
@@ -175,7 +175,7 @@ export default function MesBars({ bars }: { bars: BarDuProfil[] }) {
             Ajouter un bar
           </button>
           {limiteAtteinte && (
-            <span className="text-[12px] font-medium uppercase text-[var(--color-driftwood)]">
+            <span className="text-[12px] font-medium uppercase text-[color:var(--color-texte-secondaire)]">
               Limite de {NOMBRE_MAX_BARS} bars atteinte
             </span>
           )}

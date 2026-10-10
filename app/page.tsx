@@ -41,10 +41,10 @@ export default async function Home({
       <Bandeau page="accueil" />
       <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-8 px-6 py-8">
         <div>
-          <h1 className="text-[41px] font-medium uppercase leading-[0.9] text-[color:var(--color-warm-cream)]">
+          <h1 className="titre-page">
             Jammix
           </h1>
-          <p className="mt-2 text-[15px] text-[color:var(--color-driftwood)]">
+          <p className="mt-2 text-[15px] text-[color:var(--color-texte-secondaire)]">
             Les jams à Lyon, ce soir.
           </p>
         </div>
@@ -72,7 +72,7 @@ export default async function Home({
             </p>
             {prochainesDates.length > 0 && (
               <div className="flex flex-col gap-2">
-                <span className="text-[12px] font-medium uppercase text-[color:var(--color-driftwood)]">
+                <span className="text-[12px] font-medium uppercase text-[color:var(--color-texte-secondaire)]">
                   Prochaines dates
                 </span>
                 <div className="flex flex-wrap gap-4">

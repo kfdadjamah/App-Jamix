@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
+import ChampAdresse from "@/components/champ-adresse";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   schemaInscriptionClient,
@@ -20,6 +21,7 @@ export default function FormulaireInscription() {
     register,
     trigger,
     getValues,
+    setValue,
     formState: { errors },
   } = useForm<ChampsInscriptionClient>({
     resolver: zodResolver(schemaInscriptionClient),
@@ -56,10 +58,10 @@ export default function FormulaireInscription() {
     <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-8 px-6 py-8">
       <BoutonRetour href="/connexion" />
       <div>
-        <h1 className="text-[41px] font-medium uppercase leading-[0.9] text-[var(--color-warm-cream)]">
+        <h1 className="titre-page">
           Inscription
         </h1>
-        <p className="mt-3 text-[18px] leading-tight text-[var(--color-driftwood)]">
+        <p className="mt-3 text-[18px] leading-tight text-[color:var(--color-texte-secondaire)]">
           Créez votre compte et la fiche de votre bar.
         </p>
       </div>
@@ -97,11 +99,10 @@ export default function FormulaireInscription() {
         </ChampFormulaire>
 
         <ChampFormulaire label="Adresse du bar" erreur={errors.adresseBar?.message}>
-          <input
-            type="text"
+          <ChampAdresse
             placeholder="12 rue de la République, Lyon"
-            {...register("adresseBar")}
-            className="champ-input"
+            register={register("adresseBar")}
+            setValue={(v) => setValue("adresseBar", v, { shouldValidate: true, shouldDirty: true })}
           />
         </ChampFormulaire>
 
@@ -129,7 +130,7 @@ export default function FormulaireInscription() {
         </button>
       </form>
 
-      <p className="text-[12px] uppercase text-[var(--color-driftwood)]">
+      <p className="text-[12px] uppercase text-[color:var(--color-texte-secondaire)]">
         Déjà un compte ?{" "}
         <a href="/connexion" className="text-[var(--color-warm-cream)] underline">
           Se connecter

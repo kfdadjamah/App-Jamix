@@ -41,16 +41,16 @@ export default function CarteAnnonce({
             {occurrence.annonce.bar.nom}
           </span>
         )}
-        <span className="text-[10px] font-medium uppercase text-[var(--color-driftwood)]">
+        <span className="text-[10px] font-medium uppercase text-[color:var(--color-texte-secondaire)]">
           {LIBELLES_STATUT_OCCURRENCE[statut]}
         </span>
       </div>
       <div className="flex items-center justify-between gap-2">
-        <span className="text-[12px] text-[var(--color-driftwood)]">
+        <span className="text-[12px] text-[color:var(--color-texte-secondaire)]">
           {occurrence.annonce.bar.adresse}
         </span>
         {distanceKm !== null && (
-          <span className="whitespace-nowrap text-[12px] text-[var(--color-driftwood)]">
+          <span className="whitespace-nowrap text-[12px] text-[color:var(--color-texte-secondaire)]">
             {formaterDistance(distanceKm)}
           </span>
         )}
@@ -60,18 +60,18 @@ export default function CarteAnnonce({
         {occurrence.heureFin ? ` – ${occurrence.heureFin}` : ""}
       </span>
       {afficherEcheance && (
-        <span className="text-[12px] text-[var(--color-driftwood)]">
+        <span className="text-[12px] text-[color:var(--color-texte-secondaire)]">
           Sera confirmée le {formaterDateCourte(new Date(occurrence.confirmationJ7!))}
         </span>
       )}
       {occurrence.annonce.styles.length > 0 && (
-        <span className="text-[12px] uppercase text-[var(--color-driftwood)]">
+        <span className="text-[12px] uppercase text-[color:var(--color-texte-secondaire)]">
           {libelleStyles(occurrence.annonce.styles)}
           {occurrence.annonce.styleAutre ? ` (${occurrence.annonce.styleAutre})` : ""}
         </span>
       )}
       {occurrence.annonce.instruments.length > 0 && (
-        <span className="text-[12px] text-[var(--color-driftwood)]">
+        <span className="text-[12px] text-[color:var(--color-texte-secondaire)]">
           Instruments : {occurrence.annonce.instruments.join(", ")}
           {occurrence.annonce.instrumentAutre ? ` (${occurrence.annonce.instrumentAutre})` : ""}
         </span>

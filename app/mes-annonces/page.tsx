@@ -38,7 +38,7 @@ export default async function PageMesAnnonces() {
         <HeaderOrganisateur page="mes-annonces" />
 
         <div className="flex items-center justify-between gap-3">
-          <h1 className="text-[24px] font-medium uppercase leading-[1.09] text-[var(--color-warm-cream)]">
+          <h1 className="titre-page">
             Mes annonces
           </h1>
           <Link
@@ -50,7 +50,7 @@ export default async function PageMesAnnonces() {
         </div>
 
         {annonces.length === 0 && (
-          <p className="text-[15px] text-[var(--color-driftwood)]">
+          <p className="text-[15px] text-[color:var(--color-texte-secondaire)]">
             Aucune annonce pour le moment.
           </p>
         )}
@@ -93,7 +93,7 @@ function CarteAnnonce({ annonce }: { annonce: AnnonceAvecDetails }) {
           {annonce.statut === "BROUILLON" ? "Brouillon" : "Publiée"}
         </span>
         {annonce.estRecurrente && (
-          <span className="rounded-[9999px] border border-[var(--color-driftwood)] px-2 py-[2px] text-[10px] font-medium uppercase text-[var(--color-driftwood)]">
+          <span className="rounded-[9999px] border border-[var(--color-driftwood)] px-2 py-[2px] text-[10px] font-medium uppercase text-[color:var(--color-texte-secondaire)]">
             Récurrente
           </span>
         )}
@@ -105,7 +105,7 @@ function CarteAnnonce({ annonce }: { annonce: AnnonceAvecDetails }) {
           {premiereOccurrence.heureFin ? ` – ${premiereOccurrence.heureFin}` : ""}
         </span>
       ) : (
-        <span className="text-[15px] text-[var(--color-driftwood)]">
+        <span className="text-[15px] text-[color:var(--color-texte-secondaire)]">
           Aucune date renseignée
         </span>
       )}
@@ -136,13 +136,13 @@ function CarteAnnonce({ annonce }: { annonce: AnnonceAvecDetails }) {
       )}
 
       {annonce.styles.length > 0 && (
-        <span className="text-[12px] uppercase text-[var(--color-driftwood)]">
+        <span className="text-[12px] uppercase text-[color:var(--color-texte-secondaire)]">
           {libelleStyles(annonce.styles)}
         </span>
       )}
 
       {annonce.description && (
-        <p className="line-clamp-2 whitespace-pre-line text-[12px] text-[var(--color-driftwood)]">
+        <p className="line-clamp-2 whitespace-pre-line text-[12px] text-[color:var(--color-texte-secondaire)]">
           {annonce.description}
         </p>
       )}

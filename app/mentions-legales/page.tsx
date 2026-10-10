@@ -30,7 +30,7 @@ export default function PageMentionsLegales() {
       <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-8 px-6 py-8">
         <BoutonRetour href="/" />
 
-        <h1 className="text-[24px] font-medium uppercase leading-[1.09] text-[var(--color-warm-cream)]">
+        <h1 className="titre-page">
           Mentions légales
         </h1>
 
@@ -101,7 +101,7 @@ export default function PageMentionsLegales() {
 
         <Separateur />
 
-        <p className="text-[12px] font-medium uppercase leading-[1.2] text-[color-mix(in_srgb,var(--color-warm-cream)_60%,transparent)]">
+        <p className="text-[12px] font-medium uppercase leading-[1.2] text-[color-mix(in_srgb,var(--color-warm-cream)_70%,transparent)]">
           Mise à jour : {DATE_MISE_A_JOUR}
         </p>
       </main>

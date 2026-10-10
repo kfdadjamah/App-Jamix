@@ -2,6 +2,7 @@
 
 import { useState, type BaseSyntheticEvent } from "react";
 import { useForm } from "react-hook-form";
+import ChampAdresse from "@/components/champ-adresse";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { schemaFicheBar, type ChampsFicheBar } from "@/lib/validation/inscription";
 import ChampFormulaire from "@/components/champ-formulaire";
@@ -18,6 +19,7 @@ export default function FormulaireAjoutBar({
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<ChampsFicheBar>({
     resolver: zodResolver(schemaFicheBar),
@@ -50,12 +52,11 @@ export default function FormulaireAjoutBar({
       </ChampFormulaire>
 
       <ChampFormulaire label="Adresse du bar" erreur={errors.adresseBar?.message}>
-        <input
-          type="text"
-          placeholder="12 rue de la République, Lyon"
-          {...register("adresseBar")}
-          className="champ-input"
-        />
+        <ChampAdresse
+            placeholder="12 rue de la République, Lyon"
+            register={register("adresseBar")}
+            setValue={(v) => setValue("adresseBar", v, { shouldValidate: true, shouldDirty: true })}
+          />
       </ChampFormulaire>
 
       <ChampFormulaire label="Photo ou logo (optionnel)">

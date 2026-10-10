@@ -38,7 +38,7 @@ export default function SuppressionCompte() {
 
   return (
     <>
-      <p className="text-[15px] leading-[1.26] text-[var(--color-driftwood)]">
+      <p className="text-[15px] leading-[1.26] text-[color:var(--color-texte-secondaire)]">
         Vos bars, vos annonces, leurs dates et leurs photos seront supprimés
         définitivement. Cette action est irréversible.
       </p>
