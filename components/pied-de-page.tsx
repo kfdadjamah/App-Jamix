@@ -2,9 +2,9 @@ import paquet from "@/package.json";
 import { LienGarde } from "./garde-sortie";
 
 // Pied de page commun, rendu par chaque page après <main> (comme le Bandeau) pour rester
-// dans FournisseurGardeSortie sur les formulaires d'annonce : « CGU » et « Contact » y sont
+// dans FournisseurGardeSortie sur les formulaires d'annonce : « CGU », « Mentions légales » et « Contact » y sont
 // des sorties gardées. Placé après le contenu, jamais fixé à l'écran.
-export default function PiedDePage({ page }: { page?: "cgu" | "contact" }) {
+export default function PiedDePage({ page }: { page?: "cgu" | "mentions-legales" | "contact" }) {
   const annee = new Date().getFullYear();
   const lien = (actif: boolean) =>
     `text-[var(--color-warm-cream)] hover:underline focus-visible:underline${actif ? " underline" : ""}`;
@@ -20,6 +20,14 @@ export default function PiedDePage({ page }: { page?: "cgu" | "contact" }) {
               className={lien(page === "cgu")}
             >
               CGU
+            </LienGarde>
+            {" · "}
+            <LienGarde
+              href="/mentions-legales"
+              aria-current={page === "mentions-legales" ? "page" : undefined}
+              className={lien(page === "mentions-legales")}
+            >
+              Mentions légales
             </LienGarde>
             {" · "}
             <LienGarde

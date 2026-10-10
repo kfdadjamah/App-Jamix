@@ -16,7 +16,7 @@ La page profil de l'organisateur empile tous les formulaires dépliés les uns s
 
 Dans le formulaire d'annonce, le titre (« Nouvelle annonce », « Modifier l'annonce », « Compléter le brouillon ») est bien plus grand que celui de « Mes annonces » et passe sur deux lignes sur mobile. L'organisateur n'a aucun endroit pour donner des précisions libres sur sa jam (déroulé, niveau attendu, inscription sur place, consignes) : il doit les glisser dans les champs « Autre » ou y renoncer. Une jam ouverte à tous les styles l'oblige à cocher les styles un par un. Le libellé « Instruments / backline disponibles », et « Backline » côté musicien, emploie un jargon que tous les musiciens ne comprennent pas.
 
-Un visiteur ou un organisateur qui veut poser une question, signaler une annonce ou un problème n'a aucun moyen de joindre l'équipe Jammix. L'application n'affiche ni règles d'utilisation, ni information sur les données personnelles collectées, ni mentions légales, alors qu'un service ouvert au public doit les présenter.
+Un visiteur ou un organisateur qui veut poser une question, signaler une annonce ou un problème n'a aucun moyen de joindre l'équipe Jammix. L'application n'affiche ni règles d'utilisation, ni information sur les données personnelles collectées, ni mentions légales clairement identifiables, alors qu'un service ouvert au public doit les présenter.
 
 ## Solution
 
@@ -34,7 +34,7 @@ Sur le profil, les sections « Mes bars », « Email », « Mot de passe » et �
 
 Dans le formulaire d'annonce, le titre prend la taille de « Mes annonces » et tient sur une ligne. Un champ « Description », facultatif et limité à 500 caractères, permet d'ajouter des précisions libres, affichées au musicien sous les instruments. Dans la liste, le musicien en voit le début et ouvre, d'un clic sur la carte, la page de la jam qui montre toute l'annonce. Une case « Tous les styles » remplace en un clic la liste des styles. Les instruments s'intitulent « Instruments disponibles » dans le formulaire et « Instruments » côté musicien : le mot « backline » disparaît de l'écran.
 
-Chaque page se termine par un pied de page discret : les liens « CGU » et « Contact », puis « © <année> Jammix · Tous droits réservés · v<version> ». « CGU » ouvre une page courte qui réunit les informations clés : mentions légales, règles d'usage d'un service gratuit, données personnelles. « Contact » ouvre un formulaire (nom, adresse mail, message) ; la réponse de l'équipe arrive par email. L'éditeur, un particulier, reste anonyme : aucun nom de personne n'apparaît dans l'application.
+Chaque page se termine par un pied de page discret : les liens « CGU », « Mentions légales » et « Contact », puis « © <année> Jammix · Tous droits réservés · v<version> ». « CGU » ouvre une page courte qui réunit les règles d'usage d'un service gratuit et les données personnelles. « Mentions légales » ouvre une page dédiée : éditeur, directeur de la publication, hébergeurs, contact et signalement, propriété intellectuelle. « Contact » ouvre un formulaire (nom, adresse mail, message) ; la réponse de l'équipe arrive par email. L'éditeur, un particulier, reste anonyme : aucun nom de personne n'apparaît dans l'application.
 
 ## Utilisateur cible
 
@@ -145,8 +145,8 @@ US-99. En tant que musicien, je veux ouvrir d'un clic sur une carte de la liste 
 US-100. En tant que musicien sur la page d'une jam, je veux un bouton « Retour » vers la liste du jour de cette jam, afin de reprendre ma recherche là où je l'ai laissée.
 US-101. En tant que musicien qui ouvre la page d'une jam passée, supprimée ou retirée, je veux un message clair « Cette jam n'est plus disponible », afin de ne pas tomber sur une page d'erreur.
 US-102. En tant qu'organisateur, je veux voir le début de la description sur chaque annonce de « Mes annonces », afin de la reconnaître d'un coup d'œil.
-US-103. En tant que visiteur, je veux voir en bas de chaque page les liens « CGU » et « Contact », le copyright et la version de l'application, afin de trouver ces informations au même endroit partout.
-US-104. En tant que visiteur, je veux lire des CGU courtes qui présentent les informations clés (éditeur, hébergeur, gratuité du service, règles d'usage, responsabilité des annonces, données personnelles), afin de savoir à quoi je m'engage.
+US-103. En tant que visiteur, je veux voir en bas de chaque page les liens « CGU », « Mentions légales » et « Contact », le copyright et la version de l'application, afin de trouver ces informations au même endroit partout.
+US-104. En tant que visiteur, je veux lire des CGU courtes qui présentent les informations clés (gratuité du service, règles d'usage, responsabilité des annonces, données personnelles) et renvoient vers les mentions légales, afin de savoir à quoi je m'engage.
 US-105. En tant que visiteur, je veux savoir comment exercer mes droits sur mes données (accès, rectification, suppression), afin de garder la maîtrise de mes informations.
 US-106. En tant que visiteur, je veux envoyer un message à l'équipe via un formulaire (nom, adresse mail, message), afin de poser une question ou signaler un problème.
 US-107. En tant qu'organisateur connecté, je veux trouver mon email déjà rempli dans le formulaire Contact, afin de gagner du temps.
@@ -154,6 +154,10 @@ US-108. En tant que visiteur, je veux voir un message clair sous un champ invali
 US-109. En tant que visiteur, je veux une confirmation après l'envoi, afin d'être sûr que mon message est parti.
 US-110. En tant que visiteur dont l'envoi échoue, je veux un message d'erreur et retrouver ma saisie intacte, afin de réessayer sans tout retaper.
 US-111. En tant qu'organisateur qui saisit une annonce, je veux que les liens du pied de page suivent les mêmes règles que les autres sorties (brouillon enregistré ou confirmation), afin de ne pas perdre ma saisie.
+US-112. En tant que visiteur, je veux une page « Mentions légales » accessible depuis le pied de page de chaque page, afin de trouver facilement qui édite et héberge le service.
+US-113. En tant que visiteur, je veux savoir que l'éditeur est un particulier non professionnel, qui est le directeur de la publication (sans nom affiché) et qui héberge le service (nom et adresse de chaque hébergeur), afin de connaître les responsables du service.
+US-114. En tant que visiteur, je veux savoir comment joindre l'équipe et signaler un contenu illicite, afin de faire retirer une annonce problématique.
+US-115. En tant que visiteur, je veux connaître la propriété intellectuelle de Jammix et des contenus publiés, afin de savoir ce que je peux réutiliser.
 
 ## Critères de succès
 
@@ -196,6 +200,7 @@ US-111. En tant qu'organisateur qui saisit une annonce, je veux que les liens du
 - Le pied de page s'affiche sur toutes les pages, sans débordement horizontal à 360px.
 - La version affichée dans le pied de page est celle de l'application déployée ; l'année du copyright est l'année en cours.
 - La page CGU s'ouvre sans compte et ne contient aucun nom de personne.
+- La page Mentions légales s'ouvre sans compte, depuis le pied de page de chaque page, et ne contient aucun nom de personne ; le pied de page à 3 liens tient à 360px sans débordement.
 - Un message valide envoyé depuis le formulaire Contact arrive à l'adresse de contact, et « Répondre » vise l'adresse saisie par l'expéditeur.
 - Le 6ᵉ envoi en moins d'une heure depuis une même connexion est refusé avec un message.
 
@@ -256,7 +261,7 @@ US-111. En tant qu'organisateur qui saisit une annonce, je veux que les liens du
 - Partage de la page d'une jam, et liste des autres dates de la même annonce sur cette page.
 - Accusé de réception envoyé par email à l'expéditeur d'un message Contact.
 - Champ « Objet », pièce jointe, historique des messages, et écran de lecture ou d'administration des messages dans l'application.
-- Pages séparées « Mentions légales » et « Confidentialité », et bannière de cookies (seuls des cookies techniques de session sont utilisés).
+- Page séparée « Confidentialité » et bannière de cookies (seuls des cookies techniques de session sont utilisés).
 - Acceptation explicite des CGU (case à cocher) à l'inscription ou au contact.
 - Affichage du nom ou de l'adresse postale de l'éditeur.
 - Utilisation payante, publicité, cagnotte ou dons (la cagnotte est une piste future).
@@ -356,9 +361,10 @@ US-111. En tant qu'organisateur qui saisit une annonce, je veux que les liens du
 - « Tous les styles » compte comme un style pour la publication ; un brouillon peut toujours n'avoir aucun style coché.
 - Une annonce « Tous les styles » affiche « Tous styles » à la place de la liste des styles, côté musicien (liste et carte) comme dans « Mes annonces ». La reprise et la modification la traitent comme un style ordinaire.
 - Le champ des instruments s'intitule « Instruments disponibles » ; côté musicien, la ligne commence par « Instruments : ». Le mot « backline » n'apparaît plus à l'écran ; la liste des instruments proposés ne change pas.
-- Chaque page se termine par un pied de page, placé après le contenu (non fixé à l'écran) : un filet pointillé au-dessus, puis une ligne « CGU · Contact » et une ligne « © 2026 Jammix · Tous droits réservés · v0.1.0 », en petit texte crème atténué. L'année suit l'année en cours, la version suit chaque mise à jour de l'application.
-- Sur les formulaires d'annonce, « CGU » et « Contact » sont des sorties via l'application, au même titre que « Jammix » et « Retour », et suivent les mêmes règles.
-- La page CGU est publique, avec « ← Retour » vers l'accueil, et tient en sections courtes, dans cet ordre : éditeur (particulier non professionnel, joignable via le formulaire Contact, sans nom affiché) ; hébergeur (nom et adresse) ; objet du service et gratuité ; accès (consultation libre, compte réservé aux organisateurs) ; responsabilités (chaque organisateur est responsable de ses annonces, Jammix ne garantit pas la tenue des jams) ; propriété des photos et textes publiés ; données personnelles (données collectées, finalités, durée de conservation, droits d'accès, de rectification et de suppression, recours auprès de la CNIL) ; cookies (session uniquement) ; droit français ; date de mise à jour.
+- Chaque page se termine par un pied de page, placé après le contenu (non fixé à l'écran) : un filet pointillé au-dessus, puis une ligne « CGU · Mentions légales · Contact » et une ligne « © 2026 Jammix · Tous droits réservés · v0.1.0 », en petit texte crème atténué. L'année suit l'année en cours, la version suit chaque mise à jour de l'application.
+- Sur les formulaires d'annonce, « CGU », « Mentions légales » et « Contact » sont des sorties via l'application, au même titre que « Jammix » et « Retour », et suivent les mêmes règles.
+- La page CGU est publique, avec « ← Retour » vers l'accueil, et tient en sections courtes, dans cet ordre : renvoi vers les mentions légales (éditeur, hébergeur) ; objet du service et gratuité ; accès (consultation libre, compte réservé aux organisateurs) ; responsabilités (chaque organisateur est responsable de ses annonces, Jammix ne garantit pas la tenue des jams) ; données personnelles (données collectées, finalités, durée de conservation, droits d'accès, de rectification et de suppression, recours auprès de la CNIL) ; cookies (session uniquement) ; droit français ; date de mise à jour.
+- La page Mentions légales est publique, avec « ← Retour » vers l'accueil, et tient en sections courtes, dans cet ordre : éditeur (particulier non professionnel, joignable via le formulaire Contact, sans nom affiché) ; directeur de la publication (l'éditeur, sans nom affiché) ; hébergeurs (Vercel pour le site et les photos, Neon pour la base de données, avec le nom et l'adresse de chacun) ; contact et signalement (lien vers le formulaire Contact, explication pour signaler un contenu illicite) ; propriété intellectuelle (marque, logo et code de Jammix réservés ; photos et textes publiés des organisateurs restent à leurs auteurs) ; date de mise à jour.
 - La page Contact est publique, avec « ← Retour » vers l'accueil. Le formulaire a 3 champs obligatoires : nom (100 caractères maximum), adresse mail (format valide), message (10 à 2000 caractères, avec un compteur « N/2000 »). Un organisateur connecté trouve son email prérempli, modifiable. Une phrase sous le bouton explique l'usage des données, avec un lien vers les CGU, sans case à cocher.
 - Après l'envoi : « Message envoyé, nous vous répondrons par email. » et le formulaire se vide. En cas d'échec : un message d'erreur et la saisie conservée. Une erreur de saisie s'affiche sous le champ concerné, la saisie conservée.
 - Au-delà de 5 envois en une heure depuis une même connexion : « Trop de messages envoyés, réessayez plus tard. »
@@ -395,6 +401,6 @@ Le formulaire Contact dépend de l'adresse de contact de l'équipe, toujours à 
 
 Hypothèse : l'anonymat d'un éditeur non professionnel suppose que son identité soit connue de l'hébergeur (compte d'hébergement à son nom).
 
-Le texte des CGU est un modèle à faire relire avant l'ouverture au grand public.
+Le texte des CGU et des mentions légales est un modèle à faire relire avant l'ouverture au grand public ; l'adresse exacte de chaque hébergeur est à vérifier.
 
 Piste future : une cagnotte de dons libres pour soutenir la maintenance de l'infrastructure ; les CGU devront alors la mentionner.

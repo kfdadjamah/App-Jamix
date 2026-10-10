@@ -10,7 +10,7 @@ import { LienGarde } from "./garde-sortie";
 export default async function Bandeau({
   page,
 }: {
-  page: "accueil" | "cgu" | "connexion" | "contact" | "jam" | "mes-annonces" | "mon-profil";
+  page: "accueil" | "cgu" | "connexion" | "contact" | "jam" | "mentions-legales" | "mes-annonces" | "mon-profil";
 }) {
   const session = await sessionCourante();
   const accueil = page === "accueil";

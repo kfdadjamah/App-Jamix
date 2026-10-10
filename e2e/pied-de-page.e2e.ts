@@ -11,6 +11,10 @@ async function verifierPiedDePage(page: Page) {
   await expect(pied).toBeVisible();
   await expect(pied.getByText(MENTION)).toBeVisible();
   await expect(pied.getByRole("link", { name: "CGU" })).toHaveAttribute("href", "/cgu");
+  await expect(pied.getByRole("link", { name: "Mentions légales" })).toHaveAttribute(
+    "href",
+    "/mentions-legales"
+  );
   await expect(pied.getByRole("link", { name: "Contact" })).toHaveAttribute("href", "/contact");
   const basContenu = await page.locator("main").last().evaluate((el) => el.getBoundingClientRect().bottom);
   const hautPied = await pied.evaluate((el) => el.getBoundingClientRect().top);
@@ -25,6 +29,7 @@ const PAGES_PUBLIQUES = [
   "/mot-de-passe-oublie",
   "/reinitialiser-mot-de-passe",
   "/cgu",
+  "/mentions-legales",
   "/contact",
 ];
 
@@ -59,17 +64,49 @@ test("« CGU » mène à la page CGU, publique, avec ses sections dans l'ordre",
     "page"
   );
   await expect(page.locator("main h2")).toHaveText([
-    "Éditeur",
-    "Hébergeur",
+    "Éditeur et hébergeurs",
     "Objet du service et gratuité",
     "Accès",
     "Responsabilités",
-    "Propriété des contenus",
     "Données personnelles",
     "Cookies",
     "Droit applicable",
   ]);
   await expect(page.getByText(/^Mise à jour : /)).toBeVisible();
+  await expect(page.getByRole("main").getByRole("link", { name: "mentions légales" })).toHaveAttribute(
+    "href",
+    "/mentions-legales"
+  );
+});
+
+test("« Mentions légales » mène à la page publique, sans nom de personne", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("contentinfo").getByRole("link", { name: "Mentions légales" }).click();
+  await expect(page).toHaveURL("/mentions-legales");
+
+  await expect(page.getByRole("heading", { level: 1, name: "Mentions légales" })).toBeVisible();
+  await expect(page.getByRole("link", { name: "← Retour" })).toHaveAttribute("href", "/");
+  await expect(
+    page.getByRole("contentinfo").getByRole("link", { name: "Mentions légales" })
+  ).toHaveAttribute("aria-current", "page");
+  await expect(page.locator("main h2")).toHaveText([
+    "Éditeur",
+    "Directeur de la publication",
+    "Hébergeurs",
+    "Contact et signalement",
+    "Propriété intellectuelle",
+  ]);
+  const main = page.getByRole("main");
+  await expect(main.getByText(/Vercel Inc\./)).toBeVisible();
+  await expect(main.getByText(/Neon, LLC/)).toBeVisible();
+  await expect(main.getByText(/160 Spear Street/)).toBeVisible();
+  await expect(main.getByRole("link", { name: "formulaire Contact" }).first()).toHaveAttribute(
+    "href",
+    "/contact"
+  );
+  await expect(page.getByText(/^Mise à jour : /)).toBeVisible();
+  // Éditeur anonyme : aucune mention de nom propre de personne.
+  await expect(main).not.toContainText(/\b(M\.|Mme|Monsieur|Madame)\s/);
 });
 
 test.describe("à 360px", () => {
@@ -115,6 +152,12 @@ test.describe("espace organisateur", () => {
     await expect(page).toHaveURL("/cgu");
   });
 
+  test("sans changement, « Mentions légales » quitte directement le formulaire", async ({ page }) => {
+    await page.goto("/mes-annonces/nouvelle");
+    await page.getByRole("contentinfo").getByRole("link", { name: "Mentions légales" }).click();
+    await expect(page).toHaveURL("/mentions-legales");
+  });
+
   test("sans changement, « Contact » quitte directement le formulaire", async ({ page }) => {
     await page.goto("/mes-annonces/nouvelle");
     await page.getByRole("contentinfo").getByRole("link", { name: "Contact" }).click();
@@ -133,6 +176,20 @@ test.describe("espace organisateur", () => {
     await expect(fenetre).toBeVisible();
     await fenetre.getByRole("button", { name: "Quitter" }).click();
     await expect(page).toHaveURL("/contact");
+  });
+
+  test("sur une annonce publiée modifiée, « Mentions légales » propose Rester ou Quitter", async ({ page }) => {
+    const publiee = page.locator('main a[href^="/mes-annonces/c"]', { hasText: "Publiée" }).first();
+    test.skip((await publiee.count()) === 0, "Le compte de test n'a aucune annonce publiée");
+    await publiee.click();
+    await expect(page).toHaveURL(/\/mes-annonces\/c/);
+
+    await page.locator('textarea[name="description"]').fill(`Modifiée ${Date.now()}`);
+    await page.getByRole("contentinfo").getByRole("link", { name: "Mentions légales" }).click();
+    const fenetre = page.getByRole("dialog", { name: "Modifications non enregistrées" });
+    await expect(fenetre).toBeVisible();
+    await fenetre.getByRole("button", { name: "Quitter" }).click();
+    await expect(page).toHaveURL("/mentions-legales");
   });
 
   test("sur une annonce publiée modifiée, « CGU » propose Rester ou Quitter", async ({ page }) => {

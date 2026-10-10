@@ -861,7 +861,7 @@ Le lien « Contact » du pied de page apparaît et mène à la page publique `/c
 - [x] Nom (1 à 100 caractères), adresse mail (format valide) et message (10 à 2000 caractères, compteur « N/2000 ») sont obligatoires ; une erreur s'affiche sous le champ concerné, la saisie conservée
 - [x] Un organisateur connecté trouve son email prérempli et modifiable ; un visiteur trouve le champ vide
 - [x] Un envoi réussi affiche « Message envoyé, nous vous répondrons par email. » et vide le formulaire
-- [ ] L'email reçu à l'adresse de contact contient le nom, l'email et le message ; « Répondre » vise l'email de l'expéditeur ; aucun email n'est envoyé à l'expéditeur
+- [x] L'email reçu à l'adresse de contact contient le nom, l'email et le message ; « Répondre » vise l'email de l'expéditeur ; aucun email n'est envoyé à l'expéditeur
 - [x] Un échec d'envoi, ou une adresse de contact absente, affiche un message d'erreur et conserve la saisie
 - [x] Le 6ᵉ envoi en moins d'une heure depuis une même connexion affiche « Trop de messages envoyés, réessayez plus tard. » ; l'IP n'est jamais stockée en clair
 - [x] Un envoi avec le champ piège rempli n'envoie rien et n'est pas enregistré
@@ -872,3 +872,49 @@ Le lien « Contact » du pied de page apparaît et mène à la page publique `/c
 ## Bloquée par
 
 - Phase 31 (pied de page commun)
+
+---
+
+## Phase 33 : Mise en production
+
+### Ce qu'on livre
+
+jammix.fr tourne sur Vercel avec sa propre base Neon (branche `production`), séparée de la base de développement (branche `developpement`). Les secrets de production ne vivent que dans Vercel ; le `.env` local pointe sur la base de développement. Les opérations ponctuelles sur la production (schéma, scripts) reçoivent l'URL de la base en ligne de commande.
+
+### Critères d'acceptation
+
+- [x] Variables Production dans Vercel : `DATABASE_URL` (chaîne pooled de la branche `production`), `AUTH_SECRET` (valeur dédiée), `RESEND_API_KEY`, `BLOB_READ_WRITE_TOKEN`, `URL_APP`, `EMAIL_CONTACT`, `EMAIL_EXPEDITEUR`
+- [x] Le `.env` local pointe sur la branche Neon `developpement`, jamais sur `production`
+- [x] Le schéma de la base de production est synchronisé avec `prisma/schema.prisma`
+- [x] `main` est poussé et déployé sur jammix.fr ; `/`, `/contact`, `/cgu` et `/connexion` répondent 200
+- [ ] Parcours vérifiés en production avec de vrais emails : bienvenue, réinitialisation du mot de passe, message Contact reçu par l'équipe
+- [ ] Suppression d'un bar vérifiée en production (annonces et photos retirées)
+
+## Bloquée par
+
+- Phase 32 (formulaire Contact)
+
+---
+
+## Phase 34 : Mentions légales
+
+**User stories** : US-103, US-104, US-111, US-112, US-113, US-114, US-115
+
+### Ce qu'on livre
+
+Le pied de page affiche « CGU · Mentions légales · Contact ». « Mentions légales » mène à la page publique `/mentions-legales`, en sections courtes : éditeur (particulier non professionnel anonyme), directeur de la publication (sans nom), hébergeurs (Vercel, Neon, avec nom et adresse), contact et signalement d'un contenu illicite, propriété intellectuelle, date de mise à jour. Les sections Éditeur, Hébergeur et Propriété des contenus quittent `/cgu`, qui renvoie vers les mentions légales. Sur les formulaires d'annonce, le lien est une sortie gardée.
+
+### Critères d'acceptation
+
+- [ ] Le pied de page affiche « CGU · Mentions légales · Contact » sur toutes les pages, sans débordement horizontal à 360px
+- [ ] `/mentions-legales` est accessible sans compte, avec « ← Retour » vers `/`, et présente les sections dans l'ordre du PRD
+- [ ] Aucun nom de personne n'apparaît sur `/mentions-legales` ; l'éditeur et le directeur de la publication y sont un particulier non professionnel anonyme
+- [ ] Les hébergeurs (Vercel, Neon) sont indiqués avec leur nom et leur adresse
+- [ ] La page explique comment joindre l'équipe (lien vers `/contact`) et signaler un contenu illicite
+- [ ] `/cgu` ne contient plus Éditeur, Hébergeur ni Propriété des contenus, et renvoie vers `/mentions-legales`
+- [ ] Sur une nouvelle annonce ou un brouillon modifié, « Mentions légales » enregistre en brouillon puis affiche la fenêtre ; sur une annonce Publiée modifiée, la fenêtre Quitter/Rester ; sans changement, sortie directe
+- [ ] Tests Playwright : lien présent dans le pied de page, navigation vers `/mentions-legales`, absence de nom de personne, sortie gardée depuis un formulaire d'annonce
+
+## Bloquée par
+
+- Phase 31 (pied de page commun et page CGU)

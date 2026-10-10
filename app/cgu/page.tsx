@@ -1,9 +1,11 @@
+import Link from "next/link";
 import Bandeau from "@/components/bandeau";
 import BoutonRetour from "@/components/bouton-retour";
 import PiedDePage from "@/components/pied-de-page";
 
 // Modèle à faire relire avant l'ouverture au grand public (PRD).
-// Éditeur anonyme : aucun nom de personne sur cette page.
+// Éditeur anonyme : aucun nom de personne sur cette page. Éditeur, hébergeurs et propriété
+// des contenus sont dans /mentions-legales.
 const DATE_MISE_A_JOUR = "10 octobre 2026";
 
 function Separateur() {
@@ -38,23 +40,10 @@ export default function PageCgu() {
           Conditions générales d&apos;utilisation
         </h1>
 
-        <Section titre="Éditeur">
+        <Section titre="Éditeur et hébergeurs">
           <p>
-            Jammix est édité par un particulier, à titre non professionnel. Comme la loi le permet,
-            son identité n&apos;est pas publiée : elle est connue de l&apos;hébergeur.
-          </p>
-          <p>L&apos;éditeur est joignable via le formulaire Contact.</p>
-        </Section>
-
-        <Separateur />
-
-        <Section titre="Hébergeur">
-          <p>
-            Vercel Inc.
-            <br />
-            440 N Barranca Ave #4133
-            <br />
-            Covina, CA 91723, États-Unis
+            L&apos;éditeur, le directeur de la publication et les hébergeurs de Jammix sont
+            présentés dans les <Link href="/mentions-legales" className="underline">mentions légales</Link>.
           </p>
         </Section>
 
@@ -91,16 +80,6 @@ export default function PageCgu() {
           <p>
             Jammix ne garantit pas la tenue des jams annoncées, ni leurs horaires. Un contenu
             manifestement illicite peut être signalé via le formulaire Contact et être retiré.
-          </p>
-        </Section>
-
-        <Separateur />
-
-        <Section titre="Propriété des contenus">
-          <p>
-            Les photos et textes publiés restent la propriété de leurs auteurs. En les publiant,
-            l&apos;organisateur garantit en détenir les droits et autorise Jammix à les afficher
-            gratuitement tant qu&apos;ils sont en ligne.
           </p>
         </Section>
 
