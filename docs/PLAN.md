@@ -46,6 +46,7 @@
   - *Limite d'envois* : nouveau modèle `EnvoiContact` (`id`, `empreinteIp` = HMAC-SHA-256 de l'IP avec `AUTH_SECRET`, jamais l'IP brute ni un hash simple réversible par force brute, `creeLe`), appliqué par `prisma db push`. Seuls les envois réussis sont enregistrés ; au plus 5 envois par empreinte sur une heure glissante ; les lignes de plus de 24 h sont purgées à chaque envoi. Champ piège invisible : rempli, il renvoie un faux succès sans rien envoyer ni enregistrer.
   - *Validation* : schéma zod `lib/validation/contact.ts`, sur le modèle de `lib/validation/inscription.ts` (nom 1–100, email valide, message 10–2000 après normalisation `\r\n` → `\n` et trim, comme la description de la Phase 29).
   - *Anonymat* : aucun nom de personne dans `/cgu` ni ailleurs ; l'éditeur est « un particulier non professionnel », joignable via `/contact`.
+- **Nom et prénom de l'organisateur (Phase 35)** : nouveau champ `Organisateur.nom String?` (nullable : les comptes existants restent intacts, sans script), appliqué par `prisma db push` (pas de dossier de migrations). Champ `nomComplet` ajouté aux schémas client et serveur de `lib/validation/inscription.ts` (espaces de début et de fin retirés, 1 à 80 caractères), réutilisé par le formulaire et l'action d'inscription. Au profil, une section déroulable sur le modèle de `formulaire-email.tsx`, avec son action dans `app/mon-profil/actions.ts` ; le nom vide n'y est accepté que pour un compte sans nom. Mention de la donnée dans `/cgu`. La convention « éditeur anonyme » ne concerne pas les organisateurs. L'affichage sur les cartes est hors périmètre.
 
 ---
 
@@ -918,3 +919,27 @@ Le pied de page affiche « CGU · Mentions légales · Contact ». « Mentions l
 ## Bloquée par
 
 - Phase 31 (pied de page commun et page CGU)
+
+---
+
+## Phase 35 : Nom et prénom de l'organisateur
+
+**User stories** : US-116, US-117, US-118, US-119
+
+### Ce qu'on livre
+
+L'inscription demande « Nom et prénom » en premier champ (obligatoire, 1 à 80 caractères), avant l'email, le mot de passe, le nom et l'adresse du bar. Le nom est enregistré avec le compte et modifiable depuis `/mon-profil`, dans une section repliée « Nom et prénom ». Les comptes existants n'ont pas de nom et ne sont jamais contraints d'en saisir un. La page `/cgu` mentionne le nom parmi les données collectées. L'affichage du nom sur les cartes d'organisateur est une phase future.
+
+### Critères d'acceptation
+
+- [ ] Le formulaire d'inscription affiche « Nom et prénom » en premier champ ; un nom vide ou de plus de 80 caractères (espaces de début et de fin ignorés) est refusé avec un message sous le champ, la saisie conservée
+- [ ] Un compte créé avec un nom le retrouve prérempli dans la section « Nom et prénom » du profil
+- [ ] La section « Nom et prénom » du profil se comporte comme les autres sections (repliée par défaut) ; la modification est enregistrée et confirmée, les mêmes règles de validation s'appliquent
+- [ ] Un compte existant sans nom se connecte, utilise « Mes annonces » et son profil normalement, et peut renseigner son nom sans y être contraint
+- [ ] `/cgu` mentionne le nom et prénom parmi les données collectées
+- [ ] Aucune migration destructive : `Organisateur.nom` est nullable, les comptes existants sont intacts
+- [ ] Tests Vitest de la validation `nomComplet` ; tests Playwright : inscription avec et sans nom (message d'erreur), nom prérempli au profil, modification du nom, connexion d'un compte sans nom
+
+## Bloquée par
+
+- Phase 34 (mentions légales)

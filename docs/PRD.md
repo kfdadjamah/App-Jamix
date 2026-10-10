@@ -18,6 +18,8 @@ Dans le formulaire d'annonce, le titre (« Nouvelle annonce », « Modifier l'an
 
 Un visiteur ou un organisateur qui veut poser une question, signaler une annonce ou un problème n'a aucun moyen de joindre l'équipe Jammix. L'application n'affiche ni règles d'utilisation, ni information sur les données personnelles collectées, ni mentions légales clairement identifiables, alors qu'un service ouvert au public doit les présenter.
 
+Un organisateur n'a aucun nom propre dans son compte : seule la fiche de son bar l'identifie. Cela empêchera de présenter un organisateur aux musiciens le jour où ses informations seront affichées.
+
 ## Solution
 
 L'outil centralise les annonces de jams publiées par les organisateurs des bars lyonnais. Le musicien sélectionne une date et consulte les annonces disponibles ce jour-là : lieu, adresse, distance jusqu'à chez lui, horaire, style musical et instruments mis à disposition sur place. Quand aucune jam n'est publiée à la date choisie, l'outil lui suggère les prochaines dates où des jams ont lieu. À terme, l'outil s'ouvrira aussi au grand public souhaitant assister à une jam.
@@ -35,6 +37,8 @@ Sur le profil, les sections « Mes bars », « Email », « Mot de passe » et �
 Dans le formulaire d'annonce, le titre prend la taille de « Mes annonces » et tient sur une ligne. Un champ « Description », facultatif et limité à 500 caractères, permet d'ajouter des précisions libres, affichées au musicien sous les instruments. Dans la liste, le musicien en voit le début et ouvre, d'un clic sur la carte, la page de la jam qui montre toute l'annonce. Une case « Tous les styles » remplace en un clic la liste des styles. Les instruments s'intitulent « Instruments disponibles » dans le formulaire et « Instruments » côté musicien : le mot « backline » disparaît de l'écran.
 
 Chaque page se termine par un pied de page discret : les liens « CGU », « Mentions légales » et « Contact », puis « © <année> Jammix · Tous droits réservés · v<version> ». « CGU » ouvre une page courte qui réunit les règles d'usage d'un service gratuit et les données personnelles. « Mentions légales » ouvre une page dédiée : éditeur, directeur de la publication, hébergeurs, contact et signalement, propriété intellectuelle. « Contact » ouvre un formulaire (nom, adresse mail, message) ; la réponse de l'équipe arrive par email. L'éditeur, un particulier, reste anonyme : aucun nom de personne n'apparaît dans l'application.
+
+L'inscription d'un organisateur demande désormais, dans cet ordre, « Nom et prénom », « Email », « Mot de passe », « Nom du bar » et « Adresse du bar » (photo toujours facultative). Le nom et prénom se modifie ensuite depuis le profil.
 
 ## Utilisateur cible
 
@@ -158,6 +162,10 @@ US-112. En tant que visiteur, je veux une page « Mentions légales » accessibl
 US-113. En tant que visiteur, je veux savoir que l'éditeur est un particulier non professionnel, qui est le directeur de la publication (sans nom affiché) et qui héberge le service (nom et adresse de chaque hébergeur), afin de connaître les responsables du service.
 US-114. En tant que visiteur, je veux savoir comment joindre l'équipe et signaler un contenu illicite, afin de faire retirer une annonce problématique.
 US-115. En tant que visiteur, je veux connaître la propriété intellectuelle de Jammix et des contenus publiés, afin de savoir ce que je peux réutiliser.
+US-116. En tant qu'organisateur, je veux saisir mon nom et prénom à l'inscription, afin qu'ils soient associés à mon compte.
+US-117. En tant que visiteur sur l'inscription, je veux un message clair sous « Nom et prénom » s'il est vide ou trop long, afin de corriger sans perdre ma saisie.
+US-118. En tant qu'organisateur, je veux modifier mon nom et prénom depuis mon profil, afin de le corriger.
+US-119. En tant qu'organisateur déjà inscrit sans nom, je veux pouvoir le renseigner depuis mon profil sans y être contraint, afin de continuer à utiliser mon compte.
 
 ## Critères de succès
 
@@ -203,6 +211,7 @@ US-115. En tant que visiteur, je veux connaître la propriété intellectuelle d
 - La page Mentions légales s'ouvre sans compte, depuis le pied de page de chaque page, et ne contient aucun nom de personne ; le pied de page à 3 liens tient à 360px sans débordement.
 - Un message valide envoyé depuis le formulaire Contact arrive à l'adresse de contact, et « Répondre » vise l'adresse saisie par l'expéditeur.
 - Le 6ᵉ envoi en moins d'une heure depuis une même connexion est refusé avec un message.
+- Un compte créé avec un nom et prénom le retrouve prérempli dans son profil ; sans nom, l'inscription est refusée avec un message sous le champ ; un compte ancien sans nom se connecte normalement.
 
 ## Hors périmètre
 
@@ -266,6 +275,10 @@ US-115. En tant que visiteur, je veux connaître la propriété intellectuelle d
 - Affichage du nom ou de l'adresse postale de l'éditeur.
 - Utilisation payante, publicité, cagnotte ou dons (la cagnotte est une piste future).
 - Pied de page fixé en bas de l'écran.
+- Affichage du nom de l'organisateur sur les cartes ou côté musicien (phase future).
+- Nom et prénom exigés des comptes existants.
+- Champs prénom et nom séparés.
+- Nom de l'organisateur dans l'email de bienvenue.
 
 ## Décisions d'implémentation
 
@@ -368,6 +381,7 @@ US-115. En tant que visiteur, je veux connaître la propriété intellectuelle d
 - La page Contact est publique, avec « ← Retour » vers l'accueil. Le formulaire a 3 champs obligatoires : nom (100 caractères maximum), adresse mail (format valide), message (10 à 2000 caractères, avec un compteur « N/2000 »). Un organisateur connecté trouve son email prérempli, modifiable. Une phrase sous le bouton explique l'usage des données, avec un lien vers les CGU, sans case à cocher.
 - Après l'envoi : « Message envoyé, nous vous répondrons par email. » et le formulaire se vide. En cas d'échec : un message d'erreur et la saisie conservée. Une erreur de saisie s'affiche sous le champ concerné, la saisie conservée.
 - Au-delà de 5 envois en une heure depuis une même connexion : « Trop de messages envoyés, réessayez plus tard. »
+- « Nom et prénom » est un champ unique, obligatoire à l'inscription, de 1 à 80 caractères (espaces de début et de fin ignorés), placé en premier du formulaire. Une erreur s'affiche sous le champ, la saisie conservée. Au profil, une section repliée « Nom et prénom » (même comportement que les autres sections) enregistre la modification et confirme son succès. Le champ n'est facultatif que pour les comptes existants, qui n'ont pas de nom tant qu'ils n'en saisissent pas.
 
 ## Notes complémentaires
 
@@ -404,3 +418,5 @@ Hypothèse : l'anonymat d'un éditeur non professionnel suppose que son identit�
 Le texte des CGU et des mentions légales est un modèle à faire relire avant l'ouverture au grand public ; l'adresse exacte de chaque hébergeur est à vérifier.
 
 Piste future : une cagnotte de dons libres pour soutenir la maintenance de l'infrastructure ; les CGU devront alors la mentionner.
+
+Le nom et prénom de l'organisateur est une donnée personnelle : la page CGU doit le mentionner parmi les données collectées. La convention « éditeur anonyme » ne concerne que l'éditeur du service, pas les organisateurs.
