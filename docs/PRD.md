@@ -4,7 +4,7 @@ Le musicien qui joue régulièrement en dehors d'un groupe fixe (amateur ou semi
 
 Côté organisateur, l'accès à son espace n'est pas évident : la page d'accueil ne propose aucun lien de connexion, les informations du bar et du compte sont réparties sur plusieurs pages, et un organisateur qui oublie son mot de passe ne peut pas récupérer son compte. Une fois sur une page de l'espace organisateur ou de connexion, il n'existe aucun moyen visible de revenir en arrière : un visiteur qui clique sur « Connexion organisateur » puis renonce, ou un organisateur qui quitte la saisie d'une annonce, doit passer par le navigateur, au risque de sortir de l'application ou de perdre sa saisie.
 
-Un organisateur qui anime des jams dans plusieurs bars doit aujourd'hui créer un compte par bar, donc utiliser une adresse email différente pour chacun, et se déconnecter pour passer de l'un à l'autre. À chaque nouvelle annonce, il ressaisit aussi l'horaire, les styles, les instruments et les photos, même quand la jam revient à l'identique.
+Un organisateur qui anime des jams dans plusieurs bars doit aujourd'hui créer un compte par bar, donc utiliser une adresse email différente pour chacun, et se déconnecter pour passer de l'un à l'autre. À chaque nouvelle annonce, il ressaisit aussi l'horaire, les styles, les instruments, même quand la jam revient à l'identique.
 
 Où qu'il se trouve dans l'application, l'utilisateur n'a aucun moyen direct de revenir à l'accueil, c'est-à-dire à la carte et aux annonces. Le bouton « Retour » ne mène qu'à la page parente. Un organisateur sur son profil, ou un visiteur sur la page d'inscription, doit enchaîner plusieurs retours ou passer par le navigateur. Le haut des pages varie aussi d'un écran à l'autre et ne ressort pas sur le fond sombre : rien n'indique clairement où naviguer. Même une fois commun, le bandeau garde le fond sombre du corps de la page et ne s'en détache que par un filet fin : la zone de navigation ne se repère pas d'un coup d'œil.
 
@@ -26,9 +26,9 @@ L'outil centralise les annonces de jams publiées par les organisateurs des bars
 
 L'organisateur accède à son espace depuis la page d'accueil, retrouve toutes les informations de ses bars et de son compte sur une page profil unique, et peut réinitialiser son mot de passe par email. Il reçoit aussi par email les avis liés à la sécurité de son compte. Chaque page qui n'est pas un point de départ propose un bouton « Retour » vers sa page parente. Quitter la saisie d'une annonce en cours l'enregistre en brouillon, reprenable plus tard ; quitter une annonce publiée avec des modifications non enregistrées demande confirmation.
 
-Un même compte peut gérer jusqu'à 10 bars, ajoutés, modifiés ou supprimés depuis le profil. Chaque annonce porte sur un bar choisi par l'organisateur ; « Mes annonces » affiche le nom du bar sur chaque annonce et permet de filtrer par bar. Sur une nouvelle annonce, un bouton reprend en un clic l'horaire, les styles, les instruments et les photos de la dernière annonce publiée du bar choisi ; il ne reste qu'à ajouter les dates.
+Un même compte peut gérer jusqu'à 10 bars, ajoutés, modifiés ou supprimés depuis le profil. Chaque annonce porte sur un bar choisi par l'organisateur ; « Mes annonces » affiche le nom du bar sur chaque annonce et permet de filtrer par bar. Sur une nouvelle annonce, un bouton reprend en un clic l'horaire, les styles, et les instruments de la dernière annonce publiée du bar choisi ; il ne reste qu'à ajouter les dates.
 
-Chaque page affiche en haut un même bandeau à fond cuivré, la couleur des boutons pleins, distinct du corps sombre de la page, fixé pendant le défilement et souligné d'un filet doré. À gauche, un bouton « Jammix » avec une icône de petite maison ramène à l'accueil, à la date du jour, en vue liste, sans rechargement complet. À droite, on trouve l'icône de profil de l'organisateur connecté ou, sur l'accueil, le bouton « Connexion organisateur ». Sur l'accueil, l'organisateur connecté trouve un bouton « Accéder à mes annonces » qui l'y mène en un clic. Dans son espace, une seule ligne sous le bandeau, « 🔔 À confirmer » en gras suivi du nombre de jams à confirmer, puis un trait, remplace le lien « Mes annonces » et l'alerte des relances. Le titre « Mes annonces » tient sur une ligne à côté de « Nouvelle », y compris sur mobile.
+Chaque page affiche en haut un même bandeau à fond cuivré, la couleur des boutons pleins, distinct du corps sombre de la page, fixé pendant le défilement et souligné d'un filet doré. À gauche, un bouton « Jammix » avec une icône de petite maison ramène à l'accueil, à la date du jour, en vue liste, sans rechargement complet. À droite, on trouve l'icône de profil de l'organisateur connecté ou, sur l'accueil, le bouton « Connexion organisateur ». Sur l'accueil, l'organisateur connecté trouve un bouton « Accéder à mes annonces » qui l'y mène en un clic. Dans son espace, une seule ligne sous le bandeau, « 🔔 Accéder à mes annonces » en gras suivi du nombre de jams à confirmer, puis un trait, remplace le lien « Mes annonces » et l'alerte des relances. Le titre « Mes annonces » tient sur une ligne à côté de « Nouvelle », y compris sur mobile.
 
 Dans « Mes annonces », les boutons du filtre par bar passent à la ligne quand la largeur manque, sans défilement horizontal. Le bouton actif se distingue par un fond crème léger, sans soulignement. Un nom de bar trop long est tronqué par « … » et ne dépasse jamais la colonne.
 
@@ -52,7 +52,7 @@ Sur chaque carte de « Mes annonces », un bouton « ⋯ » en haut à droite ou
 US-1. En tant qu'organisateur, je veux créer un compte et renseigner la fiche de mon bar (nom, adresse), afin de pouvoir publier des annonces de jams pour ce lieu.
 US-2. En tant qu'organisateur, je veux pouvoir ajouter une photo ou un logo à la fiche de mon bar, afin de personnaliser mon profil.
 US-3. En tant qu'organisateur, je veux publier une annonce de jam avec une ou plusieurs dates, un horaire, un style musical et les instruments disponibles sur place, afin d'informer les musiciens de l'événement.
-US-4. En tant qu'organisateur, je veux pouvoir ajouter des photos à une annonce de jam, afin de l'illustrer pour les musiciens.
+US-4. En tant qu'organisateur, je veux pouvoir ajouter des photos à une annonce de jam, afin de l'illustrer pour les musiciens. (Reporté en V2 : masqué en V1, voir US-135.)
 US-5. En tant qu'organisateur, je veux pouvoir enregistrer une annonce en brouillon avant de la publier, afin de pouvoir la compléter plus tard sans qu'elle soit visible des musiciens.
 US-6. En tant qu'organisateur, je veux pouvoir rendre une annonce récurrente en sélectionnant plusieurs dates lors de la publication, afin de ne pas avoir à republier la même annonce chaque semaine et de simplement confirmer chaque échéance.
 US-7. En tant qu'organisateur, je veux pouvoir publier une annonce sans limite de délai à l'avance, afin d'annoncer une jam dès que je connais la date.
@@ -79,7 +79,7 @@ US-27. En tant qu'organisateur, je veux supprimer définitivement mon compte, av
 US-28. En tant qu'organisateur non connecté, je veux trouver un bouton « Connexion organisateur » en haut à droite de la page d'accueil, afin d'accéder à mon espace sans connaître l'adresse de la page de connexion.
 US-29. En tant qu'organisateur connecté, je veux voir une icône de profil en haut à droite de chaque page, afin d'accéder à mon profil depuis n'importe où.
 US-30. En tant qu'organisateur, je veux retrouver sur une seule page profil les fiches de mes bars (photo, nom, adresse), mon email, mon mot de passe, la déconnexion et la suppression de mon compte, afin de gérer toutes mes informations au même endroit.
-US-31. En tant qu'organisateur, je veux un en-tête réduit à « Jammix », à l'icône de profil, puis, sous le bandeau, à la seule ligne « À confirmer », afin de naviguer sans encombrement.
+US-31. En tant qu'organisateur, je veux un en-tête réduit à « Jammix », à l'icône de profil, puis, sous le bandeau, à la seule ligne « Accéder à mes annonces », afin de naviguer sans encombrement.
 US-32. En tant qu'organisateur, je veux arriver sur « Mes annonces » après m'être connecté, afin de gérer directement mes jams.
 US-33. En tant qu'organisateur, je veux arriver sur « Mes annonces » après mon inscription, afin de publier ma première annonce sans détour.
 US-34. En tant qu'organisateur qui a oublié son mot de passe, je veux recevoir par email un lien de réinitialisation, afin de récupérer l'accès à mon compte.
@@ -101,7 +101,7 @@ US-49. En tant qu'organisateur ayant plusieurs bars, je veux choisir le bar de c
 US-50. En tant qu'organisateur n'ayant qu'un bar, je veux que ce bar soit présélectionné dans le formulaire d'annonce, afin de ne pas avoir à le choisir à chaque fois.
 US-51. En tant qu'organisateur, je veux pouvoir changer le bar d'une annonce tant qu'elle est en brouillon, afin de corriger une erreur avant publication.
 US-52. En tant qu'organisateur, je veux que le bar d'une annonce publiée ne puisse plus être changé, afin que les musiciens ne voient jamais une jam changer de lieu.
-US-53. En tant qu'organisateur qui crée une nouvelle annonce, je veux un bouton « Reprendre la dernière annonce de ce bar » qui remplit l'horaire, les styles, les instruments, les précisions « Autre », la description et les photos de la dernière annonce publiée du bar choisi, sans les dates, afin de ne pas tout ressaisir pour une jam qui revient.
+US-53. En tant qu'organisateur qui crée une nouvelle annonce, je veux un bouton « Reprendre la dernière annonce de ce bar » qui remplit l'horaire, les styles, les instruments, les précisions « Autre », et la description de la dernière annonce publiée du bar choisi, sans les dates, afin de ne pas tout ressaisir pour une jam qui revient.
 US-54. En tant qu'organisateur dont le bar choisi n'a encore aucune annonce publiée, je ne veux pas voir le bouton de reprise, afin de ne pas proposer une action impossible.
 US-55. En tant qu'organisateur ayant plusieurs bars, je veux voir le nom du bar sur chaque annonce de « Mes annonces » et pouvoir filtrer la liste par bar, afin de m'y retrouver rapidement.
 US-56. En tant qu'organisateur ayant plusieurs bars, je veux que chaque relance s'affiche sur l'annonce qui nomme son bar, et que l'alerte des relances compte les relances de tous mes bars, afin de savoir quel bar doit confirmer quelle jam.
@@ -114,14 +114,14 @@ US-62. En tant que musicien ou organisateur, je veux que « Jammix » ouvre touj
 US-63. En tant que musicien sur l'accueil, je veux voir « Jammix » signalé comme page active, et qu'un clic remette la date à aujourd'hui et la vue en liste, afin de repartir de zéro après avoir parcouru d'autres dates.
 US-64. En tant que musicien ou organisateur, je veux que le bandeau reste visible en haut de l'écran pendant que je fais défiler la page, afin d'accéder à l'accueil et au profil sans remonter.
 US-65. En tant que visiteur sur la page de connexion, d'inscription, de mot de passe oublié ou de réinitialisation, je veux trouver le bandeau avec seulement « Jammix », afin de renoncer au parcours de connexion en un clic.
-US-66. En tant qu'organisateur, je veux retrouver la ligne « À confirmer » juste sous le bandeau dans mon espace, afin de garder un bandeau épuré.
-US-67. En tant qu'organisateur qui saisit ou modifie une annonce, je veux qu'un clic sur « Jammix » ou sur « À confirmer » suive les mêmes règles que les autres sorties (brouillon enregistré et fenêtre d'information, avertissement sur une annonce publiée, sortie directe sans changement), afin de ne jamais perdre ma saisie sans le savoir.
+US-66. En tant qu'organisateur, je veux retrouver la ligne « Accéder à mes annonces » juste sous le bandeau dans mon espace, afin de garder un bandeau épuré.
+US-67. En tant qu'organisateur qui saisit ou modifie une annonce, je veux qu'un clic sur « Jammix » ou sur « Accéder à mes annonces » suive les mêmes règles que les autres sorties (brouillon enregistré et fenêtre d'information, avertissement sur une annonce publiée, sortie directe sans changement), afin de ne jamais perdre ma saisie sans le savoir.
 US-68. En tant que musicien ou organisateur, je veux un bandeau d'une couleur cuivrée, distincte du fond sombre de la page, afin de repérer immédiatement la zone de navigation.
 US-69. En tant qu'organisateur connecté, je veux un bouton « Accéder à mes annonces » sur l'accueil, afin de gérer mes jams en un clic sans passer par mon profil.
 US-70. En tant que musicien ou visiteur non connecté, je ne veux pas voir ce bouton, afin que l'accueil reste centré sur la recherche de jams.
-US-71. En tant qu'organisateur, je veux voir sous le bandeau de mon espace une ligne « 🔔 À confirmer » suivie du nombre de jams à confirmer de tous mes bars, afin de savoir d'un coup d'œil ce qui demande une action.
+US-71. En tant qu'organisateur, je veux voir sous le bandeau de mon espace une ligne « 🔔 Accéder à mes annonces » suivie du nombre de jams à confirmer de tous mes bars, afin de savoir d'un coup d'œil ce qui demande une action.
 US-72. En tant qu'organisateur, je veux que cette ligne reste affichée avec 0 quand rien n'est à confirmer, afin de savoir que tout est à jour.
-US-73. En tant qu'organisateur sur mon profil ou dans la saisie d'une annonce, je veux que « À confirmer » me mène à « Mes annonces », afin d'y confirmer mes jams.
+US-73. En tant qu'organisateur sur mon profil ou dans la saisie d'une annonce, je veux que « Accéder à mes annonces » me mène à « Mes annonces », afin d'y confirmer mes jams.
 US-74. En tant qu'organisateur sur mobile, je veux que le titre « Mes annonces » tienne sur une ligne à côté du bouton « Nouvelle », afin d'avoir un haut de page lisible.
 US-75. En tant qu'organisateur ayant plusieurs bars, je veux que les boutons du filtre par bar passent à la ligne quand la largeur manque, afin de voir tous mes bars sans faire défiler horizontalement.
 US-76. En tant qu'organisateur ayant plusieurs bars, je veux que le bouton du filtre actif (« Tous » ou un bar) ait un fond crème léger, afin de savoir d'un coup d'œil quelles annonces sont affichées.
@@ -181,6 +181,9 @@ US-129. En tant qu'organisateur, je veux que le menu d'un brouillon ne propose q
 US-130. En tant qu'organisateur, je veux que « Annuler » disparaisse du menu quand toutes les dates sont déjà annulées, afin de ne pas annuler deux fois.
 US-131. En tant qu'organisateur, je veux fermer le menu ou la fenêtre sans effet (clic à côté, Échap, « Retour »), afin de renoncer sans conséquence.
 US-132. En tant qu'organisateur, je veux qu'un clic sur « ⋯ » n'ouvre pas la page de l'annonce, afin de ne pas naviguer par erreur.
+US-133. En tant qu'organisateur, je veux que la ligne sous le bandeau s'intitule « 🔔 Accéder à mes annonces · N », afin de comprendre qu'un clic m'emmène à mes annonces et ne confirme rien.
+US-134. En tant qu'organisateur sur « Mes annonces », je veux que cette ligne reste un simple texte non cliquable, afin de ne pas me renvoyer vers la page où je suis déjà.
+US-135. En tant qu'organisateur, je ne veux plus voir d'emplacements photo sur le formulaire ni sur la page d'une annonce, afin d'attendre la V2 qui n'en prévoira qu'un seul ; les photos déjà enregistrées restent visibles côté musicien.
 
 ## Critères de succès
 
@@ -191,7 +194,7 @@ US-132. En tant qu'organisateur, je veux qu'un clic sur « ⋯ » n'ouvre pas la
 - Toute sortie via l'application pendant la saisie d'une nouvelle annonce non vide produit soit un brouillon visible dans « Mes annonces », soit un message laissant le choix de rester ou de quitter : jamais de perte silencieuse.
 - Un organisateur publie des annonces pour 2 bars depuis un seul compte, sans se déconnecter.
 - Une annonce s'affiche côté musicien à l'adresse du bar choisi.
-- Le bouton de reprise remplit l'horaire, les styles, les instruments, la description et les photos, et laisse les dates vides.
+- Le bouton de reprise remplit l'horaire, les styles, les instruments, et la description, et laisse les dates vides.
 - Après la suppression d'un bar, aucune de ses annonces n'est plus visible, ni côté musicien ni dans « Mes annonces ».
 - Sur le premier mois suivant la mise en ligne, au moins un organisateur gère au moins 2 bars.
 - Depuis chacune des pages de l'application, un clic sur « Jammix » ouvre l'accueil à la date du jour, en vue liste, sans rechargement complet de la page.
@@ -200,7 +203,7 @@ US-132. En tant qu'organisateur, je veux qu'un clic sur « ⋯ » n'ouvre pas la
 - Sur toutes les pages, le bandeau a le fond cuivré des boutons pleins et le corps de la page garde son fond sombre.
 - Depuis l'accueil, un organisateur connecté arrive sur « Mes annonces » en un clic.
 - Un visiteur non connecté ne voit jamais le bouton « Accéder à mes annonces ».
-- Sur chaque page de l'espace organisateur, la ligne « À confirmer » affiche le nombre exact de jams à confirmer de tous les bars du compte, 0 compris.
+- Sur chaque page de l'espace organisateur, la ligne « Accéder à mes annonces » affiche le nombre exact de jams à confirmer de tous les bars du compte, 0 compris.
 - À 360px de large, le titre « Mes annonces » et le bouton « Nouvelle » tiennent sur une seule ligne.
 - À 360px de large, avec 10 bars, tous les boutons du filtre par bar sont visibles sans défilement horizontal.
 - Dans le filtre par bar, un seul bouton à la fois a le fond crème léger : « Tous » ou le bar choisi.
@@ -267,9 +270,9 @@ US-132. En tant qu'organisateur, je veux qu'un clic sur « ⋯ » n'ouvre pas la
 - Menu déroulant ou menu « burger » dans le bandeau.
 - Logo graphique ou nom de l'application séparé du bouton « Jammix » dans le bandeau.
 - Bouton « Connexion organisateur » sur les pages du parcours de connexion.
-- Accès direct aux seules annonces à confirmer (filtre ou ancre depuis la ligne « À confirmer »).
-- Lien « Mes annonces » sous le bandeau, en plus de la ligne « À confirmer ».
-- Masquage de la ligne « À confirmer » quand rien n'est à confirmer.
+- Accès direct aux seules annonces à confirmer (filtre ou ancre depuis la ligne « Accéder à mes annonces »).
+- Lien « Mes annonces » sous le bandeau, en plus de la ligne « Accéder à mes annonces ».
+- Masquage de la ligne « Accéder à mes annonces » quand rien n'est à confirmer.
 - Bouton « Accéder à mes annonces » ailleurs que sur l'accueil.
 - Défilement horizontal du filtre par bar.
 - Liste déroulante pour le filtre par bar.
@@ -303,6 +306,7 @@ US-132. En tant qu'organisateur, je veux qu'un clic sur « ⋯ » n'ouvre pas la
 - Suggestions d'adresse côté musicien, y compris pour l'adresse de recherche.
 - Suppression d'une annonce ou d'un brouillon ; autres actions dans le menu des cartes (dupliquer, confirmer une date) ; menu sur les cartes côté musicien.
 - Annulation d'une date unique d'une annonce ponctuelle distincte de « Toutes les dates » (une annonce ponctuelle = une fenêtre de confirmation simple).
+- Ajout, modification et retrait de photos d'annonce (reporté en V2, avec un seul emplacement).
 
 ## Décisions d'implémentation
 
@@ -311,7 +315,7 @@ US-132. En tant qu'organisateur, je veux qu'un clic sur « ⋯ » n'ouvre pas la
 - Un compte organisateur est rattaché à 1 à 10 bars : il crée la fiche de son premier bar (nom, adresse) au moment de son inscription, puis ajoute les suivants depuis son profil ; un compte garde toujours au moins un bar. Un bar n'appartient qu'à un seul compte.
 - L'organisateur peut ajouter, remplacer ou retirer une photo ou un logo sur la fiche de chacun de ses bars, à l'inscription ou plus tard ; cette photo est optionnelle et son absence n'empêche jamais la création ou la validité de la fiche bar.
 - Une annonce de jam peut être enregistrée en statut **brouillon** : elle est incomplète ou en cours de préparation, invisible en consultation musicien, et aucune de ses dates n'entre dans le cycle de confirmation J-7. L'organisateur la complète et la publie explicitement quand elle est prête, ce qui la fait basculer en statut **publiée** et démarre, pour chaque date, le cycle de statuts (confirmée / programmée / en attente de confirmation / annulée).
-- Une annonce peut inclure jusqu'à 2 photos, optionnelles ; leur absence n'empêche jamais la création, le brouillon ou la publication de l'annonce.
+- Les photos d'annonce sont reportées en V2 : le formulaire n'en propose plus en V1, et la V2 n'en prévoira qu'un seul emplacement. Les photos déjà enregistrées (2 emplacements au maximum) restent en base et visibles côté musicien ; leur absence n'empêche jamais la création, le brouillon ou la publication.
 - Toute photo importée (fiche bar ou annonce) est automatiquement ajustée/recadrée au format d'affichage prévu par l'application, sans contrôle manuel du cadrage par l'organisateur.
 - Une annonce de jam peut être ponctuelle (une seule date) ou récurrente : l'organisateur ajoute une ou plusieurs dates lors de la publication, jusqu'à 12 dates maximum par annonce, via une liste de dates ajoutables/supprimables ; le caractère récurrent de l'annonce est déduit automatiquement dès que plus d'une date est renseignée (pas de bascule ponctuelle/récurrente distincte à activer). Chaque date est une occurrence à part entière, avec son propre statut et sa propre échéance de confirmation à J-7.
 - Pour une annonce récurrente, l'horaire est unique et s'applique à toutes les dates de l'annonce ; il n'est pas possible de définir un horaire différent par date au moment de la publication.
@@ -343,19 +347,19 @@ US-132. En tant qu'organisateur, je veux qu'un clic sur « ⋯ » n'ouvre pas la
 - À gauche du bandeau, un bouton « Jammix » associe une icône de petite maison au libellé « Jammix », nom de l'application. Il mène toujours à l'accueil, à la date du jour, en vue liste, quels que soient la page et le chemin d'arrivée. Le passage se fait sans rechargement complet de l'application.
 - Sur l'accueil, « Jammix » est signalé comme page active. Un clic remet la date à aujourd'hui et la vue en liste.
 - À droite du bandeau : l'icône de profil si l'organisateur est connecté, sur toutes les pages. Sinon, sur l'accueil uniquement, le bouton « Connexion organisateur ». Sur les pages de connexion, d'inscription, de mot de passe oublié et de réinitialisation, la droite du bandeau est vide.
-- Dans l'espace organisateur (« Mes annonces », nouvelle annonce, modification d'annonce, profil), seule la ligne « À confirmer » s'affiche sous le bandeau.
-- Pendant la saisie d'une annonce, « Jammix » est une sortie via l'application, au même titre que « Retour », « À confirmer » et l'icône de profil, et suit les mêmes règles. Après la fenêtre, l'organisateur arrive sur l'accueil.
+- Dans l'espace organisateur (« Mes annonces », nouvelle annonce, modification d'annonce, profil), seule la ligne « Accéder à mes annonces » s'affiche sous le bandeau.
+- Pendant la saisie d'une annonce, « Jammix » est une sortie via l'application, au même titre que « Retour », « Accéder à mes annonces » et l'icône de profil, et suit les mêmes règles. Après la fenêtre, l'organisateur arrive sur l'accueil.
 - Le bouton « ← Retour » existant reste en place sous le bandeau, avec les mêmes destinations.
 - La page profil unique regroupe les fiches des bars (photo, nom, adresse), l'email, le mot de passe, la déconnexion et la suppression du compte ; elle remplace les pages séparées fiche bar et compte, dont les anciennes adresses redirigent vers elle.
-- Le bandeau de l'espace organisateur contient « Jammix » et l'icône de profil ; la ligne « À confirmer » est placée juste en dessous.
+- Le bandeau de l'espace organisateur contient « Jammix » et l'icône de profil ; la ligne « Accéder à mes annonces » est placée juste en dessous.
 - Après la connexion comme après l'inscription, l'organisateur arrive sur « Mes annonces ».
 - Mot de passe oublié : l'organisateur saisit son email et reçoit un lien valable 1 heure, à usage unique, invalidé dès qu'un nouveau lien est demandé. Le message affiché est le même que l'adresse soit connue ou non. Après réinitialisation, l'organisateur est renvoyé vers la connexion avec un message de succès.
 - Emails envoyés, liés au compte : lien de réinitialisation, bienvenue à l'inscription, avis de changement ou de réinitialisation du mot de passe, avis de changement d'email envoyé à l'ancienne adresse. Un échec d'envoi d'un email d'avis ne bloque jamais l'action qui l'a déclenché. Seule exception hors compte : le message du formulaire Contact, envoyé à l'équipe (jamais à l'expéditeur).
 - Un bouton « Retour » apparaît en haut à gauche, sous le bandeau et au-dessus du titre de la page, sous forme de lien texte « ← Retour », sur : connexion (→ accueil) ; inscription, mot de passe oublié et réinitialisation du mot de passe (→ connexion) ; profil, nouvelle annonce et modification d'annonce (→ « Mes annonces »). L'accueil et « Mes annonces », points de départ, n'en ont pas.
 - La destination du bouton « Retour » est toujours la même pour une page donnée, quel que soit le chemin d'arrivée (lien direct, favori…). Les liens de l'en-tête gardent leur propre destination.
-- Pendant la saisie d'une annonce, toute sortie via l'application (« Retour », ou « Jammix », « À confirmer » et icône de profil) suit les règles ci-dessous ; l'organisateur arrive ensuite sur la page qu'il a demandée.
+- Pendant la saisie d'une annonce, toute sortie via l'application (« Retour », ou « Jammix », « Accéder à mes annonces » et icône de profil) suit les règles ci-dessous ; l'organisateur arrive ensuite sur la page qu'il a demandée.
 - Une modification en cours se mesure par rapport au formulaire vide (nouvelle annonce) ou à l'annonce telle qu'ouverte, puis au dernier enregistrement. Sans changement, la sortie est directe, sans brouillon ni fenêtre, quel que soit le statut de l'annonce. Le choix de portée et les actions déjà enregistrées immédiatement (confirmation, annulation d'une date, photos d'une annonce existante) ne comptent pas comme des modifications.
-- Sur une nouvelle annonce ou un brouillon modifié, quitter enregistre la saisie en brouillon (même incomplète, dates et photos comprises), puis affiche une fenêtre « Annonce enregistrée en brouillon, vous pourrez la reprendre plus tard dans Mes annonces » ; après validation, l'organisateur arrive sur la page demandée.
+- Sur une nouvelle annonce ou un brouillon modifié, quitter enregistre la saisie en brouillon (même incomplète, dates comprises), puis affiche une fenêtre « Annonce enregistrée en brouillon, vous pourrez la reprendre plus tard dans Mes annonces » ; après validation, l'organisateur arrive sur la page demandée.
 - Si cet enregistrement échoue (photo refusée, erreur réseau…), l'organisateur reste sur le formulaire et une fenêtre en donne la raison, avec « Rester » (par défaut) et « Quitter sans enregistrer » ; aucun enregistrement partiel. Pendant l'enregistrement, le bouton est inactif.
 - Sur une annonce Publiée avec des modifications non enregistrées, quitter affiche une fenêtre avertissant qu'elles seront perdues, avec « Quitter » et « Rester » ; l'annonce reste publiée telle quelle.
 - Sur les formulaires d'annonce, une sortie par le navigateur avec des modifications en cours déclenche l'alerte standard du navigateur ; elle peut ne pas se déclencher sur le bouton précédent du navigateur.
@@ -369,14 +373,14 @@ US-132. En tant qu'organisateur, je veux qu'un clic sur « ⋯ » n'ouvre pas la
 - Le formulaire d'annonce commence par un champ « Bar ». S'il n'y a qu'un bar, il est présélectionné ; sinon, aucun bar n'est choisi par défaut. Le bar est obligatoire dès l'enregistrement, brouillon compris : une sortie sans bar choisi affiche la fenêtre d'échec d'enregistrement (« Choisissez un bar pour enregistrer le brouillon »). Une annonce porte sur un seul bar.
 - Le bar d'une annonce est modifiable tant qu'elle est en Brouillon et figé une fois Publiée.
 - Sur une nouvelle annonce, choisir un bar ne compte pas à lui seul comme une saisie : sans autre champ rempli, la sortie est directe. Sur un brouillon rouvert, changer de bar compte comme une modification.
-- Sur une nouvelle annonce uniquement, dès qu'un bar est choisi et qu'il a au moins une annonce publiée, un bouton fantôme « Reprendre la dernière annonce de ce bar » apparaît. Il remplit l'horaire, les styles, les instruments, les précisions « Autre », la description et les photos de l'annonce publiée le plus récemment pour ce bar, même si toutes ses dates sont passées ou annulées ; il écrase ces champs sans confirmation et ne touche jamais aux dates. Changer ensuite de bar ne modifie pas les champs repris ; le bouton suit le bar choisi. La reprise compte comme une saisie pour la sortie de la saisie d'une annonce.
-- Les photos reprises sont dupliquées à l'enregistrement : les deux annonces ne partagent jamais un même fichier. Si la copie échoue, l'enregistrement échoue sans enregistrement partiel.
+- Sur une nouvelle annonce uniquement, dès qu'un bar est choisi et qu'il a au moins une annonce publiée, un bouton fantôme « Reprendre la dernière annonce de ce bar » apparaît. Il remplit l'horaire, les styles, les instruments, les précisions « Autre », et la description de l'annonce publiée le plus récemment pour ce bar, même si toutes ses dates sont passées ou annulées ; il écrase ces champs sans confirmation et ne touche jamais aux dates. Changer ensuite de bar ne modifie pas les champs repris ; le bouton suit le bar choisi. La reprise compte comme une saisie pour la sortie de la saisie d'une annonce.
+- Les photos ne sont plus reprises en V1 (le formulaire n'en propose plus).
 - « Mes annonces » affiche une seule liste, avec le nom du bar sur chaque annonce. Dès 2 bars, un filtre « Tous » / un bouton par bar (boutons fantômes, passage à la ligne quand la largeur manque) restreint la liste ; il revient sur « Tous » à chaque visite et n'influence pas le formulaire de nouvelle annonce.
 - L'alerte des relances compte les relances de tous les bars du compte ; chaque relance s'affiche sur l'annonce, qui nomme son bar.
 - Rien ne change côté musicien : chaque annonce s'affiche avec le nom et l'adresse de son bar.
 - Sur l'accueil, un organisateur connecté voit un bouton plein « Accéder à mes annonces » (Brass Copper, texte Warm Cream, rayon 36px), sur toute la largeur de la colonne, entre le sous-titre et le champ « Date ». Il mène à « Mes annonces » et reste le seul bouton d'action plein de l'accueil ; l'option active du toggle Liste/Carte reste pleine. Un visiteur non connecté ne le voit pas.
 - Dans l'espace organisateur, la ligne sous le bandeau affiche une icône de cloche, le libellé « À CONFIRMER » en gras puis le nombre de jams en attente de confirmation de tous les bars du compte. Elle reste affichée à 0.
-- Sur le profil, la nouvelle annonce et la modification d'annonce, « À confirmer » est un lien vers « Mes annonces » ; sur « Mes annonces », la ligne n'est pas cliquable.
+- Sur le profil, la nouvelle annonce et la modification d'annonce, « Accéder à mes annonces » est un lien vers « Mes annonces » ; sur « Mes annonces », la ligne n'est pas cliquable.
 - La ligne est suivie d'un trait 1px pointillé Cork Border sur toute la largeur de la colonne. Elle remplace le lien « Mes annonces » et l'alerte « en attente » sous le bandeau.
 - Le titre « Mes annonces » est réduit pour tenir sur une ligne à côté du bouton « Nouvelle », qui ne change pas, y compris sur mobile (360px).
 - Les boutons du filtre par bar gardent leur forme de bouton fantôme (bordure Warm Cream, rayon 22.5px) et passent à la ligne quand la largeur de la colonne ne suffit pas, sans défilement horizontal. Le bouton actif (« Tous » ou un bar) a un fond Warm Cream léger transparent (environ 15 %), sans soulignement ; un seul bouton est actif à la fois. Un nom plus long que la colonne est tronqué par « … » sur une ligne, sans infobulle.
@@ -388,7 +392,7 @@ US-132. En tant qu'organisateur, je veux qu'un clic sur « ⋯ » n'ouvre pas la
 - « Supprimer mon compte » déroulé montre l'avertissement puis directement le formulaire (mot de passe actuel, mot SUPPRIMER, « Supprimer définitivement »). Le bouton intermédiaire « Supprimer mon compte » et le lien « Annuler » sont retirés : on renonce en refermant la section.
 - Le titre « Mon profil » passe à la taille du titre « Mes annonces » ; la mention « Compte créé le… » reste en dessous.
 - Les titres du formulaire d'annonce (« Nouvelle annonce », « Modifier l'annonce », « Modifier le brouillon ») prennent la taille du titre « Mes annonces » et tiennent sur une ligne à 360px.
-- Le formulaire d'annonce propose un champ « Description (optionnel) », placé après les instruments et avant les photos : zone de texte de 4 lignes, soulignée sans cadre comme les autres champs, avec un compteur « N/500 » en petit, à droite. Texte brut, 500 caractères maximum, refusé au-delà côté serveur.
+- Le formulaire d'annonce propose un champ « Description (optionnel) », placé après les instruments, en dernier champ : zone de texte de 4 lignes, soulignée sans cadre comme les autres champs, avec un compteur « N/500 » en petit, à droite. Texte brut, 500 caractères maximum, refusé au-delà côté serveur.
 - La description est facultative pour le brouillon comme pour la publication. Côté musicien, elle s'affiche sous les instruments et au-dessus des photos, avec ses retours à la ligne, en texte courant (casse mixte, 15px, Warm Cream) ; sans description, rien ne s'affiche. Dans la liste, seules ses 3 premières lignes s'affichent, coupées par « … » ; dans la fiche ouverte depuis un marqueur, elle s'affiche en entier, et la fiche ne mène pas à la page de la jam.
 - Dans la liste de l'accueil, toute la carte d'une jam est un lien vers sa page (`/jams/[id]`, une page par date), sauf le bouton « Itinéraire ». La page reprend le bandeau commun, « ← Retour » vers l'accueil à la date de la jam en vue liste, puis le nom du bar en titre, la date, le statut, l'adresse, la distance si la géolocalisation est acceptée, l'horaire, les styles, les instruments, la description complète, les photos en pleine largeur et « Itinéraire ». Une jam passée, en brouillon ou inexistante affiche « Cette jam n'est plus disponible » et un lien « Voir les jams du jour » ; une jam annulée à venir reste consultable.
 - Dans « Mes annonces », chaque annonce affiche les 2 premières lignes de sa description, en petit et en Driftwood.
@@ -430,7 +434,7 @@ Sur l'accueil d'un organisateur connecté, le bandeau cuivré et le bouton plein
 
 Le fond crème léger du bouton actif du filtre par bar est une exception à DESIGN.md, où les boutons fantômes n'ont aucun remplissage. DESIGN.md devra la consigner pour ce seul filtre.
 
-Piste future : un accès direct aux seules annonces à confirmer depuis la ligne « À confirmer » (filtre ou ancre dans « Mes annonces »).
+Piste future : un accès direct aux seules annonces à confirmer depuis la ligne « Accéder à mes annonces » (filtre ou ancre dans « Mes annonces »).
 
 Piste future : des co-organisateurs, avec des droits sur un bar accordés par un organisateur principal. Restent à cadrer l'invitation par email, le périmètre des droits, le destinataire des relances et le sort des annonces en cas de retrait d'un co-organisateur.
 
@@ -453,3 +457,5 @@ Le nom et prénom de l'organisateur est une donnée personnelle : la page CGU do
 Les suggestions d'adresse dépendent de l'API Adresse (data.gouv.fr). En cas d'indisponibilité, le champ reste un champ libre. DESIGN.md devra consigner le titre de page unique, le texte secondaire en crème 70 % et le bouton « Retour » à bordure de 2px.
 
 Le menu « ⋯ » réutilise les règles d'annulation existantes (statut « annulée » par occurrence, confirmation J-7 effacée) ; aucun email ni SMS. DESIGN.md devra consigner le menu et la fenêtre.
+
+Les photos d'annonce sont masquées en V1 sans suppression de code ni de données : le schéma (`photoUrl1/2`), l'affichage côté musicien et les composants de saisie restent en place pour la V2. Le renommage du bandeau en « Accéder à mes annonces » conserve le compteur de jams à confirmer ; DESIGN.md renomme la section correspondante.

@@ -118,7 +118,7 @@ Logo wordmark "ORYZO" left-aligned in Warm Cream at 12–14px weight 500 upperca
 
 Collé en haut pendant le défilement (`position: sticky`), 56px de haut, fond Brass Copper (#a8451f) opaque, distinct du canvas Walnut Shadow du corps, filet inférieur 1px Gold elegance (#fca311) sur toute la largeur, sans ombre. Le fond et le filet occupent toute la largeur ; le contenu est aligné sur la colonne de la page (`max-w-md`, 24px de marge). À gauche : icône de maison 18px (trait 1.5) et « JAMMIX » en 14px weight 500 uppercase, Warm Cream, 6px d'écart ; souligné quand l'accueil est la page active. À droite : l'icône de profil (cercle 32px, bordure Warm Cream) si l'organisateur est connecté, sinon le bouton fantôme « Connexion organisateur » sur l'accueil uniquement. Pas de menu déroulant ni de menu « burger ».
 
-### Ligne « À confirmer » (Jammix)
+### Ligne « Accéder à mes annonces » (Jammix)
 **Role:** Seule ligne sous le bandeau dans l'espace organisateur — nombre de jams à confirmer
 
 « 🔔 À CONFIRMER · N » en 12px uppercase Warm Cream, libellé en 700 (exception), nombre en 500, affichée même à 0. Trait 1px pointillé Cork Border sur toute la largeur de la colonne, 12px sous le texte. Même rendu partout ; lien vers « Mes annonces » (souligné au survol et au focus) sur le profil et les formulaires d'annonce, simple texte sur « Mes annonces ».

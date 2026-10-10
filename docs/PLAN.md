@@ -994,3 +994,27 @@ Un menu d'actions sur chaque carte de `/mes-annonces`, sans changement de schém
 ## Bloquée par
 
 - Phase 36 (lisibilité des titres, sous-textes, retour et suggestions d'adresse)
+
+---
+
+## Phase 38 : Bandeau « Accéder à mes annonces » et photos d'annonce masquées (V2)
+
+**User stories** : US-133, US-134, US-135
+
+### Ce qu'on livre
+
+La ligne sous le bandeau de l'espace organisateur devient « 🔔 Accéder à mes annonces · N » (compteur conservé, `components/header-organisateur.tsx`), lien vers « Mes annonces » sauf sur cette page où elle reste un texte. Les deux emplacements photo d'annonce sont masqués : `afficherPhotos` passe à `false` sur la nouvelle annonce et le bloc des deux `PhotoAnnonce` disparaît de la page de modification. Aucun code de saisie, schéma ni action serveur n'est supprimé (prêts pour la V2, un seul emplacement). DESIGN.md renomme la section « Ligne « Accéder à mes annonces » ».
+
+### Critères d'acceptation
+
+- [ ] Sur le profil, la saisie d'annonce et la modification, « 🔔 Accéder à mes annonces · N » est un lien vers `/mes-annonces` ; « À confirmer » n'apparaît plus
+- [ ] Sur `/mes-annonces`, la ligne est un texte non cliquable
+- [ ] Le libellé accessible garde le nombre de jams à confirmer
+- [ ] Le bandeau tient à 360px et 390px (DESIGN.md respecté)
+- [ ] Aucun champ photo sur `/mes-annonces/nouvelle` ni sur `/mes-annonces/[id]` (brouillon et publiée)
+- [ ] Les annonces existantes avec photos les affichent toujours côté musicien (liste et `/jams/[id]`) ; la reprise d'annonce ne casse pas
+- [ ] Tests Playwright (`e2e/phase-38.e2e.ts`) : lien et absence de « À confirmer » sur profil et formulaire, clic vers `/mes-annonces`, texte simple sur `/mes-annonces`, absence de champ photo ; `npm run lint`, `npm run build`, `npx vitest run` et toute la suite Playwright passent
+
+## Bloquée par
+
+- Phase 37 (menu « ⋯ » sur les cartes d'annonces)
