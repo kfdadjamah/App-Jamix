@@ -8,13 +8,13 @@ datasource db {
 }
 
 model Organisateur {
-  id             String   @id @default(cuid())
-  email          String   @unique
-  motDePasseHash String
+  id                     String                  @id @default(cuid())
+  email                  String                  @unique
+  motDePasseHash         String
   // Toute session émise avant cette date est rejetée ; null = aucune invalidation.
-  motDePasseModifieLe DateTime?
-  createdAt      DateTime @default(now())
-  bars           Bar[]
+  motDePasseModifieLe    DateTime?
+  createdAt              DateTime                @default(now())
+  bars                   Bar[]
   jetonsReinitialisation JetonReinitialisation[]
 }
 
@@ -61,37 +61,48 @@ enum StatutOccurrence {
 }
 
 model Annonce {
-  id             String           @id @default(cuid())
-  barId          String
-  bar            Bar              @relation(fields: [barId], references: [id])
-  statut         StatutAnnonce    @default(BROUILLON)
-  estRecurrente  Boolean          @default(false)
-  styles         String[]
-  styleAutre     String?
-  instruments    String[]
+  id              String          @id @default(cuid())
+  barId           String
+  bar             Bar             @relation(fields: [barId], references: [id])
+  statut          StatutAnnonce   @default(BROUILLON)
+  estRecurrente   Boolean         @default(false)
+  styles          String[]
+  styleAutre      String?
+  instruments     String[]
   instrumentAutre String?
   // Texte brut, 500 caractères maximum (phase 29).
-  description    String?
-  photoUrl1      String?
-  photoUrl2      String?
+  description     String?
+  photoUrl1       String?
+  photoUrl2       String?
   // Écrit une seule fois, au passage Brouillon → Publiée.
-  publieeLe      DateTime?
-  occurrences    OccurrenceJam[]
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
+  publieeLe       DateTime?
+  occurrences     OccurrenceJam[]
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
 }
 
 model OccurrenceJam {
-  id              String           @id @default(cuid())
-  annonceId       String
-  annonce         Annonce          @relation(fields: [annonceId], references: [id], onDelete: Cascade)
-  date            DateTime         @db.Date
-  heureDebut      String
-  heureFin        String?
-  statut          StatutOccurrence @default(CONFIRMEE)
-  confirmationJ7  DateTime?
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
+  id             String           @id @default(cuid())
+  annonceId      String
+  annonce        Annonce          @relation(fields: [annonceId], references: [id], onDelete: Cascade)
+  date           DateTime         @db.Date
+  heureDebut     String
+  heureFin       String?
+  statut         StatutOccurrence @default(CONFIRMEE)
+  confirmationJ7 DateTime?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
 
   @@unique([annonceId, date])
+}
+
+// Un envoi réussi du formulaire Contact, pour limiter les envois par connexion.
+// Seule une empreinte HMAC-SHA-256 de l'IP est stockée, jamais l'IP brute ;
+// les lignes de plus de 24 h sont purgées à chaque envoi.
+model EnvoiContact {
+  id          String   @id @default(cuid())
+  empreinteIp String
+  creeLe      DateTime @default(now())
+
+  @@index([empreinteIp, creeLe])
 }

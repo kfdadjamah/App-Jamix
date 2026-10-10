@@ -43,7 +43,7 @@
   - *Routes* : `/cgu` et `/contact`, publiques, hors du `matcher` de `proxy.ts`. « ← Retour » vers `/` sur les deux.
   - *Pied de page* : un composant unique `components/pied-de-page.tsx`, rendu par chaque page à la suite du contenu, comme `components/bandeau.tsx` (pas dans `app/layout.tsx`), pour rester dans `FournisseurGardeSortie` : sur les formulaires d'annonce, ses liens sont des `LienGarde` (`components/garde-sortie.tsx`). Version lue depuis `package.json` au build ; année calculée à l'affichage. DESIGN.md autorise le pied de page (fond Walnut Shadow, filet pointillé Cork Border, texte Warm Cream atténué 12px).
   - *Email de contact* : seule exception à la règle « email = messages de compte ». Envoi par `envoyerEmail` (`lib/email.ts`), étendu d'un `replyTo` optionnel qui remplace `adresseContact()` ; destinataire `adresseContact()` (`EMAIL_CONTACT`), `replyTo` = email saisi. Sans `EMAIL_CONTACT`, l'envoi est refusé avec l'erreur générique. Contrairement aux avis de compte, l'envoi est attendu (pas d'`after()`) pour afficher le succès ou l'échec. Jamais d'accusé de réception à l'expéditeur.
-  - *Limite d'envois* : nouveau modèle `EnvoiContact` (`id`, `empreinteIp` = hash SHA-256 de l'IP, jamais l'IP brute, `creeLe`), appliqué par `prisma db push`. Au plus 5 envois par empreinte sur une heure glissante ; les lignes de plus de 24 h sont purgées à chaque envoi. Champ piège invisible : rempli, il renvoie un faux succès sans rien envoyer ni enregistrer.
+  - *Limite d'envois* : nouveau modèle `EnvoiContact` (`id`, `empreinteIp` = HMAC-SHA-256 de l'IP avec `AUTH_SECRET`, jamais l'IP brute ni un hash simple réversible par force brute, `creeLe`), appliqué par `prisma db push`. Seuls les envois réussis sont enregistrés ; au plus 5 envois par empreinte sur une heure glissante ; les lignes de plus de 24 h sont purgées à chaque envoi. Champ piège invisible : rempli, il renvoie un faux succès sans rien envoyer ni enregistrer.
   - *Validation* : schéma zod `lib/validation/contact.ts`, sur le modèle de `lib/validation/inscription.ts` (nom 1–100, email valide, message 10–2000 après normalisation `\r\n` → `\n` et trim, comme la description de la Phase 29).
   - *Anonymat* : aucun nom de personne dans `/cgu` ni ailleurs ; l'éditeur est « un particulier non professionnel », joignable via `/contact`.
 
@@ -857,17 +857,17 @@ Le lien « Contact » du pied de page apparaît et mène à la page publique `/c
 
 ### Critères d'acceptation
 
-- [ ] « Contact » s'affiche dans le pied de page de toutes les pages et mène à `/contact`, avec « ← Retour » vers `/`
-- [ ] Nom (1 à 100 caractères), adresse mail (format valide) et message (10 à 2000 caractères, compteur « N/2000 ») sont obligatoires ; une erreur s'affiche sous le champ concerné, la saisie conservée
-- [ ] Un organisateur connecté trouve son email prérempli et modifiable ; un visiteur trouve le champ vide
-- [ ] Un envoi réussi affiche « Message envoyé, nous vous répondrons par email. » et vide le formulaire
+- [x] « Contact » s'affiche dans le pied de page de toutes les pages et mène à `/contact`, avec « ← Retour » vers `/`
+- [x] Nom (1 à 100 caractères), adresse mail (format valide) et message (10 à 2000 caractères, compteur « N/2000 ») sont obligatoires ; une erreur s'affiche sous le champ concerné, la saisie conservée
+- [x] Un organisateur connecté trouve son email prérempli et modifiable ; un visiteur trouve le champ vide
+- [x] Un envoi réussi affiche « Message envoyé, nous vous répondrons par email. » et vide le formulaire
 - [ ] L'email reçu à l'adresse de contact contient le nom, l'email et le message ; « Répondre » vise l'email de l'expéditeur ; aucun email n'est envoyé à l'expéditeur
-- [ ] Un échec d'envoi, ou une adresse de contact absente, affiche un message d'erreur et conserve la saisie
-- [ ] Le 6ᵉ envoi en moins d'une heure depuis une même connexion affiche « Trop de messages envoyés, réessayez plus tard. » ; l'IP n'est jamais stockée en clair
-- [ ] Un envoi avec le champ piège rempli n'envoie rien et n'est pas enregistré
-- [ ] Une phrase sous le bouton explique l'usage des données, avec un lien vers `/cgu`
-- [ ] Sur un formulaire d'annonce, « Contact » suit les mêmes règles de sortie que « CGU »
-- [ ] Tests Vitest de la validation, de la limite d'envois et du `replyTo` d'`envoyerEmail` ; test Playwright de l'envoi, des erreurs et du préremplissage
+- [x] Un échec d'envoi, ou une adresse de contact absente, affiche un message d'erreur et conserve la saisie
+- [x] Le 6ᵉ envoi en moins d'une heure depuis une même connexion affiche « Trop de messages envoyés, réessayez plus tard. » ; l'IP n'est jamais stockée en clair
+- [x] Un envoi avec le champ piège rempli n'envoie rien et n'est pas enregistré
+- [x] Une phrase sous le bouton explique l'usage des données, avec un lien vers `/cgu`
+- [x] Sur un formulaire d'annonce, « Contact » suit les mêmes règles de sortie que « CGU »
+- [x] Tests Vitest de la validation, de la limite d'envois et du `replyTo` d'`envoyerEmail` ; test Playwright de l'envoi, des erreurs et du préremplissage
 
 ## Bloquée par
 

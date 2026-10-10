@@ -8,10 +8,12 @@ type Email = {
   sujet: string;
   html: string;
   texte: string;
+  /** Adresse de réponse ; par défaut l'adresse de contact de l'équipe. */
+  replyTo?: string;
 };
 
 /**
- * Envoie un email de compte via Resend. Ne lève jamais : un échec est
+ * Envoie un email (compte ou message Contact) via Resend. Ne lève jamais : un échec est
  * journalisé et signalé par `false`. En développement, le texte de l'email
  * est écrit dans le terminal quand l'envoi n'a pas lieu (clé absente, ou
  * destinataire refusé par Resend en mode test).
@@ -22,11 +24,11 @@ export async function envoyerEmail(email: Email): Promise<boolean> {
   try {
     if (!cle) throw new Error("RESEND_API_KEY absente.");
 
-    const contact = adresseContact();
+    const replyTo = email.replyTo ?? adresseContact();
     const { error } = await new Resend(cle).emails.send({
       from: process.env.EMAIL_EXPEDITEUR ?? EXPEDITEUR_PAR_DEFAUT,
       to: email.destinataire,
-      ...(contact ? { replyTo: contact } : {}),
+      ...(replyTo ? { replyTo } : {}),
       subject: email.sujet,
       html: email.html,
       text: email.texte,
@@ -200,6 +202,29 @@ export function emailAvisChangementEmail(
         "Bonjour,",
         `L'adresse email de votre compte organisateur Jamix a été remplacée par ${masquerEmail(nouvelleAdresse)} le ${formaterDateHeure(date)}. Cette adresse-ci ne recevra plus les messages du compte.`,
         recours,
+      ],
+    }),
+  };
+}
+
+/**
+ * Message du formulaire Contact, envoyé à l'équipe (jamais à l'expéditeur) :
+ * « Répondre » vise l'email saisi par l'expéditeur.
+ */
+export function emailMessageContact(
+  destinataire: string,
+  message: { nom: string; email: string; message: string }
+): Email {
+  return {
+    destinataire,
+    replyTo: message.email,
+    sujet: `Message Contact Jamix — ${message.nom}`,
+    ...gabaritEmail({
+      paragraphes: [
+        `Nom : ${message.nom}`,
+        `Email : ${message.email}`,
+        "Message :",
+        ...message.message.split("\n").filter((ligne) => ligne.trim() !== ""),
       ],
     }),
   };

@@ -133,7 +133,9 @@ export default function PageCgu() {
             Durée de conservation : les données du compte sont conservées tant que le compte
             existe, puis effacées immédiatement et définitivement à sa suppression. Les messages
             Contact ne sont pas enregistrés dans l&apos;application et sont conservés le temps de
-            traiter la demande.
+            traiter la demande. Pour limiter les abus, une empreinte chiffrée et
+            non réversible de l&apos;adresse IP de l&apos;expéditeur est conservée 24 heures au
+            plus.
           </p>
           <p>
             Vos droits : accès, rectification et suppression de vos données. Un organisateur les

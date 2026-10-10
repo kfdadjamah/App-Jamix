@@ -11,6 +11,7 @@ async function verifierPiedDePage(page: Page) {
   await expect(pied).toBeVisible();
   await expect(pied.getByText(MENTION)).toBeVisible();
   await expect(pied.getByRole("link", { name: "CGU" })).toHaveAttribute("href", "/cgu");
+  await expect(pied.getByRole("link", { name: "Contact" })).toHaveAttribute("href", "/contact");
   const basContenu = await page.locator("main").last().evaluate((el) => el.getBoundingClientRect().bottom);
   const hautPied = await pied.evaluate((el) => el.getBoundingClientRect().top);
   expect(hautPied).toBeGreaterThanOrEqual(basContenu);
@@ -24,6 +25,7 @@ const PAGES_PUBLIQUES = [
   "/mot-de-passe-oublie",
   "/reinitialiser-mot-de-passe",
   "/cgu",
+  "/contact",
 ];
 
 for (const chemin of PAGES_PUBLIQUES) {
@@ -68,8 +70,6 @@ test("« CGU » mène à la page CGU, publique, avec ses sections dans l'ordre",
     "Droit applicable",
   ]);
   await expect(page.getByText(/^Mise à jour : /)).toBeVisible();
-  // « Contact » n'apparaît qu'en phase 32.
-  await expect(page.getByRole("contentinfo").getByRole("link", { name: "Contact" })).toHaveCount(0);
 });
 
 test.describe("à 360px", () => {
@@ -113,6 +113,26 @@ test.describe("espace organisateur", () => {
     await page.goto("/mes-annonces/nouvelle");
     await page.getByRole("contentinfo").getByRole("link", { name: "CGU" }).click();
     await expect(page).toHaveURL("/cgu");
+  });
+
+  test("sans changement, « Contact » quitte directement le formulaire", async ({ page }) => {
+    await page.goto("/mes-annonces/nouvelle");
+    await page.getByRole("contentinfo").getByRole("link", { name: "Contact" }).click();
+    await expect(page).toHaveURL("/contact");
+  });
+
+  test("sur une annonce publiée modifiée, « Contact » propose Rester ou Quitter", async ({ page }) => {
+    const publiee = page.locator('main a[href^="/mes-annonces/c"]', { hasText: "Publiée" }).first();
+    test.skip((await publiee.count()) === 0, "Le compte de test n'a aucune annonce publiée");
+    await publiee.click();
+    await expect(page).toHaveURL(/\/mes-annonces\/c/);
+
+    await page.locator('textarea[name="description"]').fill(`Modifiée ${Date.now()}`);
+    await page.getByRole("contentinfo").getByRole("link", { name: "Contact" }).click();
+    const fenetre = page.getByRole("dialog", { name: "Modifications non enregistrées" });
+    await expect(fenetre).toBeVisible();
+    await fenetre.getByRole("button", { name: "Quitter" }).click();
+    await expect(page).toHaveURL("/contact");
   });
 
   test("sur une annonce publiée modifiée, « CGU » propose Rester ou Quitter", async ({ page }) => {
