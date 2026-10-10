@@ -907,14 +907,14 @@ Le pied de page affiche « CGU · Mentions légales · Contact ». « Mentions l
 
 ### Critères d'acceptation
 
-- [ ] Le pied de page affiche « CGU · Mentions légales · Contact » sur toutes les pages, sans débordement horizontal à 360px
-- [ ] `/mentions-legales` est accessible sans compte, avec « ← Retour » vers `/`, et présente les sections dans l'ordre du PRD
-- [ ] Aucun nom de personne n'apparaît sur `/mentions-legales` ; l'éditeur et le directeur de la publication y sont un particulier non professionnel anonyme
-- [ ] Les hébergeurs (Vercel, Neon) sont indiqués avec leur nom et leur adresse
-- [ ] La page explique comment joindre l'équipe (lien vers `/contact`) et signaler un contenu illicite
-- [ ] `/cgu` ne contient plus Éditeur, Hébergeur ni Propriété des contenus, et renvoie vers `/mentions-legales`
-- [ ] Sur une nouvelle annonce ou un brouillon modifié, « Mentions légales » enregistre en brouillon puis affiche la fenêtre ; sur une annonce Publiée modifiée, la fenêtre Quitter/Rester ; sans changement, sortie directe
-- [ ] Tests Playwright : lien présent dans le pied de page, navigation vers `/mentions-legales`, absence de nom de personne, sortie gardée depuis un formulaire d'annonce
+- [x] Le pied de page affiche « CGU · Mentions légales · Contact » sur toutes les pages, sans débordement horizontal à 360px
+- [x] `/mentions-legales` est accessible sans compte, avec « ← Retour » vers `/`, et présente les sections dans l'ordre du PRD
+- [x] Aucun nom de personne n'apparaît sur `/mentions-legales` ; l'éditeur et le directeur de la publication y sont un particulier non professionnel anonyme
+- [x] Les hébergeurs (Vercel, Neon) sont indiqués avec leur nom et leur adresse
+- [x] La page explique comment joindre l'équipe (lien vers `/contact`) et signaler un contenu illicite
+- [x] `/cgu` ne contient plus Éditeur, Hébergeur ni Propriété des contenus, et renvoie vers `/mentions-legales`
+- [x] Sur une nouvelle annonce ou un brouillon modifié, « Mentions légales » enregistre en brouillon puis affiche la fenêtre ; sur une annonce Publiée modifiée, la fenêtre Quitter/Rester ; sans changement, sortie directe
+- [x] Tests Playwright : lien présent dans le pied de page, navigation vers `/mentions-legales`, absence de nom de personne, sortie gardée depuis un formulaire d'annonce
 
 ## Bloquée par
 
