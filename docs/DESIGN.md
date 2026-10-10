@@ -147,6 +147,13 @@ Rotated 90° text "ORYZO 1-MODEL" in Warm Cream, 10–12px uppercase, sits flush
 
 100vh height, Walnut Shadow (#100904) background, centered 3D product render, left-aligned heading at 41px uppercase "ISN'T JUST A COASTER.", right-aligned body copy at 29px weight 400 mixed-case. The signature layout pattern — three columns, generous gutters.
 
+### Menu « ⋯ » des cartes d'annonces (Jammix)
+**Role:** Actions d'une annonce depuis « Mes annonces », sans ouvrir l'annonce
+
+Bouton « ⋯ » (18px, weight 500, Warm Cream, sans bordure ni fond) en haut à droite de la carte (`top-2 right-2`), frère du lien de la carte et non son enfant ; zone tactile 44×44px, libellé accessible « Actions de l'annonce », `aria-haspopup="menu"` et `aria-expanded`. Le texte de la carte réserve 48px à droite pour ne jamais passer dessous. Le menu est un panneau de 12px de rayon, bordure 1px Cork Border, fond Walnut Shadow, sans ombre, avec deux entrées au plus (« Modifier », « Annuler ») en 12px weight 500 uppercase Warm Cream, soulignées au survol et au focus. Échap ou un clic extérieur le ferme.
+
+La fenêtre d'annulation est un `<dialog>` natif modal : 12px de rayon, bordure Cork Border, fond Walnut Shadow, voile noir à 60 %, 24px de marge intérieure, largeur de 384px au plus et marge de 24px à 360px. Titre en 18px uppercase, choix de portée en boutons radio 12px uppercase, puis deux boutons fantômes : « Annuler l'annonce » (bordure 1px) et « ← Retour » (bordure 2px). Une erreur s'affiche dans la fenêtre en 10px uppercase Gold elegance. Aucun bouton plein.
+
 ### Section Divider (Dashed Hairline)
 **Role:** Visual separator between content blocks
 

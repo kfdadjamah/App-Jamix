@@ -40,6 +40,8 @@ Chaque page se termine par un pied de page discret : les liens « CGU », « Men
 
 L'inscription d'un organisateur demande désormais, dans cet ordre, « Nom et prénom », « Email », « Mot de passe », « Nom du bar » et « Adresse du bar » (photo toujours facultative). Le nom et prénom se modifie ensuite depuis le profil.
 
+Sur chaque carte de « Mes annonces », un bouton « ⋯ » en haut à droite ouvre un petit menu : « Modifier » mène au formulaire de l'annonce ; « Annuler » ouvre une fenêtre de confirmation, avec choix de la portée (« Cette date seulement » + date, ou « Toutes les dates ») pour une annonce récurrente.
+
 ## Utilisateur cible
 
 - Musicien amateur ou semi-professionnel, tous instruments et styles confondus, qui joue régulièrement en dehors de tout groupe fixe et cherche des occasions de jouer en live sans avoir à monter un concert. Il vit à Lyon ou y passe.
@@ -171,6 +173,14 @@ US-121. En tant qu'utilisateur, je veux des textes secondaires assez clairs sur 
 US-122. En tant qu'utilisateur, je veux un bouton « ← Retour » bien visible, afin de le repérer et de le toucher facilement.
 US-123. En tant qu'organisateur, je veux que des adresses complètes (numéro, rue, code postal, ville) me soient suggérées pendant la saisie de l'adresse d'un bar, à l'inscription, à l'ajout et à la modification d'un bar, afin de saisir une adresse exacte sans effort.
 US-124. En tant qu'organisateur, je veux pouvoir saisir librement une adresse si aucune suggestion ne convient, afin de ne jamais être bloqué.
+US-125. En tant qu'organisateur, je veux un bouton « ⋯ » en haut à droite de chaque carte d'annonce, afin d'accéder aux actions sans ouvrir l'annonce.
+US-126. En tant qu'organisateur, je veux choisir « Modifier » dans ce menu, afin d'ouvrir directement le formulaire de modification de l'annonce.
+US-127. En tant qu'organisateur, je veux choisir « Annuler » pour une annonce publiée, puis confirmer dans une fenêtre, afin d'éviter une annulation accidentelle.
+US-128. En tant qu'organisateur d'une annonce récurrente, je veux choisir dans cette fenêtre entre « Cette date seulement » (en désignant la date) et « Toutes les dates », afin de prévenir les musiciens selon l'ampleur réelle de l'annulation.
+US-129. En tant qu'organisateur, je veux que le menu d'un brouillon ne propose que « Modifier », afin de ne voir que des actions qui ont un sens.
+US-130. En tant qu'organisateur, je veux que « Annuler » disparaisse du menu quand toutes les dates sont déjà annulées, afin de ne pas annuler deux fois.
+US-131. En tant qu'organisateur, je veux fermer le menu ou la fenêtre sans effet (clic à côté, Échap, « Retour »), afin de renoncer sans conséquence.
+US-132. En tant qu'organisateur, je veux qu'un clic sur « ⋯ » n'ouvre pas la page de l'annonce, afin de ne pas naviguer par erreur.
 
 ## Critères de succès
 
@@ -221,6 +231,7 @@ US-124. En tant qu'organisateur, je veux pouvoir saisir librement une adresse si
 - Les textes secondaires sont en crème à environ 70 % d'opacité, plus aucun en Driftwood ; le bouton « ← Retour » a une bordure de 2px et une graisse 500.
 - Dès 3 caractères saisis dans l'adresse d'un bar (inscription, ajout, modification), jusqu'à 5 suggestions s'affichent ; un clic remplit le champ avec l'adresse complète (« n° rue, code postal ville »).
 - Une adresse saisie librement, sans suggestion choisie, est acceptée comme avant ; si le service de suggestions est indisponible, le champ reste un champ libre sans message d'erreur.
+- Le bouton « ⋯ » est présent sur chaque carte de « Mes annonces » ; « Modifier » mène à la page d'édition en un clic depuis la liste ; après confirmation, les dates concernées affichent « annulée » dans la liste sans recharger manuellement ; sans confirmation, rien n'est annulé.
 
 ## Hors périmètre
 
@@ -290,6 +301,8 @@ US-124. En tant qu'organisateur, je veux pouvoir saisir librement une adresse si
 - Nom de l'organisateur dans l'email de bienvenue.
 - Changement de taille des sous-titres `h2` et des titres du bandeau.
 - Suggestions d'adresse côté musicien, y compris pour l'adresse de recherche.
+- Suppression d'une annonce ou d'un brouillon ; autres actions dans le menu des cartes (dupliquer, confirmer une date) ; menu sur les cartes côté musicien.
+- Annulation d'une date unique d'une annonce ponctuelle distincte de « Toutes les dates » (une annonce ponctuelle = une fenêtre de confirmation simple).
 
 ## Décisions d'implémentation
 
@@ -397,6 +410,7 @@ US-124. En tant qu'organisateur, je veux pouvoir saisir librement une adresse si
 - Les textes secondaires utilisent un crème à environ 70 % d'opacité ; le Driftwood est réservé aux séparateurs et bordures structurels. Les textes à 60 % d'opacité passent à 70 %.
 - « ← Retour » reste un bouton fantôme, avec une bordure de 2px, une graisse 500 et une couleur crème.
 - Le champ d'adresse d'un bar propose une liste déroulante après 3 caractères (5 suggestions au maximum), utilisable au clavier et fermée par Échap. La valeur envoyée est le texte du champ ; le géocodage serveur est inchangé (un échec laisse le bar absent de la carte).
+- Le bouton « ⋯ » des cartes de « Mes annonces » a une zone tactile d'au moins 44px et le libellé accessible « Actions de l'annonce » ; le menu a deux entrées au maximum. La fenêtre d'annulation propose « Annuler l'annonce » / « Retour » et affiche un message d'erreur dans la fenêtre si l'annulation échoue.
 
 ## Notes complémentaires
 
@@ -437,3 +451,5 @@ Piste future : une cagnotte de dons libres pour soutenir la maintenance de l'inf
 Le nom et prénom de l'organisateur est une donnée personnelle : la page CGU doit le mentionner parmi les données collectées. La convention « éditeur anonyme » ne concerne que l'éditeur du service, pas les organisateurs.
 
 Les suggestions d'adresse dépendent de l'API Adresse (data.gouv.fr). En cas d'indisponibilité, le champ reste un champ libre. DESIGN.md devra consigner le titre de page unique, le texte secondaire en crème 70 % et le bouton « Retour » à bordure de 2px.
+
+Le menu « ⋯ » réutilise les règles d'annulation existantes (statut « annulée » par occurrence, confirmation J-7 effacée) ; aucun email ni SMS. DESIGN.md devra consigner le menu et la fenêtre.

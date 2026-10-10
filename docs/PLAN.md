@@ -968,3 +968,29 @@ Tous les titres de page passent à 24px sur une ligne (classe commune `.titre-pa
 ## Bloquée par
 
 - Phase 35 (nom et prénom de l'organisateur)
+
+---
+
+## Phase 37 : Menu « ⋯ » sur les cartes d'annonces
+
+**User stories** : US-125 à US-132
+
+### Ce qu'on livre
+
+Un menu d'actions sur chaque carte de `/mes-annonces`, sans changement de schéma ni de route : « Modifier » (lien vers `/mes-annonces/[id]`) et « Annuler » (annonce publiée avec au moins une date non annulée) via une fenêtre de confirmation réutilisant les actions serveur existantes `annulerOccurrence` / `annulerAnnonce`. `CarteAnnonce` devient un conteneur `relative` dont le menu (nouveau composant client `app/mes-annonces/menu-annonce.tsx`) est un frère du `Link`, en `absolute top-2 right-2`. DESIGN.md est complété.
+
+### Critères d'acceptation
+
+- [x] Chaque carte affiche un bouton « ⋯ » en haut à droite, hors du lien de la carte ; cliquer dessus n'ouvre pas l'annonce
+- [x] « Modifier » ouvre `/mes-annonces/[id]`
+- [x] Brouillon : seule l'entrée « Modifier » est proposée
+- [x] Annonce publiée ponctuelle : « Annuler » → confirmation → date « annulée » dans la liste
+- [x] Annonce récurrente : la fenêtre propose « Cette date seulement » (liste des dates non annulées) ou « Toutes les dates » ; seule la portée choisie est annulée
+- [x] « Annuler » absent si toutes les dates sont déjà annulées
+- [x] Échap / clic extérieur ferme le menu ; Échap / « Retour » ferme la fenêtre sans rien annuler ; focus géré, `aria-haspopup`/`aria-expanded`
+- [x] Respect de DESIGN.md (couleurs, 12px/uppercase, bordures), tenue à 360px
+- [x] Tests Playwright (`e2e/menu-annonce.e2e.ts`) : menu sur brouillon et publiée, modification, annulation ponctuelle, portée ciblée vs globale sur récurrente, abandon ; `npm run lint` et `npm run build` passent
+
+## Bloquée par
+
+- Phase 36 (lisibilité des titres, sous-textes, retour et suggestions d'adresse)
