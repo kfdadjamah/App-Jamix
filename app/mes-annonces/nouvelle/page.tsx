@@ -41,7 +41,7 @@ export default async function PageNouvelleAnnonce() {
             barIdInitial: bars.length === 1 ? bars[0].id : "",
           }}
           reprises={reprises}
-          afficherPhotos
+          afficherPhotos={false}
           actionBrouillon={creerBrouillon}
           actionPublier={publier}
           destinationApresEnregistrement="/mes-annonces"

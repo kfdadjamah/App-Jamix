@@ -7,7 +7,6 @@ import BoutonRetour from "@/components/bouton-retour";
 import { FournisseurGardeSortie } from "@/components/garde-sortie";
 import FormulaireAnnonce from "../formulaire-annonce";
 import { modifierAnnonce } from "../actions";
-import PhotoAnnonce from "./photo-annonce";
 import ConfirmerOccurrence from "./confirmer-occurrence";
 import AnnulerOccurrence from "./annuler-occurrence";
 import AnnulerAnnonce from "./annuler-annonce";
@@ -138,21 +137,6 @@ export default async function PageEditionAnnonce({
           actionPublier={estPubliee ? undefined : publier}
           actionModifier={estPubliee ? enregistrerModifications : undefined}
         />
-
-        <div className="flex gap-6">
-          <PhotoAnnonce
-            annonceId={annonce.id}
-            emplacement={1}
-            photoUrl={annonce.photoUrl1}
-            label="Photo 1"
-          />
-          <PhotoAnnonce
-            annonceId={annonce.id}
-            emplacement={2}
-            photoUrl={annonce.photoUrl2}
-            label="Photo 2"
-          />
-        </div>
       </main>
       <PiedDePage />
     </FournisseurGardeSortie>
