@@ -28,7 +28,27 @@ const champAdresseBar = z
   .min(1, "L'adresse du bar est requise.")
   .transform(nettoyerEspaces);
 
+// Nom et prénom : un seul champ, espaces de début et de fin ignorés.
+const NOM_COMPLET_MAX = 80;
+const champNomComplet = z
+  .string()
+  .trim()
+  .min(1, "Le nom et prénom sont requis.")
+  .max(NOM_COMPLET_MAX, `Le nom et prénom ne doivent pas dépasser ${NOM_COMPLET_MAX} caractères.`);
+
+export const schemaNomComplet = z.object({ nomComplet: champNomComplet });
+export type ChampsNomComplet = z.infer<typeof schemaNomComplet>;
+
+// Au profil, le vide n'est accepté que pour un compte sans nom (décidé par l'appelant).
+export const schemaNomCompletVideAutorise = z.object({
+  nomComplet: z
+    .string()
+    .trim()
+    .max(NOM_COMPLET_MAX, `Le nom et prénom ne doivent pas dépasser ${NOM_COMPLET_MAX} caractères.`),
+});
+
 export const schemaInscription = z.object({
+  nomComplet: champNomComplet,
   email: champEmail,
   motDePasse: champMotDePasse,
   nomBar: champNomBar,

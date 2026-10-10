@@ -21,12 +21,12 @@ function calculerStatutInitial(date) {
   return { statut: "CONFIRMEE", confirmationJ7: null };
 }
 
-async function creerOrganisateurAvecBar({ email, motDePasse, nomBar, adresse, latitude, longitude }) {
+async function creerOrganisateurAvecBar({ email, motDePasse, nom = null, nomBar, adresse, latitude, longitude }) {
   const motDePasseHash = await bcrypt.hash(motDePasse, 12);
   const organisateur = await p.organisateur.upsert({
     where: { email },
-    update: { motDePasseHash },
-    create: { email, motDePasseHash },
+    update: { motDePasseHash, nom },
+    create: { email, motDePasseHash, nom },
   });
   // Plusieurs bars par compte (phase 18) : on retrouve le bar du seed par sa clé (compte, nom, adresse).
   const bar = await p.bar.upsert({
@@ -84,12 +84,14 @@ async function main() {
   const { bar: sousSol } = await creerOrganisateurAvecBar({
     email: "test-organisateur@jamix.fr",
     motDePasse: "test1234",
+    nom: "Camille Test",
     nomBar: "Le Sous-Sol",
     adresse: "18 rue Sainte-Hélène, Lyon",
     latitude: 45.754825,
     longitude: 4.829521,
   });
 
+  // chezmimi n'a pas de nom : il représente un compte antérieur à la phase 35.
   const { bar: chezMimi } = await creerOrganisateurAvecBar({
     email: "chezmimi@jamix.fr",
     motDePasse: "test1234",

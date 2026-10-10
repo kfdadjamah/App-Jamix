@@ -89,7 +89,7 @@ export default function PageCgu() {
           <p>Données collectées :</p>
           <Liste>
             <li>
-              organisateurs : adresse email, mot de passe (enregistré sous forme chiffrée), bars
+              organisateurs : nom et prénom, adresse email, mot de passe (enregistré sous forme chiffrée), bars
               (nom, adresse, photo) et annonces (textes, photos) ;
             </li>
             <li>
@@ -118,7 +118,7 @@ export default function PageCgu() {
           </p>
           <p>
             Vos droits : accès, rectification et suppression de vos données. Un organisateur les
-            exerce directement dans « Mon profil » (email, bars, suppression du compte) ; chacun
+            exerce directement dans « Mon profil » (nom et prénom, email, bars, suppression du compte) ; chacun
             peut aussi écrire via le formulaire Contact. En cas de désaccord, une réclamation peut
             être adressée à la CNIL (cnil.fr).
           </p>

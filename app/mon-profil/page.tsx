@@ -7,6 +7,7 @@ import HeaderOrganisateur from "@/components/header-organisateur";
 import BoutonRetour from "@/components/bouton-retour";
 import SectionDeroulable from "@/components/section-deroulable";
 import MesBars from "./mes-bars";
+import FormulaireNomComplet from "./formulaire-nom-complet";
 import FormulaireEmail from "./formulaire-email";
 import FormulaireMotDePasse from "./formulaire-mot-de-passe";
 import SuppressionCompte from "./suppression-compte";
@@ -24,6 +25,7 @@ export default async function PageMonProfil() {
   const organisateur = await prisma.organisateur.findUnique({
     where: { id: session.user.id },
     select: {
+      nom: true,
       email: true,
       createdAt: true,
       bars: {
@@ -93,6 +95,10 @@ export default async function PageMonProfil() {
               ),
             }))}
           />
+        </SectionDeroulable>
+        <Separateur />
+        <SectionDeroulable titre="Nom et prénom">
+          <FormulaireNomComplet nomActuel={organisateur.nom} />
         </SectionDeroulable>
         <Separateur />
         <SectionDeroulable

@@ -4,7 +4,10 @@ import {
   schemaChangementMotDePasse,
   schemaConnexion,
   schemaFicheBar,
+  schemaInscription,
   schemaMotDePasseOublie,
+  schemaNomComplet,
+  schemaNomCompletVideAutorise,
   schemaReinitialisationMotDePasse,
   schemaSuppressionCompte,
 } from "./inscription";
@@ -130,5 +133,37 @@ describe("schemaSuppressionCompte", () => {
       schemaSuppressionCompte.safeParse({ motDePasseActuel: "x", confirmation: "SUPPRIMER" })
         .success
     ).toBe(true);
+  });
+});
+
+describe("nomComplet", () => {
+  it("retire les espaces de début et de fin", () => {
+    const resultat = schemaNomComplet.safeParse({ nomComplet: "  Camille Martin  " });
+    expect(resultat.success && resultat.data.nomComplet).toBe("Camille Martin");
+  });
+
+  it("refuse un nom vide ou fait d'espaces", () => {
+    expect(schemaNomComplet.safeParse({ nomComplet: "" }).success).toBe(false);
+    expect(schemaNomComplet.safeParse({ nomComplet: "   " }).success).toBe(false);
+  });
+
+  it("accepte 80 caractères et refuse 81", () => {
+    expect(schemaNomComplet.safeParse({ nomComplet: "a".repeat(80) }).success).toBe(true);
+    expect(schemaNomComplet.safeParse({ nomComplet: "a".repeat(81) }).success).toBe(false);
+  });
+
+  it("ignore les espaces autour pour la limite de 80", () => {
+    expect(schemaNomComplet.safeParse({ nomComplet: ` ${"a".repeat(80)} ` }).success).toBe(true);
+  });
+
+  it("est obligatoire à l'inscription", () => {
+    const base = { email: "a@b.fr", motDePasse: "12345678", nomBar: "Bar", adresseBar: "1 rue X" };
+    expect(schemaInscription.safeParse(base).success).toBe(false);
+    expect(schemaInscription.safeParse({ ...base, nomComplet: "Camille Martin" }).success).toBe(true);
+  });
+
+  it("variante du profil : le vide passe, le trop long non", () => {
+    expect(schemaNomCompletVideAutorise.safeParse({ nomComplet: "  " }).success).toBe(true);
+    expect(schemaNomCompletVideAutorise.safeParse({ nomComplet: "a".repeat(81) }).success).toBe(false);
   });
 });

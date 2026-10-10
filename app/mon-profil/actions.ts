@@ -27,6 +27,7 @@ import {
   schemaChangementEmail,
   schemaChangementMotDePasse,
   schemaFicheBar,
+  schemaNomCompletVideAutorise,
   schemaPhoto,
   schemaSuppressionCompte,
 } from "@/lib/validation/inscription";
@@ -240,6 +241,36 @@ export async function supprimerBar(barId: string, nomSaisi: string): Promise<Res
 
 export async function deconnecterOrganisateur() {
   await signOut({ redirectTo: "/" });
+}
+
+export async function changerNomComplet(formData: FormData): Promise<ResultatAction> {
+  const resultat = schemaNomCompletVideAutorise.safeParse({
+    nomComplet: formData.get("nomComplet"),
+  });
+  if (!resultat.success) {
+    return { erreur: resultat.error.issues[0]?.message ?? "Formulaire invalide." };
+  }
+
+  const { nomComplet } = resultat.data;
+  const organisateurId = await recupererIdOrganisateurConnecte();
+  const organisateur = await prisma.organisateur.findUnique({
+    where: { id: organisateurId },
+    select: { nom: true },
+  });
+  if (!organisateur) return { erreur: "Compte introuvable." };
+
+  if (nomComplet === "") {
+    // Un compte sans nom n'est jamais contraint d'en saisir un ; un nom existant ne se retire pas.
+    if (organisateur.nom) return { erreur: "Le nom et prénom sont requis." };
+    return { succes: true };
+  }
+
+  await prisma.organisateur.update({
+    where: { id: organisateurId },
+    data: { nom: nomComplet },
+  });
+  revalidatePath("/mon-profil");
+  return { succes: true };
 }
 
 export async function changerEmail(formData: FormData): Promise<ResultatAction> {

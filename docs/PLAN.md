@@ -932,13 +932,13 @@ L'inscription demande « Nom et prénom » en premier champ (obligatoire, 1 à 8
 
 ### Critères d'acceptation
 
-- [ ] Le formulaire d'inscription affiche « Nom et prénom » en premier champ ; un nom vide ou de plus de 80 caractères (espaces de début et de fin ignorés) est refusé avec un message sous le champ, la saisie conservée
-- [ ] Un compte créé avec un nom le retrouve prérempli dans la section « Nom et prénom » du profil
-- [ ] La section « Nom et prénom » du profil se comporte comme les autres sections (repliée par défaut) ; la modification est enregistrée et confirmée, les mêmes règles de validation s'appliquent
-- [ ] Un compte existant sans nom se connecte, utilise « Mes annonces » et son profil normalement, et peut renseigner son nom sans y être contraint
-- [ ] `/cgu` mentionne le nom et prénom parmi les données collectées
-- [ ] Aucune migration destructive : `Organisateur.nom` est nullable, les comptes existants sont intacts
-- [ ] Tests Vitest de la validation `nomComplet` ; tests Playwright : inscription avec et sans nom (message d'erreur), nom prérempli au profil, modification du nom, connexion d'un compte sans nom
+- [x] Le formulaire d'inscription affiche « Nom et prénom » en premier champ ; un nom vide ou de plus de 80 caractères (espaces de début et de fin ignorés) est refusé avec un message sous le champ, la saisie conservée
+- [x] Un compte créé avec un nom le retrouve prérempli dans la section « Nom et prénom » du profil
+- [x] La section « Nom et prénom » du profil se comporte comme les autres sections (repliée par défaut) ; la modification est enregistrée et confirmée, les mêmes règles de validation s'appliquent
+- [x] Un compte existant sans nom se connecte, utilise « Mes annonces » et son profil normalement, et peut renseigner son nom sans y être contraint
+- [x] `/cgu` mentionne le nom et prénom parmi les données collectées
+- [x] Aucune migration destructive : `Organisateur.nom` est nullable, les comptes existants sont intacts
+- [x] Tests Vitest de la validation `nomComplet` ; tests Playwright : inscription avec et sans nom (message d'erreur), nom prérempli au profil, modification du nom, connexion d'un compte sans nom
 
 ## Bloquée par
 

@@ -9,6 +9,8 @@ datasource db {
 
 model Organisateur {
   id                     String                  @id @default(cuid())
+  // Nom et prénom saisis à l'inscription ; null pour les comptes antérieurs à la phase 35.
+  nom                    String?
   email                  String                  @unique
   motDePasseHash         String
   // Toute session émise avant cette date est rejetée ; null = aucune invalidation.

@@ -35,6 +35,7 @@ export default function FormulaireInscription() {
 
     const donnees = getValues();
     const formData = new FormData();
+    formData.set("nomComplet", donnees.nomComplet);
     formData.set("email", donnees.email);
     formData.set("motDePasse", donnees.motDePasse);
     formData.set("nomBar", donnees.nomBar);
@@ -64,6 +65,15 @@ export default function FormulaireInscription() {
       </div>
 
       <form onSubmit={surSoumission} className="flex flex-col gap-6" noValidate>
+        <ChampFormulaire label="Nom et prénom" erreur={errors.nomComplet?.message}>
+          <input
+            type="text"
+            autoComplete="name"
+            {...register("nomComplet")}
+            className="champ-input"
+          />
+        </ChampFormulaire>
+
         <ChampFormulaire label="Email" erreur={errors.email?.message}>
           <input
             type="email"
