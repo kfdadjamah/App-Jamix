@@ -10,7 +10,7 @@ import {
   LIBELLES_STATUT_OCCURRENCE,
   libelleStyles,
 } from "@/lib/annonce-constantes";
-import { statutAffiche } from "@/lib/annonces";
+import { mentionOrganisePar, statutAffiche } from "@/lib/annonces";
 import { messageRelance } from "@/lib/relances";
 import FiltreAnnonces from "./filtre-annonces";
 import CarteGlissable from "./carte-glissable";
@@ -22,7 +22,7 @@ export default async function PageMesAnnonces() {
   const [annonces, bars] = await Promise.all([
     prisma.annonce.findMany({
       where: { bar: { organisateurId } },
-      include: { occurrences: true, bar: { select: { nom: true } } },
+      include: { occurrences: true, bar: { select: { nom: true, organisateur: { select: { prenom: true } } } } },
       orderBy: { createdAt: "desc" },
     }),
     prisma.bar.findMany({
@@ -76,7 +76,10 @@ export default async function PageMesAnnonces() {
 }
 
 type AnnonceAvecDetails = Prisma.AnnonceGetPayload<{
-  include: { occurrences: true; bar: { select: { nom: true } } };
+  include: {
+    occurrences: true;
+    bar: { select: { nom: true; organisateur: { select: { prenom: true } } } };
+  };
 }>;
 
 function CarteAnnonce({ annonce }: { annonce: AnnonceAvecDetails }) {
@@ -84,6 +87,7 @@ function CarteAnnonce({ annonce }: { annonce: AnnonceAvecDetails }) {
     (a, b) => a.date.getTime() - b.date.getTime(),
   );
   const premiereOccurrence = occurrencesTriees[0];
+  const mention = mentionOrganisePar(annonce.bar.organisateur.prenom, annonce.coOrganisateur);
   const datesAnnulables =
     annonce.statut === "PUBLIEE"
       ? occurrencesTriees
@@ -122,6 +126,11 @@ function CarteAnnonce({ annonce }: { annonce: AnnonceAvecDetails }) {
           <span className="truncate pr-12 text-[20px] font-extrabold tracking-[-0.025em] text-[var(--harbor-marine)]">
             {annonce.bar.nom}
           </span>
+          {mention && (
+            <span className="line-clamp-2 break-words text-[12px] text-[var(--harbor-marine-2)]">
+              {mention}
+            </span>
+          )}
           <div className="flex items-center gap-2 pr-12">
             <span className="text-[12px] font-bold text-[var(--harbor-marine-2)]">
               {annonce.statut === "BROUILLON" ? "Brouillon" : "Publiée"}

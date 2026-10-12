@@ -139,6 +139,7 @@ export default async function PageEditionAnnonce({
             instruments: annonce.instruments,
             instrumentAutre: annonce.instrumentAutre ?? "",
             description: annonce.description ?? "",
+            coOrganisateur: annonce.coOrganisateur ?? "",
           }}
           actionBrouillon={estPubliee ? undefined : enregistrerBrouillon}
           actionPublier={estPubliee ? undefined : publier}

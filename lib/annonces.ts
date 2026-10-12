@@ -43,7 +43,7 @@ export async function recupererAnnoncesPubliees(dateIso: string) {
       annonce: { statut: "PUBLIEE" },
     },
     include: {
-      annonce: { include: { bar: true } },
+      annonce: { include: { bar: { include: { organisateur: { select: { prenom: true } } } } } },
     },
     orderBy: { heureDebut: "asc" },
   });
@@ -77,7 +77,7 @@ export async function recupererOccurrencePubliee(occurrenceId: string) {
       annonce: { statut: "PUBLIEE" },
     },
     include: {
-      annonce: { include: { bar: true } },
+      annonce: { include: { bar: { include: { organisateur: { select: { prenom: true } } } } } },
     },
   });
 }
@@ -107,6 +107,7 @@ export type ValeursReprises = {
   instruments: string[];
   instrumentAutre: string;
   description: string;
+  coOrganisateur: string;
   photoUrl1: string | null;
   photoUrl2: string | null;
   heureDebut: string;
@@ -123,6 +124,7 @@ type AnnoncePourReprise = {
   instruments: string[];
   instrumentAutre: string | null;
   description: string | null;
+  coOrganisateur: string | null;
   photoUrl1: string | null;
   photoUrl2: string | null;
   occurrences: { date: Date; heureDebut: string; heureFin: string | null }[];
@@ -156,6 +158,7 @@ export function valeursReprisesParBar(
       instruments: annonce.instruments,
       instrumentAutre: annonce.instrumentAutre ?? "",
       description: annonce.description ?? "",
+      coOrganisateur: annonce.coOrganisateur ?? "",
       photoUrl1: annonce.photoUrl1,
       photoUrl2: annonce.photoUrl2,
       heureDebut: premiereOccurrence?.heureDebut ?? "",
@@ -164,4 +167,18 @@ export function valeursReprisesParBar(
     };
   }
   return table;
+}
+
+/**
+ * Mention « Organisé par Prénom » ou « Organisé par Prénom et Co-organisateur » (phase 57).
+ * `null` si l'organisateur n'a pas de prénom (compte ancien) : pas de mention, co-organisateur compris.
+ */
+export function mentionOrganisePar(
+  prenom: string | null | undefined,
+  coOrganisateur: string | null | undefined
+): string | null {
+  const organisateur = prenom?.trim();
+  if (!organisateur) return null;
+  const co = coOrganisateur?.trim();
+  return co ? `Organisé par ${organisateur} et ${co}` : `Organisé par ${organisateur}`;
 }

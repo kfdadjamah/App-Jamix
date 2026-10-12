@@ -9,7 +9,7 @@ import {
   TOUS_LES_STYLES,
   libelleStyles,
 } from "@/lib/annonce-constantes";
-import { statutAffiche, type recupererAnnoncesPubliees } from "@/lib/annonces";
+import { mentionOrganisePar, statutAffiche, type recupererAnnoncesPubliees } from "@/lib/annonces";
 
 type Occurrence = Awaited<ReturnType<typeof recupererAnnoncesPubliees>>[number];
 
@@ -30,6 +30,7 @@ export default function CarteAnnonce({
 
   const { annonce } = occurrence;
   const annulee = statut === "ANNULEE";
+  const mention = mentionOrganisePar(annonce.bar.organisateur.prenom, annonce.coOrganisateur);
   const nomClasses = `min-w-0 break-words font-[family-name:var(--font-jakarta)] text-[20px] font-extrabold leading-[1.2] tracking-[-0.025em] text-[var(--harbor-marine)]     annulee ? "line-through" : ""
   }`;
   const styles = annonce.styles.includes(TOUS_LES_STYLES)
@@ -81,6 +82,11 @@ export default function CarteAnnonce({
           {LIBELLES_STATUT_OCCURRENCE[statut]}
         </span>
       </div>
+      {mention && (
+        <p className="donnees-carte line-clamp-2 break-words text-[13px] text-[var(--harbor-marine-2)]">
+          {mention}
+        </p>
+      )}
       <div className="donnees-carte flex items-baseline justify-between gap-3 text-[13px] text-[var(--harbor-marine-2)]">
         <span>{adresseComplete(annonce.bar)}</span>
         {distanceKm !== null && (

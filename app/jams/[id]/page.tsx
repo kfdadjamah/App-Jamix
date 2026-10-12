@@ -10,7 +10,7 @@ import {
   formaterDateCourte,
   libelleStyles,
 } from "@/lib/annonce-constantes";
-import { recupererOccurrencePubliee, statutAffiche } from "@/lib/annonces";
+import { mentionOrganisePar, recupererOccurrencePubliee, statutAffiche } from "@/lib/annonces";
 import DistanceJam from "./distance-jam";
 import PiedDePage from "@/components/pied-de-page";
 
@@ -48,6 +48,7 @@ export default async function PageJam({ params }: { params: Promise<{ id: string
 
   const { annonce } = occurrence;
   const statut = statutAffiche(occurrence);
+  const mention = mentionOrganisePar(annonce.bar.organisateur.prenom, annonce.coOrganisateur);
   const afficherEcheance =
     (statut === "PROGRAMMEE" || statut === "EN_ATTENTE_CONFIRMATION") && occurrence.confirmationJ7;
   const photos = [annonce.photoUrl1, annonce.photoUrl2].filter((url): url is string => !!url);
@@ -63,6 +64,9 @@ export default async function PageJam({ params }: { params: Promise<{ id: string
           <h1 className="titre-page">
             {annonce.bar.nom}
           </h1>
+          {mention && (
+            <p className="break-words text-[15px] text-[var(--harbor-marine-2)]">{mention}</p>
+          )}
           <span className="text-[15px] text-[var(--harbor-marine)]">
             {formaterDateLongue(occurrence.date)}
           </span>

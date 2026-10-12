@@ -3,7 +3,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { STYLES_MUSICAUX, INSTRUMENTS_BACKLINE, TOUS_LES_STYLES } from "@/lib/annonce-constantes";
-import { LONGUEUR_MAX_DESCRIPTION, NOMBRE_MAX_DATES } from "@/lib/validation/annonce";
+import {
+  LONGUEUR_MAX_CO_ORGANISATEUR,
+  LONGUEUR_MAX_DESCRIPTION,
+  NOMBRE_MAX_DATES,
+} from "@/lib/validation/annonce";
 import { decisionSortie, instantane } from "@/lib/garde-sortie";
 import { useGardeSortie } from "@/components/garde-sortie";
 import FenetreSortie from "@/components/fenetre-sortie";
@@ -39,6 +43,7 @@ export type ValeursInitialesAnnonce = {
   instruments: string[];
   instrumentAutre: string;
   description: string;
+  coOrganisateur: string;
 };
 
 const valeursVides: ValeursInitialesAnnonce = {
@@ -50,6 +55,7 @@ const valeursVides: ValeursInitialesAnnonce = {
   instruments: [],
   instrumentAutre: "",
   description: "",
+  coOrganisateur: "",
 };
 
 export type ChoixBar =
@@ -181,7 +187,7 @@ export default function FormulaireAnnonce({
     router.push(destination);
   }
 
-  // Écrase horaire, styles, instruments, précisions « Autre », description et photos,
+  // Écrase horaire, styles, instruments, précisions « Autre », description, co-organisateur et photos,
   // y compris par du vide ; les dates ne sont jamais touchées.
   function reprendre() {
     if (!reprise) return;
@@ -194,6 +200,7 @@ export default function FormulaireAnnonce({
       instruments: reprise.instruments,
       instrumentAutre: reprise.instrumentAutre,
       description: reprise.description,
+      coOrganisateur: reprise.coOrganisateur,
     });
     setPhotosReprises([reprise.photoUrl1, reprise.photoUrl2]);
     setCleReprise((cle) => cle + 1);
@@ -466,6 +473,21 @@ export default function FormulaireAnnonce({
         nomAutre="instrumentAutre"
         valeurAutre={valeurs.instrumentAutre}
       />
+
+      <label className="flex flex-col gap-2">
+        <span className="text-[13px] font-bold text-[var(--harbor-marine)]">
+          Co-organisateur (option)
+        </span>
+        <input
+          key={`co-organisateur-${cleReprise}`}
+          type="text"
+          name="coOrganisateur"
+          maxLength={LONGUEUR_MAX_CO_ORGANISATEUR}
+          defaultValue={valeurs.coOrganisateur}
+          autoComplete="off"
+          className="champ-input"
+        />
+      </label>
 
       <ChampDescription key={`description-${cleReprise}`} valeurInitiale={valeurs.description} />
 

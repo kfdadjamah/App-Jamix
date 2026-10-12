@@ -79,6 +79,8 @@ model Annonce {
   instrumentAutre String?
   // Texte brut, 500 caractères maximum (phase 29).
   description     String?
+  // Prénom d'un co-organisateur, 40 caractères maximum (phase 57) ; champ de l'annonce (toutes ses dates).
+  coOrganisateur  String?
   photoUrl1       String?
   photoUrl2       String?
   // Écrit une seule fois, au passage Brouillon → Publiée.
