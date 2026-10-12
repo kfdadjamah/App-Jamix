@@ -1341,3 +1341,44 @@ Les libellés « (optionnel) » des champs facultatifs deviennent « (option) »
 ## Bloquée par
 
 - Phases 48 à 51 (mêmes fichiers)
+
+---
+
+## Phase 53 : Annulation et suppression en rouge, Confirmer en vert
+
+**User stories** : US-167, US-168, US-169, US-171
+
+### Ce qu'on livre
+
+Deux variantes de bouton en tokens `--harbor-*` : danger plein (fond Erreur, texte blanc) et succès plein (fond Succès, texte blanc), chacune avec un état pressé plus foncé et la transition de 120 ms. Appliquées à « Annuler cette date », « Annuler toutes les dates », « Annuler l'annonce », « Supprimer définitivement » (fenêtres de suppression de bar, d'annonce et de compte) et « Confirmer » (pastille). L'entrée « Annuler » du menu « ⋯ » passe en texte Erreur, comme « Supprimer ». « ← Retour » reste secondaire.
+
+### Critères d'acceptation
+
+- [ ] Couleur calculée Erreur sur chaque bouton d'annulation et de suppression, Succès sur « Confirmer »
+- [ ] Texte blanc sur fond plein, contraste AA
+- [ ] « ← Retour » inchangé à côté d'un bouton rouge
+- [ ] Test Playwright (couleurs calculées et état pressé) et DESIGN.md à jour
+
+## Bloquée par
+
+- Phase 52
+
+---
+
+## Phase 54 : Audit des couleurs de tous les boutons et pastilles
+
+**User stories** : US-170
+
+### Ce qu'on livre
+
+Inventaire des boutons, liens-boutons et pastilles (`grep -rn "<button\|<Link\|<a "`), classement par fonction (principal Bleu signal, annulation/suppression Erreur, confirmation Succès, attente/relance Alerte, neutre blanc ou Voile) et correction des écarts restants. DESIGN.md consigne la règle « couleur = fonction ».
+
+### Critères d'acceptation
+
+- [ ] Aucun bouton ni pastille de l'inventaire n'est hors règle
+- [ ] Un échantillon par fonction vérifié par couleur calculée
+- [ ] Test `e2e/boutons-actifs.e2e.ts` étendu et DESIGN.md à jour
+
+## Bloquée par
+
+- Phase 53

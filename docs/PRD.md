@@ -215,6 +215,11 @@ US-163. En tant que musicien, je veux le bouton calendrier à côté de « Aujou
 US-164. En tant qu'organisateur, je veux un formulaire de nouvelle annonce plus resserré, afin de voir plus de champs à l'écran.
 US-165. En tant qu'organisateur sur téléphone, je veux des champs d'heure de début et de fin côte à côte, sans débordement ni chevauchement, afin de les saisir sans erreur.
 US-166. En tant qu'utilisateur, je veux que chaque bouton change de couleur quand je l'appuie, afin d'avoir un retour immédiat de mon geste.
+US-167. En tant qu'organisateur, je veux que « Annuler cette date », « Annuler toutes les dates », « Annuler l'annonce » et l'entrée « Annuler » du menu soient en rouge, afin de repérer tout de suite une action qui annule.
+US-168. En tant qu'organisateur, je veux que « Supprimer définitivement » et les entrées « Supprimer » soient en rouge, afin d'identifier les actions irréversibles.
+US-169. En tant qu'organisateur, je veux que « Confirmer » soit une pastille verte, afin de la distinguer d'une annulation.
+US-170. En tant qu'utilisateur, je veux que chaque bouton et chaque pastille prenne la couleur de sa fonction (action principale en Bleu signal, annulation et suppression en Erreur, confirmation en Succès, attente et relance en Alerte, action neutre en blanc ou Voile), afin de comprendre à la couleur ce que fait un bouton.
+US-171. En tant qu'utilisateur, je veux que « ← Retour » reste neutre, y compris à côté d'un bouton rouge, afin de ne jamais le confondre avec une annulation.
 
 ## Critères de succès
 
@@ -346,6 +351,7 @@ US-166. En tant qu'utilisateur, je veux que chaque bouton change de couleur quan
 - Annulation d'une date unique d'une annonce ponctuelle distincte de « Toutes les dates » (une annonce ponctuelle = une fenêtre de confirmation simple).
 - Ajout, modification et retrait de photos d'annonce (reporté en V2, avec un seul emplacement).
 - Mode sombre Harbor, migration des autres écrans vers Harbor et activation du drapeau en production (phases suivantes).
+- Mode sombre et nouvelle couleur hors palette pour les boutons (Phases 53 et 54).
 
 ## Décisions d'implémentation
 
@@ -515,3 +521,5 @@ Les photos d'annonce sont masquées en V1 sans suppression de code ni de donnée
 La migration Harbor a été livrée en une seule fois (Phase 40) : le pilote de l'accueil (Phase 39) a été étendu à tous les écrans, le drapeau `NEXT_PUBLIC_THEME_HARBOR` et le projet smoke ont été retirés, et DESIGN.md a été réécrit. Le mode sombre reste prévu plus tard, sans date.
 
 Les Phases 48 à 52 sont des finitions visuelles issues d'un usage sur téléphone. Le bug du calendrier vient de `BoutonCalendrier`, qui appelle `showPicker()` sur un `<input type="date">` de 0×0, transparent et sans événements pointeur : iOS l'ignore. Le correctif pose un vrai champ date transparent sur le bouton. Blanc sur « en attente » `#B7791F` fait environ 3,9:1 (sous AA pour 12 px) : exception à valider avec le propriétaire, ou assombrir ce seul fond. Le test réel sur iPhone et Android après déploiement reste le seul juge du calendrier. DESIGN.md consigne liserés, pastilles pleines, calendrier déplacé, espacements du formulaire et états pressés.
+
+Les Phases 53 et 54 colorent les boutons selon leur fonction. Les boutons d'annulation et de suppression sont en fond Erreur plein, texte blanc ; seule l'entrée de liste du menu « ⋯ » reste en texte Erreur sans fond. « Confirmer » est une pastille en fond Succès plein, texte blanc ; elle partage la teinte de la pastille de statut « confirmée » mais s'en distingue par sa forme de bouton d'action. « ← Retour » reste neutre. Chaque variante garde un état pressé plus foncé.
