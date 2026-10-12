@@ -97,22 +97,41 @@ test.describe("profil", () => {
 });
 
 test.describe("compte sans prénom (antérieur à la phase 42)", () => {
+  // Le 2e test donne un prénom au compte ; relancer `scripts/seed-test-data.mjs` le restaure.
   async function seConnecterSansPrenom(page: Page) {
     await page.goto("/connexion");
     await page.getByRole("textbox", { name: /^Email/ }).fill("chezmimi@jamix.fr");
     await page.getByRole("textbox", { name: /^Mot de passe/ }).fill("test1234");
     await page.getByRole("button", { name: "Se connecter" }).click();
-    await expect(page).toHaveURL("/mes-annonces");
+    await expect(page).toHaveURL(/\/mon-profil\?prenom=requis/);
   }
 
-  test("se connecte, utilise son profil sans être contraint", async ({ page }) => {
+  test("une page d'annonce redirige aussi vers le profil", async ({ page }) => {
     await seConnecterSansPrenom(page);
-    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-    const champs = await ouvrirSectionIdentite(page);
-    await expect(champs.prenom).toHaveValue("");
-    // Enregistrer les champs vides est accepté et ne change rien.
+    await page.goto("/mes-annonces/nouvelle");
+    await expect(page).toHaveURL(/\/mon-profil\?prenom=requis/);
+  });
+
+  test("est redirigé vers le profil, section dépliée et message, puis accède à ses annonces", async ({ page }) => {
+    await seConnecterSansPrenom(page);
+    await expect(page).toHaveURL(/\/mon-profil\?prenom=requis/);
+    await expect(page.getByText("Renseignez votre prénom pour accéder à vos annonces.")).toBeVisible();
+    await expect(page.getByRole("button", { name: "Nom et prénom" })).toHaveAttribute("aria-expanded", "true");
+
+    // Ni les deux champs vides, ni un nom seul ne passent.
+    await page.getByRole("textbox", { name: "Nom", exact: true }).fill("");
+    await formulaire(page).getByRole("button", { name: "Enregistrer" }).click();
+    await expect(page.getByText("Le prénom est requis.")).toBeVisible();
+    await expect(page.getByText("Nom et prénom enregistrés.")).toHaveCount(0);
+
+    // Le prénom seul suffit : le nom reste libre.
+    await page.getByRole("textbox", { name: /^Prénom/ }).fill("Mimi");
     await formulaire(page).getByRole("button", { name: "Enregistrer" }).click();
     await expect(page.getByText("Nom et prénom enregistrés.")).toBeVisible();
+
+    await page.goto("/mes-annonces");
+    await expect(page).toHaveURL("/mes-annonces");
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   });
 });
 

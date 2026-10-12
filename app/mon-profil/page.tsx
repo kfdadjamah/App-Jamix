@@ -18,7 +18,11 @@ function Separateur() {
   return <hr className="border-0 border-t border-[var(--harbor-trait)]" />;
 }
 
-export default async function PageMonProfil() {
+export default async function PageMonProfil({
+  searchParams,
+}: {
+  searchParams: Promise<{ prenom?: string }>;
+}) {
   const session = await sessionCourante();
   if (!session?.user?.id) redirect("/connexion");
   // Email lu en base, jamais depuis le JWT : celui-ci garde l'ancien email après un changement.
@@ -58,6 +62,8 @@ export default async function PageMonProfil() {
     );
   }
 
+  const prenomRequis = (await searchParams).prenom === "requis" && !organisateur.prenom;
+
   const dateCreation = organisateur.createdAt.toLocaleDateString("fr-FR", {
     day: "numeric",
     month: "long",
@@ -69,7 +75,16 @@ export default async function PageMonProfil() {
       <Bandeau page="mon-profil" />
       <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-4 px-6 py-8">
         <HeaderOrganisateur page="mon-profil" />
-        <BoutonRetour href="/mes-annonces" />
+        {!prenomRequis && <BoutonRetour href="/mes-annonces" />}
+
+        {prenomRequis && (
+          <p
+            role="status"
+            className="rounded-[12px] border border-[var(--harbor-bleu-clair)] bg-[var(--harbor-voile)] px-4 py-3 text-[14px] font-semibold text-[var(--harbor-marine)]"
+          >
+            Renseignez votre prénom pour accéder à vos annonces.
+          </p>
+        )}
 
         <div className="flex flex-col gap-3">
           <div className="flex items-center justify-between gap-3">
@@ -109,7 +124,7 @@ export default async function PageMonProfil() {
           />
         </SectionDeroulable>
         <Separateur />
-        <SectionDeroulable titre="Nom et prénom">
+        <SectionDeroulable titre="Nom et prénom" ouverteParDefaut={prenomRequis}>
           <FormulaireIdentite prenomActuel={organisateur.prenom} nomActuel={organisateur.nom} />
         </SectionDeroulable>
         <Separateur />

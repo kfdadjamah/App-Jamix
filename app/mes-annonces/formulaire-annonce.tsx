@@ -9,12 +9,13 @@ import { useGardeSortie } from "@/components/garde-sortie";
 import FenetreSortie from "@/components/fenetre-sortie";
 import type { ValeursReprises } from "@/lib/annonces";
 
-type Resultat = { erreur: string } | { succes: true };
+type Resultat = { erreur: string } | { succes: true; destination?: string };
 
 const ERREUR_RESEAU = "Connexion impossible, l'annonce n'a pas été enregistrée.";
 
 type Fenetre =
   | { type: "brouillon-enregistre"; destination: string }
+  | { type: "modification-prise-en-compte"; destination: string }
   | { type: "echec"; destination: string; raison: string }
   | { type: "avertir-perte"; destination: string };
 
@@ -232,6 +233,10 @@ export default function FormulaireAnnonce({
       return;
     }
     referenceRef.current = instantaneCourant();
+    if (resultat.destination) {
+      setFenetre({ type: "modification-prise-en-compte", destination: resultat.destination });
+      return;
+    }
     if (destinationApresEnregistrement) {
       router.push(destinationApresEnregistrement);
     }
@@ -245,6 +250,14 @@ export default function FormulaireAnnonce({
         <FenetreSortie
           titre="Brouillon enregistré"
           message="Annonce enregistrée en brouillon, vous pourrez la reprendre plus tard dans Mes annonces."
+          libelleDefaut="OK"
+          surDefaut={() => quitterVers(fenetre.destination)}
+        />
+      )}
+      {fenetre?.type === "modification-prise-en-compte" && (
+        <FenetreSortie
+          titre="Modification enregistrée"
+          message="La modification a été prise en compte."
           libelleDefaut="OK"
           surDefaut={() => quitterVers(fenetre.destination)}
         />

@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   schemaIdentite,
-  schemaIdentiteVideAutorise,
+  schemaIdentiteSansPrenom,
   type ChampsIdentite,
 } from "@/lib/validation/inscription";
 import ChampFormulaire from "@/components/champ-formulaire";
@@ -20,7 +20,7 @@ export default function FormulaireIdentite({
 }) {
   const [erreurServeur, setErreurServeur] = useState<string | null>(null);
   const [succes, setSucces] = useState(false);
-  // Le vide n'est accepté que pour un compte sans prénom (le serveur applique la même règle).
+  // Sans prénom, seul le prénom est exigé (le serveur applique la même règle).
   const [aUnPrenom, setAUnPrenom] = useState(Boolean(prenomActuel));
 
   const {
@@ -29,7 +29,7 @@ export default function FormulaireIdentite({
     formState: { errors, isSubmitting },
   } = useForm<ChampsIdentite>({
     defaultValues: { prenom: prenomActuel ?? "", nom: nomActuel ?? "" },
-    resolver: zodResolver(aUnPrenom ? schemaIdentite : schemaIdentiteVideAutorise),
+    resolver: zodResolver(aUnPrenom ? schemaIdentite : schemaIdentiteSansPrenom),
   });
 
   async function surSoumission(donnees: ChampsIdentite) {

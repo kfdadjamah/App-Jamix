@@ -7,7 +7,7 @@ import {
   schemaInscription,
   schemaMotDePasseOublie,
   schemaIdentite,
-  schemaIdentiteVideAutorise,
+  schemaIdentiteSansPrenom,
   schemaReinitialisationMotDePasse,
   schemaSuppressionCompte,
 } from "./inscription";
@@ -171,10 +171,11 @@ describe("prénom et nom", () => {
     expect(schemaInscription.safeParse({ ...base, prenom: "Camille", nom: "Martin" }).success).toBe(true);
   });
 
-  it("variante du profil : les deux vides passent, un seul rempli non, le trop long non", () => {
-    expect(schemaIdentiteVideAutorise.safeParse({ prenom: "  ", nom: "" }).success).toBe(true);
-    expect(schemaIdentiteVideAutorise.safeParse({ prenom: "Camille", nom: "" }).success).toBe(false);
-    expect(schemaIdentiteVideAutorise.safeParse({ prenom: "", nom: "Martin" }).success).toBe(false);
-    expect(schemaIdentiteVideAutorise.safeParse({ prenom: "a".repeat(41), nom: "b" }).success).toBe(false);
+  it("compte sans prénom : prénom exigé, nom libre, trop long refusé", () => {
+    expect(schemaIdentiteSansPrenom.safeParse({ prenom: "  ", nom: "" }).success).toBe(false);
+    expect(schemaIdentiteSansPrenom.safeParse({ prenom: "", nom: "Martin" }).success).toBe(false);
+    expect(schemaIdentiteSansPrenom.safeParse({ prenom: "Camille", nom: "" }).success).toBe(true);
+    expect(schemaIdentiteSansPrenom.safeParse({ prenom: "Camille", nom: "Camille Martin" }).success).toBe(true);
+    expect(schemaIdentiteSansPrenom.safeParse({ prenom: "a".repeat(41), nom: "b" }).success).toBe(false);
   });
 });
