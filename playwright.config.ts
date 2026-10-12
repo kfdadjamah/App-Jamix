@@ -15,11 +15,34 @@ export default defineConfig({
     timezoneId: "Europe/Paris",
     trace: "on-first-retry",
   },
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
-  webServer: {
-    command: "npm run dev",
-    url: "http://localhost:3000",
-    timeout: 120 * 1000,
-    reuseExistingServer: !process.env.CI,
-  },
+  // Phase 39 : suite principale avec le drapeau Harbor allumé (port 3000) ; projet smoke avec le
+  // drapeau éteint (port 3001, dossier de build à part), pour vérifier que l'accueil ORYZO est intact.
+  projects: [
+    {
+      name: "chromium",
+      testIgnore: "**/smoke-oryzo.e2e.ts",
+      use: { ...devices["Desktop Chrome"] },
+    },
+    {
+      name: "smoke-oryzo",
+      testMatch: "**/smoke-oryzo.e2e.ts",
+      use: { ...devices["Desktop Chrome"], baseURL: "http://localhost:3001" },
+    },
+  ],
+  webServer: [
+    {
+      command: "npm run dev",
+      url: "http://localhost:3000",
+      timeout: 120 * 1000,
+      reuseExistingServer: !process.env.CI,
+      env: { NEXT_PUBLIC_THEME_HARBOR: "true" },
+    },
+    {
+      command: "npm run dev -- -p 3001",
+      url: "http://localhost:3001",
+      timeout: 120 * 1000,
+      reuseExistingServer: !process.env.CI,
+      env: { NEXT_PUBLIC_THEME_HARBOR: "false", NEXT_DIST_DIR: ".next-smoke" },
+    },
+  ],
 });

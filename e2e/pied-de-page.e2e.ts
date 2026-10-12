@@ -42,9 +42,12 @@ for (const chemin of PAGES_PUBLIQUES) {
 
 test("la page d'une jam se termine par le pied de page", async ({ page }) => {
   await page.goto("/");
-  const prochaineDate = page.locator('a[href^="/?date="]').first();
-  test.skip((await prochaineDate.count()) === 0, "Aucune jam publiée à venir dans la base");
-  await prochaineDate.click();
+  // Aujourd'hui sinon la première date suggérée (le bandeau Harbor a aussi des liens ?date=).
+  if ((await page.locator('main a[href^="/jams/"]').count()) === 0) {
+    const suggestion = page.getByText("Prochaines dates").locator("..").locator("a").first();
+    test.skip((await suggestion.count()) === 0, "Aucune jam publiée à venir dans la base");
+    await suggestion.click();
+  }
   await page.locator('main a[href^="/jams/"]').first().click();
   await expect(page).toHaveURL(/\/jams\/[^/]+$/);
   await verifierPiedDePage(page);

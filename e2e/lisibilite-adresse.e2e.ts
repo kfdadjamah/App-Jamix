@@ -9,7 +9,8 @@ async function mockerAdresses(page: Page, suggestions: string[] = [ADRESSE]) {
   );
 }
 
-async function verifierTitre(page: Page, chemin: string) {
+// L'accueil Harbor (Phase 39, drapeau allumé) a un grand titre de 40 px ; les autres pages restent à 24 px.
+async function verifierTitre(page: Page, chemin: string, taille = "24px") {
   await page.goto(chemin);
   const h1 = page.locator("h1").first();
   await expect(h1).toBeVisible();
@@ -20,7 +21,7 @@ async function verifierTitre(page: Page, chemin: string) {
       uneLigne: el.getBoundingClientRect().height <= parseFloat(s.lineHeight) + 1,
     };
   });
-  expect(m.taille).toBe("24px");
+  expect(m.taille).toBe(taille);
   expect(m.uneLigne).toBe(true);
 }
 
@@ -30,7 +31,9 @@ test.describe("titres uniformes à 390px", () => {
     "/", "/contact", "/connexion", "/inscription", "/mot-de-passe-oublie",
     "/cgu", "/mentions-legales",
   ]) {
-    test(`h1 de ${chemin}`, async ({ page }) => verifierTitre(page, chemin));
+    test(`h1 de ${chemin}`, async ({ page }) =>
+      verifierTitre(page, chemin, chemin === "/" ? "40px" : "24px")
+    );
   }
   test("h1 de /mes-annonces et /mon-profil", async ({ page }) => {
     await seConnecter(page);
