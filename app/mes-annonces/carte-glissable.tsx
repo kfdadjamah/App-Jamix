@@ -131,7 +131,7 @@ export default function CarteGlissable({
           setOuvert(null);
           setSuppressionOuverte(true);
         }}
-        className="absolute inset-y-0 right-0 flex items-center justify-center rounded-[16px] bg-[var(--harbor-erreur)] text-[13px] font-bold text-white transition-colors duration-[120ms] active:bg-[var(--harbor-erreur-voile)] active:text-[var(--harbor-erreur)]"
+        className="absolute inset-y-0 right-0 flex items-center justify-center rounded-[16px] bg-[var(--harbor-erreur)] text-[13px] font-bold text-white transition-colors duration-[120ms] active:bg-[color-mix(in_srgb,var(--harbor-erreur),black_20%)]"
         style={{ width: LARGEUR_ACTION }}
       >
         Supprimer

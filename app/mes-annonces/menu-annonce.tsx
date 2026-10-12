@@ -92,7 +92,7 @@ export default function MenuAnnonce({
                 setMenuOuvert(false);
                 setFenetreOuverte(true);
               }}
-              className="px-4 py-3 text-left text-[13px] font-bold text-[var(--harbor-marine)] hover:underline focus:underline transition-colors duration-[120ms] active:bg-[var(--harbor-trait)]"
+              className="px-4 py-3 text-left text-[13px] font-bold text-[var(--harbor-erreur)] hover:underline focus:underline transition-colors duration-[120ms] active:bg-[var(--harbor-erreur-voile)]"
             >
               Annuler
             </button>
@@ -253,7 +253,7 @@ export function FenetreSuppression({
             type="button"
             onClick={confirmer}
             disabled={enCours}
-            className="rounded-[12px] border border-[var(--harbor-erreur)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-erreur)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] active:bg-[var(--harbor-erreur-voile)] disabled:opacity-60"
+            className="rounded-[12px] px-4 py-2 text-[13px] font-bold bg-[var(--harbor-erreur)] text-white transition-colors duration-[120ms] hover:bg-[color-mix(in_srgb,var(--harbor-erreur),black_10%)] active:bg-[color-mix(in_srgb,var(--harbor-erreur),black_20%)] disabled:opacity-60"
           >
             Supprimer définitivement
           </button>
@@ -393,7 +393,7 @@ function FenetreAnnulation({
             type="button"
             onClick={confirmer}
             disabled={enCours}
-            className="rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] active:border-[var(--harbor-bleu-clair)] active:bg-[var(--harbor-voile)] disabled:opacity-60"
+            className="rounded-[12px] px-4 py-2 text-[13px] font-bold bg-[var(--harbor-erreur)] text-white transition-colors duration-[120ms] hover:bg-[color-mix(in_srgb,var(--harbor-erreur),black_10%)] active:bg-[color-mix(in_srgb,var(--harbor-erreur),black_20%)] disabled:opacity-60"
           >
             Annuler l&apos;annonce
           </button>

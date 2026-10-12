@@ -1354,10 +1354,10 @@ Deux variantes de bouton en tokens `--harbor-*` : danger plein (fond Erreur, tex
 
 ### Critères d'acceptation
 
-- [ ] Couleur calculée Erreur sur chaque bouton d'annulation et de suppression, Succès sur « Confirmer »
-- [ ] Texte blanc sur fond plein, contraste AA
-- [ ] « ← Retour » inchangé à côté d'un bouton rouge
-- [ ] Test Playwright (couleurs calculées et état pressé) et DESIGN.md à jour
+- [x] Couleur calculée Erreur sur chaque bouton d'annulation et de suppression, Succès sur « Confirmer »
+- [x] Texte blanc sur fond plein, contraste AA
+- [x] « ← Retour » inchangé à côté d'un bouton rouge
+- [x] Test Playwright (couleurs calculées et état pressé) et DESIGN.md à jour
 
 ## Bloquée par
 

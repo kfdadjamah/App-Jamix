@@ -112,7 +112,7 @@ export default function FenetreSuppressionBar({
           <button
             type="submit"
             disabled={!nomValide || enCours}
-            className="rounded-[12px] bg-[var(--harbor-bleu)] px-6 py-3 text-[14px] font-bold text-white transition-colors duration-[120ms] hover:bg-[var(--harbor-marine)] active:bg-[var(--harbor-marine)] disabled:opacity-60"
+            className="rounded-[12px] px-6 py-3 text-[14px] font-bold bg-[var(--harbor-erreur)] text-white transition-colors duration-[120ms] hover:bg-[color-mix(in_srgb,var(--harbor-erreur),black_10%)] active:bg-[color-mix(in_srgb,var(--harbor-erreur),black_20%)] disabled:opacity-60"
           >
             {enCours ? "Suppression…" : "Supprimer définitivement"}
           </button>

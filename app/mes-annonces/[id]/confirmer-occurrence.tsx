@@ -25,7 +25,7 @@ export default function ConfirmerOccurrence({ occurrenceId }: { occurrenceId: st
         type="button"
         onClick={surConfirmation}
         disabled={enCours}
-        className="rounded-[8px] px-2.5 py-1.5 text-[13px] font-bold text-[var(--harbor-marine)] underline-offset-2 transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] active:bg-[var(--harbor-trait)] hover:underline disabled:opacity-60"
+        className="rounded-full bg-[var(--harbor-succes)] px-3.5 py-2 text-[13px] font-bold text-white transition-colors duration-[120ms] hover:bg-[color-mix(in_srgb,var(--harbor-succes),black_10%)] active:bg-[color-mix(in_srgb,var(--harbor-succes),black_20%)] disabled:opacity-60"
       >
         Confirmer
       </button>
