@@ -47,8 +47,9 @@
   - *Limite d'envois* : nouveau modèle `EnvoiContact` (`id`, `empreinteIp` = HMAC-SHA-256 de l'IP avec `AUTH_SECRET`, jamais l'IP brute ni un hash simple réversible par force brute, `creeLe`), appliqué par `prisma db push`. Seuls les envois réussis sont enregistrés ; au plus 5 envois par empreinte sur une heure glissante ; les lignes de plus de 24 h sont purgées à chaque envoi. Champ piège invisible : rempli, il renvoie un faux succès sans rien envoyer ni enregistrer.
   - *Validation* : schéma zod `lib/validation/contact.ts`, sur le modèle de `lib/validation/inscription.ts` (nom 1–100, email valide, message 10–2000 après normalisation `\r\n` → `\n` et trim, comme la description de la Phase 29).
   - *Anonymat* : aucun nom de personne dans `/cgu` ni ailleurs ; l'éditeur est « un particulier non professionnel », joignable via `/contact`.
-- **Prénom et nom séparés, profil replié (Phase 42)** : nouveau champ `Organisateur.prenom String?` (nullable), appliqué par `prisma db push` (pas de dossier de migrations, **à relancer sur la base de production avant le déploiement**). `nom` est conservé : pour un compte antérieur, il peut contenir l'ancien « Prénom Nom », jamais coupé automatiquement (une coupure au premier espace est fausse pour les noms composés). `lib/validation/inscription.ts` : `schemaNomComplet` et `schemaNomCompletVideAutorise` remplacés par `schemaIdentite` (prénom et nom, 1 à 40 caractères chacun) et `schemaIdentiteVideAutorise` (vide accepté ; un seul champ rempli → l'autre est requis) ; `schemaInscription` prend `prenom` et `nom`. `changerNomComplet` devient `changerIdentite` (`app/mon-profil/actions.ts`) : les deux vides sont acceptés seulement si le compte n'a pas de prénom. `formulaire-nom-complet.tsx` devient `formulaire-identite.tsx`. Profil : plus de `ouverteParDefaut` sur « Mes bars », plus de `sousTitre` email, `MesBars` démarre sans panneau ouvert. Placeholders = libellés des champs. Le seed de test crée « Camille » / « Test ». L'affichage du prénom sur la carte d'annonce est hors périmètre ; il contredit la convention « éditeur anonyme » de `CLAUDE.md`, à réviser avant de le brancher.
+- **Prénom et nom séparés, profil replié (Phase 42)** : nouveau champ `Organisateur.prenom String?` (nullable), appliqué par `prisma db push` (pas de dossier de migrations, **à relancer sur la base de production avant le déploiement**). `nom` est conservé : pour un compte antérieur, il peut contenir l'ancien « Prénom Nom », jamais coupé automatiquement (une coupure au premier espace est fausse pour les noms composés). `lib/validation/inscription.ts` : `schemaNomComplet` et `schemaNomCompletVideAutorise` remplacés par `schemaIdentite` (prénom et nom, 1 à 40 caractères chacun) et `schemaIdentiteVideAutorise` (vide accepté ; un seul champ rempli → l'autre est requis) ; `schemaInscription` prend `prenom` et `nom`. `changerNomComplet` devient `changerIdentite` (`app/mon-profil/actions.ts`) : les deux vides sont acceptés seulement si le compte n'a pas de prénom. `formulaire-nom-complet.tsx` devient `formulaire-identite.tsx`. Profil : plus de `ouverteParDefaut` sur « Mes bars », plus de `sousTitre` email, `MesBars` démarre sans panneau ouvert. Placeholders = libellés des champs. Le seed de test crée « Camille » / « Test ». L'affichage du prénom sur la carte d'annonce est hors périmètre ; il contredit la convention « éditeur anonyme » de `CLAUDE.md`, à réviser avant de le brancher. *(Levé par les Phases 56 et 57.)*
 - **Nom et prénom de l'organisateur (Phase 35)** : nouveau champ `Organisateur.nom String?` (nullable : les comptes existants restent intacts, sans script), appliqué par `prisma db push` (pas de dossier de migrations). Champ `nomComplet` ajouté aux schémas client et serveur de `lib/validation/inscription.ts` (espaces de début et de fin retirés, 1 à 80 caractères), réutilisé par le formulaire et l'action d'inscription. Au profil, une section déroulable sur le modèle de `formulaire-email.tsx`, avec son action dans `app/mon-profil/actions.ts` ; le nom vide n'y est accepté que pour un compte sans nom. Mention de la donnée dans `/cgu`. La convention « éditeur anonyme » ne concerne pas les organisateurs. L'affichage sur les cartes est hors périmètre.
+- **Prénom affiché, co-organisateur, confirmation d'édition (Phases 56 à 58)** : le prénom devient requis pour tout compte (les comptes existants sans prénom sont redirigés vers `/mon-profil` depuis la zone `/mes-annonces`) ; `Organisateur.prenom` reste nullable en base, la contrainte est applicative. Nouveau champ `Annonce.coOrganisateur String?` (porté par l'annonce, pas par l'occurrence), appliqué par `prisma db push` (à relancer en production avant le déploiement), validé par `lib/validation/annonce.ts` (1 à 40 caractères, facultatif). Le prénom d'affichage se lit via `annonce.bar.organisateur.prenom`. La page d'édition passe une destination à `FormulaireAnnonce` : fiche `/jams/<id>` de la prochaine occurrence à venir, sinon `/mes-annonces`. Le pop-up réutilise `components/fenetre-sortie.tsx`. `CLAUDE.md` précise que « éditeur anonyme » ne vise que l'éditeur du service ; `/cgu` mentionne les prénoms affichés.
 
 ---
 
@@ -1403,3 +1404,68 @@ Sur chaque carte de « Mes annonces », les pastilles de date (« 17 oct. · Con
 
 - Phase 54
 
+---
+
+## Phase 56 : Prénom obligatoire pour les comptes existants
+
+**User stories** : US-173
+
+### Ce qu'on livre
+
+Un organisateur dont le compte n'a pas de prénom est redirigé vers « Mon profil » dès qu'il ouvre « Mes annonces », avec un message l'invitant à renseigner son prénom. Une fois enregistré, il accède à ses annonces. L'inscription exige déjà le prénom et le profil n'autorise plus à le vider.
+
+### Critères d'acceptation
+
+- [ ] Un compte sans prénom ouvrant `/mes-annonces` (ou une page d'annonce) est redirigé vers `/mon-profil` avec un message explicite
+- [ ] Après enregistrement du prénom, l'accès à « Mes annonces » est rétabli, annonces intactes
+- [ ] Le profil ne permet plus d'enregistrer deux champs vides pour un compte sans prénom
+- [ ] Test e2e ; DESIGN.md à jour
+
+## Bloquée par
+
+- Aucune — démarrable immédiatement
+
+---
+
+## Phase 57 : Co-organisateur et mention « Organisé par »
+
+**User stories** : US-174, US-175, US-176, US-177
+
+### Ce qu'on livre
+
+Le formulaire d'annonce propose un champ facultatif « Co-organisateur », repris à la création d'une annonce du même bar. Les cartes (accueil, carte, « Mes annonces ») et la fiche d'une jam affichent « Organisé par Prénom » ou « Organisé par Prénom et Co-organisateur ». `CLAUDE.md` et `/cgu` sont précisés.
+
+### Critères d'acceptation
+
+- [ ] Sans co-organisateur, la carte affiche « Organisé par Prénom » ; avec, « Organisé par Prénom et Co-organisateur »
+- [ ] Le champ est facultatif, limité à 40 caractères, espaces de début et de fin ignorés
+- [ ] Le co-organisateur est repris à la création d'une annonce du même bar et modifiable
+- [ ] La mention figure sur l'accueil, la carte, la fiche d'une jam et « Mes annonces », sans débordement à 360 px
+- [ ] `CLAUDE.md` (convention « éditeur anonyme ») et `/cgu` mis à jour
+- [ ] Test e2e ; DESIGN.md à jour
+
+## Bloquée par
+
+- Phase 56
+
+---
+
+## Phase 58 : Pop-up et redirection après modification d'une annonce
+
+**User stories** : US-178, US-179, US-180, US-181
+
+### Ce qu'on livre
+
+Après « Enregistrer » sur la page d'édition, un pop-up « La modification a été prise en compte » s'affiche. Une fois validé, le formulaire se ferme sur la fiche de la prochaine date à venir de l'annonce, ou sur « Mes annonces » pour un brouillon ou une annonce sans date à venir. En cas d'échec, l'erreur s'affiche et le formulaire reste ouvert.
+
+### Critères d'acceptation
+
+- [x] Le pop-up apparaît après chaque enregistrement réussi (modification, « Publier », « Enregistrer le brouillon » depuis l'édition)
+- [x] Bouton, Échap et clic extérieur ferment le pop-up et mènent à la fiche `/jams/<id>` de la prochaine date, sinon `/mes-annonces`
+- [x] En cas d'erreur : message affiché, pas de pop-up, formulaire conservé
+- [x] La portée (date seule / toutes les dates) fonctionne comme avant
+- [x] Test e2e avec restauration des données (base partagée) ; DESIGN.md à jour
+
+## Bloquée par
+
+- Aucune — démarrable immédiatement

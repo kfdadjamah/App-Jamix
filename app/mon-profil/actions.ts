@@ -28,7 +28,8 @@ import {
   schemaChangementEmail,
   schemaChangementMotDePasse,
   schemaFicheBar,
-  schemaIdentiteVideAutorise,
+  schemaIdentite,
+  schemaIdentiteSansPrenom,
   schemaPhoto,
   schemaSuppressionCompte,
 } from "@/lib/validation/inscription";
@@ -251,7 +252,15 @@ export async function deconnecterOrganisateur() {
 }
 
 export async function changerIdentite(formData: FormData): Promise<ResultatAction> {
-  const resultat = schemaIdentiteVideAutorise.safeParse({
+  const organisateurId = await recupererIdOrganisateurConnecte();
+  const organisateur = await prisma.organisateur.findUnique({
+    where: { id: organisateurId },
+    select: { prenom: true },
+  });
+  if (!organisateur) return { erreur: "Compte introuvable." };
+
+  // Prénom obligatoire pour tous ; le nom ne l'est que pour un compte qui a déjà un prénom.
+  const resultat = (organisateur.prenom ? schemaIdentite : schemaIdentiteSansPrenom).safeParse({
     prenom: formData.get("prenom"),
     nom: formData.get("nom"),
   });
@@ -260,24 +269,12 @@ export async function changerIdentite(formData: FormData): Promise<ResultatActio
   }
 
   const { prenom, nom } = resultat.data;
-  const organisateurId = await recupererIdOrganisateurConnecte();
-  const organisateur = await prisma.organisateur.findUnique({
-    where: { id: organisateurId },
-    select: { prenom: true },
-  });
-  if (!organisateur) return { erreur: "Compte introuvable." };
-
-  if (prenom === "") {
-    // Un compte sans prénom n'est jamais contraint d'en saisir un ; un prénom existant ne se retire pas.
-    if (organisateur.prenom) return { erreur: "Le prénom est requis." };
-    return { succes: true };
-  }
-
   await prisma.organisateur.update({
     where: { id: organisateurId },
     data: { prenom, nom },
   });
   revalidatePath("/mon-profil");
+  revalidatePath("/mes-annonces");
   return { succes: true };
 }
 

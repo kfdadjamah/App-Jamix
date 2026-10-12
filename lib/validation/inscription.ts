@@ -49,27 +49,15 @@ const champNomFamille = z
 export const schemaIdentite = z.object({ prenom: champPrenom, nom: champNomFamille });
 export type ChampsIdentite = z.infer<typeof schemaIdentite>;
 
-// Au profil, le vide n'est accepté que pour un compte sans prénom (décidé par l'appelant).
-// Un seul des deux champs rempli reste refusé : l'autre devient requis.
-export const schemaIdentiteVideAutorise = z
-  .object({
-    prenom: z
-      .string()
-      .trim()
-      .max(IDENTITE_MAX, `Le prénom ne doit pas dépasser ${IDENTITE_MAX} caractères.`),
-    nom: z
-      .string()
-      .trim()
-      .max(IDENTITE_MAX, `Le nom ne doit pas dépasser ${IDENTITE_MAX} caractères.`),
-  })
-  .superRefine((champs, ctx) => {
-    if (champs.prenom === "" && champs.nom !== "") {
-      ctx.addIssue({ code: "custom", path: ["prenom"], message: "Le prénom est requis." });
-    }
-    if (champs.nom === "" && champs.prenom !== "") {
-      ctx.addIssue({ code: "custom", path: ["nom"], message: "Le nom est requis." });
-    }
-  });
+// Compte sans prénom (antérieur à la Phase 42) : seul le prénom est exigé ; le nom reste libre
+// (il peut contenir l'ancien « Prénom Nom ») et peut rester vide.
+export const schemaIdentiteSansPrenom = z.object({
+  prenom: champPrenom,
+  nom: z
+    .string()
+    .trim()
+    .max(IDENTITE_MAX, `Le nom ne doit pas dépasser ${IDENTITE_MAX} caractères.`),
+});
 
 export const schemaInscription = z.object({
   prenom: champPrenom,

@@ -221,6 +221,15 @@ US-169. En tant qu'organisateur, je veux que « Confirmer » soit une pastille v
 US-170. En tant qu'utilisateur, je veux que chaque bouton et chaque pastille prenne la couleur de sa fonction (action principale en Bleu signal, annulation et suppression en Erreur, confirmation en Succès, attente et relance en Alerte, action neutre en blanc ou Voile), afin de comprendre à la couleur ce que fait un bouton.
 US-171. En tant qu'utilisateur, je veux que « ← Retour » reste neutre, y compris à côté d'un bouton rouge, afin de ne jamais le confondre avec une annulation.
 US-172. En tant qu'organisateur, je veux que chaque pastille de date dans « Mes annonces » (ex. « 17 oct. · Confirmée », « 22 oct. · Programmée ») prenne la couleur de son statut (confirmée, programmée, en attente, annulée), afin de repérer d'un coup d'œil l'état de chaque date.
+US-173. En tant qu'organisateur dont le compte n'a pas encore de prénom, je veux être invité à le renseigner avant de continuer dans « Mes annonces », afin que mon prénom puisse toujours s'afficher sur mes annonces.
+US-174. En tant qu'organisateur, je veux pouvoir renseigner un co-organisateur (champ facultatif) en créant ou modifiant une annonce, afin de le faire apparaître à mes côtés.
+US-175. En tant qu'organisateur, je veux que le co-organisateur saisi soit repris à la création d'une nouvelle annonce du même bar, afin de ne pas le ressaisir.
+US-176. En tant que musicien, je veux voir « Organisé par <prénom> » (ou « Organisé par <prénom> et <co-organisateur> ») sur les cartes d'annonce et sur la fiche d'une jam, afin de savoir qui organise.
+US-177. En tant qu'organisateur, je veux voir la même mention sur mes cartes de « Mes annonces », afin de vérifier ce qui est affiché.
+US-178. En tant qu'organisateur, quand je clique sur « Enregistrer » après avoir modifié une annonce, je veux un pop-up m'informant que la modification a été prise en compte, afin d'être sûr qu'elle est enregistrée.
+US-179. En tant qu'organisateur, après avoir fermé ce pop-up, je veux que le formulaire se ferme et que la page de visualisation de l'annonce s'affiche, afin de vérifier le résultat.
+US-180. En tant qu'organisateur modifiant un brouillon, ou une annonce sans date à venir, je veux revenir à « Mes annonces » après le pop-up, afin de ne pas tomber sur une page introuvable.
+US-181. En tant qu'organisateur, si l'enregistrement échoue, je veux voir un message d'erreur et rester dans le formulaire sans pop-up de succès, afin de corriger ma saisie.
 
 ## Critères de succès
 
@@ -281,6 +290,8 @@ US-172. En tant qu'organisateur, je veux que chaque pastille de date dans « Mes
 - Le menu « ⋯ » propose « Supprimer » ; après confirmation, l'annonce (ou la date choisie) disparaît de « Mes annonces » et du côté musicien, photos comprises ; supprimer la dernière date supprime l'annonce ; « Retour » ou Échap ne supprime rien (Phase 46).
 - Un glissé à gauche révèle « Supprimer », à droite « Modifier » ; le geste seul ne supprime ni n'ouvre rien, un simple tap ouvre toujours la carte et le défilement vertical reste fluide (Phase 47).
 - Sur « Mes annonces », chaque pastille de date a le fond plein de la couleur de son statut (mêmes couleurs que l'accueil et la carte) avec un texte blanc lisible, y compris la relance ; une date annulée reste identifiable (Phase 55).
+- Après chaque modification réussie d'une annonce, un pop-up de confirmation apparaît ; une fois validé, la page affichée est la visualisation de l'annonce (ou « Mes annonces » pour un brouillon ou une annonce sans date à venir) (Phase 58).
+- Chaque carte d'annonce affiche « Organisé par <prénom> », complété de « et <co-organisateur> » quand il est renseigné ; aucun compte sans prénom ne peut ouvrir « Mes annonces » (Phases 56 et 57).
 
 ## Hors périmètre
 
@@ -345,7 +356,8 @@ US-172. En tant qu'organisateur, je veux que chaque pastille de date dans « Mes
 - Utilisation payante, publicité, cagnotte ou dons (la cagnotte est une piste future).
 - Pied de page fixé en bas de l'écran.
 - Affichage du nom de l'organisateur sur les cartes ou côté musicien (phase future).
-- Nom et prénom exigés des comptes existants.
+- Nom exigé des comptes existants (le prénom l'est depuis la Phase 56).
+- Co-organisateur lié à un autre compte (invitation, droits partagés) ; nom de famille du co-organisateur ; page de lecture dédiée à l'organisateur.
 - Nom de l'organisateur dans l'email de bienvenue.
 - Changement de taille des sous-titres `h2` et des titres du bandeau.
 - Suggestions d'adresse côté musicien, y compris pour l'adresse de recherche.
@@ -473,6 +485,9 @@ US-172. En tant qu'organisateur, je veux que chaque pastille de date dans « Mes
 - **Bandeau commun, mot-symbole et pastille de profil (Phase 43)** : aucune migration. Le bandeau ne porte que l'icône maison (hors accueil) et, à droite, la connexion ou l'icône de profil (pastille blanche translucide, pleine sur `/mon-profil`) ; le mot-symbole « Jammix » (Plus Jakarta Sans 800, fluide) et l'accroche sont rendus sous le bandeau par chaque page. L'accueil porte le `h1`. Page de connexion : espacements resserrés, sous-titre « Accédez à l'espace de gestion de vos jams. ».
 - **Code postal dédié, profil resserré (Phase 44)** : nouveau champ `Bar.codePostal String @default("")` (migration non destructive ; vide pour les bars antérieurs). L'adresse est stockée sans code postal (« 18 rue X, Lyon ») ; `lib/adresse.ts` fournit `separerCodePostal` (à la sélection d'une suggestion) et `adresseComplete` (affichage « 18 rue X, 69002 Lyon » et géocodage). Validation : 5 chiffres exactement. « Déconnexion » monte à droite du titre « Mon profil ». Lignes de bars à `py-2`, carré de photo vide supprimé.
 - Palette de statuts Harbor (liste et carte) : confirmée `#17807E`, programmée `#2B78BE`, en attente `#B7791F`, annulée `#6B7C8C` (grisée, nom barré).
+- **Co-organisateur et « Organisé par » (Phase 57)** : champ « Co-organisateur » facultatif dans le formulaire d'annonce, prénom en texte libre de 40 caractères maximum (espaces de début et de fin ignorés), repris d'une annonce précédente du même bar comme les styles. La mention s'écrit « Organisé par Prénom », ou « Organisé par Prénom et Co-organisateur », sous le nom du bar sur les cartes de l'accueil, de la carte et de « Mes annonces », et sur la fiche d'une jam. Le co-organisateur appartient à l'annonce (toutes ses dates).
+- **Prénom obligatoire pour tous (Phase 56)** : un compte sans prénom est redirigé vers « Mon profil » avant d'accéder à « Mes annonces », avec un message l'invitant à renseigner son prénom ; une fois enregistré, il retrouve ses annonces intactes.
+- **Confirmation d'une modification (Phase 58)** : après « Enregistrer » (modification, « Publier » ou « Enregistrer le brouillon » depuis la page d'édition), un pop-up indique « La modification a été prise en compte » avec un bouton unique ; Échap ou un clic à l'extérieur équivaut au bouton. Le formulaire se ferme alors sur la fiche de la prochaine date à venir de l'annonce, ou sur « Mes annonces » pour un brouillon ou une annonce sans date à venir. En cas d'échec, le message d'erreur s'affiche et le formulaire reste ouvert. La portée (date seule ou toutes les dates) se choisit avant l'enregistrement, inchangée.
 
 ## Notes complémentaires
 
@@ -527,3 +542,5 @@ Les Phases 48 à 52 sont des finitions visuelles issues d'un usage sur télépho
 Les Phases 53 et 54 colorent les boutons selon leur fonction. Les boutons d'annulation et de suppression sont en fond Erreur plein, texte blanc ; les déclencheurs (entrées « Annuler » et « Supprimer » du menu « ⋯ », « Supprimer ce bar ») restent en texte Erreur sans fond, la confirmation dans la fenêtre est en Erreur plein. Les « Retirer » qui suppriment une photo enregistrée sont en Erreur plein. Attente et relance restent en Alerte (pastille de statut et texte), sans bouton dédié. « Confirmer » est une pastille en fond Succès plein, texte blanc ; elle partage la teinte de la pastille de statut « confirmée » mais s'en distingue par sa forme de bouton d'action. « ← Retour » reste neutre. Chaque variante garde un état pressé plus foncé.
 
 La Phase 55 corrige un oubli de l'audit de la Phase 54 : les pastilles de date de « Mes annonces » étaient restées neutres (blanc, liseré), alors que l'accueil et la carte colorent déjà le statut. Elles réutilisent la table de couleurs existante, sans nouveau token.
+
+La Phase 57 affiche des prénoms publiquement : la convention « éditeur anonyme » de `CLAUDE.md` doit être précisée (elle ne vise que l'éditeur du service) et `/cgu` doit mentionner que le prénom de l'organisateur et celui du co-organisateur apparaissent sur les annonces. Aucune page de lecture dédiée à l'organisateur n'existe : la visualisation après modification réutilise la fiche publique d'une jam.
