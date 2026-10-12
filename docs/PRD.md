@@ -38,7 +38,7 @@ Dans le formulaire d'annonce, le titre prend la taille de « Mes annonces » et 
 
 Chaque page se termine par un pied de page discret : les liens « CGU », « Mentions légales » et « Contact », puis « © <année> Jammix · Tous droits réservés · v<version> ». « CGU » ouvre une page courte qui réunit les règles d'usage d'un service gratuit et les données personnelles. « Mentions légales » ouvre une page dédiée : éditeur, directeur de la publication, hébergeurs, contact et signalement, propriété intellectuelle. « Contact » ouvre un formulaire (nom, adresse mail, message) ; la réponse de l'équipe arrive par email. L'éditeur, un particulier, reste anonyme : aucun nom de personne n'apparaît dans l'application.
 
-L'inscription d'un organisateur demande désormais, dans cet ordre, « Nom et prénom », « Email », « Mot de passe », « Nom du bar » et « Adresse du bar » (photo toujours facultative). Le nom et prénom se modifie ensuite depuis le profil.
+L'inscription d'un organisateur demande désormais, dans cet ordre, « Prénom », « Nom », « Email », « Mot de passe », « Nom du bar » et « Adresse du bar » (photo toujours facultative). Le prénom et le nom se modifient ensuite depuis le profil, où aucune section n'est dépliée d'office et où chaque champ à remplir porte son nom en placeholder.
 
 Sur chaque carte de « Mes annonces », un bouton « ⋯ » en haut à droite ouvre un petit menu : « Modifier » mène au formulaire de l'annonce ; « Annuler » ouvre une fenêtre de confirmation, avec choix de la portée (« Cette date seulement » + date, ou « Toutes les dates ») pour une annonce récurrente.
 
@@ -165,7 +165,7 @@ US-113. En tant que visiteur, je veux savoir que l'éditeur est un particulier n
 US-114. En tant que visiteur, je veux savoir comment joindre l'équipe et signaler un contenu illicite, afin de faire retirer une annonce problématique.
 US-115. En tant que visiteur, je veux connaître la propriété intellectuelle de Jammix et des contenus publiés, afin de savoir ce que je peux réutiliser.
 US-116. En tant qu'organisateur, je veux saisir mon nom et prénom à l'inscription, afin qu'ils soient associés à mon compte.
-US-117. En tant que visiteur sur l'inscription, je veux un message clair sous « Nom et prénom » s'il est vide ou trop long, afin de corriger sans perdre ma saisie.
+US-117. En tant que visiteur sur l'inscription, je veux un message clair sous « Prénom » ou « Nom » s'il est vide ou trop long, afin de corriger sans perdre ma saisie. *(Précisé par US-144.)*
 US-118. En tant qu'organisateur, je veux modifier mon nom et prénom depuis mon profil, afin de le corriger.
 US-119. En tant qu'organisateur déjà inscrit sans nom, je veux pouvoir le renseigner depuis mon profil sans y être contraint, afin de continuer à utiliser mon compte.
 US-120. En tant que visiteur ou organisateur, je veux que le titre de chaque page ait la même taille et tienne sur une ligne, afin de naviguer dans une interface homogène.
@@ -191,6 +191,10 @@ US-139. En tant que musicien, je veux le titre « Jammix » et l'accroche « Cho
 US-140. En tant que musicien, je veux des cartes d'annonce plus lisibles (nom du bar et statut sur une ligne, adresse et distance, horaires, styles et instruments, itinéraire) sur un fond clair avec une carte claire, afin de comparer rapidement les jams.
 US-141. En tant qu'organisateur connecté, je veux retrouver sur l'accueil mon icône de profil et le bouton « Accéder à mes annonces », afin de garder mes repères avec le nouveau design (pilote Harbor).
 US-142. En tant que musicien, je veux des cartes d'annonce plus compactes (nom du bar et statut sur une même ligne, « Styles » et « Instruments » chacun sur une ligne avec leurs pastilles), afin de voir plus de jams à l'écran sans défiler.
+US-143. En tant qu'organisateur, je veux que toutes les sections de mon profil soient repliées à l'arrivée (« Mes bars » et la fiche d'un bar unique comprises, email actuel masqué), afin de choisir moi-même ce que je déplie.
+US-144. En tant qu'organisateur, je veux saisir mon prénom et mon nom dans deux champs distincts, à l'inscription et au profil, afin de pouvoir afficher plus tard seulement mon prénom.
+US-145. En tant qu'organisateur, je veux que chaque champ à remplir du profil porte son nom en placeholder, afin de savoir ce qu'on attend de moi même sans lire le libellé.
+US-146. En tant qu'organisateur déjà inscrit avec un ancien « Prénom Nom » dans un seul champ, je veux le retrouver tel quel et le corriger moi-même, afin de ne pas voir mes données coupées de travers.
 
 ## Critères de succès
 
@@ -236,7 +240,7 @@ US-142. En tant que musicien, je veux des cartes d'annonce plus compactes (nom d
 - La page Mentions légales s'ouvre sans compte, depuis le pied de page de chaque page, et ne contient aucun nom de personne ; le pied de page à 3 liens tient à 360px sans débordement.
 - Un message valide envoyé depuis le formulaire Contact arrive à l'adresse de contact, et « Répondre » vise l'adresse saisie par l'expéditeur.
 - Le 6ᵉ envoi en moins d'une heure depuis une même connexion est refusé avec un message.
-- Un compte créé avec un nom et prénom le retrouve prérempli dans son profil ; sans nom, l'inscription est refusée avec un message sous le champ ; un compte ancien sans nom se connecte normalement.
+- Un compte créé avec un prénom et un nom les retrouve préremplis dans son profil ; sans l'un des deux, l'inscription est refusée avec un message sous le champ ; un compte ancien sans prénom se connecte normalement. À l'arrivée sur `/mon-profil`, aucune section n'est dépliée et l'email actuel n'est pas affiché.
 - Aucun `h1` n'occupe plus d'une ligne à 390px, et tous les `h1` ont la même taille calculée (24px) sur toutes les pages ; un titre trop long est tronqué par « … ».
 - Les textes secondaires sont en crème à environ 70 % d'opacité, plus aucun en Driftwood ; le bouton « ← Retour » a une bordure de 2px et une graisse 500.
 - Dès 3 caractères saisis dans l'adresse d'un bar (inscription, ajout, modification), jusqu'à 5 suggestions s'affichent ; un clic remplit le champ avec l'adresse complète (« n° rue, code postal ville »).
@@ -309,7 +313,6 @@ US-142. En tant que musicien, je veux des cartes d'annonce plus compactes (nom d
 - Pied de page fixé en bas de l'écran.
 - Affichage du nom de l'organisateur sur les cartes ou côté musicien (phase future).
 - Nom et prénom exigés des comptes existants.
-- Champs prénom et nom séparés.
 - Nom de l'organisateur dans l'email de bienvenue.
 - Changement de taille des sous-titres `h2` et des titres du bandeau.
 - Suggestions d'adresse côté musicien, y compris pour l'adresse de recherche.
@@ -419,7 +422,8 @@ US-142. En tant que musicien, je veux des cartes d'annonce plus compactes (nom d
 - La page Contact est publique, avec « ← Retour » vers l'accueil. Le formulaire a 3 champs obligatoires : nom (100 caractères maximum), adresse mail (format valide), message (10 à 2000 caractères, avec un compteur « N/2000 »). Un organisateur connecté trouve son email prérempli, modifiable. Une phrase sous le bouton explique l'usage des données, avec un lien vers les CGU, sans case à cocher.
 - Après l'envoi : « Message envoyé, nous vous répondrons par email. » et le formulaire se vide. En cas d'échec : un message d'erreur et la saisie conservée. Une erreur de saisie s'affiche sous le champ concerné, la saisie conservée.
 - Au-delà de 5 envois en une heure depuis une même connexion : « Trop de messages envoyés, réessayez plus tard. »
-- « Nom et prénom » est un champ unique, obligatoire à l'inscription, de 1 à 80 caractères (espaces de début et de fin ignorés), placé en premier du formulaire. Une erreur s'affiche sous le champ, la saisie conservée. Au profil, une section repliée « Nom et prénom » (même comportement que les autres sections) enregistre la modification et confirme son succès. Le champ n'est facultatif que pour les comptes existants, qui n'ont pas de nom tant qu'ils n'en saisissent pas.
+- **Prénom et nom (remplace le champ unique « Nom et prénom » de la Phase 35, voir Phase 42)** : deux champs distincts, « Prénom » puis « Nom », obligatoires à l'inscription, de 1 à 40 caractères chacun (espaces de début et de fin ignorés), placés en premier du formulaire. Une erreur s'affiche sous le champ concerné, la saisie conservée. Au profil, une section repliée « Nom et prénom » contient les deux champs, enregistre la modification et confirme son succès. Les comptes existants n'ont pas de prénom ; leur ancien « Prénom Nom » reste dans « Nom », sans coupure automatique. Un compte sans prénom peut enregistrer les deux champs vides ; remplir l'un sans l'autre est refusé ; un prénom enregistré ne peut plus être vidé.
+- **Profil replié (remplace la règle « Mes bars déroulée d'office » de la Phase 27)** : à chaque visite de `/mon-profil`, « Mes bars », « Nom et prénom », « Email », « Mot de passe » et « Supprimer mon compte » sont repliées, y compris la fiche du bar d'un compte à un seul bar ; l'email actuel n'est pas affiché sous « Email » tant que la section est repliée. Chaque champ à remplir porte son libellé en placeholder (Prénom, Nom, Nouvel email, Mot de passe actuel, Nouveau mot de passe, Confirmation, Nom du bar, Adresse du bar, Code postal, phrase de confirmation de suppression).
 - Tous les titres de page (`h1`) font 24px, graisse 500, majuscules, sur une seule ligne ; un débordement est tronqué par « … ». Les titres de 41px (accueil, contact, connexion, inscription, mot de passe) passent à 24px.
 - Les textes secondaires utilisent un crème à environ 70 % d'opacité ; le Driftwood est réservé aux séparateurs et bordures structurels. Les textes à 60 % d'opacité passent à 70 %.
 - « ← Retour » reste un bouton fantôme, avec une bordure de 2px, une graisse 500 et une couleur crème.
