@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { seConnecter } from "./connexion";
 
 // Pastilles de statut en fond plein (Phase 49). Lecture seule : la base Neon est partagée.
 
@@ -27,5 +28,20 @@ test("les pastilles de statut ont un fond plein de la couleur du statut, texte b
     await expect(pastille).toHaveCSS("background-color", COULEURS[libelle]);
     await expect(pastille).toHaveCSS("color", "rgb(255, 255, 255)");
     await expect(pastille).toHaveCSS("font-weight", "700");
+  }
+});
+
+test("Mes annonces : les pastilles de date ont le fond plein de leur statut, texte blanc (Phase 55)", async ({
+  page,
+}) => {
+  await seConnecter(page);
+  const pastilles = page
+    .locator("main li > span")
+    .filter({ hasText: /· (Confirmée|Programmée|En attente de confirmation|Annulée)$/ });
+  test.skip((await pastilles.count()) === 0, "aucune occurrence dans Mes annonces");
+  for (const pastille of await pastilles.all()) {
+    const libelle = (await pastille.innerText()).split("·")[1].trim();
+    await expect(pastille).toHaveCSS("background-color", COULEURS[libelle]);
+    await expect(pastille).toHaveCSS("color", "rgb(255, 255, 255)");
   }
 });

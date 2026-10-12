@@ -6,6 +6,7 @@ import { recupererIdOrganisateurConnecte } from "@/lib/organisateur";
 import Bandeau from "@/components/bandeau";
 import HeaderOrganisateur from "@/components/header-organisateur";
 import {
+  COULEURS_STATUT_OCCURRENCE,
   LIBELLES_STATUT_OCCURRENCE,
   libelleStyles,
 } from "@/lib/annonce-constantes";
@@ -149,20 +150,21 @@ function CarteAnnonce({ annonce }: { annonce: AnnonceAvecDetails }) {
             <ul className="flex flex-wrap gap-2">
               {occurrencesTriees.map((occurrence) => {
                 const relance = messageRelance(occurrence);
+                const statut = statutAffiche(occurrence);
                 return (
-                  <li
-                    key={occurrence.id}
-                    className="flex flex-col rounded-[9999px] border border-[var(--harbor-trait)] px-3 py-1 text-[12px] font-semibold text-[var(--harbor-marine)]"
-                  >
-                    <span>
+                  <li key={occurrence.id} className="flex flex-col items-start gap-1">
+                    <span
+                      className="rounded-full px-3 py-1 text-[12px] font-bold leading-[1.25] text-white"
+                      style={{ backgroundColor: COULEURS_STATUT_OCCURRENCE[statut] }}
+                    >
                       {new Date(occurrence.date).toLocaleDateString("fr-FR", {
                         day: "numeric",
                         month: "short",
                       })}{" "}
-                      · {LIBELLES_STATUT_OCCURRENCE[statutAffiche(occurrence)]}
+                      · {LIBELLES_STATUT_OCCURRENCE[statut]}
                     </span>
                     {relance && (
-                      <span className="text-[var(--harbor-alerte)]">
+                      <span className="text-[12px] font-semibold text-[var(--harbor-alerte)]">
                         {relance}
                       </span>
                     )}

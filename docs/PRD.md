@@ -220,6 +220,7 @@ US-168. En tant qu'organisateur, je veux que « Supprimer définitivement » et 
 US-169. En tant qu'organisateur, je veux que « Confirmer » soit une pastille verte, afin de la distinguer d'une annulation.
 US-170. En tant qu'utilisateur, je veux que chaque bouton et chaque pastille prenne la couleur de sa fonction (action principale en Bleu signal, annulation et suppression en Erreur, confirmation en Succès, attente et relance en Alerte, action neutre en blanc ou Voile), afin de comprendre à la couleur ce que fait un bouton.
 US-171. En tant qu'utilisateur, je veux que « ← Retour » reste neutre, y compris à côté d'un bouton rouge, afin de ne jamais le confondre avec une annulation.
+US-172. En tant qu'organisateur, je veux que chaque pastille de date dans « Mes annonces » (ex. « 17 oct. · Confirmée », « 22 oct. · Programmée ») prenne la couleur de son statut (confirmée, programmée, en attente, annulée), afin de repérer d'un coup d'œil l'état de chaque date.
 
 ## Critères de succès
 
@@ -279,6 +280,7 @@ US-171. En tant qu'utilisateur, je veux que « ← Retour » reste neutre, y com
 - Sur « Mes annonces », le bouton du filtre par bar actif a un fond distinct des inactifs, et « Tous » est actif à l'arrivée (Phase 45).
 - Le menu « ⋯ » propose « Supprimer » ; après confirmation, l'annonce (ou la date choisie) disparaît de « Mes annonces » et du côté musicien, photos comprises ; supprimer la dernière date supprime l'annonce ; « Retour » ou Échap ne supprime rien (Phase 46).
 - Un glissé à gauche révèle « Supprimer », à droite « Modifier » ; le geste seul ne supprime ni n'ouvre rien, un simple tap ouvre toujours la carte et le défilement vertical reste fluide (Phase 47).
+- Sur « Mes annonces », chaque pastille de date a le fond plein de la couleur de son statut (mêmes couleurs que l'accueil et la carte) avec un texte blanc lisible, y compris la relance ; une date annulée reste identifiable (Phase 55).
 
 ## Hors périmètre
 
@@ -522,4 +524,6 @@ La migration Harbor a été livrée en une seule fois (Phase 40) : le pilote de 
 
 Les Phases 48 à 52 sont des finitions visuelles issues d'un usage sur téléphone. Le bug du calendrier vient de `BoutonCalendrier`, qui appelle `showPicker()` sur un `<input type="date">` de 0×0, transparent et sans événements pointeur : iOS l'ignore. Le correctif pose un vrai champ date transparent sur le bouton. Blanc sur « en attente » `#B7791F` fait environ 3,9:1 (sous AA pour 12 px) : exception à valider avec le propriétaire, ou assombrir ce seul fond. Le test réel sur iPhone et Android après déploiement reste le seul juge du calendrier. DESIGN.md consigne liserés, pastilles pleines, calendrier déplacé, espacements du formulaire et états pressés.
 
-Les Phases 53 et 54 colorent les boutons selon leur fonction. Les boutons d'annulation et de suppression sont en fond Erreur plein, texte blanc ; seule l'entrée de liste du menu « ⋯ » reste en texte Erreur sans fond. « Confirmer » est une pastille en fond Succès plein, texte blanc ; elle partage la teinte de la pastille de statut « confirmée » mais s'en distingue par sa forme de bouton d'action. « ← Retour » reste neutre. Chaque variante garde un état pressé plus foncé.
+Les Phases 53 et 54 colorent les boutons selon leur fonction. Les boutons d'annulation et de suppression sont en fond Erreur plein, texte blanc ; les déclencheurs (entrées « Annuler » et « Supprimer » du menu « ⋯ », « Supprimer ce bar ») restent en texte Erreur sans fond, la confirmation dans la fenêtre est en Erreur plein. Les « Retirer » qui suppriment une photo enregistrée sont en Erreur plein. Attente et relance restent en Alerte (pastille de statut et texte), sans bouton dédié. « Confirmer » est une pastille en fond Succès plein, texte blanc ; elle partage la teinte de la pastille de statut « confirmée » mais s'en distingue par sa forme de bouton d'action. « ← Retour » reste neutre. Chaque variante garde un état pressé plus foncé.
+
+La Phase 55 corrige un oubli de l'audit de la Phase 54 : les pastilles de date de « Mes annonces » étaient restées neutres (blanc, liseré), alors que l'accueil et la carte colorent déjà le statut. Elles réutilisent la table de couleurs existante, sans nouveau token.
