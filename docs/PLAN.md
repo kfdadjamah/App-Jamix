@@ -1249,9 +1249,9 @@ Dans `app/mes-annonces/carte-glissable.tsx`, deux liserés de 4 px épousant les
 
 ### Critères d'acceptation
 
-- [ ] Bord gauche Bleu signal et bord droit Erreur (couleurs calculées vérifiées, mobile 360 px)
-- [ ] Les liserés suivent la carte au glissé ; le tap et le défilement vertical sont inchangés
-- [ ] Opacité des liserés inchangée (100 %), aucune carte estompée dans Mes annonces
+- [x] Bord gauche Bleu signal et bord droit Erreur (couleurs calculées vérifiées, mobile 360 px)
+- [x] Les liserés suivent la carte au glissé ; le tap et le défilement vertical sont inchangés
+- [x] Opacité des liserés inchangée (100 %), aucune carte estompée dans Mes annonces
 - [ ] Test `e2e/glisse-annonce.e2e.ts` étendu, DESIGN.md à jour, captures 360 px montrées au propriétaire
 
 ## Bloquée par
@@ -1270,9 +1270,9 @@ Dans `app/mes-annonces/carte-glissable.tsx`, deux liserés de 4 px épousant les
 
 ### Critères d'acceptation
 
-- [ ] Fond calculé = couleur du statut pour confirmée, programmée, en attente, annulée
-- [ ] Contraste du blanc sur « en attente » (`#B7791F`, environ 3,9:1) tranché avec le propriétaire : exception documentée ou fond assombri
-- [ ] Test (`e2e/musicien.e2e.ts` ou `e2e/pastilles-statut.e2e.ts`) et DESIGN.md à jour
+- [x] Fond calculé = couleur du statut pour confirmée, programmée, en attente, annulée
+- [x] Contraste du blanc sur « en attente » (`#B7791F`, environ 3,9:1) tranché avec le propriétaire : exception documentée ou fond assombri
+- [x] Test (`e2e/musicien.e2e.ts` ou `e2e/pastilles-statut.e2e.ts`) et DESIGN.md à jour
 
 ## Bloquée par
 
@@ -1290,9 +1290,9 @@ Dans `app/mes-annonces/carte-glissable.tsx`, deux liserés de 4 px épousant les
 
 ### Critères d'acceptation
 
-- [ ] Le bouton est entre « Aujourd'hui » et « › » ; la bascule occupe toute la largeur
-- [ ] Un vrai clic (émulation tactile 390 px) ouvre le sélecteur ; choisir une date navigue vers l'URL de cette date
-- [ ] Test Playwright mobile qui clique le bouton, `e2e/musicien.e2e.ts` adapté, DESIGN.md à jour
+- [x] Le bouton est entre « Aujourd'hui » et « › » ; la bascule occupe toute la largeur
+- [x] Un vrai clic (émulation tactile 390 px) ouvre le sélecteur ; choisir une date navigue vers l'URL de cette date
+- [x] Test Playwright mobile qui clique le bouton, `e2e/musicien.e2e.ts` adapté, DESIGN.md à jour
 - [ ] Vérification réelle sur iPhone et Android après déploiement
 
 ## Bloquée par
