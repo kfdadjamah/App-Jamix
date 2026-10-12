@@ -137,7 +137,7 @@ export default function FormulaireInscription() {
           />
         </ChampFormulaire>
 
-        <ChampFormulaire label="Photo ou logo (optionnel)">
+        <ChampFormulaire label="Photo ou logo (option)">
           <input
             type="file"
             accept="image/jpeg,image/png,image/webp"

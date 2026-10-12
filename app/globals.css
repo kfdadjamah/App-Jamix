@@ -237,6 +237,13 @@ body {
   border-color: var(--harbor-bleu);
   box-shadow: 0 0 0 2px var(--harbor-voile);
 }
+.champ-input[type="time"] {
+  min-width: 0;
+  width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 10px 8px;
+}
 .champ-input--fichier {
   font-size: 13px;
 }

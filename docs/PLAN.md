@@ -1309,12 +1309,14 @@ Dans `app/mes-annonces/carte-glissable.tsx`, deux liserés de 4 px épousant les
 
 `app/mes-annonces/formulaire-annonce.tsx` : `gap-8` devient `gap-5`, le contournement `-mt-4` est retiré s'il devient inutile ; `app/mes-annonces/nouvelle/page.tsx` idem si besoin. Heures de début et de fin : `grid grid-cols-2 gap-3`, champs en `min-w-0`, libellés alignés en haut ; `.champ-input[type="time"]` (`app/globals.css`) avec `min-width:0`, `width:100%`, `appearance:none` et remplissage réduit pour iOS.
 
+Les libellés « (optionnel) » des champs facultatifs deviennent « (option) » (heure de fin, photos, description, photo ou logo).
+
 ### Critères d'acceptation
 
-- [ ] Écart entre sections réduit (mesuré), à 360 px
-- [ ] Les deux champs d'heure tiennent chacun dans une demi-colonne, sans chevauchement ni défilement horizontal
-- [ ] « Heure de fin (optionnel) » sur deux lignes ne désaligne pas les champs
-- [ ] Test `e2e/formulaire-mobile.e2e.ts` et DESIGN.md à jour
+- [x] Écart entre sections réduit (mesuré), à 360 px
+- [x] Les deux champs d'heure tiennent chacun dans une demi-colonne, sans chevauchement ni défilement horizontal
+- [x] « Heure de fin (option) » : libellé raccourci pour tenir sur une ligne, champs alignés en bas (`mt-auto`) si un libellé passe sur deux lignes
+- [x] Test `e2e/formulaire-mobile.e2e.ts` et DESIGN.md à jour
 
 ## Bloquée par
 
