@@ -100,6 +100,7 @@ test.describe("suggestions d'adresse", () => {
     await mockerAdresses(page);
     await seConnecter(page);
     await page.goto("/mon-profil");
+    await page.getByRole("button", { name: "Mes bars" }).click();
     await page.getByRole("button", { name: "Modifier" }).first().click();
     const champ = page.getByRole("combobox");
     await champ.fill("12 rue");
@@ -112,6 +113,7 @@ test.describe("suggestions d'adresse", () => {
     await mockerAdresses(page);
     await seConnecter(page);
     await page.goto("/mon-profil");
+    await page.getByRole("button", { name: "Mes bars" }).click();
     await page.getByRole("button", { name: "Ajouter un bar" }).click();
     const champ = page.getByRole("combobox");
     await champ.fill("12 rue");

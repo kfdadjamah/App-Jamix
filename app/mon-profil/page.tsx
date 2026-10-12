@@ -7,7 +7,7 @@ import HeaderOrganisateur from "@/components/header-organisateur";
 import BoutonRetour from "@/components/bouton-retour";
 import SectionDeroulable from "@/components/section-deroulable";
 import MesBars from "./mes-bars";
-import FormulaireNomComplet from "./formulaire-nom-complet";
+import FormulaireIdentite from "./formulaire-identite";
 import FormulaireEmail from "./formulaire-email";
 import FormulaireMotDePasse from "./formulaire-mot-de-passe";
 import SuppressionCompte from "./suppression-compte";
@@ -25,6 +25,7 @@ export default async function PageMonProfil() {
   const organisateur = await prisma.organisateur.findUnique({
     where: { id: session.user.id },
     select: {
+      prenom: true,
       nom: true,
       email: true,
       createdAt: true,
@@ -90,7 +91,7 @@ export default async function PageMonProfil() {
         </div>
 
         <Separateur />
-        <SectionDeroulable titre="Mes bars" ouverteParDefaut>
+        <SectionDeroulable titre="Mes bars">
           <MesBars
             bars={organisateur.bars.map((bar) => ({
               id: bar.id,
@@ -109,15 +110,10 @@ export default async function PageMonProfil() {
         </SectionDeroulable>
         <Separateur />
         <SectionDeroulable titre="Nom et prénom">
-          <FormulaireNomComplet nomActuel={organisateur.nom} />
+          <FormulaireIdentite prenomActuel={organisateur.prenom} nomActuel={organisateur.nom} />
         </SectionDeroulable>
         <Separateur />
-        <SectionDeroulable
-          titre="Email"
-          sousTitre={
-            <span className="text-[15px] text-[var(--harbor-marine-2)]">{organisateur.email}</span>
-          }
-        >
+        <SectionDeroulable titre="Email">
           <FormulaireEmail />
         </SectionDeroulable>
         <Separateur />

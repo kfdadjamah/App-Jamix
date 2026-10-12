@@ -46,6 +46,7 @@ export default function FormulaireEmail() {
         <input
           type="email"
           autoComplete="email"
+          placeholder="Nouvel email"
           {...register("nouvelEmail")}
           className="champ-input"
         />
@@ -55,6 +56,7 @@ export default function FormulaireEmail() {
         <input
           type="password"
           autoComplete="current-password"
+          placeholder="Mot de passe actuel"
           {...register("motDePasseActuel")}
           className="champ-input"
         />

@@ -19,7 +19,8 @@ export async function inscrireOrganisateur(
   const photo = photoBrute instanceof File && photoBrute.size > 0 ? photoBrute : null;
 
   const resultat = schemaInscription.safeParse({
-    nomComplet: formData.get("nomComplet"),
+    prenom: formData.get("prenom"),
+    nom: formData.get("nom"),
     email: formData.get("email"),
     motDePasse: formData.get("motDePasse"),
     nomBar: formData.get("nomBar"),
@@ -32,7 +33,7 @@ export async function inscrireOrganisateur(
     return { erreur: resultat.error.issues[0]?.message ?? "Formulaire invalide." };
   }
 
-  const { nomComplet, email, motDePasse, nomBar, adresseBar, codePostalBar } = resultat.data;
+  const { prenom, nom, email, motDePasse, nomBar, adresseBar, codePostalBar } = resultat.data;
 
   const organisateurExistant = await prisma.organisateur.findUnique({
     where: { email },
@@ -49,7 +50,8 @@ export async function inscrireOrganisateur(
 
   await prisma.organisateur.create({
     data: {
-      nom: nomComplet,
+      prenom,
+      nom,
       email,
       motDePasseHash,
       bars: {

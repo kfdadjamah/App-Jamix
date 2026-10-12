@@ -32,8 +32,8 @@ const classeBoutonFantome =
   "whitespace-nowrap rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] disabled:opacity-60";
 
 export default function MesBars({ bars }: { bars: BarDuProfil[] }) {
-  // Un compte d'un seul bar voit sa fiche dépliée d'office.
-  const [panneau, setPanneau] = useState<Panneau>(bars.length === 1 ? bars[0].id : null);
+  // Aucune fiche dépliée d'office : l'organisateur ouvre lui-même ce qu'il veut modifier.
+  const [panneau, setPanneau] = useState<Panneau>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [barASupprimer, setBarASupprimer] = useState<BarDuProfil | null>(null);
   const limiteAtteinte = bars.length >= NOMBRE_MAX_BARS;
@@ -52,11 +52,8 @@ export default function MesBars({ bars }: { bars: BarDuProfil[] }) {
   }
 
   function surSuppression() {
-    // La liste des bars est déjà revalidée par l'action : il en reste `bars.length - 1`.
-    const restants = bars.filter((bar) => bar.id !== barASupprimer?.id);
     setBarASupprimer(null);
-    // Un compte d'un seul bar voit sa fiche dépliée d'office, y compris après une suppression.
-    setPanneau(restants.length === 1 ? restants[0].id : null);
+    setPanneau(null);
     setMessage("Bar supprimé.");
   }
 

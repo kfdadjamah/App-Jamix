@@ -47,6 +47,7 @@ export default function FormulaireMotDePasse() {
         <input
           type="password"
           autoComplete="current-password"
+          placeholder="Mot de passe actuel"
           {...register("motDePasseActuel")}
           className="champ-input"
         />
@@ -56,6 +57,7 @@ export default function FormulaireMotDePasse() {
         <input
           type="password"
           autoComplete="new-password"
+          placeholder="Nouveau mot de passe"
           {...register("nouveauMotDePasse")}
           className="champ-input"
         />
@@ -65,6 +67,7 @@ export default function FormulaireMotDePasse() {
         <input
           type="password"
           autoComplete="new-password"
+          placeholder="Confirmation"
           {...register("confirmation")}
           className="champ-input"
         />

@@ -48,6 +48,7 @@ export default function SuppressionCompte() {
           <input
             type="password"
             autoComplete="current-password"
+            placeholder="Mot de passe actuel"
             {...register("motDePasseActuel")}
             className="champ-input"
           />
@@ -60,6 +61,7 @@ export default function SuppressionCompte() {
           <input
             type="text"
             autoComplete="off"
+            placeholder={`Saisissez ${MOT_CONFIRMATION_SUPPRESSION} pour confirmer`}
             {...register("confirmation")}
             className="champ-input"
           />

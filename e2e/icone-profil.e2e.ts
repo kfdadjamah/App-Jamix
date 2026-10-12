@@ -33,6 +33,7 @@ test("Déconnexion est visible sans défiler sur /mon-profil", async ({ page }) 
 test("la liste des bars affiche le code postal et pas de carré photo vide", async ({ page }) => {
   await seConnecter(page);
   await page.goto("/mon-profil");
+  await page.getByRole("button", { name: "Mes bars" }).click();
   await expect(page.getByText("18 rue Sainte-Hélène, 69002 Lyon")).toBeVisible();
   await expect(page.locator("main li div.border-dashed")).toHaveCount(0);
 });
@@ -40,6 +41,7 @@ test("la liste des bars affiche le code postal et pas de carré photo vide", asy
 test("ajouter un bar exige un code postal de 5 chiffres", async ({ page }) => {
   await seConnecter(page);
   await page.goto("/mon-profil");
+  await page.getByRole("button", { name: "Mes bars" }).click();
   await page.getByRole("button", { name: "Ajouter un bar" }).click();
   await page.getByRole("textbox", { name: "Nom du bar" }).fill("Bar Test CP");
   await page.getByRole("combobox").fill("1 rue Test, Lyon");

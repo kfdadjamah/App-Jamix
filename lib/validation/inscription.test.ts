@@ -6,8 +6,8 @@ import {
   schemaFicheBar,
   schemaInscription,
   schemaMotDePasseOublie,
-  schemaNomComplet,
-  schemaNomCompletVideAutorise,
+  schemaIdentite,
+  schemaIdentiteVideAutorise,
   schemaReinitialisationMotDePasse,
   schemaSuppressionCompte,
 } from "./inscription";
@@ -147,34 +147,34 @@ describe("schemaSuppressionCompte", () => {
   });
 });
 
-describe("nomComplet", () => {
-  it("retire les espaces de début et de fin", () => {
-    const resultat = schemaNomComplet.safeParse({ nomComplet: "  Camille Martin  " });
-    expect(resultat.success && resultat.data.nomComplet).toBe("Camille Martin");
+describe("prénom et nom", () => {
+  it("retirent les espaces de début et de fin", () => {
+    const resultat = schemaIdentite.safeParse({ prenom: "  Camille ", nom: " Martin  " });
+    expect(resultat.success && [resultat.data.prenom, resultat.data.nom]).toEqual(["Camille", "Martin"]);
   });
 
-  it("refuse un nom vide ou fait d'espaces", () => {
-    expect(schemaNomComplet.safeParse({ nomComplet: "" }).success).toBe(false);
-    expect(schemaNomComplet.safeParse({ nomComplet: "   " }).success).toBe(false);
+  it("refusent un champ vide ou fait d'espaces", () => {
+    expect(schemaIdentite.safeParse({ prenom: "", nom: "Martin" }).success).toBe(false);
+    expect(schemaIdentite.safeParse({ prenom: "Camille", nom: "   " }).success).toBe(false);
   });
 
-  it("accepte 80 caractères et refuse 81", () => {
-    expect(schemaNomComplet.safeParse({ nomComplet: "a".repeat(80) }).success).toBe(true);
-    expect(schemaNomComplet.safeParse({ nomComplet: "a".repeat(81) }).success).toBe(false);
+  it("acceptent 40 caractères et refusent 41", () => {
+    expect(schemaIdentite.safeParse({ prenom: "a".repeat(40), nom: "b".repeat(40) }).success).toBe(true);
+    expect(schemaIdentite.safeParse({ prenom: "a".repeat(41), nom: "b" }).success).toBe(false);
+    expect(schemaIdentite.safeParse({ prenom: "a", nom: "b".repeat(41) }).success).toBe(false);
   });
 
-  it("ignore les espaces autour pour la limite de 80", () => {
-    expect(schemaNomComplet.safeParse({ nomComplet: ` ${"a".repeat(80)} ` }).success).toBe(true);
-  });
-
-  it("est obligatoire à l'inscription", () => {
+  it("sont obligatoires à l'inscription", () => {
     const base = { email: "a@b.fr", motDePasse: "12345678", nomBar: "Bar", adresseBar: "1 rue X", codePostalBar: "69001" };
     expect(schemaInscription.safeParse(base).success).toBe(false);
-    expect(schemaInscription.safeParse({ ...base, nomComplet: "Camille Martin" }).success).toBe(true);
+    expect(schemaInscription.safeParse({ ...base, prenom: "Camille" }).success).toBe(false);
+    expect(schemaInscription.safeParse({ ...base, prenom: "Camille", nom: "Martin" }).success).toBe(true);
   });
 
-  it("variante du profil : le vide passe, le trop long non", () => {
-    expect(schemaNomCompletVideAutorise.safeParse({ nomComplet: "  " }).success).toBe(true);
-    expect(schemaNomCompletVideAutorise.safeParse({ nomComplet: "a".repeat(81) }).success).toBe(false);
+  it("variante du profil : les deux vides passent, un seul rempli non, le trop long non", () => {
+    expect(schemaIdentiteVideAutorise.safeParse({ prenom: "  ", nom: "" }).success).toBe(true);
+    expect(schemaIdentiteVideAutorise.safeParse({ prenom: "Camille", nom: "" }).success).toBe(false);
+    expect(schemaIdentiteVideAutorise.safeParse({ prenom: "", nom: "Martin" }).success).toBe(false);
+    expect(schemaIdentiteVideAutorise.safeParse({ prenom: "a".repeat(41), nom: "b" }).success).toBe(false);
   });
 });

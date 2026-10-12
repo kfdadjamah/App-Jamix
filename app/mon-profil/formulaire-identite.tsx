@@ -4,51 +4,69 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  schemaNomComplet,
-  schemaNomCompletVideAutorise,
-  type ChampsNomComplet,
+  schemaIdentite,
+  schemaIdentiteVideAutorise,
+  type ChampsIdentite,
 } from "@/lib/validation/inscription";
 import ChampFormulaire from "@/components/champ-formulaire";
-import { changerNomComplet } from "./actions";
+import { changerIdentite } from "./actions";
 
-export default function FormulaireNomComplet({ nomActuel }: { nomActuel: string | null }) {
+export default function FormulaireIdentite({
+  prenomActuel,
+  nomActuel,
+}: {
+  prenomActuel: string | null;
+  nomActuel: string | null;
+}) {
   const [erreurServeur, setErreurServeur] = useState<string | null>(null);
   const [succes, setSucces] = useState(false);
-  // Le vide n'est accepté que pour un compte sans nom (le serveur applique la même règle).
-  const [aUnNom, setAUnNom] = useState(Boolean(nomActuel));
+  // Le vide n'est accepté que pour un compte sans prénom (le serveur applique la même règle).
+  const [aUnPrenom, setAUnPrenom] = useState(Boolean(prenomActuel));
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<ChampsNomComplet>({
-    defaultValues: { nomComplet: nomActuel ?? "" },
-    resolver: zodResolver(aUnNom ? schemaNomComplet : schemaNomCompletVideAutorise),
+  } = useForm<ChampsIdentite>({
+    defaultValues: { prenom: prenomActuel ?? "", nom: nomActuel ?? "" },
+    resolver: zodResolver(aUnPrenom ? schemaIdentite : schemaIdentiteVideAutorise),
   });
 
-  async function surSoumission(donnees: ChampsNomComplet) {
+  async function surSoumission(donnees: ChampsIdentite) {
     setErreurServeur(null);
     setSucces(false);
 
     const formData = new FormData();
-    formData.set("nomComplet", donnees.nomComplet);
+    formData.set("prenom", donnees.prenom);
+    formData.set("nom", donnees.nom);
 
-    const resultat = await changerNomComplet(formData);
+    const resultat = await changerIdentite(formData);
     if ("erreur" in resultat) {
       setErreurServeur(resultat.erreur);
     } else {
       setSucces(true);
-      if (donnees.nomComplet.trim() !== "") setAUnNom(true);
+      if (donnees.prenom.trim() !== "") setAUnPrenom(true);
     }
   }
 
   return (
     <form onSubmit={handleSubmit(surSoumission)} className="flex flex-col gap-4" noValidate>
-      <ChampFormulaire label="Nom et prénom" erreur={errors.nomComplet?.message}>
+      <ChampFormulaire label="Prénom" erreur={errors.prenom?.message}>
         <input
           type="text"
-          autoComplete="name"
-          {...register("nomComplet")}
+          autoComplete="given-name"
+          placeholder="Prénom"
+          {...register("prenom")}
+          className="champ-input"
+        />
+      </ChampFormulaire>
+
+      <ChampFormulaire label="Nom" erreur={errors.nom?.message}>
+        <input
+          type="text"
+          autoComplete="family-name"
+          placeholder="Nom"
+          {...register("nom")}
           className="champ-input"
         />
       </ChampFormulaire>
