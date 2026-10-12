@@ -19,6 +19,53 @@
   --font-sans: var(--font-inter);
 }
 
+/* Harbor (Phase 39) : tokens limités à l'accueil musicien, jamais dans :root (DESIGN.md). */
+.theme-harbor {
+  --harbor-brume: #f7fafc;
+  --harbor-carte: #ffffff;
+  --harbor-marine: #0b3658;
+  --harbor-marine-2: #486984;
+  --harbor-marine-3: #688dac;
+  --harbor-bleu: #2b78be;
+  --harbor-bleu-clair: #4e9ad9;
+  --harbor-voile: #e6f1fa;
+  --harbor-trait: #dde7ee;
+  --harbor-succes: #17807e;
+  --harbor-alerte: #b7791f;
+  --harbor-erreur: #b3261e;
+  --harbor-annulee: #6b7c8c;
+
+  --harbor-rayon-petit: 6px;
+  --harbor-rayon-moyen: 12px;
+  --harbor-rayon-grand: 16px;
+  --harbor-ombre-carte: 0 12px 48px rgba(11, 54, 88, 0.08);
+  --harbor-ombre-menu: 0 4px 24px rgba(11, 54, 88, 0.08);
+
+  --background: var(--harbor-brume);
+  --foreground: var(--harbor-marine);
+  --font-sans: var(--font-plus-jakarta-sans);
+  --font-donnees: var(--font-geist);
+  --font-code: var(--font-jetbrains-mono);
+
+  background: var(--harbor-brume);
+  color: var(--harbor-marine);
+  font-family: var(--font-plus-jakarta-sans), ui-sans-serif, system-ui, sans-serif;
+  line-height: 1.55;
+}
+
+.theme-harbor .donnees {
+  font-family: var(--font-geist), ui-monospace, sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+
+.theme-harbor .kicker {
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);

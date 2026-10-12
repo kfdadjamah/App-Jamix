@@ -46,6 +46,14 @@ export const COULEURS_STATUT_OCCURRENCE: Record<string, string> = {
   ANNULEE: "#6c5f51",
 };
 
+// Palette Harbor (Phase 39), liste et carte : table séparée pour ne pas changer les écrans ORYZO.
+export const COULEURS_STATUT_HARBOR: Record<string, string> = {
+  CONFIRMEE: "#17807E",
+  PROGRAMMEE: "#2B78BE",
+  EN_ATTENTE_CONFIRMATION: "#B7791F",
+  ANNULEE: "#6B7C8C",
+};
+
 export const PRIORITE_STATUT_OCCURRENCE: Record<string, number> = {
   CONFIRMEE: 0,
   PROGRAMMEE: 1,
