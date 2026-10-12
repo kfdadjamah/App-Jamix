@@ -22,17 +22,18 @@ async function allerAUneDateAvecJams(page: Page): Promise<boolean> {
   return true;
 }
 
-test("l'accueil affiche le titre, l'accroche et le bandeau de 7 jours", async ({ page }) => {
+test("l'accueil affiche le logo, la bascule, la semaine et le bandeau de 7 jours", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1, name: "Jammix" })).toBeVisible();
-  await expect(page.getByText("Choisis une date. Vois où jouer ce soir.")).toBeVisible();
+  await expect(page.getByText(/Cette semaine ·/)).toBeVisible();
+  await expect(page.getByRole("button", { name: "Liste" })).toBeVisible();
   await expect(page.getByRole("link", { name: "Aujourd'hui" })).toBeVisible();
   await expect(page.getByRole("link", { name: "Semaine suivante" })).toBeVisible();
   await expect(page.locator(".grid-cols-7 > *")).toHaveCount(7);
   await expect(page.locator('.grid-cols-7 a[aria-current="date"]')).toHaveCount(1);
 });
 
-test("visiteur : seul « Connexion organisateur » à droite, sans logo ni champ date visible", async ({
+test("visiteur : seul « Connexion organisateur » à droite, sans lien logo ni champ date visible", async ({
   page,
 }) => {
   await page.goto("/");

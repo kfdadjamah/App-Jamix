@@ -17,11 +17,13 @@ export default async function Bandeau({
 
   return (
     <header className="sticky top-0 z-20 w-full border-b-[3px] border-[var(--harbor-bleu-clair)] bg-[var(--harbor-marine)]">
-      <div className="mx-auto flex h-14 w-full max-w-md items-center justify-between gap-3 px-6">
-        {/* Accueil : pas de logo, le grand titre « Jammix » de la page en tient lieu.
-            Ailleurs : lien vers / sans paramètre (date du jour, vue liste), en navigation client. */}
+      <div className="mx-auto flex h-12 w-full max-w-md items-center justify-between gap-3 px-6">
+        {/* Accueil : logo bicolore « Jammix » en h1. Ailleurs : lien vers / sans paramètre
+            (date du jour, vue liste), en navigation client. */}
         {accueil ? (
-          <span />
+          <h1 className="text-[22px] font-extrabold leading-none tracking-[-0.03em] text-white">
+            Jam<span className="text-[var(--harbor-bleu-clair)]">mix</span>
+          </h1>
         ) : (
           <LienGarde
             href="/"
@@ -37,7 +39,7 @@ export default async function Bandeau({
           accueil && (
             <Link
               href="/connexion"
-              className="whitespace-nowrap rounded-full bg-white/[.12] px-4 py-2 text-[12px] font-semibold text-white"
+              className="whitespace-nowrap rounded-full bg-white/[.12] px-3 py-1.5 text-[12px] font-semibold text-white"
             >
               Connexion organisateur
             </Link>

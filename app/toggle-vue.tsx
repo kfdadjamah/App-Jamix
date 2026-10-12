@@ -27,7 +27,7 @@ export default function ToggleVue({
             type="button"
             aria-pressed={actif}
             onClick={() => selectionnerVue(option)}
-            className={`flex-1 rounded-[8px] py-2 text-[13px] font-bold transition-colors duration-[120ms] ${
+            className={`flex-1 rounded-[8px] py-1.5 text-[13px] font-bold transition-colors duration-[120ms] ${
               actif
                 ? "bg-white text-[var(--harbor-marine)] shadow-[0_1px_3px_rgba(11,54,88,.12)]"
                 : "text-[var(--harbor-marine-2)]"

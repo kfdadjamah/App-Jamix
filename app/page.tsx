@@ -7,9 +7,9 @@ import {
 } from "@/lib/annonces";
 import { fenetreSept } from "@/lib/semaine";
 import Bandeau from "@/components/bandeau";
-import SelecteurDate from "./selecteur-date";
+import SelecteurDate, { BoutonCalendrier } from "./selecteur-date";
 import ConsultationMusicien from "./consultation-musicien";
-import type { Vue } from "./toggle-vue";
+import ToggleVue, { type Vue } from "./toggle-vue";
 import PiedDePage from "@/components/pied-de-page";
 
 const NOMBRE_DATES_SUGGEREES = 3;
@@ -48,16 +48,7 @@ export default async function Home({
   return (
     <div className="flex flex-1 flex-col">
       <Bandeau page="accueil" />
-      <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-6 px-6 py-8">
-        <div>
-          <h1 className="text-[40px] font-extrabold leading-[1.1] tracking-[-0.025em]">
-            Jammix
-          </h1>
-          <p className="mt-2 text-[16px] font-semibold text-[var(--harbor-marine-2)]">
-            Choisis une date. Vois où jouer ce soir.
-          </p>
-        </div>
-
+      <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-5 px-6 py-6">
         {session?.user?.id && (
           <Link
             href="/mes-annonces"
@@ -67,8 +58,18 @@ export default async function Home({
           </Link>
         )}
 
+        <div className="flex gap-2">
+          <div className="flex-1">
+            <ToggleVue vue={vueSelectionnee} dateSelectionnee={dateSelectionnee} />
+          </div>
+          <BoutonCalendrier
+            dateSelectionnee={dateSelectionnee}
+            aujourdhui={aujourdhui}
+            vue={vueSelectionnee}
+          />
+        </div>
+
         <SelecteurDate
-         
           dateSelectionnee={dateSelectionnee}
           aujourdhui={aujourdhui}
           vue={vueSelectionnee}
@@ -100,7 +101,6 @@ export default async function Home({
         ) : (
           <ConsultationMusicien
             occurrences={occurrences}
-            dateSelectionnee={dateSelectionnee}
             vue={vueSelectionnee}
            
           />

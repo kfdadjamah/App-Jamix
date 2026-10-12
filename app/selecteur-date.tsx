@@ -24,80 +24,60 @@ export default function SelecteurDate({
   vue?: Vue;
   joursAvecJams?: string[];
 }) {
-  const router = useRouter();
-  const champRef = useRef<HTMLInputElement | null>(null);
-
   const { debut, jours } = fenetreSept(dateSelectionnee, aujourdhui);
   const precedentPossible = debut > aujourdhui;
   const boutonFleche =
-    "flex h-9 w-9 items-center justify-center rounded-full text-[var(--harbor-marine)] hover:bg-[var(--harbor-voile)] transition-colors duration-[120ms]";
+    "flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] border border-[var(--harbor-trait)] bg-white text-[var(--harbor-marine)] hover:bg-[var(--harbor-voile)] transition-colors duration-[120ms]";
+  const formatCourt = new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "short", timeZone: "UTC" });
+  const libelleSemaine = `${Number(debut.slice(8))}–${formatCourt.format(new Date(jours[6]))}`;
+  const semaineCourante = debut <= aujourdhui && aujourdhui <= jours[6];
 
   return (
-    <div className="flex flex-col gap-3">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-1">
-          {precedentPossible ? (
-            <Link
-              href={hrefDate(ajouterJours(dateSelectionnee, -7), vue)}
-              aria-label="Semaine précédente"
-              className={boutonFleche}
-            >
-              <ChevronLeft size={20} aria-hidden="true" />
-            </Link>
-          ) : (
-            <span className={`${boutonFleche} opacity-30`} aria-hidden="true">
-              <ChevronLeft size={20} />
-            </span>
-          )}
+    <div className="flex flex-col gap-4">
+      <div className="flex items-center gap-2">
+        {precedentPossible ? (
           <Link
-            href={hrefDate(aujourdhui, vue)}
-            className="rounded-full px-3 py-1.5 text-[13px] font-semibold hover:bg-[var(--harbor-voile)] transition-colors duration-[120ms]"
-          >
-            Aujourd&apos;hui
-          </Link>
-          <Link
-            href={hrefDate(ajouterJours(dateSelectionnee, 7), vue)}
-            aria-label="Semaine suivante"
+            href={hrefDate(ajouterJours(dateSelectionnee, -7), vue)}
+            aria-label="Semaine précédente"
             className={boutonFleche}
           >
-            <ChevronRight size={20} aria-hidden="true" />
+            <ChevronLeft size={20} aria-hidden="true" />
           </Link>
-        </div>
-        <div className="relative">
-          <button
-            type="button"
-            aria-label="Choisir une date"
-            onClick={() => champRef.current?.showPicker()}
-            className={boutonFleche}
-          >
-            <CalendarDays size={20} aria-hidden="true" />
-          </button>
-          <input
-            ref={champRef}
-            type="date"
-            aria-label="Date"
-            tabIndex={-1}
-            value={dateSelectionnee}
-            min={aujourdhui}
-            onChange={(evenement) => {
-              if (evenement.target.value) router.push(hrefDate(evenement.target.value, vue));
-            }}
-            className="pointer-events-none absolute right-0 top-full h-0 w-0 opacity-0"
-          />
-        </div>
+        ) : (
+          <span className={`${boutonFleche} opacity-30`} aria-hidden="true">
+            <ChevronLeft size={20} />
+          </span>
+        )}
+        <p className="min-w-0 flex-1 text-[14px] font-bold leading-tight text-[var(--harbor-marine)]">
+          {semaineCourante ? "Cette semaine · " : ""}
+          {libelleSemaine}
+        </p>
+        <Link
+          href={hrefDate(aujourdhui, vue)}
+          className="rounded-[14px] bg-[var(--harbor-voile)] px-3 py-2.5 text-[14px] font-semibold text-[var(--harbor-marine)] hover:bg-[var(--harbor-trait)] transition-colors duration-[120ms]"
+        >
+          Aujourd&apos;hui
+        </Link>
+        <Link
+          href={hrefDate(ajouterJours(dateSelectionnee, 7), vue)}
+          aria-label="Semaine suivante"
+          className={boutonFleche}
+        >
+          <ChevronRight size={20} aria-hidden="true" />
+        </Link>
       </div>
 
-      <div className="grid grid-cols-7 gap-1">
+      <div className="grid grid-cols-7 gap-1.5">
         {jours.map((jour) => {
           const selectionne = jour === dateSelectionnee;
           const passe = jour < aujourdhui;
           const avecJam = joursAvecJams.includes(jour);
           const contenu = (
             <>
-              <span className="donnees text-[11px]">
+              <span className="donnees text-[13px] font-semibold">
                 {ABREVIATIONS.format(new Date(jour)).replace(".", "")}
               </span>
-              <span className="donnees text-[17px] font-bold">{Number(jour.slice(8))}</span>
+              <span className="donnees text-[20px] font-extrabold leading-none">{Number(jour.slice(8))}</span>
               <span
                 aria-hidden="true"
                 data-point={avecJam ? "oui" : undefined}
@@ -111,10 +91,10 @@ export default function SelecteurDate({
               />
             </>
           );
-          const classes = `flex flex-col items-center gap-0.5 rounded-[12px] py-2 transition-colors duration-[120ms] ${
+          const classes = `flex flex-col items-center gap-1 rounded-[16px] border py-2.5 transition-colors duration-[120ms] ${
             selectionne
-              ? "bg-[var(--harbor-bleu)] text-white"
-              : "text-[var(--harbor-marine)] hover:bg-[var(--harbor-voile)]"
+              ? "border-[var(--harbor-bleu)] bg-[var(--harbor-bleu)] text-white"
+              : "border-[var(--harbor-trait)] bg-white text-[var(--harbor-marine)] hover:bg-[var(--harbor-voile)]"
           }`;
           const libelle = new Intl.DateTimeFormat("fr-FR", {
             weekday: "long",
@@ -140,6 +120,45 @@ export default function SelecteurDate({
           );
         })}
       </div>
+    </div>
+  );
+}
+
+// Bouton calendrier (sélecteur de date natif), placé à côté de la bascule Liste/Carte.
+export function BoutonCalendrier({
+  dateSelectionnee,
+  aujourdhui,
+  vue = "liste",
+}: {
+  dateSelectionnee: string;
+  aujourdhui: string;
+  vue?: Vue;
+}) {
+  const router = useRouter();
+  const champRef = useRef<HTMLInputElement | null>(null);
+
+  return (
+    <div className="relative shrink-0">
+      <button
+        type="button"
+        aria-label="Choisir une date"
+        onClick={() => champRef.current?.showPicker()}
+        className="flex h-full min-h-9 w-9 items-center justify-center rounded-[12px] border border-[var(--harbor-trait)] bg-white text-[var(--harbor-marine)] hover:bg-[var(--harbor-voile)] transition-colors duration-[120ms]"
+      >
+        <CalendarDays size={18} aria-hidden="true" />
+      </button>
+      <input
+        ref={champRef}
+        type="date"
+        aria-label="Date"
+        tabIndex={-1}
+        value={dateSelectionnee}
+        min={aujourdhui}
+        onChange={(evenement) => {
+          if (evenement.target.value) router.push(hrefDate(evenement.target.value, vue));
+        }}
+        className="pointer-events-none absolute right-0 top-full h-0 w-0 opacity-0"
+      />
     </div>
   );
 }
