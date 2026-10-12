@@ -394,3 +394,65 @@ The bold signature: line-height 0.9 at 41–51px display sizes. This is unusuall
   --radius-full: 9999px;
 }
 ```
+
+---
+
+# Harbor — pilote « accueil musicien » (Phase 39)
+
+> Clair, marine et bleu. Une interface nette, sérieuse sans être froide, pensée pour consulter vite en mobile.
+
+**Portée : l'accueil musicien seul**, derrière le drapeau `NEXT_PUBLIC_THEME_HARBOR`. Tout le reste de ce document (ORYZO, thème sombre) reste la règle pour les autres écrans tant qu'ils ne sont pas migrés. Une migration écran par écran suivra ; à la fin, Harbor remplacera ORYZO et ce fichier sera réécrit. **Thème clair uniquement** : un mode sombre Harbor est prévu plus tard, sans date. Les tokens vivent sous la classe `.theme-harbor`, jamais dans `:root`. Référence visuelle : `design-harbor-preview.html` (dossier mémoire du projet).
+
+## Harbor — Couleurs
+
+| Nom | Valeur | Rôle |
+|-----|--------|------|
+| Brume | `#F7FAFC` | Fond de page |
+| Carte | `#FFFFFF` | Fond des cartes, champs, menus |
+| Marine | `#0B3658` | Texte principal, entête, étiquettes de carte |
+| Marine 2 | `#486984` | Texte secondaire |
+| Marine 3 | `#688DAC` | Texte discret, pied de page, kickers |
+| Bleu signal | `#2B78BE` | Action principale, jour sélectionné, statut « programmée » |
+| Bleu clair | `#4E9AD9` | Filet sous l'entête, accents sur marine |
+| Voile | `#E6F1FA` | Fonds teintés : bascule, boutons secondaires, survols, chips |
+| Trait | `#DDE7EE` | Bordures et séparateurs |
+| Succès | `#17807E` | Statut « confirmée » |
+| Alerte | `#B7791F` | Statut « en attente de confirmation » |
+| Erreur | `#B3261E` | Erreurs de saisie |
+| Annulée | `#6B7C8C` | Statut « annulée » : carte à 60 % d'opacité, nom barré |
+
+**Statuts d'occurrence (liste et carte, palette unique)** : confirmée `#17807E`, programmée `#2B78BE`, en attente `#B7791F`, annulée `#6B7C8C`. Table `COULEURS_STATUT_HARBOR` dans `lib/annonce-constantes.ts`, à côté de `COULEURS_STATUT_OCCURRENCE` qui n'est pas modifiée. Le statut d'annonce (Brouillon/Publiée) et celui d'occurrence restent distincts.
+
+## Harbor — Typographie
+
+- **Plus Jakarta Sans** — titres (800, interlettrage −0,025 em) et corps (400/600). Corps 16 px, interligne 1,55.
+- **Geist** — données (horaires, distances, dates), `font-variant-numeric: tabular-nums`.
+- **JetBrains Mono** — code et kickers en capitales (12 px, 500, interlettrage 0,1 em).
+- Chargées via `next/font/google` en variables CSS ; Inter reste la police des écrans non migrés.
+- Titre d'accueil « Jammix » : 40 px, 800. Accroche : 16 px, 600, Marine 2.
+
+## Harbor — Espacement, formes, ombres, mouvement
+
+- Base 4 px. Rayons : 6 (petits badges), 12 (boutons, champs), 16 (cartes), pastille complète (chips, étiquettes de carte).
+- Ombres teintées marine : `0 12px 48px rgba(11,54,88,.08)` (cartes en vue), `0 4px 24px rgba(11,54,88,.08)` (menus, éléments flottants).
+- Mouvement minimal : transitions de couleur et de fond de 120 ms ; aucune animation décorative.
+
+## Harbor — Composants (accueil)
+
+- **Entête** : fond Marine, filet inférieur 3 px Bleu clair, pas de logo (le titre « Jammix » en tient lieu). À droite : « Connexion organisateur » en pastille (`rgba(255,255,255,.12)`, texte blanc, 12 px, 600), ou l'icône de profil dans la même pastille pour l'organisateur connecté.
+- **Bloc titre** : « Jammix » + accroche « Choisis une date. Vois où jouer ce soir. »
+- **Bouton « Accéder à mes annonces »** (organisateur connecté) : bouton secondaire, fond Voile, texte Marine, rayon 12, sous l'accroche.
+- **Bascule Liste/Carte** : segmentée, fond Voile, rayon 12, segment actif blanc avec ombre légère, texte 13 px 700.
+- **Bandeau de 7 jours** : ligne « ‹ · Aujourd'hui · › » puis sept jours (abréviation en capitales 11 px Geist, numéro 17 px 700). Jour sélectionné en pastille Bleu signal, texte blanc. Point de 4 px Bleu signal (blanc sur le jour sélectionné) sous les jours qui ont au moins une occurrence d'annonce publiée, annulée comprise. Icône calendrier à droite qui ouvre un sélecteur de date natif pour les dates lointaines. Borne basse : aujourd'hui.
+- **Carte d'annonce** : fond blanc, rayon 16, bordure Trait, ombre légère. Ligne 1 : nom du bar (20 px, 800, ellipsis) et statut en badge (texte de la couleur du statut). Ligne 2 : adresse à gauche, distance à droite (Geist, 600). Ligne 3 : horaires « 20:30 – 23:30 » (Geist, 600). Lignes « Styles » et « Instruments » : libellé en capitales 11 px, puces sur une ligne avec ellipsis. Ligne « Sera confirmée le … » conservée. Bouton Itinéraire secondaire (bordure Trait, fond blanc) ; son menu est une carte blanche, rayon 12.
+- **Étiquette de carte (pill)** : fond Marine à 96 %, bordure et pointe de la couleur du statut, nom en capitales 12 px blanc, sous-ligne statut/distance en blanc à 75 %. Version compacte (point seul) en cas de chevauchement. Fond de carte : OpenFreeMap `positron` (clair). Attribution OSM en pastille blanche à 80 %, sans chevauchement avec les étiquettes.
+- **Feuille de bar** (bottom sheet) : fond blanc, bordure Trait, coins supérieurs 16, bouton de fermeture rond Voile.
+- **États vides** : bloc à bordure pointillée Trait ; chips de prochaines dates en Voile, rayon complet.
+- **Pied de page** : texte centré Geist 12 px Marine 3, filet supérieur Trait.
+
+## Harbor — À ne pas faire
+
+- Ne pas utiliser Harbor sur un écran non migré, ni mélanger des tokens ORYZO et Harbor sur un même écran.
+- Ne pas modifier `:root` ni `COULEURS_STATUT_OCCURRENCE` pendant le pilote.
+- Pas de noir pur, pas de couleur de statut hors de la palette ci-dessus.
+- Aucun nom de personne dans l'interface.
