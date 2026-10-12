@@ -106,12 +106,17 @@ export default function FormulaireInscription() {
         </ChampFormulaire>
 
         <ChampFormulaire label="Nom du bar" erreur={errors.nomBar?.message}>
-          <input type="text" {...register("nomBar")} className="champ-input" />
+          <input
+            type="text"
+            placeholder="Nom du bar"
+            {...register("nomBar")}
+            className="champ-input"
+          />
         </ChampFormulaire>
 
         <ChampFormulaire label="Adresse du bar" erreur={errors.adresseBar?.message}>
           <ChampAdresse
-            placeholder="12 rue de la République, Lyon"
+            placeholder="Adresse du bar"
             register={register("adresseBar")}
             setValue={(v) => setValue("adresseBar", v, { shouldValidate: true, shouldDirty: true })}
             setCodePostal={(v) =>
@@ -126,7 +131,7 @@ export default function FormulaireInscription() {
             inputMode="numeric"
             autoComplete="postal-code"
             maxLength={5}
-            placeholder="69002"
+            placeholder="Code postal"
             {...register("codePostalBar")}
             className="champ-input"
           />

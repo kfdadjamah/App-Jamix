@@ -720,7 +720,7 @@ Dans « Mes annonces », dès 2 bars, les boutons du filtre « Tous » / un bout
 
 ### Ce qu'on livre
 
-Sur `/mon-profil`, « Mes bars », « Email », « Mot de passe » et « Supprimer mon compte » deviennent des sections déroulables : un clic sur la ligne de titre, qui porte un chevron, déroule ou replie la section, indépendamment des autres. À chaque visite, seule « Mes bars » est déroulée. L'email actuel reste visible sous « Email ». *(Remplacé par la Phase 42 : tout est replié, email masqué.)* Replier une section n'efface pas la saisie. « Supprimer mon compte » déroulé montre directement le formulaire de suppression. « Déconnexion » ne change pas. Le titre « Mon profil » passe à la taille de « Mes annonces » (24px). Aucune migration de schéma.
+Sur `/mon-profil`, « Mes bars », « Email », « Mot de passe » et « Supprimer mon compte » deviennent des sections déroulables : un clic sur la ligne de titre, qui porte un chevron, déroule ou replie la section, indépendamment des autres. À chaque visite, seule « Mes bars » est déroulée. L'email actuel reste visible sous « Email ». *(Remplacé par la Phase 42.)* *(Remplacé par la Phase 42 : tout est replié, email masqué.)* Replier une section n'efface pas la saisie. « Supprimer mon compte » déroulé montre directement le formulaire de suppression. « Déconnexion » ne change pas. Le titre « Mon profil » passe à la taille de « Mes annonces » (24px). Aucune migration de schéma.
 
 ### Critères d'acceptation
 
@@ -960,7 +960,7 @@ Tous les titres de page passent à 24px sur une ligne (classe commune `.titre-pa
 - [x] Sur toutes les pages, le `h1` tient sur une ligne à 390px et a la même taille calculée (24px) ; un titre trop long est tronqué par « … »
 - [x] Les textes secondaires sont en crème ~70 % (plus de `--color-driftwood` en texte) ; le Driftwood reste sur les séparateurs et bordures
 - [x] « ← Retour » a une bordure de 2px et une graisse 500
-- [x] À l'inscription, à l'ajout et à la modification d'un bar, des suggestions (5 maximum) apparaissent dès 3 caractères ; un clic remplit « n° rue, code postal ville »
+- [x] À l'inscription, à l'ajout et à la modification d'un bar, des suggestions (5 maximum) apparaissent dès 3 caractères ; un clic remplit « n° rue, code postal ville » *(Phase 44 : adresse sans code postal + champ « Code postal » dédié)*
 - [x] Le champ d'adresse est accessible (`role="combobox"`, navigation clavier, Échap) et accepte la saisie libre ; une panne de l'API Adresse n'affiche aucune erreur
 - [x] Le géocodage serveur (`lib/geocode.ts`) est inchangé
 - [x] DESIGN.md documente le titre unique, le texte secondaire et le bouton Retour
@@ -1122,3 +1122,50 @@ Sur `/mon-profil`, rien n'est déplié d'office : « Mes bars », « Nom et pré
 ## Bloquée par
 
 - Phase 41 (carte d'annonce compacte)
+
+---
+
+## Phase 43 : Bandeau allégé, mot-symbole sous le bandeau, pastille de profil
+
+**User stories** : US-147, US-148
+
+### Ce qu'on livre
+
+*(Livrée avant formalisation : commits `19a2b25`, `b6bfc46`, `199cfc6`.)* Le bandeau (48 px, Marine) ne porte plus le texte « Jammix » : hors accueil, une icône maison seule (libellé accessible « Accueil ») ; à droite, « Connexion organisateur » ou l'icône de profil en pastille blanche translucide, identique sur toutes les pages. Sous le bandeau, sur toutes les pages, le mot-symbole « Jammix » (fluide) et l'accroche « Les Jams à Lyon, ce soir ». La page de connexion resserre ses espacements et son sous-titre devient « Accédez à l'espace de gestion de vos jams. ». Aucune migration ni règle métier touchée.
+
+### Critères d'acceptation
+
+- [x] Hors accueil, le bandeau n'affiche que l'icône maison (lien `/`, libellé « Accueil ») ; aucun texte « Jammix » dans le bandeau
+- [x] Mot-symbole et accroche visibles sous le bandeau sur toutes les pages ; `h1` sur l'accueil uniquement
+- [x] L'icône de profil est la même pastille blanche sur toutes les pages, pleine sur `/mon-profil`
+- [x] Sous-titre de connexion mis à jour, espacements resserrés
+- [x] Tests Playwright (`e2e/musicien.e2e.ts`, `e2e/icone-profil.e2e.ts`) et DESIGN.md à jour
+
+## Bloquée par
+
+- Phase 40 (bascule Harbor sur toute l'application)
+
+---
+
+## Phase 44 : Code postal dédié, profil resserré, Déconnexion en haut, placeholders d'inscription
+
+**User stories** : US-149, US-150, US-151, US-152
+
+### Ce qu'on livre
+
+*(Livrée avant formalisation : commits `8336858`, `d744b53` ; placeholders d'inscription corrigés ensuite.)* Le code postal d'un bar devient un champ dédié « Code postal » (5 chiffres) à l'inscription, à l'ajout et à la modification d'un bar ; choisir une suggestion d'adresse met l'adresse sans code postal dans son champ et renseigne le code postal. L'adresse s'affiche recomposée « n° rue, code postal ville » (cartes, fiche d'annonce, profil) et le géocodage l'utilise en entier. Sur `/mon-profil`, « Déconnexion » passe à droite du titre, les lignes de bars sont resserrées et le carré de photo vide disparaît. Les placeholders de l'inscription reprennent les libellés (« Nom du bar », « Adresse du bar », « Code postal »).
+
+### Critères d'acceptation
+
+- [x] Champ « Code postal » (5 chiffres, `inputMode="numeric"`, `autoComplete="postal-code"`) aux trois formulaires de bar ; erreur « Le code postal doit contenir 5 chiffres. » sous le champ, saisie conservée
+- [x] Choisir une suggestion renseigne l'adresse (sans code postal) et le code postal
+- [x] `Bar.codePostal` (défaut vide, migration non destructive) ; un bar antérieur sans code postal s'affiche tel quel et exige un code postal valide à sa prochaine modification
+- [x] Adresse affichée « n° rue, code postal ville » sur cartes, fiche d'annonce et profil ; géocodage sur l'adresse complète
+- [x] « Déconnexion » à droite du titre « Mon profil » ; plus de carré de photo vide ; lignes de bars resserrées
+- [x] Placeholders d'inscription = libellés (Nom du bar, Adresse du bar, Code postal)
+- [x] Tests : `lib/adresse.test.ts`, `lib/validation/inscription.test.ts`, `e2e/lisibilite-adresse.e2e.ts`
+- [ ] `prisma db push` (colonnes `Organisateur.prenom` et `Bar.codePostal`) appliqué sur la base de production avant le déploiement
+
+## Bloquée par
+
+- Phase 42 (profil replié, prénom et nom séparés)
