@@ -1236,3 +1236,106 @@ Un composant client `CarteGlissable` (`app/mes-annonces/carte-glissable.tsx`) en
 ## Bloquée par
 
 - Phase 46 (fenêtre de suppression)
+
+---
+
+## Phase 48 : Liseré coloré arrondi sur les cartes de Mes annonces
+
+**User stories** : US-159, US-160
+
+### Ce qu'on livre
+
+Dans `app/mes-annonces/carte-glissable.tsx`, deux liserés arrondis d'environ 4 px sur la carte glissante (`span aria-hidden`, sans bloquer les pointer events) : bord gauche Bleu signal (`--harbor-bleu`, annonce « Modifier »), bord droit Erreur (`--harbor-erreur`, annonce « Supprimer »). Ils suivent la carte pendant le glissé et l'opacité de 60 % d'une carte annulée. Vérifier que `overflow-x-clip` ne rogne ni l'ombre ni les coins.
+
+### Critères d'acceptation
+
+- [ ] Bord gauche Bleu signal et bord droit Erreur (couleurs calculées vérifiées, mobile 360 px)
+- [ ] Les liserés suivent la carte au glissé ; le tap et le défilement vertical sont inchangés
+- [ ] Carte annulée : liserés à 60 % d'opacité
+- [ ] Test `e2e/glisse-annonce.e2e.ts` étendu, DESIGN.md à jour, captures 360 px montrées au propriétaire
+
+## Bloquée par
+
+- Aucune
+
+---
+
+## Phase 49 : Pastilles de statut en fond plein
+
+**User stories** : US-161
+
+### Ce qu'on livre
+
+`app/carte-annonce.tsx` (pastille de statut) et `app/mes-annonces/page.tsx` : le fond teinté à 12 % est remplacé par un fond plein `COULEURS_STATUT_OCCURRENCE[statut]` (`lib/annonce-constantes.ts`), texte blanc, graisse 700.
+
+### Critères d'acceptation
+
+- [ ] Fond calculé = couleur du statut pour confirmée, programmée, en attente, annulée
+- [ ] Contraste du blanc sur « en attente » (`#B7791F`, environ 3,9:1) tranché avec le propriétaire : exception documentée ou fond assombri
+- [ ] Test (`e2e/musicien.e2e.ts` ou `e2e/pastilles-statut.e2e.ts`) et DESIGN.md à jour
+
+## Bloquée par
+
+- Aucune
+
+---
+
+## Phase 50 : Calendrier de l'accueil déplacé et fonctionnel sur téléphone
+
+**User stories** : US-162, US-163
+
+### Ce qu'on livre
+
+`BoutonCalendrier` (`app/selecteur-date.tsx`) quitte la ligne de la bascule Liste/Carte (qui reprend toute la largeur) et prend place à droite de « › » dans la ligne « ‹ Aujourd'hui › », zone tactile 40×40 au moins. Le `<input type="date">` caché de 0×0 est remplacé par un champ réellement posé sur le bouton (transparent, `absolute inset-0`, `min` = aujourd'hui), sans dépendre de `showPicker()` (au besoin avec `try/catch` en renfort). `onChange` inchangé.
+
+### Critères d'acceptation
+
+- [ ] Le bouton est à droite de « › » ; la bascule occupe toute la largeur
+- [ ] Un vrai clic (émulation tactile 390 px) ouvre le sélecteur ; choisir une date navigue vers l'URL de cette date
+- [ ] Test Playwright mobile qui clique le bouton, `e2e/musicien.e2e.ts` adapté, DESIGN.md à jour
+- [ ] Vérification réelle sur iPhone et Android après déploiement
+
+## Bloquée par
+
+- Aucune
+
+---
+
+## Phase 51 : Formulaire de nouvelle annonce resserré, heures lisibles
+
+**User stories** : US-164, US-165
+
+### Ce qu'on livre
+
+`app/mes-annonces/formulaire-annonce.tsx` : `gap-8` devient `gap-5`, le contournement `-mt-4` est retiré s'il devient inutile ; `app/mes-annonces/nouvelle/page.tsx` idem si besoin. Heures de début et de fin : `grid grid-cols-2 gap-3`, champs en `min-w-0`, libellés alignés en haut ; `.champ-input[type="time"]` (`app/globals.css`) avec `min-width:0`, `width:100%`, `appearance:none` et remplissage réduit pour iOS.
+
+### Critères d'acceptation
+
+- [ ] Écart entre sections réduit (mesuré), à 360 px
+- [ ] Les deux champs d'heure tiennent chacun dans une demi-colonne, sans chevauchement ni défilement horizontal
+- [ ] « Heure de fin (optionnel) » sur deux lignes ne désaligne pas les champs
+- [ ] Test `e2e/formulaire-mobile.e2e.ts` et DESIGN.md à jour
+
+## Bloquée par
+
+- Aucune
+
+---
+
+## Phase 52 : Tous les boutons ont une couleur au clic
+
+**User stories** : US-166
+
+### Ce qu'on livre
+
+États `:active` par famille, tokens `--harbor-*` uniquement, transition de 120 ms conservée : principal (Bleu signal → Marine), secondaire (fond Voile, bordure Bleu clair), discret (Voile → Trait), danger (fond Erreur teinté, texte Erreur), puis pastilles, flèches, jours du bandeau, bascule, filtres, entrées de menu, boutons de fenêtre et chips. Pas de composant `Button` commun : variantes `active:` ajoutées aux motifs répétés, à partir d'un inventaire `grep -rn "<button\|<Link\|<a "` pour ne rien oublier.
+
+### Critères d'acceptation
+
+- [ ] Un échantillon par famille change de couleur calculée sous `mouse.down()`
+- [ ] Aucun bouton, lien-bouton ou entrée de menu de l'inventaire n'est oublié
+- [ ] Test `e2e/boutons-actifs.e2e.ts` et DESIGN.md à jour
+
+## Bloquée par
+
+- Phases 48 à 51 (mêmes fichiers)

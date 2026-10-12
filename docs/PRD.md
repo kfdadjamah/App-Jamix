@@ -207,6 +207,14 @@ US-155. En tant qu'organisateur, je veux confirmer la suppression dans une fenê
 US-156. En tant qu'organisateur d'une annonce récurrente, je veux choisir entre « Cette date seulement » (avec la date) et « Toutes les dates » avant de supprimer, afin de ne retirer que ce que je veux.
 US-157. En tant qu'organisateur, je veux glisser une carte vers la gauche pour faire apparaître un bouton « Supprimer », afin de supprimer rapidement au doigt.
 US-158. En tant qu'organisateur, je veux glisser une carte vers la droite pour faire apparaître un bouton « Modifier », afin d'ouvrir le formulaire rapidement.
+US-159. En tant qu'organisateur, je veux un liseré bleu arrondi sur le bord gauche de chaque carte de « Mes annonces », afin de deviner que le glissé à droite mène à « Modifier ».
+US-160. En tant qu'organisateur, je veux un liseré rouge arrondi sur le bord droit de chaque carte de « Mes annonces », afin de deviner que le glissé à gauche mène à « Supprimer ».
+US-161. En tant qu'utilisateur, je veux des pastilles de statut à fond plein (texte blanc) sur les cartes d'annonce, afin de lire le statut d'un coup d'œil.
+US-162. En tant que musicien, je veux que le bouton calendrier s'ouvre sur mon téléphone, afin de choisir une date lointaine.
+US-163. En tant que musicien, je veux le bouton calendrier à droite de « ‹ Aujourd'hui › », afin de le trouver avec la navigation par date.
+US-164. En tant qu'organisateur, je veux un formulaire de nouvelle annonce plus resserré, afin de voir plus de champs à l'écran.
+US-165. En tant qu'organisateur sur téléphone, je veux des champs d'heure de début et de fin côte à côte, sans débordement ni chevauchement, afin de les saisir sans erreur.
+US-166. En tant qu'utilisateur, je veux que chaque bouton change de couleur quand je l'appuie, afin d'avoir un retour immédiat de mon geste.
 
 ## Critères de succès
 
@@ -505,3 +513,5 @@ Les Phases 45 à 47 devront aussi consigner dans DESIGN.md le menu à trois entr
 Les photos d'annonce sont masquées en V1 sans suppression de code ni de données : le schéma (`photoUrl1/2`), l'affichage côté musicien et les composants de saisie restent en place pour la V2. Le bandeau devient « Accéder à mes annonces » (sans chiffre, nombre conservé dans le libellé accessible) hors de « Mes annonces », où il reste « À confirmer · N » ; DESIGN.md renomme la section correspondante.
 
 La migration Harbor a été livrée en une seule fois (Phase 40) : le pilote de l'accueil (Phase 39) a été étendu à tous les écrans, le drapeau `NEXT_PUBLIC_THEME_HARBOR` et le projet smoke ont été retirés, et DESIGN.md a été réécrit. Le mode sombre reste prévu plus tard, sans date.
+
+Les Phases 48 à 52 sont des finitions visuelles issues d'un usage sur téléphone. Le bug du calendrier vient de `BoutonCalendrier`, qui appelle `showPicker()` sur un `<input type="date">` de 0×0, transparent et sans événements pointeur : iOS l'ignore. Le correctif pose un vrai champ date transparent sur le bouton. Blanc sur « en attente » `#B7791F` fait environ 3,9:1 (sous AA pour 12 px) : exception à valider avec le propriétaire, ou assombrir ce seul fond. Le test réel sur iPhone et Android après déploiement reste le seul juge du calendrier. DESIGN.md consigne liserés, pastilles pleines, calendrier déplacé, espacements du formulaire et états pressés.
