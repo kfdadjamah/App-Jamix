@@ -1395,9 +1395,9 @@ Sur chaque carte de « Mes annonces », les pastilles de date (« 17 oct. · Con
 
 ### Critères d'acceptation
 
-- [ ] Chaque pastille a pour fond calculé la couleur de son statut (confirmée, programmée, en attente, annulée) et un texte blanc
-- [ ] Le texte de relance reste lisible (contraste AA) et un 390 px ne déborde pas
-- [ ] Test `e2e/pastilles-statut.e2e.ts` étendu aux pastilles de « Mes annonces » ; DESIGN.md à jour
+- [x] Chaque pastille a pour fond calculé la couleur de son statut (confirmée, programmée, en attente, annulée) et un texte blanc
+- [x] Le texte de relance reste lisible (contraste AA) et un 390 px ne déborde pas
+- [x] Test `e2e/pastilles-statut.e2e.ts` étendu aux pastilles de « Mes annonces » ; DESIGN.md à jour
 
 ## Bloquée par
 
