@@ -1375,10 +1375,31 @@ Inventaire des boutons, liens-boutons et pastilles (`grep -rn "<button\|<Link\|<
 
 ### Critères d'acceptation
 
-- [ ] Aucun bouton ni pastille de l'inventaire n'est hors règle
-- [ ] Un échantillon par fonction vérifié par couleur calculée
-- [ ] Test `e2e/boutons-actifs.e2e.ts` étendu et DESIGN.md à jour
+- [x] Aucun bouton ni pastille de l'inventaire n'est hors règle
+- [x] Un échantillon par fonction vérifié par couleur calculée
+- [x] Test `e2e/boutons-actifs.e2e.ts` étendu et DESIGN.md à jour
 
 ## Bloquée par
 
 - Phase 53
+
+---
+
+## Phase 55 : Pastilles de date colorées dans Mes annonces
+
+**User stories** : US-172
+
+### Ce qu'on livre
+
+Sur chaque carte de « Mes annonces », les pastilles de date (« 17 oct. · Confirmée », « 22 oct. · Programmée »…) prennent le fond plein de la couleur de leur statut, avec texte blanc, comme sur l'accueil et la carte. Le message de relance reste lisible sur ce fond.
+
+### Critères d'acceptation
+
+- [ ] Chaque pastille a pour fond calculé la couleur de son statut (confirmée, programmée, en attente, annulée) et un texte blanc
+- [ ] Le texte de relance reste lisible (contraste AA) et un 390 px ne déborde pas
+- [ ] Test `e2e/pastilles-statut.e2e.ts` étendu aux pastilles de « Mes annonces » ; DESIGN.md à jour
+
+## Bloquée par
+
+- Phase 54
+
