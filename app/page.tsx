@@ -53,7 +53,7 @@ export default async function Home({
         {session?.user?.id && (
           <Link
             href="/mes-annonces"
-            className="w-full rounded-[12px] bg-[var(--harbor-voile)] px-6 py-3 text-center text-[14px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-trait)] active:bg-[var(--harbor-trait)]"
+            className="w-full rounded-[12px] bg-[var(--harbor-bleu)] px-6 py-3 text-center text-[14px] font-bold text-white transition-colors duration-[120ms] hover:bg-[var(--harbor-marine)] active:bg-[var(--harbor-marine)]"
           >
             Accéder à mes annonces
           </Link>
