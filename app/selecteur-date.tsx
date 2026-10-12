@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { CalendarDays, ChevronLeft, ChevronRight } from "lucide-react";
 import { ajouterJours, fenetreSept } from "@/lib/semaine";
-import type { Theme } from "@/lib/theme";
 import type { Vue } from "./toggle-vue";
 
 function hrefDate(date: string, vue: Vue) {
@@ -16,32 +15,17 @@ const ABREVIATIONS = new Intl.DateTimeFormat("fr-FR", { weekday: "short", timeZo
 
 export default function SelecteurDate({
   dateSelectionnee,
-  theme = "oryzo",
   aujourdhui,
   vue = "liste",
   joursAvecJams = [],
 }: {
   dateSelectionnee: string;
-  theme?: Theme;
-  aujourdhui?: string;
+  aujourdhui: string;
   vue?: Vue;
   joursAvecJams?: string[];
 }) {
   const router = useRouter();
   const champRef = useRef<HTMLInputElement | null>(null);
-
-  if (theme === "oryzo" || !aujourdhui) {
-    return (
-      <input
-        type="date"
-        value={dateSelectionnee}
-        min={new Date().toISOString().slice(0, 10)}
-        onChange={(evenement) => router.push(`/?date=${evenement.target.value}`)}
-        className="w-full bg-transparent border-0 border-b border-[var(--color-warm-cream)] px-[2px] py-[1px] text-[18px] text-[var(--color-warm-cream)] focus:outline-none focus:border-b-2 focus:pb-0"
-        style={{ colorScheme: "dark" }}
-      />
-    );
-  }
 
   const { debut, jours } = fenetreSept(dateSelectionnee, aujourdhui);
   const precedentPossible = debut > aujourdhui;
@@ -110,7 +94,7 @@ export default function SelecteurDate({
           const avecJam = joursAvecJams.includes(jour);
           const contenu = (
             <>
-              <span className="donnees text-[11px] uppercase">
+              <span className="donnees text-[11px]">
                 {ABREVIATIONS.format(new Date(jour)).replace(".", "")}
               </span>
               <span className="donnees text-[17px] font-bold">{Number(jour.slice(8))}</span>

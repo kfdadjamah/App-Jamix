@@ -44,14 +44,14 @@ export default async function PageMesAnnonces() {
           </h1>
           <Link
             href="/mes-annonces/nouvelle"
-            className="rounded-[36px] bg-[var(--color-brass-copper)] px-4 py-[10px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)]"
+            className="rounded-[12px] bg-[var(--harbor-bleu)] px-4 py-3 text-[14px] font-bold text-white transition-colors duration-[120ms] hover:bg-[var(--harbor-marine)]"
           >
             Nouvelle
           </Link>
         </div>
 
         {annonces.length === 0 && (
-          <p className="text-[15px] text-[color:var(--color-texte-secondaire)]">
+          <p className="text-[15px] text-[var(--harbor-marine-2)]">
             Aucune annonce pour le moment.
           </p>
         )}
@@ -99,29 +99,29 @@ function CarteAnnonce({ annonce }: { annonce: AnnonceAvecDetails }) {
     <div className="relative">
       <Link
         href={`/mes-annonces/${annonce.id}`}
-        className="flex flex-col gap-2 rounded-[12px] border border-[var(--color-cork-border)] p-4"
+        className="flex flex-col gap-2 rounded-[16px] border border-[var(--harbor-trait)] bg-white p-4 shadow-[var(--harbor-ombre-carte)]"
       >
-        <span className="pr-12 text-[12px] font-medium uppercase text-[var(--color-warm-cream)]">
+        <span className="truncate pr-12 text-[20px] font-extrabold tracking-[-0.025em] text-[var(--harbor-marine)]">
           {annonce.bar.nom}
         </span>
         <div className="flex items-center gap-2 pr-12">
-          <span className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)]">
+          <span className="text-[12px] font-bold text-[var(--harbor-marine-2)]">
             {annonce.statut === "BROUILLON" ? "Brouillon" : "Publiée"}
           </span>
           {annonce.estRecurrente && (
-            <span className="rounded-[9999px] border border-[var(--color-driftwood)] px-2 py-[2px] text-[10px] font-medium uppercase text-[color:var(--color-texte-secondaire)]">
+            <span className="rounded-[9999px] border border-[var(--harbor-trait)] px-2 py-[2px] text-[12px] font-semibold text-[var(--harbor-marine-2)]">
               Récurrente
             </span>
           )}
         </div>
 
         {premiereOccurrence ? (
-          <span className="text-[18px] text-[var(--color-warm-cream)]">
+          <span className="donnees text-[15px] font-semibold text-[var(--harbor-marine)]">
             {premiereOccurrence.heureDebut}
             {premiereOccurrence.heureFin ? ` – ${premiereOccurrence.heureFin}` : ""}
           </span>
         ) : (
-          <span className="text-[15px] text-[color:var(--color-texte-secondaire)]">
+          <span className="text-[15px] text-[var(--harbor-marine-2)]">
             Aucune date renseignée
           </span>
         )}
@@ -133,7 +133,7 @@ function CarteAnnonce({ annonce }: { annonce: AnnonceAvecDetails }) {
               return (
                 <li
                   key={occurrence.id}
-                  className="flex flex-col rounded-[9999px] border border-[var(--color-cork-border)] px-3 py-1 text-[10px] font-medium uppercase text-[var(--color-warm-cream)]"
+                  className="flex flex-col rounded-[9999px] border border-[var(--harbor-trait)] px-3 py-1 text-[12px] font-semibold text-[var(--harbor-marine)]"
                 >
                   <span>
                     {new Date(occurrence.date).toLocaleDateString("fr-FR", {
@@ -143,7 +143,7 @@ function CarteAnnonce({ annonce }: { annonce: AnnonceAvecDetails }) {
                     · {LIBELLES_STATUT_OCCURRENCE[statutAffiche(occurrence)]}
                   </span>
                   {relance && (
-                    <span className="text-[var(--color-gold-elegance)]">{relance}</span>
+                    <span className="text-[var(--harbor-alerte)]">{relance}</span>
                   )}
                 </li>
               );
@@ -152,13 +152,13 @@ function CarteAnnonce({ annonce }: { annonce: AnnonceAvecDetails }) {
         )}
 
         {annonce.styles.length > 0 && (
-          <span className="text-[12px] uppercase text-[color:var(--color-texte-secondaire)]">
+          <span className="text-[12px] text-[var(--harbor-marine-2)]">
             {libelleStyles(annonce.styles)}
           </span>
         )}
 
         {annonce.description && (
-          <p className="line-clamp-2 whitespace-pre-line text-[12px] text-[color:var(--color-texte-secondaire)]">
+          <p className="line-clamp-2 whitespace-pre-line text-[12px] text-[var(--harbor-marine-2)]">
             {annonce.description}
           </p>
         )}

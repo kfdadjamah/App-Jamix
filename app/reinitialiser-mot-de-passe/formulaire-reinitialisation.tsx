@@ -66,7 +66,7 @@ export default function FormulaireReinitialisation({ jeton }: { jeton: string })
       </ChampFormulaire>
 
       {erreurServeur && (
-        <p className="text-[12px] font-medium uppercase text-[var(--color-gold-elegance)]">
+        <p className="text-[13px] font-semibold text-[var(--harbor-erreur)]">
           {erreurServeur}
         </p>
       )}
@@ -74,7 +74,7 @@ export default function FormulaireReinitialisation({ jeton }: { jeton: string })
       <button
         type="submit"
         disabled={enCours}
-        className="mt-2 rounded-[36px] bg-[var(--color-brass-copper)] px-6 py-[14px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)] disabled:opacity-60"
+        className="mt-2 rounded-[12px] bg-[var(--harbor-bleu)] px-6 py-3 text-[14px] font-bold text-white transition-colors duration-[120ms] hover:bg-[var(--harbor-marine)] disabled:opacity-60"
       >
         {enCours ? "Enregistrement…" : "Enregistrer le mot de passe"}
       </button>

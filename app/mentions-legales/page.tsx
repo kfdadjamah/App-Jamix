@@ -7,16 +7,16 @@ import PiedDePage from "@/components/pied-de-page";
 const DATE_MISE_A_JOUR = "10 octobre 2026";
 
 function Separateur() {
-  return <hr className="border-0 border-t border-dashed border-[var(--color-cork-border)]" />;
+  return <hr className="border-0 border-t border-[var(--harbor-trait)]" />;
 }
 
 function Section({ titre, children }: { titre: string; children: React.ReactNode }) {
   return (
     <section className="flex flex-col gap-3">
-      <h2 className="text-[12px] font-medium uppercase leading-[1.2] text-[var(--color-warm-cream)]">
+      <h2 className="text-[12px] font-semibold leading-[1.2] text-[var(--harbor-marine)]">
         {titre}
       </h2>
-      <div className="flex flex-col gap-3 text-[15px] leading-[1.4] text-[var(--color-warm-cream)]">
+      <div className="flex flex-col gap-3 text-[15px] leading-[1.4] text-[var(--harbor-marine)]">
         {children}
       </div>
     </section>
@@ -101,7 +101,7 @@ export default function PageMentionsLegales() {
 
         <Separateur />
 
-        <p className="text-[12px] font-medium uppercase leading-[1.2] text-[color-mix(in_srgb,var(--color-warm-cream)_70%,transparent)]">
+        <p className="text-[12px] font-semibold leading-[1.2] text-[var(--harbor-marine-2)]">
           Mise à jour : {DATE_MISE_A_JOUR}
         </p>
       </main>

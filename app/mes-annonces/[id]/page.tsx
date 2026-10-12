@@ -66,23 +66,23 @@ export default async function PageEditionAnnonce({
               return (
                 <div
                   key={occurrence.id}
-                  className="flex flex-col gap-2 rounded-[12px] border border-[var(--color-cork-border)] p-4"
+                  className="flex flex-col gap-2 rounded-[12px] border border-[var(--harbor-trait)] p-4"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-[15px] text-[var(--color-warm-cream)]">
+                    <span className="text-[15px] text-[var(--harbor-marine)]">
                       {formaterDateCourte(new Date(occurrence.date))}
                     </span>
-                    <span className="text-[10px] font-medium uppercase text-[color:var(--color-texte-secondaire)]">
+                    <span className="text-[12px] font-semibold text-[var(--harbor-marine-2)]">
                       {LIBELLES_STATUT_OCCURRENCE[statut]}
                     </span>
                   </div>
                   {statut === "PROGRAMMEE" && occurrence.confirmationJ7 && (
-                    <span className="text-[12px] text-[color:var(--color-texte-secondaire)]">
+                    <span className="text-[12px] text-[var(--harbor-marine-2)]">
                       Sera confirmée le {formaterDateCourte(new Date(occurrence.confirmationJ7))}
                     </span>
                   )}
                   {relance && (
-                    <span className="text-[12px] font-medium uppercase text-[var(--color-gold-elegance)]">
+                    <span className="text-[13px] font-semibold text-[var(--harbor-erreur)]">
                       {relance}
                     </span>
                   )}

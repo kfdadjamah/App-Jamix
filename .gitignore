@@ -48,4 +48,3 @@ next-env.d.ts
 /playwright-report/
 /playwright/.cache/
 .neon
-/.next-smoke/

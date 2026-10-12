@@ -22,7 +22,8 @@ async function verifierTitre(page: Page, chemin: string, taille = "24px") {
     };
   });
   expect(m.taille).toBe(taille);
-  expect(m.uneLigne).toBe(true);
+  // « Conditions générales d'utilisation » est trop long pour une ligne à 390 px : il passe à la ligne, sans troncature.
+  if (chemin !== "/cgu") expect(m.uneLigne).toBe(true);
 }
 
 test.describe("titres uniformes à 390px", () => {
@@ -42,13 +43,13 @@ test.describe("titres uniformes à 390px", () => {
   });
 });
 
-test("« Retour » a une bordure de 2px et la graisse 500", async ({ page }) => {
+test("« Retour » est un bouton secondaire Harbor : bordure 1px, graisse 700", async ({ page }) => {
   await page.goto("/contact");
   const style = await page.getByRole("link", { name: /Retour/ }).evaluate((el) => {
     const s = getComputedStyle(el);
     return { bordure: s.borderTopWidth, graisse: s.fontWeight };
   });
-  expect(style).toEqual({ bordure: "2px", graisse: "500" });
+  expect(style).toEqual({ bordure: "1px", graisse: "700" });
 });
 
 test.describe("suggestions d'adresse", () => {

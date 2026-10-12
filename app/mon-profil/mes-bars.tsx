@@ -27,7 +27,7 @@ export type BarDuProfil = {
 type Panneau = string | "ajout" | null;
 
 const classeBoutonFantome =
-  "whitespace-nowrap rounded-[22.5px] border border-[var(--color-warm-cream)] px-4 py-[7.5px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)] disabled:opacity-60";
+  "whitespace-nowrap rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] disabled:opacity-60";
 
 export default function MesBars({ bars }: { bars: BarDuProfil[] }) {
   // Un compte d'un seul bar voit sa fiche dépliée d'office.
@@ -66,7 +66,7 @@ export default function MesBars({ bars }: { bars: BarDuProfil[] }) {
           return (
             <li
               key={bar.id}
-              className="flex flex-col gap-6 border-t border-dashed border-[var(--color-cork-border)] py-4 first:border-t-0 first:pt-0"
+              className="flex flex-col gap-6 border-t border-[var(--harbor-trait)] py-4 first:border-t-0 first:pt-0"
             >
               <div className="flex items-center gap-3">
                 {bar.photoUrl ? (
@@ -77,17 +77,17 @@ export default function MesBars({ bars }: { bars: BarDuProfil[] }) {
                     className="h-12 w-12 shrink-0 rounded-[12px] object-cover"
                   />
                 ) : (
-                  <div className="h-12 w-12 shrink-0 rounded-[12px] border border-dashed border-[var(--color-cork-border)]" />
+                  <div className="h-12 w-12 shrink-0 rounded-[12px] border border-dashed border-[var(--harbor-trait)]" />
                 )}
                 <div className="flex min-w-0 flex-1 flex-col gap-1">
-                  <span className="truncate text-[14px] font-medium uppercase text-[var(--color-warm-cream)]">
+                  <span className="truncate text-[14px] font-semibold text-[var(--harbor-marine)]">
                     {bar.nom}
                   </span>
-                  <span className="truncate text-[12px] text-[color:var(--color-texte-secondaire)]">
+                  <span className="truncate text-[12px] text-[var(--harbor-marine-2)]">
                     {bar.adresse}
                   </span>
                   {!bar.surLaCarte && (
-                    <span className="text-[10px] font-medium uppercase text-[var(--color-gold-elegance)]">
+                    <span className="text-[13px] font-semibold text-[var(--harbor-erreur)]">
                       Absent de la carte
                     </span>
                   )}
@@ -123,7 +123,7 @@ export default function MesBars({ bars }: { bars: BarDuProfil[] }) {
                       }
                     />
                     {bars.length === 1 && (
-                      <span className="text-[12px] font-medium uppercase text-[color:var(--color-texte-secondaire)]">
+                      <span className="text-[12px] font-semibold text-[var(--harbor-marine-2)]">
                         {MENTION_DERNIER_BAR}
                       </span>
                     )}
@@ -136,7 +136,7 @@ export default function MesBars({ bars }: { bars: BarDuProfil[] }) {
       </ul>
 
       {message && (
-        <p className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)]">
+        <p className="text-[13px] font-bold text-[var(--harbor-marine)]">
           {message}
         </p>
       )}
@@ -153,9 +153,9 @@ export default function MesBars({ bars }: { bars: BarDuProfil[] }) {
       )}
 
       {panneau === "ajout" ? (
-        <div className="flex flex-col gap-6 rounded-[12px] border border-[var(--color-cork-border)] p-6">
+        <div className="flex flex-col gap-6 rounded-[12px] border border-[var(--harbor-trait)] p-6">
           <div className="flex items-center justify-between gap-3">
-            <h3 className="text-[18px] font-medium uppercase leading-none text-[var(--color-warm-cream)]">
+            <h3 className="text-[18px] font-semibold leading-none text-[var(--harbor-marine)]">
               Nouveau bar
             </h3>
             <button type="button" onClick={() => basculer("ajout")} className={classeBoutonFantome}>
@@ -175,7 +175,7 @@ export default function MesBars({ bars }: { bars: BarDuProfil[] }) {
             Ajouter un bar
           </button>
           {limiteAtteinte && (
-            <span className="text-[12px] font-medium uppercase text-[color:var(--color-texte-secondaire)]">
+            <span className="text-[12px] font-semibold text-[var(--harbor-marine-2)]">
               Limite de {NOMBRE_MAX_BARS} bars atteinte
             </span>
           )}

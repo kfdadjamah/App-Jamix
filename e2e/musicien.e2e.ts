@@ -1,7 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 
-// Suite principale lancée avec NEXT_PUBLIC_THEME_HARBOR=true (voir playwright.config.ts).
-// Lecture seule : la base Neon est partagée.
+// Accueil musicien (design Harbor). Lecture seule : la base Neon est partagée.
 
 const STATUTS = /^(Confirmée|Programmée|En attente de confirmation|Annulée)$/;
 
@@ -27,7 +26,6 @@ test("l'accueil affiche le titre, l'accroche et le bandeau de 7 jours", async ({
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1, name: "Jammix" })).toBeVisible();
   await expect(page.getByText("Choisis une date. Vois où jouer ce soir.")).toBeVisible();
-  await expect(page.locator(".theme-harbor")).toBeVisible();
   await expect(page.getByRole("link", { name: "Aujourd'hui" })).toBeVisible();
   await expect(page.getByRole("link", { name: "Semaine suivante" })).toBeVisible();
   await expect(page.locator(".grid-cols-7 > *")).toHaveCount(7);
@@ -167,13 +165,6 @@ test("une jam inexistante renvoie une 404 avec un message clair", async ({ page 
   expect(reponse?.status()).toBe(404);
   await expect(page.getByText("Cette jam n'est plus disponible.")).toBeVisible();
   await expect(page.getByRole("link", { name: "Voir les jams du jour" })).toHaveAttribute("href", "/");
-});
-
-test("les pages non migrées restent en ORYZO (sans .theme-harbor)", async ({ page }) => {
-  for (const chemin of ["/connexion", "/inscription", "/cgu"]) {
-    await page.goto(chemin);
-    await expect(page.locator(".theme-harbor")).toHaveCount(0);
-  }
 });
 
 test.describe("sur mobile", () => {

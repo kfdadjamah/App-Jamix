@@ -104,7 +104,7 @@ export default function ChampAdresse({
         <ul
           id={idListe}
           role="listbox"
-          className="absolute left-0 right-0 z-10 mt-1 border border-[var(--color-cork-border)] bg-[var(--color-walnut-shadow)]"
+          className="absolute left-0 right-0 z-10 mt-1 border border-[var(--harbor-trait)] bg-white"
         >
           {suggestions.map((s, i) => (
             <li
@@ -116,7 +116,7 @@ export default function ChampAdresse({
                 e.preventDefault();
                 choisir(s);
               }}
-              className={`cursor-pointer px-2 py-2 text-[12px] text-[var(--color-warm-cream)] ${
+              className={`cursor-pointer px-2 py-2 text-[12px] text-[var(--harbor-marine)] ${
                 i === actif ? "bg-[color-mix(in_srgb,var(--color-warm-cream)_15%,transparent)]" : ""
               }`}
             >

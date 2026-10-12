@@ -41,7 +41,7 @@ export default function GestionPhotoBar({
 
   return (
     <div className="flex flex-col gap-3">
-      <span className="text-[12px] font-medium uppercase text-[color:var(--color-texte-secondaire)]">
+      <span className="text-[12px] font-semibold text-[var(--harbor-marine-2)]">
         Photo ou logo
       </span>
 
@@ -53,7 +53,7 @@ export default function GestionPhotoBar({
           className="h-32 w-32 rounded-[12px] object-cover"
         />
       ) : (
-        <div className="flex h-32 w-32 items-center justify-center rounded-[12px] border border-dashed border-[var(--color-cork-border)] text-[10px] uppercase text-[color:var(--color-texte-secondaire)]">
+        <div className="flex h-32 w-32 items-center justify-center rounded-[12px] border border-dashed border-[var(--harbor-trait)] text-[10px] text-[var(--harbor-marine-2)]">
           Aucune photo
         </div>
       )}
@@ -65,14 +65,14 @@ export default function GestionPhotoBar({
           ref={refFichier}
           onChange={surChangementFichier}
           disabled={enCours}
-          className="text-[12px] text-[var(--color-warm-cream)]"
+          className="text-[12px] text-[var(--harbor-marine)]"
         />
         {photoUrl && (
           <button
             type="button"
             onClick={surRetrait}
             disabled={enCours}
-            className="rounded-[22.5px] border border-[var(--color-warm-cream)] px-4 py-[7.5px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)] disabled:opacity-60"
+            className="rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] disabled:opacity-60"
           >
             Retirer
           </button>
@@ -80,7 +80,7 @@ export default function GestionPhotoBar({
       </div>
 
       {erreur && (
-        <span className="text-[10px] font-medium uppercase text-[var(--color-gold-elegance)]">
+        <span className="text-[13px] font-semibold text-[var(--harbor-erreur)]">
           {erreur}
         </span>
       )}

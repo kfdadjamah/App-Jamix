@@ -241,7 +241,7 @@ US-141. En tant qu'organisateur connecté, je veux retrouver sur l'accueil mon i
 - Dès 3 caractères saisis dans l'adresse d'un bar (inscription, ajout, modification), jusqu'à 5 suggestions s'affichent ; un clic remplit le champ avec l'adresse complète (« n° rue, code postal ville »).
 - Une adresse saisie librement, sans suggestion choisie, est acceptée comme avant ; si le service de suggestions est indisponible, le champ reste un champ libre sans message d'erreur.
 - Le bouton « ⋯ » est présent sur chaque carte de « Mes annonces » ; « Modifier » mène à la page d'édition en un clic depuis la liste ; après confirmation, les dates concernées affichent « annulée » dans la liste sans recharger manuellement ; sans confirmation, rien n'est annulé.
-- Pilote Harbor (drapeau `NEXT_PUBLIC_THEME_HARBOR` actif) : l'accueil affiche le titre, l'accroche et le bandeau de 7 jours ; un clic sur un jour met à jour `?date=` ; les jours avec jams ont un point ; `/mes-annonces` et `/jams/[id]` restent visuellement inchangées. Drapeau éteint : l'accueil actuel est servi sans changement.
+- Design Harbor : l'accueil affiche le titre, l'accroche et le bandeau de 7 jours ; un clic sur un jour met à jour `?date=` ; les jours avec jams ont un point ; toutes les autres pages (jam, connexion, espace organisateur, pages légales) adoptent le même design clair.
 
 ## Hors périmètre
 
@@ -423,7 +423,7 @@ US-141. En tant qu'organisateur connecté, je veux retrouver sur l'accueil mon i
 - « ← Retour » reste un bouton fantôme, avec une bordure de 2px, une graisse 500 et une couleur crème.
 - Le champ d'adresse d'un bar propose une liste déroulante après 3 caractères (5 suggestions au maximum), utilisable au clavier et fermée par Échap. La valeur envoyée est le texte du champ ; le géocodage serveur est inchangé (un échec laisse le bar absent de la carte).
 - Le bouton « ⋯ » des cartes de « Mes annonces » a une zone tactile d'au moins 44px et le libellé accessible « Actions de l'annonce » ; le menu a deux entrées au maximum. La fenêtre d'annulation propose « Annuler l'annonce » / « Retour » et affiche un message d'erreur dans la fenêtre si l'annulation échoue.
-- Pilote Harbor (Phase 39) : l'accueil musicien passe à un design clair (voir la section Harbor de DESIGN.md) derrière `NEXT_PUBLIC_THEME_HARBOR`, éteint en production. Les autres écrans gardent le design actuel. Les tokens Harbor vivent sous `.theme-harbor` ; `CarteAnnonce`, `BoutonItineraire` et les couleurs de statut reçoivent une variante (prop `theme`, `"oryzo"` par défaut) pour ne pas modifier `/mes-annonces` ni `/jams/[id]`.
+- Design Harbor (Phases 39 et 40) : toute l'application passe à un design clair (voir DESIGN.md), sans drapeau : tokens `--harbor-*` dans `:root`, ORYZO retiré, e-mails compris. Aucune règle métier ne change.
 - Sur l'accueil Harbor, un seul bandeau d'entête marine : pas de logo « Jammix » (le grand titre le remplace), « Connexion organisateur » ou l'icône de profil à droite ; l'organisateur connecté trouve « Accéder à mes annonces » en bouton secondaire sous l'accroche.
 - Bandeau de 7 jours : borne basse = aujourd'hui, flèches ± 7 jours, bouton « Aujourd'hui », icône calendrier ouvrant un sélecteur de date natif pour les dates lointaines ; navigation par l'URL (`/?date=…&vue=…`). Un point marque tout jour ayant au moins une occurrence d'annonce publiée, annulée comprise.
 - Palette de statuts Harbor (liste et carte) : confirmée `#17807E`, programmée `#2B78BE`, en attente `#B7791F`, annulée `#6B7C8C` (grisée, nom barré).
@@ -472,4 +472,4 @@ Le menu « ⋯ » réutilise les règles d'annulation existantes (statut « annu
 
 Les photos d'annonce sont masquées en V1 sans suppression de code ni de données : le schéma (`photoUrl1/2`), l'affichage côté musicien et les composants de saisie restent en place pour la V2. Le bandeau devient « Accéder à mes annonces » (sans chiffre, nombre conservé dans le libellé accessible) hors de « Mes annonces », où il reste « À confirmer · N » ; DESIGN.md renomme la section correspondante.
 
-Le pilote Harbor crée un état transitoire : l'accueil est clair, le reste de l'application reste sombre. Il reste derrière un drapeau tant que la migration n'est pas terminée. La migration complète, puis la bascule (tokens Harbor dans `:root`, retrait d'ORYZO, réécriture de DESIGN.md), feront l'objet de phases dédiées, écran par écran. Le bandeau cuivré (US-68) ne s'applique plus à l'accueil Harbor ; il reste valable ailleurs jusqu'à migration.
+La migration Harbor a été livrée en une seule fois (Phase 40) : le pilote de l'accueil (Phase 39) a été étendu à tous les écrans, le drapeau `NEXT_PUBLIC_THEME_HARBOR` et le projet smoke ont été retirés, et DESIGN.md a été réécrit. Le mode sombre reste prévu plus tard, sans date.

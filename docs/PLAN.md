@@ -1057,7 +1057,12 @@ L'accueil musicien passe en design Harbor (clair, marine/bleu), derrière le dra
 
 ---
 
-## Suite prévue : migration Harbor (phases à détailler)
+## Phase 40 : Bascule Harbor, toute l'application
 
-Une phase par écran ou groupe d'écrans, ordre par risque croissant : page d'une jam `/jams/[id]`, connexion et inscription, profil, Mes annonces, formulaires d'annonce, pages légales et contact. Chaque écran migré est fusionné dans `main` derrière le drapeau. Phase finale de bascule : tokens Harbor dans `:root`, retrait de `.theme-harbor`, des variantes ORYZO, du drapeau et du projet smoke, réécriture complète de `DESIGN.md`. Aucune règle métier ne change pendant la migration.
+**Livré en un seul push** (branche `feat/design-test`) : tous les écrans passent en design Harbor, sans drapeau.
 
+- `app/globals.css` : tokens `--harbor-*` dans `:root`, composants `.champ-input`, `.titre-page`, carte, étiquettes ; ORYZO retiré. `app/layout.tsx` : Inter retirée.
+- Toutes les pages (`/jams/[id]`, connexion, inscription, mot de passe, Mes annonces, formulaires d'annonce, profil, CGU, mentions légales, contact), entête (logo « Jammix » hors accueil), pied de page, modales, menus et e-mails (`lib/email.ts`) migrés.
+- Retrait de `lib/theme.ts`, de la prop `theme`, du drapeau `NEXT_PUBLIC_THEME_HARBOR`, du projet Playwright smoke ; `COULEURS_STATUT_OCCURRENCE` reprend la palette Harbor.
+- `docs/DESIGN.md` réécrit (Harbor seul).
+- Critères : `tsc`, `lint`, `vitest`, `build` et toute la suite Playwright verts ; captures mobile 400 px de chaque page relues ; mode sombre hors périmètre.

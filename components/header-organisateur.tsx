@@ -45,10 +45,10 @@ export default async function HeaderOrganisateur({
     </>
   );
   const classes =
-    "inline-flex flex-wrap items-center gap-x-[6px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)]";
+    "inline-flex flex-wrap items-center gap-x-[6px] text-[13px] font-bold text-[var(--harbor-marine)]";
 
   return (
-    <div className="border-b border-dashed border-[var(--color-cork-border)] pb-3">
+    <div className="border-b border-[var(--harbor-trait)] pb-3">
       {page === "mes-annonces" ? (
         <p className={classes}>{contenu}</p>
       ) : (

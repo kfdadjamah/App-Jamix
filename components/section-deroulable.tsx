@@ -23,13 +23,13 @@ export default function SectionDeroulable({
   return (
     <section className="flex flex-col gap-6">
       <div className="flex flex-col gap-1">
-        <h2 className="text-[24px] font-medium uppercase leading-[1.09] text-[var(--color-warm-cream)]">
+        <h2 className="text-[24px] font-semibold leading-[1.09] text-[var(--harbor-marine)]">
           <button
             type="button"
             onClick={() => setOuverte(!ouverte)}
             aria-expanded={ouverte}
             aria-controls={idContenu}
-            className="flex w-full items-center justify-between gap-3 text-left uppercase hover:underline focus-visible:underline focus-visible:outline-none"
+            className="flex w-full items-center justify-between gap-3 text-left hover:underline focus-visible:underline focus-visible:outline-none"
           >
             {titre}
             <ChevronDown

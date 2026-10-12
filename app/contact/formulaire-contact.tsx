@@ -68,7 +68,7 @@ export default function FormulaireContact({ emailInitial }: { emailInitial: stri
         <h1 className="titre-page">
           Contact
         </h1>
-        <p className="mt-3 text-[18px] leading-tight text-[color:var(--color-texte-secondaire)]">
+        <p className="mt-3 text-[18px] leading-tight text-[var(--harbor-marine-2)]">
           Une question, une remarque ? Écrivez-nous, nous vous répondrons par email.
         </p>
       </div>
@@ -95,7 +95,7 @@ export default function FormulaireContact({ emailInitial }: { emailInitial: stri
             {...register("message")}
             className="champ-input resize-none"
           />
-          <span className="self-end text-[12px] text-[color:var(--color-texte-secondaire)]">
+          <span className="self-end text-[12px] text-[var(--harbor-marine-2)]">
             {longueurMessage}/{LONGUEUR_MAX_MESSAGE_CONTACT}
           </span>
         </ChampFormulaire>
@@ -116,12 +116,12 @@ export default function FormulaireContact({ emailInitial }: { emailInitial: stri
         </div>
 
         {erreurServeur && (
-          <p role="alert" className="text-[12px] font-medium uppercase text-[var(--color-gold-elegance)]">
+          <p role="alert" className="text-[13px] font-semibold text-[var(--harbor-erreur)]">
             {erreurServeur}
           </p>
         )}
         {envoye && (
-          <p role="status" className="text-[18px] leading-tight text-[var(--color-warm-cream)]">
+          <p role="status" className="text-[18px] leading-tight text-[var(--harbor-marine)]">
             Message envoyé, nous vous répondrons par email.
           </p>
         )}
@@ -129,17 +129,17 @@ export default function FormulaireContact({ emailInitial }: { emailInitial: stri
         <button
           type="submit"
           disabled={enCours}
-          className="mt-2 rounded-[36px] bg-[var(--color-brass-copper)] px-6 py-[14px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)] disabled:opacity-60"
+          className="mt-2 rounded-[12px] bg-[var(--harbor-bleu)] px-6 py-3 text-[14px] font-bold text-white transition-colors duration-[120ms] hover:bg-[var(--harbor-marine)] disabled:opacity-60"
         >
           {enCours ? "Envoi…" : "Envoyer"}
         </button>
 
-        <p className="text-[12px] leading-[1.4] text-[color-mix(in_srgb,var(--color-warm-cream)_70%,transparent)]">
+        <p className="text-[12px] leading-[1.4] text-[var(--harbor-marine-2)]">
           Votre nom, votre email et votre message servent uniquement à vous répondre ; ils ne sont
           pas enregistrés dans l&apos;application. En savoir plus dans les{" "}
           <Link
             href="/cgu"
-            className="text-[var(--color-warm-cream)] underline hover:no-underline focus-visible:no-underline"
+            className="text-[var(--harbor-marine)] underline hover:no-underline focus-visible:no-underline"
           >
             CGU
           </Link>

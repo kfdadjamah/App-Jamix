@@ -5,13 +5,11 @@ import * as maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { StatutOccurrence } from "@prisma/client";
 import {
-  COULEURS_STATUT_HARBOR,
   COULEURS_STATUT_OCCURRENCE,
   LIBELLES_STATUT_OCCURRENCE,
   PRIORITE_STATUT_OCCURRENCE,
 } from "@/lib/annonce-constantes";
 import { statutAffiche, type recupererAnnoncesPubliees } from "@/lib/annonces";
-import type { Theme } from "@/lib/theme";
 import { distanceJusquAuBar, formaterDistance } from "@/lib/distance";
 
 type Occurrence = Awaited<ReturnType<typeof recupererAnnoncesPubliees>>[number];
@@ -21,10 +19,8 @@ maplibregl.setWorkerUrl("/maplibre/maplibre-gl-worker.mjs");
 
 const CENTRE_LYON: [number, number] = [4.835, 45.764];
 
-// Style vectoriel sombre OpenFreeMap : gratuit, sans clé API (Carto exige désormais une clé).
-const STYLE_FOND_CARTE = "https://tiles.openfreemap.org/styles/dark";
-// Variante claire du pilote Harbor.
-const STYLE_FOND_CARTE_HARBOR = "https://tiles.openfreemap.org/styles/positron";
+// Style vectoriel clair OpenFreeMap (positron) : gratuit, sans clé API.
+const STYLE_FOND_CARTE = "https://tiles.openfreemap.org/styles/positron";
 
 // Marge (px) en dessous de laquelle deux étiquettes sont considérées comme superposées.
 const MARGE_CHEVAUCHEMENT = 4;
@@ -69,10 +65,9 @@ function resoudreChevauchements(map: maplibregl.Map, marqueurs: MarqueurBar[]) {
 function creerElementMarqueur(
   nomBar: string,
   statut: StatutOccurrence,
-  distanceKm: number | null,
-  theme: Theme
+  distanceKm: number | null
 ): HTMLDivElement {
-  const couleur = (theme === "harbor" ? COULEURS_STATUT_HARBOR : COULEURS_STATUT_OCCURRENCE)[statut];
+  const couleur = COULEURS_STATUT_OCCURRENCE[statut];
   const wrapper = document.createElement("div");
   wrapper.className = "jam-sticker";
   wrapper.style.opacity = statut === "ANNULEE" ? "0.55" : "1";
@@ -112,14 +107,12 @@ interface JamMapProps {
   occurrences: Occurrence[];
   positionMusicien: { latitude: number; longitude: number } | null;
   onSelectionBar: (barId: string) => void;
-  theme?: Theme;
 }
 
 export default function JamMap({
   occurrences,
   positionMusicien,
   onSelectionBar,
-  theme = "oryzo",
 }: JamMapProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
@@ -129,19 +122,12 @@ export default function JamMap({
 
     const map = new maplibregl.Map({
       container: containerRef.current,
-      style: theme === "harbor" ? STYLE_FOND_CARTE_HARBOR : STYLE_FOND_CARTE,
+      style: STYLE_FOND_CARTE,
       center: CENTRE_LYON,
       zoom: 13,
       attributionControl: { compact: true },
     });
 
-    if (theme === "oryzo") {
-      map.on("style.load", () => {
-        if (map.getLayer("background")) {
-          map.setPaintProperty("background", "background-color", "#100904");
-        }
-      });
-    }
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
     mapRef.current = map;
 
@@ -149,7 +135,7 @@ export default function JamMap({
       map.remove();
       mapRef.current = null;
     };
-  }, [theme]);
+  }, []);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -172,7 +158,7 @@ export default function JamMap({
       if (latitude === null || longitude === null) continue;
       const statut = statutPrioritaire(occurrencesDuBar);
       const distanceKm = distanceJusquAuBar(positionMusicien, bar);
-      const el = creerElementMarqueur(bar.nom, statut, distanceKm, theme);
+      const el = creerElementMarqueur(bar.nom, statut, distanceKm);
       el.addEventListener("click", () => onSelectionBar(barId));
 
       const marker = new maplibregl.Marker({ element: el, anchor: "bottom" })
@@ -198,7 +184,7 @@ export default function JamMap({
       map.off("resize", recalculer);
       marqueurs.forEach((m) => m.marker.remove());
     };
-  }, [occurrences, positionMusicien, onSelectionBar, theme]);
+  }, [occurrences, positionMusicien, onSelectionBar]);
 
   return <div ref={containerRef} className="jam-map h-full w-full" />;
 }

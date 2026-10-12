@@ -61,7 +61,7 @@ export default function MenuAnnonce({
         aria-haspopup="menu"
         aria-expanded={menuOuvert}
         onClick={() => setMenuOuvert((ouvert) => !ouvert)}
-        className="flex h-11 w-11 items-center justify-center rounded-[9999px] text-[18px] font-medium text-[var(--color-warm-cream)]"
+        className="flex h-11 w-11 items-center justify-center rounded-[9999px] text-[18px] font-semibold text-[var(--harbor-marine)]"
       >
         ⋯
       </button>
@@ -69,13 +69,13 @@ export default function MenuAnnonce({
       {menuOuvert && (
         <div
           role="menu"
-          className="absolute right-0 top-full z-10 flex min-w-[160px] flex-col rounded-[12px] border border-[var(--color-cork-border)] bg-[var(--color-walnut-shadow)] py-1"
+          className="absolute right-0 top-full z-10 flex min-w-[160px] flex-col rounded-[12px] border border-[var(--harbor-trait)] bg-white py-1"
         >
           <Link
             ref={premiereEntree}
             href={`/mes-annonces/${annonceId}`}
             role="menuitem"
-            className="px-4 py-3 text-[12px] font-medium uppercase text-[var(--color-warm-cream)] hover:underline focus:underline"
+            className="px-4 py-3 text-[13px] font-bold text-[var(--harbor-marine)] hover:underline focus:underline"
           >
             Modifier
           </Link>
@@ -87,7 +87,7 @@ export default function MenuAnnonce({
                 setMenuOuvert(false);
                 setFenetreOuverte(true);
               }}
-              className="px-4 py-3 text-left text-[12px] font-medium uppercase text-[var(--color-warm-cream)] hover:underline focus:underline"
+              className="px-4 py-3 text-left text-[13px] font-bold text-[var(--harbor-marine)] hover:underline focus:underline"
             >
               Annuler
             </button>
@@ -161,12 +161,12 @@ function FenetreAnnulation({
       ref={fenetre}
       aria-labelledby={`titre-annulation-${annonceId}`}
       onClose={surFermeture}
-      className="m-auto w-[calc(100%-48px)] max-w-sm rounded-[12px] border border-[var(--color-cork-border)] bg-[var(--color-walnut-shadow)] p-6 text-[var(--color-warm-cream)] backdrop:bg-black/60"
+      className="m-auto w-[calc(100%-48px)] max-w-sm rounded-[12px] border border-[var(--harbor-trait)] bg-white p-6 text-[var(--harbor-marine)] backdrop:bg-black/60"
     >
       <div className="flex flex-col gap-4">
         <h2
           id={`titre-annulation-${annonceId}`}
-          className="text-[18px] font-medium uppercase leading-none"
+          className="text-[18px] font-semibold leading-none"
         >
           Annuler l&apos;annonce ?
         </h2>
@@ -174,7 +174,7 @@ function FenetreAnnulation({
         {choixDePortee ? (
           <fieldset className="flex flex-col gap-3">
             <legend className="sr-only">Portée de l&apos;annulation</legend>
-            <label className="flex items-center gap-2 text-[12px] font-medium uppercase">
+            <label className="flex items-center gap-2 text-[12px] font-medium">
               <input
                 type="radio"
                 name={`portee-${annonceId}`}
@@ -187,7 +187,7 @@ function FenetreAnnulation({
               <ul className="ml-6 flex flex-col gap-2">
                 {datesAnnulables.map((date) => (
                   <li key={date.id}>
-                    <label className="flex items-center gap-2 text-[12px] font-medium uppercase text-[color:var(--color-texte-secondaire)]">
+                    <label className="flex items-center gap-2 text-[12px] font-semibold text-[var(--harbor-marine-2)]">
                       <input
                         type="radio"
                         name={`date-${annonceId}`}
@@ -200,7 +200,7 @@ function FenetreAnnulation({
                 ))}
               </ul>
             )}
-            <label className="flex items-center gap-2 text-[12px] font-medium uppercase">
+            <label className="flex items-center gap-2 text-[12px] font-medium">
               <input
                 type="radio"
                 name={`portee-${annonceId}`}
@@ -211,7 +211,7 @@ function FenetreAnnulation({
             </label>
           </fieldset>
         ) : (
-          <p className="text-[12px] font-medium uppercase text-[color:var(--color-texte-secondaire)]">
+          <p className="text-[12px] font-semibold text-[var(--harbor-marine-2)]">
             {datesAnnulables.length > 1
               ? "Toutes les dates seront annulées."
               : `Date annulée : ${datesAnnulables[0]?.libelle ?? ""}.`}
@@ -221,7 +221,7 @@ function FenetreAnnulation({
         {erreur && (
           <p
             role="alert"
-            className="text-[10px] font-medium uppercase text-[var(--color-gold-elegance)]"
+            className="text-[13px] font-semibold text-[var(--harbor-erreur)]"
           >
             {erreur}
           </p>
@@ -232,7 +232,7 @@ function FenetreAnnulation({
             type="button"
             onClick={confirmer}
             disabled={enCours}
-            className="rounded-[22.5px] border border-[var(--color-warm-cream)] px-4 py-[7.5px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)] disabled:opacity-60"
+            className="rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] disabled:opacity-60"
           >
             Annuler l&apos;annonce
           </button>
@@ -240,7 +240,7 @@ function FenetreAnnulation({
             type="button"
             onClick={() => fenetre.current?.close()}
             disabled={enCours}
-            className="rounded-[22.5px] border-2 border-[var(--color-warm-cream)] px-4 py-[7.5px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)] disabled:opacity-60"
+            className="rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] disabled:opacity-60"
           >
             ← Retour
           </button>

@@ -1,8 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Projet smoke Playwright (drapeau Harbor éteint) : second serveur de dev, dossier de build séparé.
-  distDir: process.env.NEXT_DIST_DIR ?? ".next",
   agentRules: false,
   // Dev : autorise le test depuis un téléphone du réseau local (sinon le HMR est refusé et la page ne s'hydrate pas).
   allowedDevOrigins: ["192.168.*.*"],

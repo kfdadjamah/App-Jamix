@@ -4,7 +4,6 @@ import { useState } from "react";
 import dynamic from "next/dynamic";
 import { type recupererAnnoncesPubliees } from "@/lib/annonces";
 import { usePositionMusicien } from "@/lib/position-musicien";
-import type { Theme } from "@/lib/theme";
 import ListeAnnonces from "./liste-annonces";
 import ToggleVue, { type Vue } from "./toggle-vue";
 import BottomSheetBar from "./bottom-sheet-bar";
@@ -17,12 +16,10 @@ export default function ConsultationMusicien({
   occurrences,
   dateSelectionnee,
   vue,
-  theme = "oryzo",
 }: {
   occurrences: Occurrence[];
   dateSelectionnee: string;
   vue: Vue;
-  theme?: Theme;
 }) {
   const positionMusicien = usePositionMusicien();
   const [barSelectionneId, setBarSelectionneId] = useState<string | null>(null);
@@ -33,14 +30,14 @@ export default function ConsultationMusicien({
 
   return (
     <div className="flex flex-col gap-4">
-      <ToggleVue vue={vue} dateSelectionnee={dateSelectionnee} theme={theme} />
+      <ToggleVue vue={vue} dateSelectionnee={dateSelectionnee} />
 
       {vue === "liste" ? (
-        <ListeAnnonces occurrences={occurrences} positionMusicien={positionMusicien} theme={theme} />
+        <ListeAnnonces occurrences={occurrences} positionMusicien={positionMusicien} />
       ) : (
         <div className="relative h-[70vh] overflow-hidden rounded-[12px]">
           <JamMap
-            theme={theme}
+           
             occurrences={occurrences}
             positionMusicien={positionMusicien}
             onSelectionBar={setBarSelectionneId}
@@ -50,7 +47,7 @@ export default function ConsultationMusicien({
               occurrences={occurrencesDuBarSelectionne}
               positionMusicien={positionMusicien}
               onFermer={() => setBarSelectionneId(null)}
-              theme={theme}
+             
             />
           )}
         </div>

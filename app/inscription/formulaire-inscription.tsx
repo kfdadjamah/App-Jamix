@@ -61,7 +61,7 @@ export default function FormulaireInscription() {
         <h1 className="titre-page">
           Inscription
         </h1>
-        <p className="mt-3 text-[18px] leading-tight text-[color:var(--color-texte-secondaire)]">
+        <p className="mt-3 text-[18px] leading-tight text-[var(--harbor-marine-2)]">
           Créez votre compte et la fiche de votre bar.
         </p>
       </div>
@@ -116,7 +116,7 @@ export default function FormulaireInscription() {
         </ChampFormulaire>
 
         {erreurServeur && (
-          <p className="text-[12px] font-medium uppercase text-[var(--color-gold-elegance)]">
+          <p className="text-[13px] font-semibold text-[var(--harbor-erreur)]">
             {erreurServeur}
           </p>
         )}
@@ -124,15 +124,15 @@ export default function FormulaireInscription() {
         <button
           type="submit"
           disabled={enCours}
-          className="mt-2 rounded-[36px] bg-[var(--color-brass-copper)] px-6 py-[14px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)] disabled:opacity-60"
+          className="mt-2 rounded-[12px] bg-[var(--harbor-bleu)] px-6 py-3 text-[14px] font-bold text-white transition-colors duration-[120ms] hover:bg-[var(--harbor-marine)] disabled:opacity-60"
         >
           {enCours ? "Création en cours…" : "Créer mon compte"}
         </button>
       </form>
 
-      <p className="text-[12px] uppercase text-[color:var(--color-texte-secondaire)]">
+      <p className="text-[12px] text-[var(--harbor-marine-2)]">
         Déjà un compte ?{" "}
-        <a href="/connexion" className="text-[var(--color-warm-cream)] underline">
+        <a href="/connexion" className="text-[var(--harbor-marine)] underline">
           Se connecter
         </a>
       </p>

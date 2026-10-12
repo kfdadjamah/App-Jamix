@@ -41,20 +41,20 @@ export default function FormulaireConnexion({ reinitialise }: { reinitialise?: s
         <h1 className="titre-page">
           Connexion
         </h1>
-        <p className="mt-3 text-[18px] leading-tight text-[color:var(--color-texte-secondaire)]">
+        <p className="mt-3 text-[18px] leading-tight text-[var(--harbor-marine-2)]">
           Accédez à l&apos;espace de gestion de votre bar.
         </p>
       </div>
 
       {reinitialise === "1" && (
-        <p className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)]">
+        <p className="text-[13px] font-bold text-[var(--harbor-marine)]">
           Mot de passe modifié. Vous pouvez vous connecter.
         </p>
       )}
 
       <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6" noValidate>
         <label className="flex flex-col gap-2">
-          <span className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)]">
+          <span className="text-[13px] font-bold text-[var(--harbor-marine)]">
             Email
           </span>
           <input
@@ -64,14 +64,14 @@ export default function FormulaireConnexion({ reinitialise }: { reinitialise?: s
             className="champ-input"
           />
           {errors.email && (
-            <span className="text-[10px] font-medium uppercase text-[var(--color-gold-elegance)]">
+            <span className="text-[13px] font-semibold text-[var(--harbor-erreur)]">
               {errors.email.message}
             </span>
           )}
         </label>
 
         <label className="flex flex-col gap-2">
-          <span className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)]">
+          <span className="text-[13px] font-bold text-[var(--harbor-marine)]">
             Mot de passe
           </span>
           <input
@@ -81,7 +81,7 @@ export default function FormulaireConnexion({ reinitialise }: { reinitialise?: s
             className="champ-input"
           />
           {errors.motDePasse && (
-            <span className="text-[10px] font-medium uppercase text-[var(--color-gold-elegance)]">
+            <span className="text-[13px] font-semibold text-[var(--harbor-erreur)]">
               {errors.motDePasse.message}
             </span>
           )}
@@ -89,13 +89,13 @@ export default function FormulaireConnexion({ reinitialise }: { reinitialise?: s
 
         <a
           href="/mot-de-passe-oublie"
-          className="-mt-3 self-start text-[12px] font-medium uppercase text-[var(--color-warm-cream)] underline"
+          className="-mt-3 self-start text-[13px] font-bold text-[var(--harbor-marine)] underline"
         >
           Mot de passe oublié ?
         </a>
 
         {erreurServeur && (
-          <p className="text-[12px] font-medium uppercase text-[var(--color-gold-elegance)]">
+          <p className="text-[13px] font-semibold text-[var(--harbor-erreur)]">
             {erreurServeur}
           </p>
         )}
@@ -103,15 +103,15 @@ export default function FormulaireConnexion({ reinitialise }: { reinitialise?: s
         <button
           type="submit"
           disabled={enCours}
-          className="mt-2 rounded-[36px] bg-[var(--color-brass-copper)] px-6 py-[14px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)] disabled:opacity-60"
+          className="mt-2 rounded-[12px] bg-[var(--harbor-bleu)] px-6 py-3 text-[14px] font-bold text-white transition-colors duration-[120ms] hover:bg-[var(--harbor-marine)] disabled:opacity-60"
         >
           {enCours ? "Connexion…" : "Se connecter"}
         </button>
       </form>
 
-      <p className="text-[12px] uppercase text-[color:var(--color-texte-secondaire)]">
+      <p className="text-[12px] text-[var(--harbor-marine-2)]">
         Pas encore de compte ?{" "}
-        <a href="/inscription" className="text-[var(--color-warm-cream)] underline">
+        <a href="/inscription" className="text-[var(--harbor-marine)] underline">
           S&apos;inscrire
         </a>
       </p>

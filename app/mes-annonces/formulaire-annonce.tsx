@@ -296,11 +296,11 @@ export default function FormulaireAnnonce({
         </Champ>
       ) : (
         <div className="flex flex-col gap-2">
-          <span className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)]">
+          <span className="text-[13px] font-bold text-[var(--harbor-marine)]">
             Bar
           </span>
-          <span className="text-[18px] text-[var(--color-warm-cream)]">{choixBar.nom}</span>
-          <span className="text-[12px] text-[color:var(--color-texte-secondaire)]">
+          <span className="text-[18px] text-[var(--harbor-marine)]">{choixBar.nom}</span>
+          <span className="text-[12px] text-[var(--harbor-marine-2)]">
             Le bar d&apos;une annonce publiée ne peut plus être changé.
           </span>
         </div>
@@ -311,12 +311,12 @@ export default function FormulaireAnnonce({
           <button
             type="button"
             onClick={reprendre}
-            className="rounded-[22.5px] border border-[var(--color-warm-cream)] px-4 py-[7.5px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)]"
+            className="rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)]"
           >
             Reprendre la dernière annonce de ce bar
           </button>
           {repriseDu && (
-            <span className="text-[12px] font-medium uppercase text-[color:var(--color-texte-secondaire)]">
+            <span className="text-[12px] font-semibold text-[var(--harbor-marine-2)]">
               Repris de l&apos;annonce publiée le{" "}
               {new Date(repriseDu).toLocaleDateString("fr-FR", {
                 day: "numeric",
@@ -330,7 +330,7 @@ export default function FormulaireAnnonce({
       )}
 
       <div className="flex flex-col gap-3">
-        <span className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)]">
+        <span className="text-[13px] font-bold text-[var(--harbor-marine)]">
           {dates.length > 1 ? "Dates (annonce récurrente)" : "Date"}
         </span>
 
@@ -339,7 +339,7 @@ export default function FormulaireAnnonce({
             {dates.map((date) => (
               <li
                 key={date}
-                className="flex items-center gap-2 rounded-[9999px] border border-[var(--color-cork-border)] px-3 py-1 text-[12px] uppercase text-[var(--color-warm-cream)]"
+                className="flex items-center gap-2 rounded-[9999px] border border-[var(--harbor-trait)] px-3 py-1 text-[12px] text-[var(--harbor-marine)]"
               >
                 {new Date(date).toLocaleDateString("fr-FR", {
                   weekday: "short",
@@ -351,7 +351,7 @@ export default function FormulaireAnnonce({
                     type="button"
                     onClick={() => retirerDate(date)}
                     aria-label={`Retirer le ${date}`}
-                    className="text-[color:var(--color-texte-secondaire)]"
+                    className="text-[var(--harbor-marine-2)]"
                   >
                     ×
                   </button>
@@ -375,14 +375,14 @@ export default function FormulaireAnnonce({
               type="button"
               onClick={ajouterDate}
               disabled={dates.length >= NOMBRE_MAX_DATES}
-              className="whitespace-nowrap rounded-[22.5px] border border-[var(--color-warm-cream)] px-4 py-[7.5px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)] disabled:opacity-60"
+              className="whitespace-nowrap rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] disabled:opacity-60"
             >
               Ajouter une date
             </button>
           </div>
         ) : (
           dates.length === 0 && (
-            <span className="text-[15px] text-[color:var(--color-texte-secondaire)]">
+            <span className="text-[15px] text-[var(--harbor-marine-2)]">
               Aucune date renseignée
             </span>
           )
@@ -410,7 +410,7 @@ export default function FormulaireAnnonce({
 
       {occurrencesPourPortee && occurrencesPourPortee.length > 0 && (
         <div className="flex flex-col gap-3">
-          <span className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)]">
+          <span className="text-[13px] font-bold text-[var(--harbor-marine)]">
             Appliquer l&apos;horaire à
           </span>
           <select
@@ -464,7 +464,7 @@ export default function FormulaireAnnonce({
       )}
 
       {erreur && (
-        <p className="text-[12px] font-medium uppercase text-[var(--color-gold-elegance)]">
+        <p className="text-[13px] font-semibold text-[var(--harbor-erreur)]">
           {erreur}
         </p>
       )}
@@ -475,7 +475,7 @@ export default function FormulaireAnnonce({
             type="button"
             disabled={inactif}
             onClick={() => soumettre(actionBrouillon)}
-            className="rounded-[22.5px] border border-[var(--color-warm-cream)] px-4 py-[7.5px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)] disabled:opacity-60"
+            className="rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] disabled:opacity-60"
           >
             Enregistrer le brouillon
           </button>
@@ -485,7 +485,7 @@ export default function FormulaireAnnonce({
             type="button"
             disabled={inactif}
             onClick={() => soumettre(actionPublier)}
-            className="rounded-[36px] bg-[var(--color-brass-copper)] px-6 py-[14px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)] disabled:opacity-60"
+            className="rounded-[12px] bg-[var(--harbor-bleu)] px-6 py-3 text-[14px] font-bold text-white transition-colors duration-[120ms] hover:bg-[var(--harbor-marine)] disabled:opacity-60"
           >
             Publier
           </button>
@@ -495,7 +495,7 @@ export default function FormulaireAnnonce({
             type="button"
             disabled={inactif}
             onClick={() => soumettre(actionModifier)}
-            className="rounded-[36px] bg-[var(--color-brass-copper)] px-6 py-[14px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)] disabled:opacity-60"
+            className="rounded-[12px] bg-[var(--harbor-bleu)] px-6 py-3 text-[14px] font-bold text-white transition-colors duration-[120ms] hover:bg-[var(--harbor-marine)] disabled:opacity-60"
           >
             Enregistrer les modifications
           </button>
@@ -539,11 +539,11 @@ function GroupeCases({
 
   return (
     <div className="flex flex-col gap-3">
-      <span className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)]">
+      <span className="text-[13px] font-bold text-[var(--harbor-marine)]">
         {label}
       </span>
       {optionExclusive !== undefined && (
-        <label className="flex items-center gap-2 text-[12px] uppercase text-[var(--color-warm-cream)]">
+        <label className="flex items-center gap-2 text-[12px] text-[var(--harbor-marine)]">
           <input
             type="checkbox"
             name={nom}
@@ -558,7 +558,7 @@ function GroupeCases({
         {autres.map((option) => (
           <label
             key={option}
-            className={`flex items-center gap-2 text-[12px] uppercase text-[var(--color-warm-cream)] ${
+            className={`flex items-center gap-2 text-[12px] text-[var(--harbor-marine)] ${
               exclusiveCochee ? "cursor-not-allowed opacity-60" : ""
             }`}
           >
@@ -605,7 +605,7 @@ function EmplacementPhoto({
   // perdrait le fichier choisi via « Remplacer ».
   return (
     <div className="flex flex-1 flex-col gap-2">
-      <span className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)]">
+      <span className="text-[13px] font-bold text-[var(--harbor-marine)]">
         {label}
       </span>
       {photoReprise && (
@@ -632,14 +632,14 @@ function EmplacementPhoto({
           <button
             type="button"
             onClick={() => refFichier.current?.click()}
-            className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)] underline"
+            className="text-[13px] font-bold text-[var(--harbor-marine)] underline"
           >
             Remplacer
           </button>
           <button
             type="button"
             onClick={() => setPhotoReprise(null)}
-            className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)] underline"
+            className="text-[13px] font-bold text-[var(--harbor-marine)] underline"
           >
             Retirer
           </button>
@@ -654,7 +654,7 @@ function ChampDescription({ valeurInitiale }: { valeurInitiale: string }) {
 
   return (
     <label className="flex flex-col gap-2">
-      <span className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)]">
+      <span className="text-[13px] font-bold text-[var(--harbor-marine)]">
         Description (optionnel)
       </span>
       <textarea
@@ -665,7 +665,7 @@ function ChampDescription({ valeurInitiale }: { valeurInitiale: string }) {
         onChange={(e) => setLongueur(e.target.value.length)}
         className="champ-input resize-none"
       />
-      <span className="self-end text-[12px] text-[color:var(--color-texte-secondaire)]">
+      <span className="self-end text-[12px] text-[var(--harbor-marine-2)]">
         {longueur}/{LONGUEUR_MAX_DESCRIPTION}
       </span>
     </label>
@@ -675,7 +675,7 @@ function ChampDescription({ valeurInitiale }: { valeurInitiale: string }) {
 function Champ({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="flex flex-1 flex-col gap-2">
-      <span className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)]">
+      <span className="text-[13px] font-bold text-[var(--harbor-marine)]">
         {label}
       </span>
       {children}

@@ -15,7 +15,7 @@ import { deconnecterOrganisateur } from "./actions";
 import PiedDePage from "@/components/pied-de-page";
 
 function Separateur() {
-  return <hr className="border-0 border-t border-dashed border-[var(--color-cork-border)]" />;
+  return <hr className="border-0 border-t border-[var(--harbor-trait)]" />;
 }
 
 export default async function PageMonProfil() {
@@ -49,7 +49,7 @@ export default async function PageMonProfil() {
     return (
       <>
         <Bandeau page="mon-profil" />
-        <main className="mx-auto w-full max-w-md px-6 py-8 text-[var(--color-warm-cream)]">
+        <main className="mx-auto w-full max-w-md px-6 py-8 text-[var(--harbor-marine)]">
           Compte introuvable.
         </main>
         <PiedDePage />
@@ -74,7 +74,7 @@ export default async function PageMonProfil() {
           <h1 className="titre-page">
             Mon profil
           </h1>
-          <span className="text-[12px] font-medium uppercase text-[color:var(--color-texte-secondaire)]">
+          <span className="text-[12px] font-semibold text-[var(--harbor-marine-2)]">
             Compte créé le {dateCreation}
           </span>
         </div>
@@ -104,7 +104,7 @@ export default async function PageMonProfil() {
         <SectionDeroulable
           titre="Email"
           sousTitre={
-            <span className="text-[15px] text-[color:var(--color-texte-secondaire)]">{organisateur.email}</span>
+            <span className="text-[15px] text-[var(--harbor-marine-2)]">{organisateur.email}</span>
           }
         >
           <FormulaireEmail />
@@ -117,7 +117,7 @@ export default async function PageMonProfil() {
         <form action={deconnecterOrganisateur}>
           <button
             type="submit"
-            className="rounded-[22.5px] border border-[var(--color-warm-cream)] px-4 py-[7.5px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)]"
+            className="rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)]"
           >
             Déconnexion
           </button>

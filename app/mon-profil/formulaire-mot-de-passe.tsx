@@ -71,12 +71,12 @@ export default function FormulaireMotDePasse() {
       </ChampFormulaire>
 
       {erreurServeur && (
-        <p className="text-[12px] font-medium uppercase text-[var(--color-gold-elegance)]">
+        <p className="text-[13px] font-semibold text-[var(--harbor-erreur)]">
           {erreurServeur}
         </p>
       )}
       {succes && (
-        <p className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)]">
+        <p className="text-[13px] font-bold text-[var(--harbor-marine)]">
           Mot de passe modifié.
         </p>
       )}
@@ -84,7 +84,7 @@ export default function FormulaireMotDePasse() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="self-start rounded-[22.5px] border border-[var(--color-warm-cream)] px-4 py-[7.5px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)] disabled:opacity-60"
+        className="self-start rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] disabled:opacity-60"
       >
         {isSubmitting ? "Enregistrement…" : "Changer de mot de passe"}
       </button>
