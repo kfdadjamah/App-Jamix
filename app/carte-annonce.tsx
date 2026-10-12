@@ -76,11 +76,8 @@ export default function CarteAnnonce({
           <span className={nomClasses}>{annonce.bar.nom}</span>
         )}
         <span
-          className="mt-0.5 max-w-[42%] shrink-0 rounded-[6px] px-2 py-[3px] text-center text-[12px] font-semibold leading-[1.25]"
-          style={{
-            color: couleurStatut,
-            backgroundColor: `color-mix(in srgb, ${couleurStatut} 12%, white)`,
-          }}
+          className="mt-0.5 max-w-[42%] shrink-0 rounded-[6px] px-2 py-[3px] text-center text-[12px] font-bold leading-[1.25] text-white"
+          style={{ backgroundColor: couleurStatut }}
         >
           {LIBELLES_STATUT_OCCURRENCE[statut]}
         </span>

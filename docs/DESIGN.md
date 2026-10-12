@@ -18,11 +18,11 @@ Harbor est le seul système de design de l'application (accueil, connexion, espa
 | Voile | `#E6F1FA` | Fonds teintés : bascule, boutons discrets, survols, chips |
 | Trait | `#DDE7EE` | Bordures et séparateurs |
 | Succès | `#17807E` | Statut « confirmée » |
-| Alerte | `#B7791F` | Statut « en attente de confirmation », relances |
+| Alerte | `#946010` | Statut « en attente de confirmation », relances |
 | Erreur | `#B3261E` | Erreurs de saisie et d'envoi |
 | Annulée | `#6B7C8C` | Statut « annulée » : carte à 60 % d'opacité, nom barré |
 
-**Statuts d'occurrence (liste, carte, Mes annonces)** : confirmée `#17807E`, programmée `#2B78BE`, en attente `#B7791F`, annulée `#6B7C8C`. Table `COULEURS_STATUT_OCCURRENCE` dans `lib/annonce-constantes.ts`. Le statut d'annonce (Brouillon/Publiée) et celui d'occurrence restent distincts.
+**Statuts d'occurrence (liste, carte, Mes annonces)** : confirmée `#17807E`, programmée `#2B78BE`, en attente `#946010`, annulée `#6B7C8C`. Table `COULEURS_STATUT_OCCURRENCE` dans `lib/annonce-constantes.ts`. Le statut d'annonce (Brouillon/Publiée) et celui d'occurrence restent distincts. L'Alerte a été assombrie (`#B7791F` → `#946010`, blanc dessus à 5,3:1) pour que la pastille en fond plein à texte blanc reste AA.
 
 ## Typographie
 
