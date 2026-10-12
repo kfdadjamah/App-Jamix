@@ -153,6 +153,16 @@ export default function CarteGlissable({
         }}
       >
         {children}
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 rounded-[16px] border-l-4 border-l-[var(--harbor-bleu)]"
+          data-lisere="gauche"
+        />
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 rounded-[16px] border-r-4 border-r-[var(--harbor-erreur)]"
+          data-lisere="droite"
+        />
       </div>
 
       {suppressionOuverte && (

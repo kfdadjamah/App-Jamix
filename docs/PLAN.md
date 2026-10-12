@@ -1245,13 +1245,13 @@ Un composant client `CarteGlissable` (`app/mes-annonces/carte-glissable.tsx`) en
 
 ### Ce qu'on livre
 
-Dans `app/mes-annonces/carte-glissable.tsx`, deux liserés arrondis d'environ 4 px sur la carte glissante (`span aria-hidden`, sans bloquer les pointer events) : bord gauche Bleu signal (`--harbor-bleu`, annonce « Modifier »), bord droit Erreur (`--harbor-erreur`, annonce « Supprimer »). Ils suivent la carte pendant le glissé et l'opacité de 60 % d'une carte annulée. Vérifier que `overflow-x-clip` ne rogne ni l'ombre ni les coins.
+Dans `app/mes-annonces/carte-glissable.tsx`, deux liserés de 4 px épousant les coins arrondis de la carte glissante, en bordure colorée pleine hauteur (`span aria-hidden` en `border-l-4`/`border-r-4`, sans bloquer les pointer events) : bord gauche Bleu signal (`--harbor-bleu`, annonce « Modifier »), bord droit Erreur (`--harbor-erreur`, annonce « Supprimer »). Ils suivent la carte pendant le glissé ; l'opacité reste à 100 % (les cartes de Mes annonces ne sont jamais estompées). Vérifier que `overflow-x-clip` ne rogne ni l'ombre ni les coins.
 
 ### Critères d'acceptation
 
 - [ ] Bord gauche Bleu signal et bord droit Erreur (couleurs calculées vérifiées, mobile 360 px)
 - [ ] Les liserés suivent la carte au glissé ; le tap et le défilement vertical sont inchangés
-- [ ] Carte annulée : liserés à 60 % d'opacité
+- [ ] Opacité des liserés inchangée (100 %), aucune carte estompée dans Mes annonces
 - [ ] Test `e2e/glisse-annonce.e2e.ts` étendu, DESIGN.md à jour, captures 360 px montrées au propriétaire
 
 ## Bloquée par

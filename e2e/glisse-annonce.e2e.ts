@@ -102,6 +102,27 @@ for (const [nom, viewport] of [
       expect(await prisma.annonce.count({ where: { id } })).toBe(1);
     });
 
+    test("liserés : bord Bleu signal à gauche, Erreur à droite, 4 px, ils suivent la carte", async ({
+      page,
+    }) => {
+      const id = await creerAnnonce();
+      await page.reload();
+
+      const lisere = (cote: string) =>
+        carte(page, id).locator("..").locator(`span[data-lisere="${cote}"]`);
+      await expect(lisere("gauche")).toHaveCSS("border-left-color", "rgb(43, 120, 190)");
+      await expect(lisere("droite")).toHaveCSS("border-right-color", "rgb(179, 38, 30)");
+      await expect(lisere("gauche")).toHaveCSS("border-left-width", "4px");
+      await expect(lisere("droite")).toHaveCSS("pointer-events", "none");
+
+      const avant = (await lisere("gauche").boundingBox())!.x;
+      await glisser(page, id, 120);
+      await expect.poll(() => decalage(page, id)).toBe(96);
+      const apres = (await lisere("gauche").boundingBox())!.x;
+      expect(Math.round(apres - avant)).toBe(96);
+      await page.screenshot({ path: `test-results/lisere-${nom.replace(/ /g, "-")}.png` });
+    });
+
     test("glissé à droite : « Modifier » apparaît, le bouton mène au formulaire", async ({
       page,
     }) => {
