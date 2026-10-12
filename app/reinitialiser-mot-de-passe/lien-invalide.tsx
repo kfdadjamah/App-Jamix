@@ -7,7 +7,7 @@ export default function LienInvalide() {
       </p>
       <a
         href="/mot-de-passe-oublie"
-        className="self-start rounded-[12px] border border-[var(--harbor-trait)] bg-white px-6 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)]"
+        className="self-start rounded-[12px] border border-[var(--harbor-trait)] bg-white px-6 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] active:border-[var(--harbor-bleu-clair)] active:bg-[var(--harbor-voile)]"
       >
         Demander un nouveau lien
       </a>

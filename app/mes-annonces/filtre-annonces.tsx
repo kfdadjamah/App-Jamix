@@ -31,7 +31,7 @@ export default function FiltreAnnonces({
               className={`max-w-full truncate rounded-[12px] border px-4 py-2 text-[13px] font-bold transition-colors duration-[120ms] ${
                 actif
                   ? "border-[var(--harbor-bleu)] bg-[var(--harbor-bleu)] text-white"
-                  : "border-[var(--harbor-trait)] bg-white text-[var(--harbor-marine)] hover:bg-[var(--harbor-voile)]"
+                  : "border-[var(--harbor-trait)] bg-white text-[var(--harbor-marine)] hover:bg-[var(--harbor-voile)] active:bg-[var(--harbor-trait)]"
               }`}
             >
               {option.nom}

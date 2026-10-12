@@ -6,7 +6,7 @@ import { LienGarde } from "./garde-sortie";
 // des sorties gardées. Placé après le contenu, jamais fixé à l'écran.
 export default function PiedDePage({ page }: { page?: "cgu" | "mentions-legales" | "contact" }) {
   const annee = new Date().getFullYear();
-  const lien = (actif: boolean) => `hover:underline focus-visible:underline${actif ? " underline" : ""}`;
+  const lien = (actif: boolean) => `hover:underline focus-visible:underline active:text-[var(--harbor-bleu)]${actif ? " underline" : ""}`;
 
   return (
     <footer className="w-full">

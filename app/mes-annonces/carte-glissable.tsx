@@ -118,7 +118,7 @@ export default function CarteGlissable({
         onClick={() => routeur.push(`/mes-annonces/${annonceId}`)}
         aria-hidden={ouvert !== "droite"}
         tabIndex={-1}
-        className="absolute inset-y-0 left-0 flex items-center justify-center rounded-[16px] bg-[var(--harbor-bleu)] text-[13px] font-bold text-white"
+        className="absolute inset-y-0 left-0 flex items-center justify-center rounded-[16px] bg-[var(--harbor-bleu)] text-[13px] font-bold text-white transition-colors duration-[120ms] active:bg-[var(--harbor-marine)]"
         style={{ width: LARGEUR_ACTION }}
       >
         Modifier
@@ -131,7 +131,7 @@ export default function CarteGlissable({
           setOuvert(null);
           setSuppressionOuverte(true);
         }}
-        className="absolute inset-y-0 right-0 flex items-center justify-center rounded-[16px] bg-[var(--harbor-erreur)] text-[13px] font-bold text-white"
+        className="absolute inset-y-0 right-0 flex items-center justify-center rounded-[16px] bg-[var(--harbor-erreur)] text-[13px] font-bold text-white transition-colors duration-[120ms] active:bg-[var(--harbor-erreur-voile)] active:text-[var(--harbor-erreur)]"
         style={{ width: LARGEUR_ACTION }}
       >
         Supprimer

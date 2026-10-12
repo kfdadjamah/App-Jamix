@@ -66,7 +66,7 @@ export default function MenuAnnonce({
         aria-haspopup="menu"
         aria-expanded={menuOuvert}
         onClick={() => setMenuOuvert((ouvert) => !ouvert)}
-        className="flex h-11 w-11 items-center justify-center rounded-[9999px] text-[18px] font-semibold text-[var(--harbor-marine)]"
+        className="flex h-11 w-11 items-center justify-center rounded-[9999px] text-[18px] font-semibold text-[var(--harbor-marine)] transition-colors duration-[120ms] active:bg-[var(--harbor-trait)]"
       >
         ⋯
       </button>
@@ -80,7 +80,7 @@ export default function MenuAnnonce({
             ref={premiereEntree}
             href={`/mes-annonces/${annonceId}`}
             role="menuitem"
-            className="px-4 py-3 text-[13px] font-bold text-[var(--harbor-marine)] hover:underline focus:underline"
+            className="px-4 py-3 text-[13px] font-bold text-[var(--harbor-marine)] hover:underline focus:underline transition-colors duration-[120ms] active:bg-[var(--harbor-trait)]"
           >
             Modifier
           </Link>
@@ -92,7 +92,7 @@ export default function MenuAnnonce({
                 setMenuOuvert(false);
                 setFenetreOuverte(true);
               }}
-              className="px-4 py-3 text-left text-[13px] font-bold text-[var(--harbor-marine)] hover:underline focus:underline"
+              className="px-4 py-3 text-left text-[13px] font-bold text-[var(--harbor-marine)] hover:underline focus:underline transition-colors duration-[120ms] active:bg-[var(--harbor-trait)]"
             >
               Annuler
             </button>
@@ -104,7 +104,7 @@ export default function MenuAnnonce({
               setMenuOuvert(false);
               setSuppressionOuverte(true);
             }}
-            className="px-4 py-3 text-left text-[13px] font-bold text-[var(--harbor-erreur)] hover:underline focus:underline"
+            className="px-4 py-3 text-left text-[13px] font-bold text-[var(--harbor-erreur)] hover:underline focus:underline transition-colors duration-[120ms] active:bg-[var(--harbor-erreur-voile)]"
           >
             Supprimer
           </button>
@@ -253,7 +253,7 @@ export function FenetreSuppression({
             type="button"
             onClick={confirmer}
             disabled={enCours}
-            className="rounded-[12px] border border-[var(--harbor-erreur)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-erreur)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] disabled:opacity-60"
+            className="rounded-[12px] border border-[var(--harbor-erreur)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-erreur)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] active:bg-[var(--harbor-erreur-voile)] disabled:opacity-60"
           >
             Supprimer définitivement
           </button>
@@ -261,7 +261,7 @@ export function FenetreSuppression({
             type="button"
             onClick={() => fenetre.current?.close()}
             disabled={enCours}
-            className="rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] disabled:opacity-60"
+            className="rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] active:border-[var(--harbor-bleu-clair)] active:bg-[var(--harbor-voile)] disabled:opacity-60"
           >
             ← Retour
           </button>
@@ -393,7 +393,7 @@ function FenetreAnnulation({
             type="button"
             onClick={confirmer}
             disabled={enCours}
-            className="rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] disabled:opacity-60"
+            className="rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] active:border-[var(--harbor-bleu-clair)] active:bg-[var(--harbor-voile)] disabled:opacity-60"
           >
             Annuler l&apos;annonce
           </button>
@@ -401,7 +401,7 @@ function FenetreAnnulation({
             type="button"
             onClick={() => fenetre.current?.close()}
             disabled={enCours}
-            className="rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] disabled:opacity-60"
+            className="rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] active:border-[var(--harbor-bleu-clair)] active:bg-[var(--harbor-voile)] disabled:opacity-60"
           >
             ← Retour
           </button>

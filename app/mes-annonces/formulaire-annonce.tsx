@@ -311,7 +311,7 @@ export default function FormulaireAnnonce({
           <button
             type="button"
             onClick={reprendre}
-            className="rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)]"
+            className="rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] active:border-[var(--harbor-bleu-clair)] active:bg-[var(--harbor-voile)]"
           >
             Reprendre la dernière annonce de ce bar
           </button>
@@ -351,7 +351,7 @@ export default function FormulaireAnnonce({
                     type="button"
                     onClick={() => retirerDate(date)}
                     aria-label={`Retirer le ${date}`}
-                    className="text-[var(--harbor-marine-2)]"
+                    className="text-[var(--harbor-marine-2)] active:text-[var(--harbor-erreur)]"
                   >
                     ×
                   </button>
@@ -375,7 +375,7 @@ export default function FormulaireAnnonce({
               type="button"
               onClick={ajouterDate}
               disabled={dates.length >= NOMBRE_MAX_DATES}
-              className="whitespace-nowrap rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] disabled:opacity-60"
+              className="whitespace-nowrap rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] active:border-[var(--harbor-bleu-clair)] active:bg-[var(--harbor-voile)] disabled:opacity-60"
             >
               Ajouter une date
             </button>
@@ -475,7 +475,7 @@ export default function FormulaireAnnonce({
             type="button"
             disabled={inactif}
             onClick={() => soumettre(actionBrouillon)}
-            className="rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] disabled:opacity-60"
+            className="rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] active:border-[var(--harbor-bleu-clair)] active:bg-[var(--harbor-voile)] disabled:opacity-60"
           >
             Enregistrer le brouillon
           </button>
@@ -485,7 +485,7 @@ export default function FormulaireAnnonce({
             type="button"
             disabled={inactif}
             onClick={() => soumettre(actionPublier)}
-            className="rounded-[12px] bg-[var(--harbor-bleu)] px-6 py-3 text-[14px] font-bold text-white transition-colors duration-[120ms] hover:bg-[var(--harbor-marine)] disabled:opacity-60"
+            className="rounded-[12px] bg-[var(--harbor-bleu)] px-6 py-3 text-[14px] font-bold text-white transition-colors duration-[120ms] hover:bg-[var(--harbor-marine)] active:bg-[var(--harbor-marine)] disabled:opacity-60"
           >
             Publier
           </button>
@@ -495,7 +495,7 @@ export default function FormulaireAnnonce({
             type="button"
             disabled={inactif}
             onClick={() => soumettre(actionModifier)}
-            className="rounded-[12px] bg-[var(--harbor-bleu)] px-6 py-3 text-[14px] font-bold text-white transition-colors duration-[120ms] hover:bg-[var(--harbor-marine)] disabled:opacity-60"
+            className="rounded-[12px] bg-[var(--harbor-bleu)] px-6 py-3 text-[14px] font-bold text-white transition-colors duration-[120ms] hover:bg-[var(--harbor-marine)] active:bg-[var(--harbor-marine)] disabled:opacity-60"
           >
             Enregistrer les modifications
           </button>
@@ -632,14 +632,14 @@ function EmplacementPhoto({
           <button
             type="button"
             onClick={() => refFichier.current?.click()}
-            className="text-[13px] font-bold text-[var(--harbor-marine)] underline"
+            className="text-[13px] font-bold text-[var(--harbor-marine)] underline active:text-[var(--harbor-bleu)]"
           >
             Remplacer
           </button>
           <button
             type="button"
             onClick={() => setPhotoReprise(null)}
-            className="text-[13px] font-bold text-[var(--harbor-marine)] underline"
+            className="text-[13px] font-bold text-[var(--harbor-marine)] underline active:text-[var(--harbor-bleu)]"
           >
             Retirer
           </button>

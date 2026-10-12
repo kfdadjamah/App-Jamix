@@ -14,6 +14,7 @@
   --harbor-succes: #17807e;
   --harbor-alerte: #946010;
   --harbor-erreur: #b3261e;
+  --harbor-erreur-voile: #fbe9e7;
   --harbor-annulee: #6b7c8c;
 
   --harbor-rayon-petit: 6px;
@@ -113,6 +114,14 @@ body {
   border-radius: 9999px;
   padding: 8px 16px 8px 12px;
   white-space: nowrap;
+}
+
+.jam-sticker__pill {
+  transition: background-color 120ms;
+}
+
+.jam-sticker:active .jam-sticker__pill {
+  background: var(--harbor-bleu);
 }
 
 .jam-sticker__dot {

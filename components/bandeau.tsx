@@ -37,7 +37,7 @@ export default async function Bandeau({
             <LienGarde
               href="/"
               aria-label="Accueil"
-              className="flex items-center text-white"
+              className="flex items-center text-white transition-opacity duration-[120ms] active:opacity-70"
             >
               <House size={22} strokeWidth={1.75} aria-hidden="true" />
             </LienGarde>
@@ -48,7 +48,7 @@ export default async function Bandeau({
             accueil && (
               <Link
                 href="/connexion"
-                className="whitespace-nowrap rounded-full bg-white/[.12] px-3 py-1.5 text-[12px] font-semibold text-white"
+                className="whitespace-nowrap rounded-full bg-white/[.12] px-3 py-1.5 text-[12px] font-semibold text-white transition-colors duration-[120ms] active:bg-white/25"
               >
                 Connexion organisateur
               </Link>

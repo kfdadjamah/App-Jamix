@@ -1334,9 +1334,9 @@ Les libellés « (optionnel) » des champs facultatifs deviennent « (option) »
 
 ### Critères d'acceptation
 
-- [ ] Un échantillon par famille change de couleur calculée sous `mouse.down()`
-- [ ] Aucun bouton, lien-bouton ou entrée de menu de l'inventaire n'est oublié
-- [ ] Test `e2e/boutons-actifs.e2e.ts` et DESIGN.md à jour
+- [x] Un échantillon par famille change de couleur calculée sous `mouse.down()`
+- [x] Aucun bouton, lien-bouton ou entrée de menu de l'inventaire n'est oublié
+- [x] Test `e2e/boutons-actifs.e2e.ts` et DESIGN.md à jour
 
 ## Bloquée par
 

@@ -46,7 +46,7 @@ export default async function PageMesAnnonces() {
           <h1 className="titre-page">Mes annonces</h1>
           <Link
             href="/mes-annonces/nouvelle"
-            className="rounded-[12px] bg-[var(--harbor-bleu)] px-4 py-3 text-[14px] font-bold text-white transition-colors duration-[120ms] hover:bg-[var(--harbor-marine)]"
+            className="rounded-[12px] bg-[var(--harbor-bleu)] px-4 py-3 text-[14px] font-bold text-white transition-colors duration-[120ms] hover:bg-[var(--harbor-marine)] active:bg-[var(--harbor-marine)]"
           >
             Nouvelle
           </Link>
@@ -116,7 +116,7 @@ function CarteAnnonce({ annonce }: { annonce: AnnonceAvecDetails }) {
       <div className="relative">
         <Link
           href={`/mes-annonces/${annonce.id}`}
-          className="flex flex-col gap-2 rounded-[16px] border border-[var(--harbor-trait)] bg-white p-4 shadow-[var(--harbor-ombre-carte)]"
+          className="flex flex-col gap-2 rounded-[16px] border border-[var(--harbor-trait)] bg-white p-4 shadow-[var(--harbor-ombre-carte)] transition-colors duration-[120ms] active:bg-[var(--harbor-voile)]"
         >
           <span className="truncate pr-12 text-[20px] font-extrabold tracking-[-0.025em] text-[var(--harbor-marine)]">
             {annonce.bar.nom}

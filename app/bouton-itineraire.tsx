@@ -43,7 +43,7 @@ export default function BoutonItineraire({ bar }: { bar: Destination }) {
         onClick={basculerMenu}
         aria-expanded={ouvert}
         aria-haspopup="menu"
-        className="rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)]"
+        className="rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] active:border-[var(--harbor-bleu-clair)] active:bg-[var(--harbor-voile)]"
       >
         Itinéraire
       </button>
@@ -61,7 +61,7 @@ export default function BoutonItineraire({ bar }: { bar: Destination }) {
               target="_blank"
               rel="noopener"
               onClick={() => setOuvert(false)}
-              className="text-[13px] font-semibold text-[var(--harbor-bleu)] hover:underline"
+              className="text-[13px] font-semibold text-[var(--harbor-bleu)] hover:underline active:text-[var(--harbor-marine)]"
             >
               {app.nom}
             </a>

@@ -15,7 +15,7 @@ export default function JamIndisponible() {
         </p>
         <Link
           href="/"
-          className="self-start text-[13px] font-bold text-[var(--harbor-marine)] underline"
+          className="self-start text-[13px] font-bold text-[var(--harbor-marine)] underline active:text-[var(--harbor-bleu)]"
         >
           Voir les jams du jour
         </Link>

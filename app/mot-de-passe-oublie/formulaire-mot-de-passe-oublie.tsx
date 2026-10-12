@@ -80,7 +80,7 @@ export default function FormulaireMotDePasseOublie() {
           <button
             type="submit"
             disabled={enCours}
-            className="mt-2 rounded-[12px] bg-[var(--harbor-bleu)] px-6 py-3 text-[14px] font-bold text-white transition-colors duration-[120ms] hover:bg-[var(--harbor-marine)] disabled:opacity-60"
+            className="mt-2 rounded-[12px] bg-[var(--harbor-bleu)] px-6 py-3 text-[14px] font-bold text-white transition-colors duration-[120ms] hover:bg-[var(--harbor-marine)] active:bg-[var(--harbor-marine)] disabled:opacity-60"
           >
             {enCours ? "Envoi…" : "Envoyer le lien"}
           </button>

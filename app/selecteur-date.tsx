@@ -26,7 +26,7 @@ export default function SelecteurDate({
   const { debut, jours } = fenetreSept(dateSelectionnee, aujourdhui);
   const precedentPossible = debut > aujourdhui;
   const boutonFleche =
-    "flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] border border-[var(--harbor-trait)] bg-white text-[var(--harbor-marine)] hover:bg-[var(--harbor-voile)] transition-colors duration-[120ms]";
+    "flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] border border-[var(--harbor-trait)] bg-white text-[var(--harbor-marine)] hover:bg-[var(--harbor-voile)] active:border-[var(--harbor-bleu-clair)] active:bg-[var(--harbor-voile)] transition-colors duration-[120ms]";
 
   return (
     <div className="flex flex-col gap-4">
@@ -47,7 +47,7 @@ export default function SelecteurDate({
         <div className="flex items-center gap-2">
           <Link
             href={hrefDate(aujourdhui, vue)}
-            className="rounded-[14px] bg-[var(--harbor-voile)] px-3 py-2.5 text-[14px] font-semibold text-[var(--harbor-marine)] hover:bg-[var(--harbor-trait)] transition-colors duration-[120ms]"
+            className="rounded-[14px] bg-[var(--harbor-voile)] px-3 py-2.5 text-[14px] font-semibold text-[var(--harbor-marine)] hover:bg-[var(--harbor-trait)] active:bg-[var(--harbor-trait)] transition-colors duration-[120ms]"
           >
             Aujourd&apos;hui
           </Link>
@@ -88,8 +88,8 @@ export default function SelecteurDate({
           );
           const classes = `flex flex-col items-center gap-1 rounded-[14px] py-2 transition-colors duration-[120ms] ${
             selectionne
-              ? "bg-[var(--harbor-bleu)] text-white"
-              : "text-[var(--harbor-marine)] hover:bg-[var(--harbor-voile)]"
+              ? "bg-[var(--harbor-bleu)] text-white active:bg-[var(--harbor-marine)]"
+              : "text-[var(--harbor-marine)] hover:bg-[var(--harbor-voile)] active:bg-[var(--harbor-trait)]"
           }`;
           const libelle = new Intl.DateTimeFormat("fr-FR", {
             weekday: "long",
@@ -133,7 +133,7 @@ function BoutonCalendrier({
   const router = useRouter();
 
   return (
-    <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] border border-[var(--harbor-trait)] bg-white text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)]">
+    <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] border border-[var(--harbor-trait)] bg-white text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] active:border-[var(--harbor-bleu-clair)] active:bg-[var(--harbor-voile)]">
       <CalendarDays size={18} aria-hidden="true" />
       <input
         type="date"

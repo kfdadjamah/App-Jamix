@@ -74,7 +74,7 @@ export default function FormulaireReinitialisation({ jeton }: { jeton: string })
       <button
         type="submit"
         disabled={enCours}
-        className="mt-2 rounded-[12px] bg-[var(--harbor-bleu)] px-6 py-3 text-[14px] font-bold text-white transition-colors duration-[120ms] hover:bg-[var(--harbor-marine)] disabled:opacity-60"
+        className="mt-2 rounded-[12px] bg-[var(--harbor-bleu)] px-6 py-3 text-[14px] font-bold text-white transition-colors duration-[120ms] hover:bg-[var(--harbor-marine)] active:bg-[var(--harbor-marine)] disabled:opacity-60"
       >
         {enCours ? "Enregistrement…" : "Enregistrer le mot de passe"}
       </button>

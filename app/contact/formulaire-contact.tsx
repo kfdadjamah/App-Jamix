@@ -129,7 +129,7 @@ export default function FormulaireContact({ emailInitial }: { emailInitial: stri
         <button
           type="submit"
           disabled={enCours}
-          className="mt-2 rounded-[12px] bg-[var(--harbor-bleu)] px-6 py-3 text-[14px] font-bold text-white transition-colors duration-[120ms] hover:bg-[var(--harbor-marine)] disabled:opacity-60"
+          className="mt-2 rounded-[12px] bg-[var(--harbor-bleu)] px-6 py-3 text-[14px] font-bold text-white transition-colors duration-[120ms] hover:bg-[var(--harbor-marine)] active:bg-[var(--harbor-marine)] disabled:opacity-60"
         >
           {enCours ? "Envoi…" : "Envoyer"}
         </button>
@@ -139,7 +139,7 @@ export default function FormulaireContact({ emailInitial }: { emailInitial: stri
           pas enregistrés dans l&apos;application. En savoir plus dans les{" "}
           <Link
             href="/cgu"
-            className="text-[var(--harbor-marine)] underline hover:no-underline focus-visible:no-underline"
+            className="text-[var(--harbor-marine)] underline hover:no-underline focus-visible:no-underline active:text-[var(--harbor-bleu)]"
           >
             CGU
           </Link>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Figtree, Geist, Plus_Jakarta_Sans } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
+import ActiverPressionTactile from "@/components/activer-pression-tactile";
 
 // Police Harbor : Figtree (style Refero), les rôles passent par la graisse et la taille.
 // Exception : la carte d'annonce reprend Plus Jakarta Sans (nom du bar) et Geist (données).
@@ -35,7 +36,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="fr" className={`${figtree.variable} ${jakarta.variable} ${geist.variable} h-full antialiased`} suppressHydrationWarning>
       <body className="min-h-full flex flex-col">
         {children}
-        <Analytics />
+        <ActiverPressionTactile />        <Analytics />
       </body>
     </html>
   );
