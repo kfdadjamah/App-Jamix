@@ -1,13 +1,48 @@
 import paquet from "@/package.json";
+import type { Theme } from "@/lib/theme";
 import { LienGarde } from "./garde-sortie";
 
 // Pied de page commun, rendu par chaque page après <main> (comme le Bandeau) pour rester
 // dans FournisseurGardeSortie sur les formulaires d'annonce : « CGU », « Mentions légales » et « Contact » y sont
 // des sorties gardées. Placé après le contenu, jamais fixé à l'écran.
-export default function PiedDePage({ page }: { page?: "cgu" | "mentions-legales" | "contact" }) {
+export default function PiedDePage({
+  page,
+  theme = "oryzo",
+}: {
+  page?: "cgu" | "mentions-legales" | "contact";
+  theme?: Theme;
+}) {
   const annee = new Date().getFullYear();
   const lien = (actif: boolean) =>
     `text-[var(--color-warm-cream)] hover:underline focus-visible:underline${actif ? " underline" : ""}`;
+
+  if (theme === "harbor") {
+    const lienHarbor = "hover:underline focus-visible:underline";
+    return (
+      <footer className="w-full">
+        <div className="mx-auto w-full max-w-md px-6 pb-6">
+          <div className="donnees flex flex-col items-center gap-2 border-t border-[var(--harbor-trait)] pt-6 text-center text-[12px] text-[var(--harbor-marine-3)]">
+            <nav aria-label="Informations légales">
+              <LienGarde href="/cgu" className={lienHarbor}>
+                CGU
+              </LienGarde>
+              {" · "}
+              <LienGarde href="/mentions-legales" className={lienHarbor}>
+                Mentions légales
+              </LienGarde>
+              {" · "}
+              <LienGarde href="/contact" className={lienHarbor}>
+                Contact
+              </LienGarde>
+            </nav>
+            <p>
+              © {annee} Jammix · Tous droits réservés · v{paquet.version}
+            </p>
+          </div>
+        </div>
+      </footer>
+    );
+  }
 
   return (
     <footer className="w-full bg-[var(--color-walnut-shadow)]">

@@ -1,9 +1,17 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import type { Theme } from "@/lib/theme";
 import { applicationsCarto, detecterAppareil, type Destination } from "@/lib/itineraire";
 
-export default function BoutonItineraire({ bar }: { bar: Destination }) {
+export default function BoutonItineraire({
+  bar,
+  theme = "oryzo",
+}: {
+  bar: Destination;
+  theme?: Theme;
+}) {
+  const harbor = theme === "harbor";
   const [ouvert, setOuvert] = useState(false);
   const [appareil, setAppareil] = useState({ apple: false, mobile: false });
   const conteneurRef = useRef<HTMLDivElement | null>(null);
@@ -43,7 +51,11 @@ export default function BoutonItineraire({ bar }: { bar: Destination }) {
         onClick={basculerMenu}
         aria-expanded={ouvert}
         aria-haspopup="menu"
-        className="rounded-[22.5px] border border-[var(--color-warm-cream)] px-4 py-[7.5px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)]"
+        className={
+          harbor
+            ? "rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)]"
+            : "rounded-[22.5px] border border-[var(--color-warm-cream)] px-4 py-[7.5px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)]"
+        }
       >
         Itinéraire
       </button>
@@ -51,7 +63,11 @@ export default function BoutonItineraire({ bar }: { bar: Destination }) {
       {ouvert && (
         <div
           role="menu"
-          className="mt-2 flex min-w-[180px] flex-col gap-3 rounded-[12px] border border-[var(--color-cork-border)] p-4"
+          className={
+            harbor
+              ? "mt-2 flex min-w-[180px] flex-col gap-3 rounded-[12px] border border-[var(--harbor-trait)] bg-white p-4 shadow-[var(--harbor-ombre-menu)]"
+              : "mt-2 flex min-w-[180px] flex-col gap-3 rounded-[12px] border border-[var(--color-cork-border)] p-4"
+          }
         >
           {applications.map((app) => (
             <a
@@ -61,7 +77,11 @@ export default function BoutonItineraire({ bar }: { bar: Destination }) {
               target="_blank"
               rel="noopener"
               onClick={() => setOuvert(false)}
-              className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)] underline"
+              className={
+                harbor
+                  ? "text-[13px] font-semibold text-[var(--harbor-bleu)] hover:underline"
+                  : "text-[12px] font-medium uppercase text-[var(--color-warm-cream)] underline"
+              }
             >
               {app.nom}
             </a>

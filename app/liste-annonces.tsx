@@ -2,6 +2,7 @@
 
 import { distanceJusquAuBar } from "@/lib/distance";
 import { type recupererAnnoncesPubliees } from "@/lib/annonces";
+import type { Theme } from "@/lib/theme";
 import CarteAnnonce from "./carte-annonce";
 
 type Occurrence = Awaited<ReturnType<typeof recupererAnnoncesPubliees>>[number];
@@ -9,9 +10,11 @@ type Occurrence = Awaited<ReturnType<typeof recupererAnnoncesPubliees>>[number];
 export default function ListeAnnonces({
   occurrences,
   positionMusicien,
+  theme = "oryzo",
 }: {
   occurrences: Occurrence[];
   positionMusicien: { latitude: number; longitude: number } | null;
+  theme?: Theme;
 }) {
   const occurrencesAvecDistance = occurrences.map((occurrence) => {
     const distanceKm = distanceJusquAuBar(positionMusicien, occurrence.annonce.bar);
@@ -34,6 +37,7 @@ export default function ListeAnnonces({
           occurrence={occurrence}
           distanceKm={distanceKm}
           mode="liste"
+          theme={theme}
         />
       ))}
     </div>

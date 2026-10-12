@@ -2,6 +2,7 @@ import Link from "next/link";
 import { House } from "lucide-react";
 import { sessionCourante } from "@/auth";
 import IconeProfil from "./icone-profil";
+import { THEME_ACCUEIL } from "@/lib/theme";
 import { LienGarde } from "./garde-sortie";
 
 // Bandeau commun, rendu par chaque page (pas dans le layout) pour rester dans
@@ -14,6 +15,26 @@ export default async function Bandeau({
 }) {
   const session = await sessionCourante();
   const accueil = page === "accueil";
+
+  // Pilote Harbor (Phase 39) : accueil seul, sans logo ; le titre « Jammix » de la page en tient lieu.
+  if (accueil && THEME_ACCUEIL === "harbor") {
+    return (
+      <header className="sticky top-0 z-20 w-full border-b-[3px] border-[var(--harbor-bleu-clair)] bg-[var(--harbor-marine)]">
+        <div className="mx-auto flex h-14 w-full max-w-md items-center justify-end px-6">
+          {session?.user?.id ? (
+            <IconeProfil theme="harbor" />
+          ) : (
+            <Link
+              href="/connexion"
+              className="whitespace-nowrap rounded-full bg-white/[.12] px-4 py-2 text-[12px] font-semibold text-white"
+            >
+              Connexion organisateur
+            </Link>
+          )}
+        </div>
+      </header>
+    );
+  }
 
   return (
     <header className="sticky top-0 z-20 w-full border-b border-[var(--color-gold-elegance)] bg-[var(--color-brass-copper)]">

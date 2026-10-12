@@ -53,6 +53,11 @@
   line-height: 1.55;
 }
 
+.theme-harbor :where(a, button, input):focus-visible {
+  outline: 2px solid var(--harbor-bleu);
+  outline-offset: 2px;
+}
+
 .theme-harbor .donnees {
   font-family: var(--font-geist), ui-monospace, sans-serif;
   font-variant-numeric: tabular-nums;
@@ -196,6 +201,35 @@ body {
   border-right: 6px solid transparent;
   border-top: 8px solid;
   margin-top: -1px;
+}
+
+/* Harbor : carte claire, étiquettes marine (Phase 39) */
+.theme-harbor .maplibregl-ctrl-bottom-right {
+  z-index: 5;
+}
+.theme-harbor .maplibregl-ctrl-attrib {
+  background: rgba(255, 255, 255, 0.8) !important;
+  color: var(--harbor-marine-2) !important;
+  font-family: var(--font-geist), sans-serif;
+}
+.theme-harbor .maplibregl-ctrl-attrib a {
+  color: var(--harbor-marine-2) !important;
+}
+.theme-harbor .jam-sticker__pill {
+  background: rgba(11, 54, 88, 0.96);
+  box-shadow: var(--harbor-ombre-menu);
+}
+.theme-harbor .jam-sticker__name {
+  font-family: var(--font-plus-jakarta-sans), sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+  color: #ffffff;
+}
+.theme-harbor .jam-sticker__sub,
+.theme-harbor .jam-sticker__distance {
+  font-family: var(--font-geist), sans-serif;
+  text-transform: none;
+  color: rgba(255, 255, 255, 0.75);
 }
 
 /* Popup */
