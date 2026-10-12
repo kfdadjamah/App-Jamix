@@ -54,15 +54,20 @@ for (const chemin of ["/mon-profil", "/mes-annonces/nouvelle"]) {
     await page.goto(chemin);
     const lien = page.getByRole("link", { name: /Accéder à mes annonces/ });
     await expect(lien).toBeVisible();
+    await expect(lien).toContainText("🔔");
+    // Pas de chiffre visible ; le nombre reste dans le libellé accessible.
+    await expect(lien.locator('[aria-hidden="true"]').nth(1)).toHaveText("Accéder à mes annonces");
+    await expect(lien.locator(".sr-only")).toContainText(/jam/);
     await expect(page.getByText("À confirmer", { exact: true })).toHaveCount(0);
     await lien.click();
     await expect(page).toHaveURL(/\/mes-annonces$/);
   });
 }
 
-test("Mes annonces : la ligne est un texte sans lien", async ({ page }) => {
+test("Mes annonces : la ligne « 🔔 À confirmer · N » est un texte sans lien", async ({ page }) => {
   await page.goto("/mes-annonces");
-  await expect(page.getByText("Accéder à mes annonces").first()).toBeVisible();
+  await expect(page.getByText(/^À confirmer · \d+$/).first()).toBeVisible();
+  await expect(page.getByText("Accéder à mes annonces")).toHaveCount(0);
   await expect(page.getByRole("link", { name: /Accéder à mes annonces/ })).toHaveCount(0);
 });
 

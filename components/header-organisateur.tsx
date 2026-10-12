@@ -4,8 +4,9 @@ import { aujourdHuiUTC } from "@/lib/annonces";
 import { prisma } from "@/lib/prisma";
 import { LienGarde } from "./garde-sortie";
 
-// Ligne « Accéder à mes annonces · N » sous le bandeau de l'espace organisateur.
-// Lien vers « Mes annonces » sur le profil et les formulaires (garde de sortie), simple texte sur « Mes annonces ».
+// Ligne sous le bandeau de l'espace organisateur.
+// Profil et formulaires : lien « Accéder à mes annonces » sans chiffre (garde de sortie), le nombre reste dans le libellé accessible.
+// « Mes annonces » : simple texte « À confirmer · N ».
 export default async function HeaderOrganisateur({
   page,
 }: {
@@ -32,7 +33,13 @@ export default async function HeaderOrganisateur({
     <>
       <span aria-hidden="true">🔔</span>
       <span aria-hidden="true">
-        <span className="font-bold">Accéder à mes annonces</span> · {nbAConfirmer}
+        {page === "mes-annonces" ? (
+          <>
+            <span className="font-bold">À confirmer</span> · {nbAConfirmer}
+          </>
+        ) : (
+          <span className="font-bold">Accéder à mes annonces</span>
+        )}
       </span>
       <span className="sr-only">{libelleAccessible}</span>
     </>
