@@ -1,6 +1,5 @@
 "use client";
 
-import { useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { CalendarDays, ChevronLeft, ChevronRight } from "lucide-react";
@@ -45,12 +44,15 @@ export default function SelecteurDate({
             <ChevronLeft size={20} />
           </span>
         )}
-        <Link
-          href={hrefDate(aujourdhui, vue)}
-          className="rounded-[14px] bg-[var(--harbor-voile)] px-3 py-2.5 text-[14px] font-semibold text-[var(--harbor-marine)] hover:bg-[var(--harbor-trait)] transition-colors duration-[120ms]"
-        >
-          Aujourd&apos;hui
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link
+            href={hrefDate(aujourdhui, vue)}
+            className="rounded-[14px] bg-[var(--harbor-voile)] px-3 py-2.5 text-[14px] font-semibold text-[var(--harbor-marine)] hover:bg-[var(--harbor-trait)] transition-colors duration-[120ms]"
+          >
+            Aujourd&apos;hui
+          </Link>
+          <BoutonCalendrier dateSelectionnee={dateSelectionnee} aujourdhui={aujourdhui} vue={vue} />
+        </div>
         <Link
           href={hrefDate(ajouterJours(dateSelectionnee, 7), vue)}
           aria-label="Semaine suivante"
@@ -117,40 +119,38 @@ export default function SelecteurDate({
   );
 }
 
-// Bouton calendrier (sélecteur de date natif), placé à côté de la bascule Liste/Carte.
-export function BoutonCalendrier({
+// Bouton calendrier : un vrai champ date transparent posé sur le bouton, pour que le toucher
+// ouvre le sélecteur natif (showPicker() sur un champ de 0×0 est ignoré par iOS).
+function BoutonCalendrier({
   dateSelectionnee,
   aujourdhui,
-  vue = "liste",
+  vue,
 }: {
   dateSelectionnee: string;
   aujourdhui: string;
-  vue?: Vue;
+  vue: Vue;
 }) {
   const router = useRouter();
-  const champRef = useRef<HTMLInputElement | null>(null);
 
   return (
-    <div className="relative shrink-0">
-      <button
-        type="button"
-        aria-label="Choisir une date"
-        onClick={() => champRef.current?.showPicker()}
-        className="flex h-full min-h-9 w-9 items-center justify-center rounded-[12px] border border-[var(--harbor-trait)] bg-white text-[var(--harbor-marine)] hover:bg-[var(--harbor-voile)] transition-colors duration-[120ms]"
-      >
-        <CalendarDays size={18} aria-hidden="true" />
-      </button>
+    <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] border border-[var(--harbor-trait)] bg-white text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)]">
+      <CalendarDays size={18} aria-hidden="true" />
       <input
-        ref={champRef}
         type="date"
-        aria-label="Date"
-        tabIndex={-1}
+        aria-label="Choisir une date"
         value={dateSelectionnee}
         min={aujourdhui}
+        onClick={(evenement) => {
+          try {
+            evenement.currentTarget.showPicker();
+          } catch {
+            // Le toucher natif sur le champ suffit.
+          }
+        }}
         onChange={(evenement) => {
           if (evenement.target.value) router.push(hrefDate(evenement.target.value, vue));
         }}
-        className="pointer-events-none absolute right-0 top-full h-0 w-0 opacity-0"
+        className="absolute -inset-px h-[calc(100%+2px)] w-[calc(100%+2px)] cursor-pointer rounded-[14px] opacity-0"
       />
     </div>
   );

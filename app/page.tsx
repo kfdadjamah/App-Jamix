@@ -7,7 +7,7 @@ import {
 } from "@/lib/annonces";
 import { fenetreSept } from "@/lib/semaine";
 import Bandeau from "@/components/bandeau";
-import SelecteurDate, { BoutonCalendrier } from "./selecteur-date";
+import SelecteurDate from "./selecteur-date";
 import ConsultationMusicien from "./consultation-musicien";
 import ToggleVue, { type Vue } from "./toggle-vue";
 import PiedDePage from "@/components/pied-de-page";
@@ -59,16 +59,7 @@ export default async function Home({
           </Link>
         )}
 
-        <div className="flex gap-2">
-          <div className="flex-1">
-            <ToggleVue vue={vueSelectionnee} dateSelectionnee={dateSelectionnee} />
-          </div>
-          <BoutonCalendrier
-            dateSelectionnee={dateSelectionnee}
-            aujourdhui={aujourdhui}
-            vue={vueSelectionnee}
-          />
-        </div>
+        <ToggleVue vue={vueSelectionnee} dateSelectionnee={dateSelectionnee} />
 
         <SelecteurDate
           dateSelectionnee={dateSelectionnee}

@@ -1286,11 +1286,11 @@ Dans `app/mes-annonces/carte-glissable.tsx`, deux liserés de 4 px épousant les
 
 ### Ce qu'on livre
 
-`BoutonCalendrier` (`app/selecteur-date.tsx`) quitte la ligne de la bascule Liste/Carte (qui reprend toute la largeur) et prend place à droite de « › » dans la ligne « ‹ Aujourd'hui › », zone tactile 40×40 au moins. Le `<input type="date">` caché de 0×0 est remplacé par un champ réellement posé sur le bouton (transparent, `absolute inset-0`, `min` = aujourd'hui), sans dépendre de `showPicker()` (au besoin avec `try/catch` en renfort). `onChange` inchangé.
+`BoutonCalendrier` (`app/selecteur-date.tsx`) quitte la ligne de la bascule Liste/Carte (qui reprend toute la largeur) et prend place juste à droite de « Aujourd'hui », avant « › », dans la ligne « ‹ Aujourd'hui [calendrier] › », zone tactile 40×40 au moins. Le `<input type="date">` caché de 0×0 est remplacé par un champ réellement posé sur le bouton (transparent, `absolute inset-0`, `min` = aujourd'hui), sans dépendre de `showPicker()` (au besoin avec `try/catch` en renfort). `onChange` inchangé.
 
 ### Critères d'acceptation
 
-- [ ] Le bouton est à droite de « › » ; la bascule occupe toute la largeur
+- [ ] Le bouton est entre « Aujourd'hui » et « › » ; la bascule occupe toute la largeur
 - [ ] Un vrai clic (émulation tactile 390 px) ouvre le sélecteur ; choisir une date navigue vers l'URL de cette date
 - [ ] Test Playwright mobile qui clique le bouton, `e2e/musicien.e2e.ts` adapté, DESIGN.md à jour
 - [ ] Vérification réelle sur iPhone et Android après déploiement

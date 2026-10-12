@@ -211,7 +211,7 @@ US-159. En tant qu'organisateur, je veux un liseré bleu arrondi sur le bord gau
 US-160. En tant qu'organisateur, je veux un liseré rouge arrondi sur le bord droit de chaque carte de « Mes annonces », afin de deviner que le glissé à gauche mène à « Supprimer ».
 US-161. En tant qu'utilisateur, je veux des pastilles de statut à fond plein (texte blanc) sur les cartes d'annonce, afin de lire le statut d'un coup d'œil.
 US-162. En tant que musicien, je veux que le bouton calendrier s'ouvre sur mon téléphone, afin de choisir une date lointaine.
-US-163. En tant que musicien, je veux le bouton calendrier à droite de « ‹ Aujourd'hui › », afin de le trouver avec la navigation par date.
+US-163. En tant que musicien, je veux le bouton calendrier à côté de « Aujourd'hui », entre les deux flèches « ‹ Aujourd'hui [calendrier] › », afin de le trouver avec la navigation par date.
 US-164. En tant qu'organisateur, je veux un formulaire de nouvelle annonce plus resserré, afin de voir plus de champs à l'écran.
 US-165. En tant qu'organisateur sur téléphone, je veux des champs d'heure de début et de fin côte à côte, sans débordement ni chevauchement, afin de les saisir sans erreur.
 US-166. En tant qu'utilisateur, je veux que chaque bouton change de couleur quand je l'appuie, afin d'avoir un retour immédiat de mon geste.
