@@ -1018,3 +1018,46 @@ La ligne sous le bandeau de l'espace organisateur (`components/header-organisate
 ## Bloquée par
 
 - Phase 37 (menu « ⋯ » sur les cartes d'annonces)
+
+---
+
+## Phase 39 : Design Harbor, accueil musicien (pilote)
+
+**User stories** : US-136, US-137, US-138, US-139, US-140, US-141
+
+### Ce qu'on livre
+
+L'accueil musicien passe en design Harbor (clair, marine/bleu), derrière le drapeau `NEXT_PUBLIC_THEME_HARBOR` (éteint en production). Le reste de l'application ne change pas. Branche `feat/design-test`.
+
+- `docs/DESIGN.md` : ajout d'une section « Harbor (pilote, accueil musicien) » (tokens, typo, composants, portée « accueil seul », mode sombre prévu plus tard). Le contenu ORYZO n'est pas réécrit.
+- `app/layout.tsx` : Plus Jakarta Sans, Geist, JetBrains Mono via `next/font/google` (Context7 d'abord) ; Inter conservée. `app/globals.css` : bloc `.theme-harbor` sans toucher `:root`.
+- `lib/annonce-constantes.ts` : table `COULEURS_STATUT_HARBOR` à côté de l'existante.
+- `app/page.tsx` : enrobage `.theme-harbor`, titre « Jammix » + accroche, bouton « Accéder à mes annonces » restylé, encart « aucune jam » en chips.
+- `components/bandeau.tsx` et `components/pied-de-page.tsx` : variante Harbor pour l'accueil (marine, sans logo, « Connexion organisateur » ou icône de profil).
+- `app/selecteur-date.tsx` : bandeau de 7 jours (flèches ± 7 jours, « Aujourd'hui », icône calendrier + `<input type="date">` caché pour les dates lointaines, navigation par l'URL, borne basse = aujourd'hui) ; `app/toggle-vue.tsx` segmenté.
+- `lib/annonces.ts` : `recupererJoursAvecJams(debutIso, finIso)` (annonces publiées, annulées comprises) appelée depuis `page.tsx` ; points sous les jours.
+- `app/carte-annonce.tsx`, `app/bouton-itineraire.tsx` : prop `theme` (`"oryzo"` par défaut) ; `app/bottom-sheet-bar.tsx` et `components/JamMap.tsx` (style positron, étiquettes marine, attribution corrigée) en variante Harbor. J-7, photos et statuts d'occurrence inchangés.
+
+### Critères d'acceptation
+
+- [ ] Drapeau actif : titre, accroche et bandeau de 7 jours visibles ; flèches, « Aujourd'hui » et clic sur un jour mettent à jour `?date=` ; la date minimale est aujourd'hui
+- [ ] L'icône calendrier ouvre le sélecteur natif et permet d'atteindre une date lointaine
+- [ ] Un point apparaît sous chaque jour ayant au moins une occurrence d'annonce publiée (annulée comprise), et seulement sous ceux-là
+- [ ] Carte d'annonce : nom du bar et statut sur une ligne, adresse/distance, horaires, styles et instruments sur une ligne avec ellipsis, « Sera confirmée le … » conservé, annulée grisée et barrée ; menu Itinéraire fonctionnel
+- [ ] Visiteur : seul « Connexion organisateur » à droite, sans logo ; organisateur connecté : icône de profil et bouton « Accéder à mes annonces » sous l'accroche
+- [ ] Vue Carte : fond clair OpenFreeMap positron, étiquettes lisibles, attribution OSM sans chevauchement
+- [ ] `/mes-annonces`, `/jams/[id]`, `/connexion` visuellement inchangées (captures avant/après)
+- [ ] Drapeau éteint : l'accueil actuel (champ date, bandeau cuivré) est servi sans changement
+- [ ] Tests Playwright : suite principale lancée drapeau actif (`e2e/musicien.e2e.ts` mis à jour, lecture seule) ; projet smoke séparé, drapeau éteint ; `pied-de-page.e2e.ts` et `contact.e2e.ts` verts ; captures mobile 400 px (liste et carte)
+- [ ] `npx tsc --noEmit`, `npm run lint`, `npx vitest run`, `npm run build` et toute la suite Playwright passent
+
+## Bloquée par
+
+- Phase 38 (bandeau « Accéder à mes annonces » et photos masquées)
+
+---
+
+## Suite prévue : migration Harbor (phases à détailler)
+
+Une phase par écran ou groupe d'écrans, ordre par risque croissant : page d'une jam `/jams/[id]`, connexion et inscription, profil, Mes annonces, formulaires d'annonce, pages légales et contact. Chaque écran migré est fusionné dans `main` derrière le drapeau. Phase finale de bascule : tokens Harbor dans `:root`, retrait de `.theme-harbor`, des variantes ORYZO, du drapeau et du projet smoke, réécriture complète de `DESIGN.md`. Aucune règle métier ne change pendant la migration.
+

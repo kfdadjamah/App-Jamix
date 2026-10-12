@@ -28,7 +28,7 @@ L'organisateur accède à son espace depuis la page d'accueil, retrouve toutes l
 
 Un même compte peut gérer jusqu'à 10 bars, ajoutés, modifiés ou supprimés depuis le profil. Chaque annonce porte sur un bar choisi par l'organisateur ; « Mes annonces » affiche le nom du bar sur chaque annonce et permet de filtrer par bar. Sur une nouvelle annonce, un bouton reprend en un clic l'horaire, les styles, et les instruments de la dernière annonce publiée du bar choisi ; il ne reste qu'à ajouter les dates.
 
-Chaque page affiche en haut un même bandeau à fond cuivré, la couleur des boutons pleins, distinct du corps sombre de la page, fixé pendant le défilement et souligné d'un filet doré. À gauche, un bouton « Jammix » avec une icône de petite maison ramène à l'accueil, à la date du jour, en vue liste, sans rechargement complet. À droite, on trouve l'icône de profil de l'organisateur connecté ou, sur l'accueil, le bouton « Connexion organisateur ». Sur l'accueil, l'organisateur connecté trouve un bouton « Accéder à mes annonces » qui l'y mène en un clic. Dans son espace, une seule ligne sous le bandeau, « 🔔 Accéder à mes annonces » en gras suivi du nombre de jams à confirmer, puis un trait, remplace le lien « Mes annonces » et l'alerte des relances. Le titre « Mes annonces » tient sur une ligne à côté de « Nouvelle », y compris sur mobile.
+Chaque page (sauf l'accueil en pilote Harbor, voir US-136 à US-141) affiche en haut un même bandeau à fond cuivré, la couleur des boutons pleins, distinct du corps sombre de la page, fixé pendant le défilement et souligné d'un filet doré. À gauche, un bouton « Jammix » avec une icône de petite maison ramène à l'accueil, à la date du jour, en vue liste, sans rechargement complet. À droite, on trouve l'icône de profil de l'organisateur connecté ou, sur l'accueil, le bouton « Connexion organisateur ». Sur l'accueil, l'organisateur connecté trouve un bouton « Accéder à mes annonces » qui l'y mène en un clic. Dans son espace, une seule ligne sous le bandeau, « 🔔 Accéder à mes annonces » en gras suivi du nombre de jams à confirmer, puis un trait, remplace le lien « Mes annonces » et l'alerte des relances. Le titre « Mes annonces » tient sur une ligne à côté de « Nouvelle », y compris sur mobile.
 
 Dans « Mes annonces », les boutons du filtre par bar passent à la ligne quand la largeur manque, sans défilement horizontal. Le bouton actif se distingue par un fond crème léger, sans soulignement. Un nom de bar trop long est tronqué par « … » et ne dépasse jamais la colonne.
 
@@ -184,6 +184,12 @@ US-132. En tant qu'organisateur, je veux qu'un clic sur « ⋯ » n'ouvre pas la
 US-133. En tant qu'organisateur, je veux que la ligne sous le bandeau s'intitule « 🔔 Accéder à mes annonces » (sans chiffre) sur mon profil et dans la saisie d'annonce, et « 🔔 À confirmer · N » sur « Mes annonces », afin de comprendre qu'un clic m'emmène à mes annonces et que le compteur n'apparaît qu'une fois sur place.
 US-134. En tant qu'organisateur sur « Mes annonces », je veux que cette ligne reste un simple texte non cliquable, afin de ne pas me renvoyer vers la page où je suis déjà.
 US-135. En tant qu'organisateur, je ne veux plus voir d'emplacements photo sur le formulaire ni sur la page d'une annonce, afin d'attendre la V2 qui n'en prévoira qu'un seul ; les photos déjà enregistrées restent visibles côté musicien.
+US-136. En tant que musicien, je veux voir les 7 jours à partir d'aujourd'hui dans un bandeau, avec le jour choisi mis en évidence, afin de choisir une date en un geste.
+US-137. En tant que musicien, je veux un point sous les jours qui ont au moins une jam (annulée comprise), afin de voir d'un coup d'œil où il se passe quelque chose.
+US-138. En tant que musicien, je veux naviguer de 7 jours en 7 jours, revenir à « Aujourd'hui » et ouvrir un calendrier pour une date lointaine, afin d'atteindre n'importe quelle date à venir.
+US-139. En tant que musicien, je veux le titre « Jammix » et l'accroche « Choisis une date. Vois où jouer ce soir. » en haut de l'accueil, afin de comprendre tout de suite à quoi sert la page.
+US-140. En tant que musicien, je veux des cartes d'annonce plus lisibles (nom du bar et statut sur une ligne, adresse et distance, horaires, styles et instruments, itinéraire) sur un fond clair avec une carte claire, afin de comparer rapidement les jams.
+US-141. En tant qu'organisateur connecté, je veux retrouver sur l'accueil mon icône de profil et le bouton « Accéder à mes annonces », afin de garder mes repères avec le nouveau design (pilote Harbor).
 
 ## Critères de succès
 
@@ -235,6 +241,7 @@ US-135. En tant qu'organisateur, je ne veux plus voir d'emplacements photo sur l
 - Dès 3 caractères saisis dans l'adresse d'un bar (inscription, ajout, modification), jusqu'à 5 suggestions s'affichent ; un clic remplit le champ avec l'adresse complète (« n° rue, code postal ville »).
 - Une adresse saisie librement, sans suggestion choisie, est acceptée comme avant ; si le service de suggestions est indisponible, le champ reste un champ libre sans message d'erreur.
 - Le bouton « ⋯ » est présent sur chaque carte de « Mes annonces » ; « Modifier » mène à la page d'édition en un clic depuis la liste ; après confirmation, les dates concernées affichent « annulée » dans la liste sans recharger manuellement ; sans confirmation, rien n'est annulé.
+- Pilote Harbor (drapeau `NEXT_PUBLIC_THEME_HARBOR` actif) : l'accueil affiche le titre, l'accroche et le bandeau de 7 jours ; un clic sur un jour met à jour `?date=` ; les jours avec jams ont un point ; `/mes-annonces` et `/jams/[id]` restent visuellement inchangées. Drapeau éteint : l'accueil actuel est servi sans changement.
 
 ## Hors périmètre
 
@@ -307,6 +314,7 @@ US-135. En tant qu'organisateur, je ne veux plus voir d'emplacements photo sur l
 - Suppression d'une annonce ou d'un brouillon ; autres actions dans le menu des cartes (dupliquer, confirmer une date) ; menu sur les cartes côté musicien.
 - Annulation d'une date unique d'une annonce ponctuelle distincte de « Toutes les dates » (une annonce ponctuelle = une fenêtre de confirmation simple).
 - Ajout, modification et retrait de photos d'annonce (reporté en V2, avec un seul emplacement).
+- Mode sombre Harbor, migration des autres écrans vers Harbor et activation du drapeau en production (phases suivantes).
 
 ## Décisions d'implémentation
 
@@ -415,6 +423,10 @@ US-135. En tant qu'organisateur, je ne veux plus voir d'emplacements photo sur l
 - « ← Retour » reste un bouton fantôme, avec une bordure de 2px, une graisse 500 et une couleur crème.
 - Le champ d'adresse d'un bar propose une liste déroulante après 3 caractères (5 suggestions au maximum), utilisable au clavier et fermée par Échap. La valeur envoyée est le texte du champ ; le géocodage serveur est inchangé (un échec laisse le bar absent de la carte).
 - Le bouton « ⋯ » des cartes de « Mes annonces » a une zone tactile d'au moins 44px et le libellé accessible « Actions de l'annonce » ; le menu a deux entrées au maximum. La fenêtre d'annulation propose « Annuler l'annonce » / « Retour » et affiche un message d'erreur dans la fenêtre si l'annulation échoue.
+- Pilote Harbor (Phase 39) : l'accueil musicien passe à un design clair (voir la section Harbor de DESIGN.md) derrière `NEXT_PUBLIC_THEME_HARBOR`, éteint en production. Les autres écrans gardent le design actuel. Les tokens Harbor vivent sous `.theme-harbor` ; `CarteAnnonce`, `BoutonItineraire` et les couleurs de statut reçoivent une variante (prop `theme`, `"oryzo"` par défaut) pour ne pas modifier `/mes-annonces` ni `/jams/[id]`.
+- Sur l'accueil Harbor, un seul bandeau d'entête marine : pas de logo « Jammix » (le grand titre le remplace), « Connexion organisateur » ou l'icône de profil à droite ; l'organisateur connecté trouve « Accéder à mes annonces » en bouton secondaire sous l'accroche.
+- Bandeau de 7 jours : borne basse = aujourd'hui, flèches ± 7 jours, bouton « Aujourd'hui », icône calendrier ouvrant un sélecteur de date natif pour les dates lointaines ; navigation par l'URL (`/?date=…&vue=…`). Un point marque tout jour ayant au moins une occurrence d'annonce publiée, annulée comprise.
+- Palette de statuts Harbor (liste et carte) : confirmée `#17807E`, programmée `#2B78BE`, en attente `#B7791F`, annulée `#6B7C8C` (grisée, nom barré).
 
 ## Notes complémentaires
 
@@ -459,3 +471,5 @@ Les suggestions d'adresse dépendent de l'API Adresse (data.gouv.fr). En cas d'i
 Le menu « ⋯ » réutilise les règles d'annulation existantes (statut « annulée » par occurrence, confirmation J-7 effacée) ; aucun email ni SMS. DESIGN.md devra consigner le menu et la fenêtre.
 
 Les photos d'annonce sont masquées en V1 sans suppression de code ni de données : le schéma (`photoUrl1/2`), l'affichage côté musicien et les composants de saisie restent en place pour la V2. Le bandeau devient « Accéder à mes annonces » (sans chiffre, nombre conservé dans le libellé accessible) hors de « Mes annonces », où il reste « À confirmer · N » ; DESIGN.md renomme la section correspondante.
+
+Le pilote Harbor crée un état transitoire : l'accueil est clair, le reste de l'application reste sombre. Il reste derrière un drapeau tant que la migration n'est pas terminée. La migration complète, puis la bascule (tokens Harbor dans `:root`, retrait d'ORYZO, réécriture de DESIGN.md), feront l'objet de phases dédiées, écran par écran. Le bandeau cuivré (US-68) ne s'applique plus à l'accueil Harbor ; il reste valable ailleurs jusqu'à migration.
