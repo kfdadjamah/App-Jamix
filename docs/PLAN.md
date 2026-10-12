@@ -1117,7 +1117,7 @@ Sur `/mon-profil`, rien n'est déplié d'office : « Mes bars », « Nom et pré
 - [x] Placeholders = libellés : Prénom, Nom, Nouvel email, Mot de passe actuel, Nouveau mot de passe, Confirmation, Nom du bar, Adresse du bar, Code postal, phrase de confirmation de suppression du compte
 - [x] Aucune migration destructive : `Organisateur.prenom` est nullable, `nom` est inchangé
 - [x] `npx tsc --noEmit`, `npm run lint`, `npx vitest run` et toute la suite Playwright verts ; `e2e/nom-complet.e2e.ts` devient `e2e/identite.e2e.ts`
-- [ ] `prisma db push` appliqué sur la base de production avant le déploiement
+- [x] `prisma db push` appliqué sur la base de production avant le déploiement (2026-10-12)
 
 ## Bloquée par
 
@@ -1164,7 +1164,7 @@ Sur `/mon-profil`, rien n'est déplié d'office : « Mes bars », « Nom et pré
 - [x] « Déconnexion » à droite du titre « Mon profil » ; plus de carré de photo vide ; lignes de bars resserrées
 - [x] Placeholders d'inscription = libellés (Nom du bar, Adresse du bar, Code postal)
 - [x] Tests : `lib/adresse.test.ts`, `lib/validation/inscription.test.ts`, `e2e/lisibilite-adresse.e2e.ts`
-- [ ] `prisma db push` (colonnes `Organisateur.prenom` et `Bar.codePostal`) appliqué sur la base de production avant le déploiement
+- [x] `prisma db push` (colonnes `Organisateur.prenom` et `Bar.codePostal`) appliqué sur la base de production avant le déploiement (2026-10-12)
 
 ## Bloquée par
 
