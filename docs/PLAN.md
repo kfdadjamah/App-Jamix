@@ -1003,17 +1003,17 @@ Un menu d'actions sur chaque carte de `/mes-annonces`, sans changement de schém
 
 ### Ce qu'on livre
 
-La ligne sous le bandeau de l'espace organisateur devient « 🔔 Accéder à mes annonces · N » (compteur conservé, `components/header-organisateur.tsx`), lien vers « Mes annonces » sauf sur cette page où elle reste un texte. Les deux emplacements photo d'annonce sont masqués : `afficherPhotos` passe à `false` sur la nouvelle annonce et le bloc des deux `PhotoAnnonce` disparaît de la page de modification. Aucun code de saisie, schéma ni action serveur n'est supprimé (prêts pour la V2, un seul emplacement). DESIGN.md renomme la section « Ligne « Accéder à mes annonces » ».
+La ligne sous le bandeau de l'espace organisateur (`components/header-organisateur.tsx`) devient « 🔔 Accéder à mes annonces », sans chiffre, lien vers « Mes annonces » sur le profil et les formulaires d'annonce ; le nombre de jams à confirmer reste dans le libellé accessible. Sur « Mes annonces », elle devient le texte non cliquable « 🔔 À confirmer · N » (icône et compteur conservés). Les deux emplacements photo d'annonce sont masqués : `afficherPhotos` passe à `false` sur la nouvelle annonce et le bloc des deux `PhotoAnnonce` disparaît de la page de modification. Aucun code de saisie, schéma ni action serveur n'est supprimé (prêts pour la V2, un seul emplacement). DESIGN.md renomme la section « Ligne « Accéder à mes annonces » ».
 
 ### Critères d'acceptation
 
-- [ ] Sur le profil, la saisie d'annonce et la modification, « 🔔 Accéder à mes annonces · N » est un lien vers `/mes-annonces` ; « À confirmer » n'apparaît plus
-- [ ] Sur `/mes-annonces`, la ligne est un texte non cliquable
-- [ ] Le libellé accessible garde le nombre de jams à confirmer
-- [ ] Le bandeau tient à 360px et 390px (DESIGN.md respecté)
-- [ ] Aucun champ photo sur `/mes-annonces/nouvelle` ni sur `/mes-annonces/[id]` (brouillon et publiée)
-- [ ] Les annonces existantes avec photos les affichent toujours côté musicien (liste et `/jams/[id]`) ; la reprise d'annonce ne casse pas
-- [ ] Tests Playwright (`e2e/phase-38.e2e.ts`) : lien et absence de « À confirmer » sur profil et formulaire, clic vers `/mes-annonces`, texte simple sur `/mes-annonces`, absence de champ photo ; `npm run lint`, `npm run build`, `npx vitest run` et toute la suite Playwright passent
+- [x] Sur le profil, la saisie d'annonce et la modification, « 🔔 Accéder à mes annonces » (sans chiffre) est un lien vers `/mes-annonces` ; « À confirmer » n'apparaît pas
+- [x] Sur `/mes-annonces`, la ligne « 🔔 À confirmer · N » est un texte non cliquable
+- [x] Le libellé accessible garde le nombre de jams à confirmer
+- [x] Le bandeau tient à 360px et 390px (DESIGN.md respecté)
+- [x] Aucun champ photo sur `/mes-annonces/nouvelle` ni sur `/mes-annonces/[id]` (brouillon et publiée)
+- [x] Les annonces existantes avec photos les affichent toujours côté musicien (liste et `/jams/[id]`) ; la reprise d'annonce ne casse pas
+- [x] Tests Playwright (`e2e/phase-38.e2e.ts`) : lien et absence de « À confirmer » sur profil et formulaire, clic vers `/mes-annonces`, texte simple sur `/mes-annonces`, absence de champ photo ; `npm run lint`, `npm run build`, `npx vitest run` et toute la suite Playwright passent
 
 ## Bloquée par
 

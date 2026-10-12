@@ -121,7 +121,7 @@ Collé en haut pendant le défilement (`position: sticky`), 56px de haut, fond B
 ### Ligne « Accéder à mes annonces » (Jammix)
 **Role:** Seule ligne sous le bandeau dans l'espace organisateur — nombre de jams à confirmer
 
-« 🔔 À CONFIRMER · N » en 12px uppercase Warm Cream, libellé en 700 (exception), nombre en 500, affichée même à 0. Trait 1px pointillé Cork Border sur toute la largeur de la colonne, 12px sous le texte. Même rendu partout ; lien vers « Mes annonces » (souligné au survol et au focus) sur le profil et les formulaires d'annonce, simple texte sur « Mes annonces ».
+12px uppercase Warm Cream, libellé en 700 (exception), nombre en 500. Trait 1px pointillé Cork Border sur toute la largeur de la colonne, 12px sous le texte. Sur le profil et les formulaires d'annonce : « 🔔 ACCÉDER À MES ANNONCES » sans chiffre, lien vers « Mes annonces » (souligné au survol et au focus) ; le nombre de jams à confirmer reste dans le libellé accessible. Sur « Mes annonces » : « 🔔 À CONFIRMER · N » en simple texte, affiché même à 0.
 
 ### Pied de page (Jammix)
 **Role:** Exception Jammix à « no footer chrome » — un même pied de page discret en bas de toutes les pages

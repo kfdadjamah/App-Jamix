@@ -181,7 +181,7 @@ US-129. En tant qu'organisateur, je veux que le menu d'un brouillon ne propose q
 US-130. En tant qu'organisateur, je veux que « Annuler » disparaisse du menu quand toutes les dates sont déjà annulées, afin de ne pas annuler deux fois.
 US-131. En tant qu'organisateur, je veux fermer le menu ou la fenêtre sans effet (clic à côté, Échap, « Retour »), afin de renoncer sans conséquence.
 US-132. En tant qu'organisateur, je veux qu'un clic sur « ⋯ » n'ouvre pas la page de l'annonce, afin de ne pas naviguer par erreur.
-US-133. En tant qu'organisateur, je veux que la ligne sous le bandeau s'intitule « 🔔 Accéder à mes annonces · N », afin de comprendre qu'un clic m'emmène à mes annonces et ne confirme rien.
+US-133. En tant qu'organisateur, je veux que la ligne sous le bandeau s'intitule « 🔔 Accéder à mes annonces » (sans chiffre) sur mon profil et dans la saisie d'annonce, et « 🔔 À confirmer · N » sur « Mes annonces », afin de comprendre qu'un clic m'emmène à mes annonces et que le compteur n'apparaît qu'une fois sur place.
 US-134. En tant qu'organisateur sur « Mes annonces », je veux que cette ligne reste un simple texte non cliquable, afin de ne pas me renvoyer vers la page où je suis déjà.
 US-135. En tant qu'organisateur, je ne veux plus voir d'emplacements photo sur le formulaire ni sur la page d'une annonce, afin d'attendre la V2 qui n'en prévoira qu'un seul ; les photos déjà enregistrées restent visibles côté musicien.
 
@@ -380,7 +380,7 @@ US-135. En tant qu'organisateur, je ne veux plus voir d'emplacements photo sur l
 - Rien ne change côté musicien : chaque annonce s'affiche avec le nom et l'adresse de son bar.
 - Sur l'accueil, un organisateur connecté voit un bouton plein « Accéder à mes annonces » (Brass Copper, texte Warm Cream, rayon 36px), sur toute la largeur de la colonne, entre le sous-titre et le champ « Date ». Il mène à « Mes annonces » et reste le seul bouton d'action plein de l'accueil ; l'option active du toggle Liste/Carte reste pleine. Un visiteur non connecté ne le voit pas.
 - Dans l'espace organisateur, la ligne sous le bandeau affiche une icône de cloche, le libellé « À CONFIRMER » en gras puis le nombre de jams en attente de confirmation de tous les bars du compte. Elle reste affichée à 0.
-- Sur le profil, la nouvelle annonce et la modification d'annonce, « Accéder à mes annonces » est un lien vers « Mes annonces » ; sur « Mes annonces », la ligne n'est pas cliquable.
+- Sur le profil, la nouvelle annonce et la modification d'annonce, « Accéder à mes annonces » (sans chiffre) est un lien vers « Mes annonces » ; sur « Mes annonces », la ligne « À confirmer · N » n'est pas cliquable.
 - La ligne est suivie d'un trait 1px pointillé Cork Border sur toute la largeur de la colonne. Elle remplace le lien « Mes annonces » et l'alerte « en attente » sous le bandeau.
 - Le titre « Mes annonces » est réduit pour tenir sur une ligne à côté du bouton « Nouvelle », qui ne change pas, y compris sur mobile (360px).
 - Les boutons du filtre par bar gardent leur forme de bouton fantôme (bordure Warm Cream, rayon 22.5px) et passent à la ligne quand la largeur de la colonne ne suffit pas, sans défilement horizontal. Le bouton actif (« Tous » ou un bar) a un fond Warm Cream léger transparent (environ 15 %), sans soulignement ; un seul bouton est actif à la fois. Un nom plus long que la colonne est tronqué par « … » sur une ligne, sans infobulle.
@@ -458,4 +458,4 @@ Les suggestions d'adresse dépendent de l'API Adresse (data.gouv.fr). En cas d'i
 
 Le menu « ⋯ » réutilise les règles d'annulation existantes (statut « annulée » par occurrence, confirmation J-7 effacée) ; aucun email ni SMS. DESIGN.md devra consigner le menu et la fenêtre.
 
-Les photos d'annonce sont masquées en V1 sans suppression de code ni de données : le schéma (`photoUrl1/2`), l'affichage côté musicien et les composants de saisie restent en place pour la V2. Le renommage du bandeau en « Accéder à mes annonces » conserve le compteur de jams à confirmer ; DESIGN.md renomme la section correspondante.
+Les photos d'annonce sont masquées en V1 sans suppression de code ni de données : le schéma (`photoUrl1/2`), l'affichage côté musicien et les composants de saisie restent en place pour la V2. Le bandeau devient « Accéder à mes annonces » (sans chiffre, nombre conservé dans le libellé accessible) hors de « Mes annonces », où il reste « À confirmer · N » ; DESIGN.md renomme la section correspondante.
