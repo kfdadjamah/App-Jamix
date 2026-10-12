@@ -41,7 +41,7 @@ export default function FormulaireEmail() {
   }
 
   return (
-    <form onSubmit={handleSubmit(surSoumission)} className="flex flex-col gap-6" noValidate>
+    <form onSubmit={handleSubmit(surSoumission)} className="flex flex-col gap-4" noValidate>
       <ChampFormulaire label="Nouvel email" erreur={errors.nouvelEmail?.message}>
         <input
           type="email"

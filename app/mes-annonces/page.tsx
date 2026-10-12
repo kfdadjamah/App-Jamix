@@ -35,7 +35,7 @@ export default async function PageMesAnnonces() {
   return (
     <>
       <Bandeau page="mes-annonces" />
-      <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-8 px-6 py-8">
+      <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-4 px-6 py-8">
         <HeaderOrganisateur page="mes-annonces" />
 
         <div className="flex items-center justify-between gap-3">
@@ -60,7 +60,7 @@ export default async function PageMesAnnonces() {
           (bars.length >= 2 ? (
             <FiltreAnnonces bars={bars} annonces={cartes} />
           ) : (
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-3">
               {cartes.map(({ id, carte }) => (
                 <Fragment key={id}>{carte}</Fragment>
               ))}

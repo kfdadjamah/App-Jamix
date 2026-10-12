@@ -66,7 +66,7 @@ export default function MesBars({ bars }: { bars: BarDuProfil[] }) {
           return (
             <li
               key={bar.id}
-              className="flex flex-col gap-6 border-t border-[var(--harbor-trait)] py-4 first:border-t-0 first:pt-0"
+              className="flex flex-col gap-4 border-t border-[var(--harbor-trait)] py-4 first:border-t-0 first:pt-0"
             >
               <div className="flex items-center gap-3">
                 {bar.photoUrl ? (
@@ -103,7 +103,7 @@ export default function MesBars({ bars }: { bars: BarDuProfil[] }) {
               </div>
 
               {deplie && (
-                <div className="flex flex-col gap-6">
+                <div className="flex flex-col gap-4">
                   <GestionPhotoBar barId={bar.id} photoUrl={bar.photoUrl} />
                   <div className="flex flex-col gap-2">
                     <FormulaireFicheBar
@@ -153,7 +153,7 @@ export default function MesBars({ bars }: { bars: BarDuProfil[] }) {
       )}
 
       {panneau === "ajout" ? (
-        <div className="flex flex-col gap-6 rounded-[12px] border border-[var(--harbor-trait)] p-6">
+        <div className="flex flex-col gap-4 rounded-[12px] border border-[var(--harbor-trait)] p-6">
           <div className="flex items-center justify-between gap-3">
             <h3 className="text-[18px] font-semibold leading-none text-[var(--harbor-marine)]">
               Nouveau bar

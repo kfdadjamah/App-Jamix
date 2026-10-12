@@ -54,7 +54,7 @@ export default function FormulaireFicheBar({
   }
 
   return (
-    <form onSubmit={handleSubmit(surSoumission)} className="flex flex-col gap-6" noValidate>
+    <form onSubmit={handleSubmit(surSoumission)} className="flex flex-col gap-4" noValidate>
       <ChampFormulaire label="Nom du bar" erreur={errors.nomBar?.message}>
         <input type="text" {...register("nomBar")} className="champ-input" />
       </ChampFormulaire>

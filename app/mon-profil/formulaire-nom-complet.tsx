@@ -43,7 +43,7 @@ export default function FormulaireNomComplet({ nomActuel }: { nomActuel: string 
   }
 
   return (
-    <form onSubmit={handleSubmit(surSoumission)} className="flex flex-col gap-6" noValidate>
+    <form onSubmit={handleSubmit(surSoumission)} className="flex flex-col gap-4" noValidate>
       <ChampFormulaire label="Nom et prénom" erreur={errors.nomComplet?.message}>
         <input
           type="text"

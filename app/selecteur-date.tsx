@@ -28,13 +28,10 @@ export default function SelecteurDate({
   const precedentPossible = debut > aujourdhui;
   const boutonFleche =
     "flex h-10 w-10 shrink-0 items-center justify-center rounded-[14px] border border-[var(--harbor-trait)] bg-white text-[var(--harbor-marine)] hover:bg-[var(--harbor-voile)] transition-colors duration-[120ms]";
-  const formatCourt = new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "short", timeZone: "UTC" });
-  const libelleSemaine = `${Number(debut.slice(8))}–${formatCourt.format(new Date(jours[6]))}`;
-  const semaineCourante = debut <= aujourdhui && aujourdhui <= jours[6];
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex items-center gap-2">
+      <div className="flex items-center justify-between gap-2">
         {precedentPossible ? (
           <Link
             href={hrefDate(ajouterJours(dateSelectionnee, -7), vue)}
@@ -48,10 +45,6 @@ export default function SelecteurDate({
             <ChevronLeft size={20} />
           </span>
         )}
-        <p className="min-w-0 flex-1 text-[14px] font-bold leading-tight text-[var(--harbor-marine)]">
-          {semaineCourante ? "Cette semaine · " : ""}
-          {libelleSemaine}
-        </p>
         <Link
           href={hrefDate(aujourdhui, vue)}
           className="rounded-[14px] bg-[var(--harbor-voile)] px-3 py-2.5 text-[14px] font-semibold text-[var(--harbor-marine)] hover:bg-[var(--harbor-trait)] transition-colors duration-[120ms]"
@@ -67,17 +60,17 @@ export default function SelecteurDate({
         </Link>
       </div>
 
-      <div className="grid grid-cols-7 gap-1.5">
+      <div className="grid grid-cols-7 gap-1">
         {jours.map((jour) => {
           const selectionne = jour === dateSelectionnee;
           const passe = jour < aujourdhui;
           const avecJam = joursAvecJams.includes(jour);
           const contenu = (
             <>
-              <span className="donnees text-[13px] font-semibold">
+              <span className="donnees text-[12px] font-medium opacity-70">
                 {ABREVIATIONS.format(new Date(jour)).replace(".", "")}
               </span>
-              <span className="donnees text-[20px] font-extrabold leading-none">{Number(jour.slice(8))}</span>
+              <span className="donnees text-[18px] font-bold leading-none">{Number(jour.slice(8))}</span>
               <span
                 aria-hidden="true"
                 data-point={avecJam ? "oui" : undefined}
@@ -91,10 +84,10 @@ export default function SelecteurDate({
               />
             </>
           );
-          const classes = `flex flex-col items-center gap-1 rounded-[16px] border py-2.5 transition-colors duration-[120ms] ${
+          const classes = `flex flex-col items-center gap-1 rounded-[14px] py-2 transition-colors duration-[120ms] ${
             selectionne
-              ? "border-[var(--harbor-bleu)] bg-[var(--harbor-bleu)] text-white"
-              : "border-[var(--harbor-trait)] bg-white text-[var(--harbor-marine)] hover:bg-[var(--harbor-voile)]"
+              ? "bg-[var(--harbor-bleu)] text-white"
+              : "text-[var(--harbor-marine)] hover:bg-[var(--harbor-voile)]"
           }`;
           const libelle = new Intl.DateTimeFormat("fr-FR", {
             weekday: "long",

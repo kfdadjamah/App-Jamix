@@ -25,7 +25,8 @@ async function allerAUneDateAvecJams(page: Page): Promise<boolean> {
 test("l'accueil affiche le logo, la bascule, la semaine et le bandeau de 7 jours", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1, name: "Jammix" })).toBeVisible();
-  await expect(page.getByText(/Cette semaine ·/)).toBeVisible();
+  await expect(page.getByText("Les Jams à Lyon, ce soir")).toBeVisible();
+  await expect(page.getByText(/Cette semaine ·/)).toHaveCount(0);
   await expect(page.getByRole("button", { name: "Liste" })).toBeVisible();
   await expect(page.getByRole("link", { name: "Aujourd'hui" })).toBeVisible();
   await expect(page.getByRole("link", { name: "Semaine suivante" })).toBeVisible();

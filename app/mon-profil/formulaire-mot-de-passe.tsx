@@ -42,7 +42,7 @@ export default function FormulaireMotDePasse() {
   }
 
   return (
-    <form onSubmit={handleSubmit(surSoumission)} className="flex flex-col gap-6" noValidate>
+    <form onSubmit={handleSubmit(surSoumission)} className="flex flex-col gap-4" noValidate>
       <ChampFormulaire label="Mot de passe actuel" erreur={errors.motDePasseActuel?.message}>
         <input
           type="password"

@@ -43,7 +43,7 @@ export default function SuppressionCompte() {
         définitivement. Cette action est irréversible.
       </p>
 
-      <form onSubmit={handleSubmit(surSoumission)} className="flex flex-col gap-6" noValidate>
+      <form onSubmit={handleSubmit(surSoumission)} className="flex flex-col gap-4" noValidate>
         <ChampFormulaire label="Mot de passe actuel" erreur={errors.motDePasseActuel?.message}>
           <input
             type="password"

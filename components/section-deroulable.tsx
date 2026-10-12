@@ -23,7 +23,7 @@ export default function SectionDeroulable({
   return (
     <section className="flex flex-col gap-6">
       <div className="flex flex-col gap-1">
-        <h2 className="text-[24px] font-semibold leading-[1.09] text-[var(--harbor-marine)]">
+        <h2 className="text-[18px] font-bold leading-[1.2] text-[var(--harbor-marine)]">
           <button
             type="button"
             onClick={() => setOuverte(!ouverte)}

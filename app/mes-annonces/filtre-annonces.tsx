@@ -18,7 +18,7 @@ export default function FiltreAnnonces({
   const barChoisi = bars.find((bar) => bar.id === barId);
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-3">
       <div className="flex flex-wrap gap-2">
         {options.map((option) => {
           const actif = option.id === barId;
