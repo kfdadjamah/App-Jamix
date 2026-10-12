@@ -33,7 +33,7 @@ test.describe("titres uniformes à 390px", () => {
     "/cgu", "/mentions-legales",
   ]) {
     test(`h1 de ${chemin}`, async ({ page }) =>
-      verifierTitre(page, chemin, chemin === "/" ? "22px" : "24px")
+      verifierTitre(page, chemin, chemin === "/" ? "50.7px" : "24px")
     );
   }
   test("h1 de /mes-annonces et /mon-profil", async ({ page }) => {

@@ -35,14 +35,14 @@ export default function FormulaireConnexion({ reinitialise }: { reinitialise?: s
   }
 
   return (
-    <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-8 px-6 py-8">
+    <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-5 px-6 py-6">
       <BoutonRetour href="/" />
       <div>
         <h1 className="titre-page">
           Connexion
         </h1>
-        <p className="mt-3 text-[18px] leading-tight text-[var(--harbor-marine-2)]">
-          Accédez à l&apos;espace de gestion de votre bar.
+        <p className="mt-2 text-[18px] leading-tight text-[var(--harbor-marine-2)]">
+          Accédez à l&apos;espace de gestion de vos jams.
         </p>
       </div>
 
@@ -52,7 +52,7 @@ export default function FormulaireConnexion({ reinitialise }: { reinitialise?: s
         </p>
       )}
 
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6" noValidate>
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
         <label className="flex flex-col gap-2">
           <span className="text-[13px] font-bold text-[var(--harbor-marine)]">
             Email
@@ -89,7 +89,7 @@ export default function FormulaireConnexion({ reinitialise }: { reinitialise?: s
 
         <a
           href="/mot-de-passe-oublie"
-          className="-mt-3 self-start text-[13px] font-bold text-[var(--harbor-marine)] underline"
+          className="-mt-2 self-start text-[13px] font-bold text-[var(--harbor-marine)] underline"
         >
           Mot de passe oublié ?
         </a>
@@ -103,7 +103,7 @@ export default function FormulaireConnexion({ reinitialise }: { reinitialise?: s
         <button
           type="submit"
           disabled={enCours}
-          className="mt-2 rounded-[12px] bg-[var(--harbor-bleu)] px-6 py-3 text-[14px] font-bold text-white transition-colors duration-[120ms] hover:bg-[var(--harbor-marine)] disabled:opacity-60"
+          className="mt-1 rounded-[12px] bg-[var(--harbor-bleu)] px-6 py-3 text-[14px] font-bold text-white transition-colors duration-[120ms] hover:bg-[var(--harbor-marine)] disabled:opacity-60"
         >
           {enCours ? "Connexion…" : "Se connecter"}
         </button>

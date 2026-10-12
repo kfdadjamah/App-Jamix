@@ -48,19 +48,7 @@ export default async function Home({
   return (
     <div className="flex flex-1 flex-col">
       <Bandeau page="accueil" />
-      <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-5 px-6 py-6">
-        <div className="flex flex-col gap-2">
-          <p
-            aria-hidden="true"
-            className="font-[family-name:var(--font-jakarta)] text-[clamp(44px,13vw,56px)] font-extrabold leading-[0.95] tracking-[-0.045em] text-[var(--harbor-marine)]"
-          >
-            Jam<span className="text-[var(--harbor-bleu)]">mix</span>
-          </p>
-          <p className="text-[18px] font-semibold leading-tight tracking-[-0.02em] text-[var(--harbor-marine-2)]">
-            Les Jams à Lyon, ce soir
-          </p>
-        </div>
-
+      <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-5 px-6 pb-6 pt-5">
         {session?.user?.id && (
           <Link
             href="/mes-annonces"
