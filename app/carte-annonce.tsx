@@ -29,7 +29,7 @@ export default function CarteAnnonce({
 
   const { annonce } = occurrence;
   const annulee = statut === "ANNULEE";
-  const nomClasses = `text-[22px] font-extrabold leading-[1.15] tracking-[-0.03em] text-[var(--harbor-marine)] ${
+  const nomClasses = `min-w-0 break-words font-[family-name:var(--font-jakarta)] text-[20px] font-extrabold leading-[1.2] tracking-[-0.025em] text-[var(--harbor-marine)] ${
     annulee ? "line-through" : ""
   }`;
   const styles = annonce.styles.includes(TOUS_LES_STYLES)
@@ -41,13 +41,13 @@ export default function CarteAnnonce({
   ];
   const ligneChips = (libelle: string, valeurs: string[]) =>
     valeurs.length > 0 && (
-      <div className="flex flex-col gap-1">
-        <span className="text-[12px] font-semibold text-[var(--harbor-marine-3)]">{libelle}</span>
+      <div className="flex flex-wrap items-center gap-1.5">
+        <span className="shrink-0 text-[12px] font-semibold text-[var(--harbor-marine-3)]">{libelle}</span>
         <ul className="flex flex-wrap gap-1.5">
           {valeurs.map((valeur) => (
             <li
               key={valeur}
-              className="rounded-full border border-[var(--harbor-trait)] px-2.5 py-0.5 text-[12px] font-semibold text-[var(--harbor-marine-2)]"
+              className="rounded-full border border-[var(--harbor-trait)] px-2.5 py-[3px] text-[12px] font-semibold text-[var(--harbor-marine-2)]"
             >
               {valeur}
             </li>
@@ -59,43 +59,45 @@ export default function CarteAnnonce({
 
   return (
     <div
-      className={`relative flex flex-col gap-1.5 rounded-[20px] border border-[var(--harbor-trait)] bg-white p-4 shadow-[var(--harbor-ombre-carte)] ${
+      className={`relative flex flex-col gap-1.5 rounded-[16px] border border-[var(--harbor-trait)] bg-white p-4 shadow-[0_4px_24px_rgba(11,54,88,.08)] ${
         annulee ? "opacity-60" : ""
       }`}
     >
-      <span
-        className="self-start rounded-[8px] px-2.5 py-1 text-[12px] font-bold"
-        style={{
-          color: couleurStatut,
-          backgroundColor: `color-mix(in srgb, ${couleurStatut} 12%, white)`,
-        }}
-      >
-        {LIBELLES_STATUT_OCCURRENCE[statut]}
-      </span>
-      {mode === "liste" ? (
-        <Link
-          href={`/jams/${occurrence.id}`}
-          className={`${nomClasses} after:absolute after:inset-0 after:rounded-[20px] after:content-['']`}
+      <div className="flex items-start justify-between gap-3">
+        {mode === "liste" ? (
+          <Link
+            href={`/jams/${occurrence.id}`}
+            className={`${nomClasses} after:absolute after:inset-0 after:rounded-[16px] after:content-['']`}
+          >
+            {annonce.bar.nom}
+          </Link>
+        ) : (
+          <span className={nomClasses}>{annonce.bar.nom}</span>
+        )}
+        <span
+          className="mt-0.5 max-w-[42%] shrink-0 rounded-[6px] px-2 py-[3px] text-center text-[12px] font-semibold leading-[1.25]"
+          style={{
+            color: couleurStatut,
+            backgroundColor: `color-mix(in srgb, ${couleurStatut} 12%, white)`,
+          }}
         >
-          {annonce.bar.nom}
-        </Link>
-      ) : (
-        <span className={nomClasses}>{annonce.bar.nom}</span>
-      )}
-      <div className="flex items-baseline justify-between gap-3 text-[13px] text-[var(--harbor-marine-2)]">
+          {LIBELLES_STATUT_OCCURRENCE[statut]}
+        </span>
+      </div>
+      <div className="donnees-carte flex items-baseline justify-between gap-3 text-[13px] text-[var(--harbor-marine-2)]">
         <span>{annonce.bar.adresse}</span>
         {distanceKm !== null && (
-          <span className="donnees shrink-0 font-bold text-[var(--harbor-marine)]">
+          <span className="shrink-0 font-semibold text-[var(--harbor-marine)]">
             {formaterDistance(distanceKm)}
           </span>
         )}
       </div>
-      <p className="donnees text-[14px] font-bold text-[var(--harbor-marine)]">
+      <p className="donnees-carte text-[13px] font-semibold text-[var(--harbor-marine)]">
         {occurrence.heureDebut}
         {occurrence.heureFin ? ` → ${occurrence.heureFin}` : ""}
       </p>
       {afficherEcheance && (
-        <span className="text-[12px] text-[var(--harbor-marine-2)]">
+        <span className="donnees-carte text-[12px] text-[var(--harbor-marine-2)]">
           Sera confirmée le {formaterDateCourte(new Date(occurrence.confirmationJ7!))}
         </span>
       )}

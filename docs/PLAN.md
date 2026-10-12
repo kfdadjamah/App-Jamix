@@ -1066,3 +1066,31 @@ L'accueil musicien passe en design Harbor (clair, marine/bleu), derrière le dra
 - Retrait de `lib/theme.ts`, de la prop `theme`, du drapeau `NEXT_PUBLIC_THEME_HARBOR`, du projet Playwright smoke ; `COULEURS_STATUT_OCCURRENCE` reprend la palette Harbor.
 - `docs/DESIGN.md` réécrit (Harbor seul).
 - Critères : `tsc`, `lint`, `vitest`, `build` et toute la suite Playwright verts ; captures mobile 400 px de chaque page relues ; mode sombre hors périmètre.
+
+---
+
+## Phase 41 : Carte d'annonce compacte (polices du preview)
+
+**User stories** : US-142
+
+### Ce qu'on livre
+
+La carte d'annonce de l'accueil (`app/carte-annonce.tsx`, modes `liste` et `fiche`) prend moins de place verticalement et reprend les polices et tailles du preview Harbor. Aucune règle métier ne change.
+
+- **Visuel validé d'abord** : maquette avant/après de 3 cartes (confirmée, en attente avec échéance, annulée avec nom long et 6 styles), aucun changement dans l'appli avant accord.
+- `app/carte-annonce.tsx` : ligne 1 `flex items-start justify-between gap-3` (nom du bar, `after:absolute` conservé pour rendre toute la carte cliquable ; statut à droite, `max-w-[42%]`, retour à la ligne autorisé car « En attente de confirmation » est long) ; `ligneChips` réécrit en `flex flex-wrap items-center gap-1.5` avec libellé `shrink-0` à gauche et pastilles à droite ; rayon 16, ombre menu.
+- Tailles : nom Plus Jakarta Sans 800 20 px (−0,025 em) ; statut 600 12 px, 3×8, rayon 6 ; adresse/distance Geist 13 px `tabular-nums` ; horaires Geist 600 13 px ; pastilles 600 12 px, 3×10.
+- `app/layout.tsx` : Plus Jakarta Sans et Geist via `next/font/google` (Context7 d'abord), variables `--font-jakarta` et `--font-geist` ; `app/globals.css` : `.donnees` pour la carte. Figtree reste la police du reste de l'application.
+- `docs/DESIGN.md` : section Typographie (exception de la carte) et composant « Carte d'annonce » mis à jour.
+
+### Critères d'acceptation
+
+- [ ] Nom du bar et statut sur une ligne ; « Styles » + pastilles et « Instruments » + pastilles chacun sur une ligne, retour à la ligne des pastilles si trop nombreuses
+- [ ] Bar au nom long et 6 styles : aucun débordement horizontal à 390 px (liste et fiche carte)
+- [ ] Toute la carte reste cliquable en mode liste ; menu Itinéraire fonctionnel ; annulée à 60 % d'opacité, nom barré ; « Sera confirmée le … » conservé ; libellés de statut inchangés
+- [ ] Polices Plus Jakarta Sans et Geist chargées sur la carte uniquement (Figtree ailleurs)
+- [ ] `npx tsc --noEmit`, `npm run lint`, `npx playwright test e2e/musicien.e2e.ts e2e/lisibilite-adresse.e2e.ts --workers=1` verts (sélecteurs sur nom, statut, « Styles », « Instruments » vérifiés) ; captures Playwright mobile 390 px en liste et en fiche carte
+
+## Bloquée par
+
+- Phase 40 (bascule Harbor sur toute l'application)

@@ -190,6 +190,7 @@ US-138. En tant que musicien, je veux naviguer de 7 jours en 7 jours, revenir à
 US-139. En tant que musicien, je veux le titre « Jammix » et l'accroche « Choisis une date. Vois où jouer ce soir. » en haut de l'accueil, afin de comprendre tout de suite à quoi sert la page.
 US-140. En tant que musicien, je veux des cartes d'annonce plus lisibles (nom du bar et statut sur une ligne, adresse et distance, horaires, styles et instruments, itinéraire) sur un fond clair avec une carte claire, afin de comparer rapidement les jams.
 US-141. En tant qu'organisateur connecté, je veux retrouver sur l'accueil mon icône de profil et le bouton « Accéder à mes annonces », afin de garder mes repères avec le nouveau design (pilote Harbor).
+US-142. En tant que musicien, je veux des cartes d'annonce plus compactes (nom du bar et statut sur une même ligne, « Styles » et « Instruments » chacun sur une ligne avec leurs pastilles), afin de voir plus de jams à l'écran sans défiler.
 
 ## Critères de succès
 
@@ -241,6 +242,7 @@ US-141. En tant qu'organisateur connecté, je veux retrouver sur l'accueil mon i
 - Dès 3 caractères saisis dans l'adresse d'un bar (inscription, ajout, modification), jusqu'à 5 suggestions s'affichent ; un clic remplit le champ avec l'adresse complète (« n° rue, code postal ville »).
 - Une adresse saisie librement, sans suggestion choisie, est acceptée comme avant ; si le service de suggestions est indisponible, le champ reste un champ libre sans message d'erreur.
 - Le bouton « ⋯ » est présent sur chaque carte de « Mes annonces » ; « Modifier » mène à la page d'édition en un clic depuis la liste ; après confirmation, les dates concernées affichent « annulée » dans la liste sans recharger manuellement ; sans confirmation, rien n'est annulé.
+- Carte d'annonce compacte : le nom du bar et le statut tiennent sur une ligne ; « Styles » et « Instruments » suivis de leurs pastilles sur une même ligne (retour à la ligne si trop nombreuses) ; un nom de bar long ou 6 styles ne font pas déborder la carte à 390 px ; statuts inchangés.
 - Design Harbor : l'accueil affiche le titre, l'accroche et le bandeau de 7 jours ; un clic sur un jour met à jour `?date=` ; les jours avec jams ont un point ; toutes les autres pages (jam, connexion, espace organisateur, pages légales) adoptent le même design clair.
 
 ## Hors périmètre
@@ -426,6 +428,7 @@ US-141. En tant qu'organisateur connecté, je veux retrouver sur l'accueil mon i
 - Design Harbor (Phases 39 et 40) : toute l'application passe à un design clair (voir DESIGN.md), sans drapeau : tokens `--harbor-*` dans `:root`, ORYZO retiré, e-mails compris. Aucune règle métier ne change.
 - Sur l'accueil Harbor, un seul bandeau d'entête marine : pas de logo « Jammix » (le grand titre le remplace), « Connexion organisateur » ou l'icône de profil à droite ; l'organisateur connecté trouve « Accéder à mes annonces » en bouton secondaire sous l'accroche.
 - Bandeau de 7 jours : borne basse = aujourd'hui, flèches ± 7 jours, bouton « Aujourd'hui », icône calendrier ouvrant un sélecteur de date natif pour les dates lointaines ; navigation par l'URL (`/?date=…&vue=…`). Un point marque tout jour ayant au moins une occurrence d'annonce publiée, annulée comprise.
+- Carte d'annonce (Phase 41) : polices et tailles du preview Harbor limitées à la carte (Plus Jakarta Sans pour le nom du bar, Geist pour adresse, distance et horaires), Figtree conservée partout ailleurs ; rayon 16, padding 16. Aucune règle métier ne change (statuts d'occurrence, J-7).
 - Palette de statuts Harbor (liste et carte) : confirmée `#17807E`, programmée `#2B78BE`, en attente `#B7791F`, annulée `#6B7C8C` (grisée, nom barré).
 
 ## Notes complémentaires

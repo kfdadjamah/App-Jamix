@@ -45,6 +45,12 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
+/* Carte d'annonce : Geist pour adresse, distance, horaires (voir DESIGN.md). */
+.donnees-carte {
+  font-family: var(--font-geist), ui-sans-serif, sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+
 .kicker {
   font-family: var(--font-figtree), ui-sans-serif, sans-serif;
   font-size: 12px;

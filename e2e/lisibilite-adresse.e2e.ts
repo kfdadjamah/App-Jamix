@@ -9,7 +9,7 @@ async function mockerAdresses(page: Page, suggestions: string[] = [ADRESSE]) {
   );
 }
 
-// L'accueil Harbor (Phase 39, drapeau allumé) a un grand titre de 40 px ; les autres pages restent à 24 px.
+// L'accueil Harbor (Phase 39, drapeau allumé) a un titre compact de 22 px ; les autres pages restent à 24 px.
 async function verifierTitre(page: Page, chemin: string, taille = "24px") {
   await page.goto(chemin);
   const h1 = page.locator("h1").first();
@@ -33,7 +33,7 @@ test.describe("titres uniformes à 390px", () => {
     "/cgu", "/mentions-legales",
   ]) {
     test(`h1 de ${chemin}`, async ({ page }) =>
-      verifierTitre(page, chemin, chemin === "/" ? "40px" : "24px")
+      verifierTitre(page, chemin, chemin === "/" ? "22px" : "24px")
     );
   }
   test("h1 de /mes-annonces et /mon-profil", async ({ page }) => {

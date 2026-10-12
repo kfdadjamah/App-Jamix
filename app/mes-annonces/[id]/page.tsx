@@ -59,44 +59,51 @@ export default async function PageEditionAnnonce({
 
         {estPubliee && (
           <div className="flex flex-col gap-4">
-            {occurrencesTriees.map((occurrence) => {
-              const statut = statutAffiche(occurrence);
-              const afficherEcheance = statut === "PROGRAMMEE" || statut === "EN_ATTENTE_CONFIRMATION";
-              const relance = statut === "EN_ATTENTE_CONFIRMATION" ? messageRelance(occurrence) : null;
-              return (
-                <div
-                  key={occurrence.id}
-                  className="flex flex-col gap-2 rounded-[12px] border border-[var(--harbor-trait)] p-4"
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-[15px] text-[var(--harbor-marine)]">
-                      {formaterDateCourte(new Date(occurrence.date))}
-                    </span>
-                    <span className="text-[12px] font-semibold text-[var(--harbor-marine-2)]">
-                      {LIBELLES_STATUT_OCCURRENCE[statut]}
-                    </span>
-                  </div>
-                  {statut === "PROGRAMMEE" && occurrence.confirmationJ7 && (
-                    <span className="text-[12px] text-[var(--harbor-marine-2)]">
-                      Sera confirmée le {formaterDateCourte(new Date(occurrence.confirmationJ7))}
-                    </span>
-                  )}
-                  {relance && (
-                    <span className="text-[13px] font-semibold text-[var(--harbor-erreur)]">
-                      {relance}
-                    </span>
-                  )}
-                  <div className="flex gap-3">
-                    {afficherEcheance && (
-                      <ConfirmerOccurrence occurrenceId={occurrence.id} />
+            <ul className="flex flex-col divide-y divide-[var(--harbor-trait)] border-y border-[var(--harbor-trait)]">
+              {occurrencesTriees.map((occurrence) => {
+                const statut = statutAffiche(occurrence);
+                const afficherEcheance = statut === "PROGRAMMEE" || statut === "EN_ATTENTE_CONFIRMATION";
+                const relance = statut === "EN_ATTENTE_CONFIRMATION" ? messageRelance(occurrence) : null;
+                const info =
+                  relance ??
+                  (statut === "PROGRAMMEE" && occurrence.confirmationJ7
+                    ? `Sera confirmée le ${formaterDateCourte(new Date(occurrence.confirmationJ7))}`
+                    : null);
+                return (
+                  <li key={occurrence.id} className="flex flex-col gap-0.5 py-2.5">
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="flex flex-col">
+                        <span className="text-[15px] text-[var(--harbor-marine)]">
+                          {formaterDateCourte(new Date(occurrence.date))}
+                        </span>
+                        <span className="text-[12px] font-semibold text-[var(--harbor-marine-2)]">
+                          {LIBELLES_STATUT_OCCURRENCE[statut]}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        {afficherEcheance && (
+                          <ConfirmerOccurrence occurrenceId={occurrence.id} />
+                        )}
+                        {statut !== "ANNULEE" && (
+                          <AnnulerOccurrence occurrenceId={occurrence.id} />
+                        )}
+                      </div>
+                    </div>
+                    {info && (
+                      <span
+                        className={
+                          relance
+                            ? "text-[13px] font-semibold text-[var(--harbor-erreur)]"
+                            : "text-[12px] text-[var(--harbor-marine-2)]"
+                        }
+                      >
+                        {info}
+                      </span>
                     )}
-                    {statut !== "ANNULEE" && (
-                      <AnnulerOccurrence occurrenceId={occurrence.id} />
-                    )}
-                  </div>
-                </div>
-              );
-            })}
+                  </li>
+                );
+              })}
+            </ul>
             {annonce.estRecurrente && occurrencesNonAnnulees.length > 0 && (
               <AnnulerAnnonce annonceId={annonce.id} />
             )}
