@@ -34,16 +34,17 @@ export default async function Home({
   const { date, vue } = await searchParams;
   const dateSelectionnee = date ?? aujourdHuiIso();
   const vueSelectionnee: Vue = vue === "carte" ? "carte" : "liste";
-  const session = await sessionCourante();
-  const occurrences = await recupererAnnoncesPubliees(dateSelectionnee);
+  const aujourdhui = aujourdHuiIso();
+  const fenetre = fenetreSept(dateSelectionnee, aujourdhui);
+  const [session, occurrences, joursAvecJams] = await Promise.all([
+    sessionCourante(),
+    recupererAnnoncesPubliees(dateSelectionnee),
+    recupererJoursAvecJams(fenetre.debut, fenetre.fin),
+  ]);
   const prochainesDates =
     occurrences.length === 0
       ? await recupererProchainesDatesDisponibles(dateSelectionnee, NOMBRE_DATES_SUGGEREES)
       : [];
-
-  const aujourdhui = aujourdHuiIso();
-  const fenetre = fenetreSept(dateSelectionnee, aujourdhui);
-  const joursAvecJams = await recupererJoursAvecJams(fenetre.debut, fenetre.fin);
 
   return (
     <div className="flex flex-1 flex-col">
