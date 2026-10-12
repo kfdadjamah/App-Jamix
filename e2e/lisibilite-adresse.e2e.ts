@@ -2,6 +2,8 @@ import { expect, test, type Page } from "@playwright/test";
 import { seConnecter } from "./connexion";
 
 const ADRESSE = "12 Rue de la République 69001 Lyon";
+// Un choix de suggestion met l'adresse sans code postal dans le champ, et le code postal dans le sien.
+const ADRESSE_SANS_CP = "12 Rue de la République, Lyon";
 
 async function mockerAdresses(page: Page, suggestions: string[] = [ADRESSE]) {
   await page.route("**/api/adresses*", (route) =>
@@ -59,7 +61,8 @@ test.describe("suggestions d'adresse", () => {
     const champ = page.getByRole("combobox");
     await champ.fill("12 rue");
     await page.getByRole("option", { name: ADRESSE }).click();
-    await expect(champ).toHaveValue(ADRESSE);
+    await expect(champ).toHaveValue(ADRESSE_SANS_CP);
+    await expect(page.getByRole("textbox", { name: "Code postal" })).toHaveValue("69001");
   });
 
   test("inscription : saisie libre et API en panne, aucune erreur", async ({ page }) => {
@@ -82,7 +85,8 @@ test.describe("suggestions d'adresse", () => {
     await champ.fill("12 rue ");
     await champ.press("ArrowDown");
     await champ.press("Enter");
-    await expect(champ).toHaveValue(ADRESSE);
+    await expect(champ).toHaveValue(ADRESSE_SANS_CP);
+    await expect(page.getByRole("textbox", { name: "Code postal" })).toHaveValue("69001");
   });
 
   test("moins de 3 caractères : pas de suggestion", async ({ page }) => {
@@ -100,7 +104,8 @@ test.describe("suggestions d'adresse", () => {
     const champ = page.getByRole("combobox");
     await champ.fill("12 rue");
     await page.getByRole("option", { name: ADRESSE }).click();
-    await expect(champ).toHaveValue(ADRESSE);
+    await expect(champ).toHaveValue(ADRESSE_SANS_CP);
+    await expect(page.getByRole("textbox", { name: "Code postal" })).toHaveValue("69001");
   });
 
   test("ajout d'un bar", async ({ page }) => {
@@ -111,6 +116,7 @@ test.describe("suggestions d'adresse", () => {
     const champ = page.getByRole("combobox");
     await champ.fill("12 rue");
     await page.getByRole("option", { name: ADRESSE }).click();
-    await expect(champ).toHaveValue(ADRESSE);
+    await expect(champ).toHaveValue(ADRESSE_SANS_CP);
+    await expect(page.getByRole("textbox", { name: "Code postal" })).toHaveValue("69001");
   });
 });

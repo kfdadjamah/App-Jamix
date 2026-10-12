@@ -23,7 +23,7 @@ export default function FormulaireAjoutBar({
     formState: { errors, isSubmitting },
   } = useForm<ChampsFicheBar>({
     resolver: zodResolver(schemaFicheBar),
-    defaultValues: { nomBar: "", adresseBar: "" },
+    defaultValues: { nomBar: "", adresseBar: "", codePostalBar: "" },
   });
 
   async function surSoumission(donnees: ChampsFicheBar, evenement?: BaseSyntheticEvent) {
@@ -32,6 +32,7 @@ export default function FormulaireAjoutBar({
     const formData = new FormData();
     formData.set("nomBar", donnees.nomBar);
     formData.set("adresseBar", donnees.adresseBar);
+    formData.set("codePostalBar", donnees.codePostalBar);
     const photo = new FormData(evenement?.target as HTMLFormElement).get("photo");
     if (photo instanceof File && photo.size > 0) {
       formData.set("photo", photo);
@@ -56,7 +57,22 @@ export default function FormulaireAjoutBar({
             placeholder="12 rue de la République, Lyon"
             register={register("adresseBar")}
             setValue={(v) => setValue("adresseBar", v, { shouldValidate: true, shouldDirty: true })}
+            setCodePostal={(v) =>
+              setValue("codePostalBar", v, { shouldValidate: true, shouldDirty: true })
+            }
           />
+      </ChampFormulaire>
+
+      <ChampFormulaire label="Code postal" erreur={errors.codePostalBar?.message}>
+        <input
+          type="text"
+          inputMode="numeric"
+          autoComplete="postal-code"
+          maxLength={5}
+          placeholder="69002"
+          {...register("codePostalBar")}
+          className="champ-input"
+        />
       </ChampFormulaire>
 
       <ChampFormulaire label="Photo ou logo (optionnel)">

@@ -1,3 +1,4 @@
+import { adresseComplete } from "@/lib/adresse";
 import Link from "next/link";
 import { formaterDistance } from "@/lib/distance";
 import BoutonItineraire from "./bouton-itineraire";
@@ -85,7 +86,7 @@ export default function CarteAnnonce({
         </span>
       </div>
       <div className="donnees-carte flex items-baseline justify-between gap-3 text-[13px] text-[var(--harbor-marine-2)]">
-        <span>{annonce.bar.adresse}</span>
+        <span>{adresseComplete(annonce.bar)}</span>
         {distanceKm !== null && (
           <span className="shrink-0 font-semibold text-[var(--harbor-marine)]">
             {formaterDistance(distanceKm)}

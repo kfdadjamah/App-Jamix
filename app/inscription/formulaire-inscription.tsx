@@ -42,6 +42,7 @@ export default function FormulaireInscription() {
     formData.set("motDePasse", donnees.motDePasse);
     formData.set("nomBar", donnees.nomBar);
     formData.set("adresseBar", donnees.adresseBar);
+    formData.set("codePostalBar", donnees.codePostalBar);
     const fichierPhoto = refPhoto.current?.files?.[0];
     if (fichierPhoto) {
       formData.set("photo", fichierPhoto);
@@ -103,6 +104,21 @@ export default function FormulaireInscription() {
             placeholder="12 rue de la République, Lyon"
             register={register("adresseBar")}
             setValue={(v) => setValue("adresseBar", v, { shouldValidate: true, shouldDirty: true })}
+            setCodePostal={(v) =>
+              setValue("codePostalBar", v, { shouldValidate: true, shouldDirty: true })
+            }
+          />
+        </ChampFormulaire>
+
+        <ChampFormulaire label="Code postal" erreur={errors.codePostalBar?.message}>
+          <input
+            type="text"
+            inputMode="numeric"
+            autoComplete="postal-code"
+            maxLength={5}
+            placeholder="69002"
+            {...register("codePostalBar")}
+            className="champ-input"
           />
         </ChampFormulaire>
 

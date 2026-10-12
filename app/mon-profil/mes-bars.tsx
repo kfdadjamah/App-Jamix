@@ -6,6 +6,7 @@ import {
   MENTION_DERNIER_BAR,
   NOMBRE_MAX_BARS,
 } from "@/lib/bars";
+import { adresseComplete } from "@/lib/adresse";
 import GestionPhotoBar from "./gestion-photo-bar";
 import FormulaireFicheBar from "./formulaire-fiche-bar";
 import FormulaireAjoutBar from "./formulaire-ajout-bar";
@@ -15,6 +16,7 @@ export type BarDuProfil = {
   id: string;
   nom: string;
   adresse: string;
+  codePostal: string;
   photoUrl: string | null;
   surLaCarte: boolean;
   // Toutes les annonces du bar, brouillons compris.
@@ -66,25 +68,23 @@ export default function MesBars({ bars }: { bars: BarDuProfil[] }) {
           return (
             <li
               key={bar.id}
-              className="flex flex-col gap-4 border-t border-[var(--harbor-trait)] py-4 first:border-t-0 first:pt-0"
+              className="flex flex-col gap-4 border-t border-[var(--harbor-trait)] py-2 first:border-t-0 first:pt-0"
             >
               <div className="flex items-center gap-3">
-                {bar.photoUrl ? (
+                {bar.photoUrl && (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={bar.photoUrl}
                     alt=""
                     className="h-12 w-12 shrink-0 rounded-[12px] object-cover"
                   />
-                ) : (
-                  <div className="h-12 w-12 shrink-0 rounded-[12px] border border-dashed border-[var(--harbor-trait)]" />
                 )}
                 <div className="flex min-w-0 flex-1 flex-col gap-1">
                   <span className="truncate text-[14px] font-semibold text-[var(--harbor-marine)]">
                     {bar.nom}
                   </span>
                   <span className="truncate text-[12px] text-[var(--harbor-marine-2)]">
-                    {bar.adresse}
+                    {adresseComplete(bar)}
                   </span>
                   {!bar.surLaCarte && (
                     <span className="text-[13px] font-semibold text-[var(--harbor-erreur)]">
@@ -110,6 +110,7 @@ export default function MesBars({ bars }: { bars: BarDuProfil[] }) {
                       barId={bar.id}
                       nom={bar.nom}
                       adresse={bar.adresse}
+                      codePostal={bar.codePostal}
                       actionDroite={
                         bars.length > 1 && (
                           <button

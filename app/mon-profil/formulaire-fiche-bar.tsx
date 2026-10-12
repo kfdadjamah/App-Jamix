@@ -13,11 +13,13 @@ export default function FormulaireFicheBar({
   barId,
   nom,
   adresse,
+  codePostal,
   actionDroite,
 }: {
   barId: string;
   nom: string;
   adresse: string;
+  codePostal: string;
   // Affichée à droite d'« Enregistrer », sur la même ligne (ex. « Supprimer ce bar »).
   actionDroite?: React.ReactNode;
 }) {
@@ -32,7 +34,7 @@ export default function FormulaireFicheBar({
     formState: { errors, isSubmitting },
   } = useForm<ChampsFicheBar>({
     resolver: zodResolver(schemaFicheBar),
-    defaultValues: { nomBar: nom, adresseBar: adresse },
+    defaultValues: { nomBar: nom, adresseBar: adresse, codePostalBar: codePostal },
   });
 
   async function surSoumission(donnees: ChampsFicheBar) {
@@ -43,6 +45,7 @@ export default function FormulaireFicheBar({
     const formData = new FormData();
     formData.set("nomBar", donnees.nomBar);
     formData.set("adresseBar", donnees.adresseBar);
+    formData.set("codePostalBar", donnees.codePostalBar);
 
     const resultat = await mettreAJourFicheBar(barId, formData);
     if ("erreur" in resultat) {
@@ -64,7 +67,22 @@ export default function FormulaireFicheBar({
             placeholder="12 rue de la République, Lyon"
             register={register("adresseBar")}
             setValue={(v) => setValue("adresseBar", v, { shouldValidate: true, shouldDirty: true })}
+            setCodePostal={(v) =>
+              setValue("codePostalBar", v, { shouldValidate: true, shouldDirty: true })
+            }
           />
+      </ChampFormulaire>
+
+      <ChampFormulaire label="Code postal" erreur={errors.codePostalBar?.message}>
+        <input
+          type="text"
+          inputMode="numeric"
+          autoComplete="postal-code"
+          maxLength={5}
+          placeholder="69002"
+          {...register("codePostalBar")}
+          className="champ-input"
+        />
       </ChampFormulaire>
 
       {erreurServeur && (

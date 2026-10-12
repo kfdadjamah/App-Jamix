@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import { redirect } from "next/navigation";
 import { after } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { adresseComplete } from "@/lib/adresse";
 import { geocoderAdresse } from "@/lib/geocode";
 import { recadrerEtUploaderPhoto } from "@/lib/image";
 import { schemaInscription } from "@/lib/validation/inscription";
@@ -23,6 +24,7 @@ export async function inscrireOrganisateur(
     motDePasse: formData.get("motDePasse"),
     nomBar: formData.get("nomBar"),
     adresseBar: formData.get("adresseBar"),
+    codePostalBar: formData.get("codePostalBar"),
     photo,
   });
 
@@ -30,7 +32,7 @@ export async function inscrireOrganisateur(
     return { erreur: resultat.error.issues[0]?.message ?? "Formulaire invalide." };
   }
 
-  const { nomComplet, email, motDePasse, nomBar, adresseBar } = resultat.data;
+  const { nomComplet, email, motDePasse, nomBar, adresseBar, codePostalBar } = resultat.data;
 
   const organisateurExistant = await prisma.organisateur.findUnique({
     where: { email },
@@ -41,7 +43,7 @@ export async function inscrireOrganisateur(
 
   const [motDePasseHash, coordonnees, photoUrl] = await Promise.all([
     bcrypt.hash(motDePasse, TOURS_HASHING),
-    geocoderAdresse(adresseBar),
+    geocoderAdresse(adresseComplete({ adresse: adresseBar, codePostal: codePostalBar })),
     photo ? recadrerEtUploaderPhoto(photo, "bars") : Promise.resolve(null),
   ]);
 
@@ -54,6 +56,7 @@ export async function inscrireOrganisateur(
         create: {
           nom: nomBar,
           adresse: adresseBar,
+          codePostal: codePostalBar,
           latitude: coordonnees?.latitude,
           longitude: coordonnees?.longitude,
           photoUrl,

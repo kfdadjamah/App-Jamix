@@ -60,17 +60,28 @@ describe("schemaReinitialisationMotDePasse", () => {
 describe("schemaFicheBar", () => {
   it("accepte un nom et une adresse", () => {
     expect(
-      schemaFicheBar.safeParse({ nomBar: "Le Sirius", adresseBar: "4 quai Augagneur, Lyon" })
-        .success
+      schemaFicheBar.safeParse({
+        nomBar: "Le Sirius",
+        adresseBar: "4 quai Augagneur, Lyon",
+        codePostalBar: "69002",
+      }).success
     ).toBe(true);
   });
 
+  it("exige un code postal de 5 chiffres", () => {
+    const base = { nomBar: "Le Sirius", adresseBar: "4 quai Augagneur, Lyon" };
+    for (const codePostalBar of ["", "6900", "690022", "69 02", "abcde"]) {
+      expect(schemaFicheBar.safeParse({ ...base, codePostalBar }).success).toBe(false);
+    }
+    expect(schemaFicheBar.safeParse({ ...base, codePostalBar: " 69002 " }).success).toBe(true);
+  });
+
   it("refuse un nom vide après trim", () => {
-    expect(schemaFicheBar.safeParse({ nomBar: "   ", adresseBar: "Lyon" }).success).toBe(false);
+    expect(schemaFicheBar.safeParse({ nomBar: "   ", adresseBar: "Lyon", codePostalBar: "69001" }).success).toBe(false);
   });
 
   it("refuse une adresse vide après trim", () => {
-    expect(schemaFicheBar.safeParse({ nomBar: "Le Sirius", adresseBar: "  " }).success).toBe(
+    expect(schemaFicheBar.safeParse({ nomBar: "Le Sirius", adresseBar: "  ", codePostalBar: "69001" }).success).toBe(
       false
     );
   });
@@ -157,7 +168,7 @@ describe("nomComplet", () => {
   });
 
   it("est obligatoire à l'inscription", () => {
-    const base = { email: "a@b.fr", motDePasse: "12345678", nomBar: "Bar", adresseBar: "1 rue X" };
+    const base = { email: "a@b.fr", motDePasse: "12345678", nomBar: "Bar", adresseBar: "1 rue X", codePostalBar: "69001" };
     expect(schemaInscription.safeParse(base).success).toBe(false);
     expect(schemaInscription.safeParse({ ...base, nomComplet: "Camille Martin" }).success).toBe(true);
   });

@@ -1,3 +1,4 @@
+import { adresseComplete } from "@/lib/adresse";
 import { cache } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -77,7 +78,7 @@ export default async function PageJam({ params }: { params: Promise<{ id: string
 
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between gap-2">
-            <span className="text-[12px] text-[var(--harbor-marine-2)]">{annonce.bar.adresse}</span>
+            <span className="text-[12px] text-[var(--harbor-marine-2)]">{adresseComplete(annonce.bar)}</span>
             <DistanceJam bar={annonce.bar} />
           </div>
           <span className="text-[15px] text-[var(--harbor-marine)]">

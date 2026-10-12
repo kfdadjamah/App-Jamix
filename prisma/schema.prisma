@@ -36,6 +36,8 @@ model Bar {
   id             String       @id @default(cuid())
   nom            String
   adresse        String
+  // Code postal à part (« 69002 ») ; vide pour un bar antérieur qui ne l'avait pas renseigné.
+  codePostal     String       @default("")
   latitude       Float?
   longitude      Float?
   photoUrl       String?

@@ -1,6 +1,9 @@
+import { adresseComplete } from "./adresse";
+
 export interface Destination {
   nom: string;
   adresse: string;
+  codePostal: string;
   latitude: number | null;
   longitude: number | null;
 }
@@ -20,7 +23,7 @@ export interface ApplicationCarto {
 export function applicationsCarto(bar: Destination, appareil: Appareil): ApplicationCarto[] {
   const coordonnees =
     bar.latitude !== null && bar.longitude !== null ? `${bar.latitude},${bar.longitude}` : null;
-  const adresse = encodeURIComponent(bar.adresse);
+  const adresse = encodeURIComponent(adresseComplete(bar));
   const destination = coordonnees ?? adresse;
 
   const applications = [

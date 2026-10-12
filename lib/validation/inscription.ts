@@ -28,6 +28,11 @@ const champAdresseBar = z
   .min(1, "L'adresse du bar est requise.")
   .transform(nettoyerEspaces);
 
+const champCodePostal = z
+  .string()
+  .trim()
+  .regex(/^\d{5}$/, "Le code postal doit contenir 5 chiffres.");
+
 // Nom et prénom : un seul champ, espaces de début et de fin ignorés.
 const NOM_COMPLET_MAX = 80;
 const champNomComplet = z
@@ -53,6 +58,7 @@ export const schemaInscription = z.object({
   motDePasse: champMotDePasse,
   nomBar: champNomBar,
   adresseBar: champAdresseBar,
+  codePostalBar: champCodePostal,
   photo: z
     .union([schemaPhoto, z.literal(null)])
     .optional(),
@@ -75,6 +81,7 @@ export type ChampsConnexion = z.infer<typeof schemaConnexion>;
 export const schemaFicheBar = z.object({
   nomBar: champNomBar,
   adresseBar: champAdresseBar,
+  codePostalBar: champCodePostal,
 });
 
 export type ChampsFicheBar = z.infer<typeof schemaFicheBar>;

@@ -71,9 +71,19 @@ export default async function PageMonProfil() {
         <BoutonRetour href="/mes-annonces" />
 
         <div className="flex flex-col gap-3">
-          <h1 className="titre-page">
-            Mon profil
-          </h1>
+          <div className="flex items-center justify-between gap-3">
+            <h1 className="titre-page">
+              Mon profil
+            </h1>
+            <form action={deconnecterOrganisateur}>
+              <button
+                type="submit"
+                className="rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)]"
+              >
+                Déconnexion
+              </button>
+            </form>
+          </div>
           <span className="text-[12px] font-semibold text-[var(--harbor-marine-2)]">
             Compte créé le {dateCreation}
           </span>
@@ -86,6 +96,7 @@ export default async function PageMonProfil() {
               id: bar.id,
               nom: bar.nom,
               adresse: bar.adresse,
+              codePostal: bar.codePostal,
               photoUrl: bar.photoUrl,
               surLaCarte: bar.latitude !== null && bar.longitude !== null,
               nombreAnnonces: bar._count.annonces,
@@ -113,15 +124,6 @@ export default async function PageMonProfil() {
         <SectionDeroulable titre="Mot de passe">
           <FormulaireMotDePasse />
         </SectionDeroulable>
-        <Separateur />
-        <form action={deconnecterOrganisateur}>
-          <button
-            type="submit"
-            className="rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)]"
-          >
-            Déconnexion
-          </button>
-        </form>
         <Separateur />
         <SectionDeroulable titre="Supprimer mon compte">
           <SuppressionCompte />
