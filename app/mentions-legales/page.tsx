@@ -41,7 +41,7 @@ export default function PageMentionsLegales() {
           </p>
           <p>
             L&apos;éditeur est joignable via le{" "}
-            <Link href="/contact" className="underline">
+            <Link href="/contact" className="underline active:text-[var(--harbor-bleu)]">
               formulaire Contact
             </Link>
             .
@@ -78,7 +78,7 @@ export default function PageMentionsLegales() {
         <Section titre="Contact et signalement">
           <p>
             Pour poser une question ou joindre l&apos;équipe, utilisez le{" "}
-            <Link href="/contact" className="underline">
+            <Link href="/contact" className="underline active:text-[var(--harbor-bleu)]">
               formulaire Contact
             </Link>
             .

@@ -54,7 +54,7 @@ export default async function HeaderOrganisateur({
       ) : (
         <LienGarde
           href="/mes-annonces"
-          className={`${classes} hover:underline focus-visible:underline`}
+          className={`${classes} hover:underline focus-visible:underline active:text-[var(--harbor-bleu)]`}
         >
           {contenu}
         </LienGarde>

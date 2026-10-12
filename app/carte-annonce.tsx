@@ -30,8 +30,7 @@ export default function CarteAnnonce({
 
   const { annonce } = occurrence;
   const annulee = statut === "ANNULEE";
-  const nomClasses = `min-w-0 break-words font-[family-name:var(--font-jakarta)] text-[20px] font-extrabold leading-[1.2] tracking-[-0.025em] text-[var(--harbor-marine)] ${
-    annulee ? "line-through" : ""
+  const nomClasses = `min-w-0 break-words font-[family-name:var(--font-jakarta)] text-[20px] font-extrabold leading-[1.2] tracking-[-0.025em] text-[var(--harbor-marine)]     annulee ? "line-through" : ""
   }`;
   const styles = annonce.styles.includes(TOUS_LES_STYLES)
     ? [libelleStyles(annonce.styles)]
@@ -76,11 +75,8 @@ export default function CarteAnnonce({
           <span className={nomClasses}>{annonce.bar.nom}</span>
         )}
         <span
-          className="mt-0.5 max-w-[42%] shrink-0 rounded-[6px] px-2 py-[3px] text-center text-[12px] font-semibold leading-[1.25]"
-          style={{
-            color: couleurStatut,
-            backgroundColor: `color-mix(in srgb, ${couleurStatut} 12%, white)`,
-          }}
+          className="mt-0.5 max-w-[42%] shrink-0 rounded-[6px] px-2 py-[3px] text-center text-[12px] font-bold leading-[1.25] text-white"
+          style={{ backgroundColor: couleurStatut }}
         >
           {LIBELLES_STATUT_OCCURRENCE[statut]}
         </span>
@@ -106,8 +102,7 @@ export default function CarteAnnonce({
       {ligneChips("Instruments", instruments)}
       {annonce.description && (
         <p
-          className={`whitespace-pre-line text-[14px] text-[var(--harbor-marine)] ${
-            mode === "liste" ? "line-clamp-3" : ""
+          className={`whitespace-pre-line text-[14px] text-[var(--harbor-marine)]             mode === "liste" ? "line-clamp-3" : ""
           }`}
         >
           {annonce.description}

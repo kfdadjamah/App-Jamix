@@ -43,7 +43,7 @@ export const LIBELLES_STATUT_OCCURRENCE: Record<string, string> = {
 export const COULEURS_STATUT_OCCURRENCE: Record<string, string> = {
   CONFIRMEE: "#17807E",
   PROGRAMMEE: "#2B78BE",
-  EN_ATTENTE_CONFIRMATION: "#B7791F",
+  EN_ATTENTE_CONFIRMATION: "#946010",
   ANNULEE: "#6B7C8C",
 };
 

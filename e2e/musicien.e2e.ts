@@ -72,7 +72,7 @@ test.describe("bandeau de 7 jours", () => {
     ).toHaveCount(0);
     // Les jours passés de la semaine en cours ne sont pas cliquables.
     await expect(page.locator(".grid-cols-7 a")).not.toHaveCount(0);
-    await expect(page.getByLabel("Date", { exact: true })).toHaveAttribute(
+    await expect(page.getByLabel("Choisir une date")).toHaveAttribute(
       "min",
       aujourdhuiIso(),
     );
@@ -113,12 +113,11 @@ test.describe("bandeau de 7 jours", () => {
   test("l'icône calendrier mène à une date lointaine", async ({ page }) => {
     const lointaine = ajouterJoursIso(aujourdhuiIso(), 60);
     await page.goto("/");
-    await expect(
-      page.getByRole("button", { name: "Choisir une date" }),
-    ).toBeVisible();
+    const champ = page.getByLabel("Choisir une date");
+    await expect(champ).toBeVisible();
 
-    // Le champ natif est caché : on simule le choix dans le sélecteur.
-    await page.getByLabel("Date", { exact: true }).evaluate((champ, valeur) => {
+    // Le sélecteur natif ne se pilote pas : on simule le choix de la date.
+    await champ.evaluate((champ, valeur) => {
       const input = champ as HTMLInputElement;
       Object.getOwnPropertyDescriptor(
         HTMLInputElement.prototype,
@@ -256,6 +255,53 @@ test.describe("sur mobile", () => {
       expect(deborde).toBe(false);
     });
   }
+
+  test.describe("calendrier au toucher (390 px)", () => {
+    test.use({
+      viewport: { width: 390, height: 844 },
+      hasTouch: true,
+      isMobile: true,
+    });
+
+    test("le bouton est entre « Aujourd'hui » et « › », en 40×40, et la bascule est pleine largeur", async ({
+      page,
+    }) => {
+      await page.goto("/");
+      const box = async (l: ReturnType<typeof page.locator>) =>
+        (await l.boundingBox())!;
+      const aujourdhui = await box(page.getByRole("link", { name: "Aujourd'hui" }));
+      const calendrier = await box(page.getByLabel("Choisir une date"));
+      const suivante = await box(page.getByRole("link", { name: "Semaine suivante" }));
+      const liste = await box(page.getByRole("button", { name: "Liste" }));
+      const carte = await box(page.getByRole("button", { name: "Carte" }));
+
+      expect(calendrier.width).toBeGreaterThanOrEqual(40);
+      expect(calendrier.height).toBeGreaterThanOrEqual(40);
+      expect(calendrier.x).toBeGreaterThanOrEqual(aujourdhui.x + aujourdhui.width);
+      expect(calendrier.x + calendrier.width).toBeLessThanOrEqual(suivante.x);
+      expect(Math.abs(calendrier.y - aujourdhui.y)).toBeLessThan(20);
+      // La bascule occupe toute la largeur de la colonne (hors marges de 24 px et remplissage de la bascule).
+      expect(liste.x).toBeLessThanOrEqual(32);
+      expect(carte.x + carte.width).toBeGreaterThanOrEqual(390 - 32);
+    });
+
+    test("un vrai toucher sur le bouton cible le champ date, choisir une date navigue", async ({
+      page,
+    }) => {
+      const lointaine = ajouterJoursIso(aujourdhuiIso(), 45);
+      await page.goto("/");
+      const champ = page.getByLabel("Choisir une date");
+      // Le toucher atterrit bien sur le champ (pas sur un autre élément qui le recouvre).
+      const cible = await champ.evaluate((el) => {
+        const r = el.getBoundingClientRect();
+        return document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2) === el;
+      });
+      expect(cible).toBe(true);
+      await champ.tap();
+      await champ.fill(lointaine);
+      await expect(page).toHaveURL(`/?date=${lointaine}`);
+    });
+  });
 
   test("captures mobile 400 px : liste et carte", async ({ page }) => {
     test.skip(

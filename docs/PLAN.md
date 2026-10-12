@@ -22,6 +22,7 @@
 - **Bandeau commun « Jammix » (Phase 22)** : aucune migration de schéma. Un composant unique de bandeau, rendu par chaque page (pas dans `app/layout.tsx`) pour rester à l'intérieur de `FournisseurGardeSortie` sur les formulaires d'annonce ; il remplace `HeaderPublic` et la ligne haute de `HeaderOrganisateur`. Bandeau `position: sticky` en haut, fond Walnut Shadow (Brass Copper depuis la Phase 23), filet inférieur 1px Gold elegance (nouvel usage structurel, ajouté à DESIGN.md dans la phase). « Jammix » est un `LienGarde` vers `/` sans paramètre : la date et la vue de l'accueil vivant dans l'URL (`?date=&vue=`), ce lien suffit à revenir à aujourd'hui en vue liste, en navigation client. La partie droite est choisie par une prop de variante (accueil / organisateur / parcours de connexion) et la session. « Mes annonces » et l'alerte des relances restent dans `HeaderOrganisateur`, affiché sous le bandeau (remplacés par la ligne « À confirmer » en Phase 25).
 - **Bandeau cuivré (Phase 23)** : aucune migration de schéma. Seul le fond du composant de bandeau commun change (Walnut Shadow → Brass Copper). Le filet Gold elegance, la hauteur, le sticky et le contenu restent inchangés. DESIGN.md autorise le Brass Copper comme fond du bandeau uniquement.
 - **Accès aux annonces (Phases 24 et 25)** : aucune migration de schéma. Le bouton « Accéder à mes annonces » de l'accueil est rendu côté serveur selon `sessionCourante()`, comme la partie droite de `components/bandeau.tsx`. `HeaderOrganisateur` (`components/header-organisateur.tsx`) est réduit à une ligne « À confirmer » ; le nombre vient de `compterRelancesActives` (`lib/relances.ts`), déjà utilisé pour l'alerte. Il reçoit une variante distincte pour « Mes annonces » (ligne non cliquable), les formulaires d'annonce et le profil (lien vers `/mes-annonces`) ; aujourd'hui les formulaires passent `page="mes-annonces"`. Sur les formulaires, le lien passe par `LienGarde` (`components/garde-sortie.tsx`) pour suivre la garde de sortie.
+- **Mes annonces : filtre, suppression, glissé (Phases 45 à 47)** : aucune migration de schéma, pas de `prisma db push`. Server actions `supprimerAnnonce` et `supprimerOccurrence` (`app/mes-annonces/actions.ts`) avec contrôle de propriétaire (`verifierProprietaireAnnonce`, `recupererAnnonceDuCompte`) ; photos retirées via `supprimerPhotos`, occurrences en cascade ; supprimer la dernière date supprime l'annonce. `FenetreAnnulation` est généralisée en fenêtre à deux modes (annuler / supprimer). Le glissé passe par un composant client `CarteGlissable` qui réutilise la même fenêtre.
 - **Plusieurs bars par compte (Phases 18 à 21)** :
   - *Modèle* : `Organisateur` 1–N `Bar` ; on retire `@unique` sur `Bar.organisateurId` et `Organisateur.bar` devient `bars Bar[]`. Contrainte `@@unique([organisateurId, nom, adresse])` en base comme filet ; la détection des doublons se fait côté application avec comparaison normalisée (espaces en début/fin retirés, espaces multiples réduits, casse ignorée), à l'ajout comme à la modification. Nom et adresse sont stockés tels que saisis, débarrassés des espaces superflus. Limite de 10 bars vérifiée côté serveur. Migration sans perte : les données existantes sont déjà conformes.
   - *Date de publication* : nouveau champ `Annonce.publieeLe DateTime?`, écrit une seule fois au passage Brouillon → Publiée, en même temps que le calcul J-7 (Phase 6). Ajouté par la migration de la Phase 18 ; les annonces déjà publiées sont remplies avec `createdAt`.
@@ -1169,3 +1170,215 @@ Sur `/mon-profil`, rien n'est déplié d'office : « Mes bars », « Nom et pré
 ## Bloquée par
 
 - Phase 42 (profil replié, prénom et nom séparés)
+
+---
+
+## Phase 45 : Filtre par bar, état actif coloré
+
+**User stories** : US-153
+
+### Ce qu'on livre
+
+Dans `app/mes-annonces/filtre-annonces.tsx`, le bouton actif prend le fond Bleu signal (`--harbor-bleu`), le texte blanc et la bordure Bleu signal ; les inactifs sont inchangés. L'ancienne variable `--color-warm-cream` (ORYZO) n'existe plus et n'avait aucun effet. `aria-pressed` est conservé.
+
+### Critères d'acceptation
+
+- [ ] Le bouton actif a un fond différent des inactifs (couleur calculée vérifiée)
+- [ ] « Tous » est actif à l'arrivée ; changer de bar déplace l'état actif
+- [ ] Contraste AA (blanc sur `#2B78BE`)
+- [ ] Test `e2e/filtre-annonces.e2e.ts` et DESIGN.md à jour
+
+## Bloquée par
+
+- Aucune
+
+---
+
+## Phase 46 : « Supprimer » dans le menu « ⋯ », avec confirmation et portée
+
+**User stories** : US-154, US-155, US-156
+
+### Ce qu'on livre
+
+Une troisième entrée « Supprimer » (texte `--harbor-erreur`, visible aussi sur un brouillon) dans le menu « ⋯ ». Elle ouvre la fenêtre de confirmation (« Supprimer l'annonce ? », « Cette suppression est définitive. », « Supprimer définitivement » / « ← Retour »). Annonce récurrente : choix de portée « Cette date seulement » / « Toutes les dates » (toutes les dates listées, annulées comprises). Ponctuelle ou brouillon : confirmation simple. Actions `supprimerAnnonce` et `supprimerOccurrence` ; `page.tsx` transmet à `MenuAnnonce` la liste `datesSupprimables`.
+
+### Critères d'acceptation
+
+- [ ] Le menu propose trois entrées ; « Retour » ou Échap ne supprime rien
+- [ ] Ponctuelle ou brouillon : confirmation simple ; récurrente : choix de portée
+- [ ] Après confirmation, la carte (ou la date) disparaît sans rechargement manuel et l'annonce n'apparaît plus côté musicien ; photos supprimées
+- [ ] Supprimer la dernière date supprime l'annonce
+- [ ] En cas d'échec, le message « La suppression a échoué. Réessayez. » s'affiche dans la fenêtre
+- [ ] Un autre compte ne peut pas supprimer l'annonce
+- [ ] Tests : `e2e/menu-annonce.e2e.ts` étendu (suppression, portée, annulation de la fenêtre) ; DESIGN.md à jour
+
+## Bloquée par
+
+- Aucune (indépendante de la Phase 45)
+
+---
+
+## Phase 47 : Glissé sur la carte, « Supprimer » à gauche et « Modifier » à droite
+
+**User stories** : US-157, US-158
+
+### Ce qu'on livre
+
+Un composant client `CarteGlissable` (`app/mes-annonces/carte-glissable.tsx`) enveloppe la carte : pointer events (souris et doigt), `touch-action: pan-y`, seuil d'environ 72 px pour rester ouvert. Glissé à gauche : bouton « Supprimer » (Erreur) qui ouvre la fenêtre de la Phase 46 ; glissé à droite : bouton « Modifier » (Bleu signal) vers `/mes-annonces/[id]`. Un seul côté à la fois ; le clic fantôme sur le lien de la carte est supprimé après un glissé ; les boutons fermés sont `aria-hidden` et `tabIndex=-1` (le menu « ⋯ » reste l'accès clavier). Transition de 120 ms, sans ressort.
+
+### Critères d'acceptation
+
+- [x] Glissé à gauche révèle « Supprimer », à droite « Modifier »
+- [x] Le geste seul ne supprime ni n'ouvre rien ; toucher « Supprimer » ouvre la confirmation ; toucher « Modifier » mène au formulaire
+- [x] Un simple tap sur la carte l'ouvre toujours ; le défilement vertical reste fluide
+- [x] Test `e2e/glisse-annonce.e2e.ts` (souris, émulation mobile 360 px) et DESIGN.md à jour
+
+## Bloquée par
+
+- Phase 46 (fenêtre de suppression)
+
+---
+
+## Phase 48 : Liseré coloré arrondi sur les cartes de Mes annonces
+
+**User stories** : US-159, US-160
+
+### Ce qu'on livre
+
+Dans `app/mes-annonces/carte-glissable.tsx`, deux liserés de 4 px épousant les coins arrondis de la carte glissante, en bordure colorée pleine hauteur (`span aria-hidden` en `border-l-4`/`border-r-4`, sans bloquer les pointer events) : bord gauche Bleu signal (`--harbor-bleu`, annonce « Modifier »), bord droit Erreur (`--harbor-erreur`, annonce « Supprimer »). Ils suivent la carte pendant le glissé ; l'opacité reste à 100 % (les cartes de Mes annonces ne sont jamais estompées). Vérifier que `overflow-x-clip` ne rogne ni l'ombre ni les coins.
+
+### Critères d'acceptation
+
+- [x] Bord gauche Bleu signal et bord droit Erreur (couleurs calculées vérifiées, mobile 360 px)
+- [x] Les liserés suivent la carte au glissé ; le tap et le défilement vertical sont inchangés
+- [x] Opacité des liserés inchangée (100 %), aucune carte estompée dans Mes annonces
+- [ ] Test `e2e/glisse-annonce.e2e.ts` étendu, DESIGN.md à jour, captures 360 px montrées au propriétaire
+
+## Bloquée par
+
+- Aucune
+
+---
+
+## Phase 49 : Pastilles de statut en fond plein
+
+**User stories** : US-161
+
+### Ce qu'on livre
+
+`app/carte-annonce.tsx` (pastille de statut) et `app/mes-annonces/page.tsx` : le fond teinté à 12 % est remplacé par un fond plein `COULEURS_STATUT_OCCURRENCE[statut]` (`lib/annonce-constantes.ts`), texte blanc, graisse 700.
+
+### Critères d'acceptation
+
+- [x] Fond calculé = couleur du statut pour confirmée, programmée, en attente, annulée
+- [x] Contraste du blanc sur « en attente » (`#B7791F`, environ 3,9:1) tranché avec le propriétaire : exception documentée ou fond assombri
+- [x] Test (`e2e/musicien.e2e.ts` ou `e2e/pastilles-statut.e2e.ts`) et DESIGN.md à jour
+
+## Bloquée par
+
+- Aucune
+
+---
+
+## Phase 50 : Calendrier de l'accueil déplacé et fonctionnel sur téléphone
+
+**User stories** : US-162, US-163
+
+### Ce qu'on livre
+
+`BoutonCalendrier` (`app/selecteur-date.tsx`) quitte la ligne de la bascule Liste/Carte (qui reprend toute la largeur) et prend place juste à droite de « Aujourd'hui », avant « › », dans la ligne « ‹ Aujourd'hui [calendrier] › », zone tactile 40×40 au moins. Le `<input type="date">` caché de 0×0 est remplacé par un champ réellement posé sur le bouton (transparent, `absolute inset-0`, `min` = aujourd'hui), sans dépendre de `showPicker()` (au besoin avec `try/catch` en renfort). `onChange` inchangé.
+
+### Critères d'acceptation
+
+- [x] Le bouton est entre « Aujourd'hui » et « › » ; la bascule occupe toute la largeur
+- [x] Un vrai clic (émulation tactile 390 px) ouvre le sélecteur ; choisir une date navigue vers l'URL de cette date
+- [x] Test Playwright mobile qui clique le bouton, `e2e/musicien.e2e.ts` adapté, DESIGN.md à jour
+- [ ] Vérification réelle sur iPhone et Android après déploiement
+
+## Bloquée par
+
+- Aucune
+
+---
+
+## Phase 51 : Formulaire de nouvelle annonce resserré, heures lisibles
+
+**User stories** : US-164, US-165
+
+### Ce qu'on livre
+
+`app/mes-annonces/formulaire-annonce.tsx` : `gap-8` devient `gap-5`, le contournement `-mt-4` est retiré s'il devient inutile ; `app/mes-annonces/nouvelle/page.tsx` idem si besoin. Heures de début et de fin : `grid grid-cols-2 gap-3`, champs en `min-w-0`, libellés alignés en haut ; `.champ-input[type="time"]` (`app/globals.css`) avec `min-width:0`, `width:100%`, `appearance:none` et remplissage réduit pour iOS.
+
+Les libellés « (optionnel) » des champs facultatifs deviennent « (option) » (heure de fin, photos, description, photo ou logo).
+
+### Critères d'acceptation
+
+- [x] Écart entre sections réduit (mesuré), à 360 px
+- [x] Les deux champs d'heure tiennent chacun dans une demi-colonne, sans chevauchement ni défilement horizontal
+- [x] « Heure de fin (option) » : libellé raccourci pour tenir sur une ligne, champs alignés en bas (`mt-auto`) si un libellé passe sur deux lignes
+- [x] Test `e2e/formulaire-mobile.e2e.ts` et DESIGN.md à jour
+
+## Bloquée par
+
+- Aucune
+
+---
+
+## Phase 52 : Tous les boutons ont une couleur au clic
+
+**User stories** : US-166
+
+### Ce qu'on livre
+
+États `:active` par famille, tokens `--harbor-*` uniquement, transition de 120 ms conservée : principal (Bleu signal → Marine), secondaire (fond Voile, bordure Bleu clair), discret (Voile → Trait), danger (fond Erreur teinté, texte Erreur), puis pastilles, flèches, jours du bandeau, bascule, filtres, entrées de menu, boutons de fenêtre et chips. Pas de composant `Button` commun : variantes `active:` ajoutées aux motifs répétés, à partir d'un inventaire `grep -rn "<button\|<Link\|<a "` pour ne rien oublier.
+
+### Critères d'acceptation
+
+- [x] Un échantillon par famille change de couleur calculée sous `mouse.down()`
+- [x] Aucun bouton, lien-bouton ou entrée de menu de l'inventaire n'est oublié
+- [x] Test `e2e/boutons-actifs.e2e.ts` et DESIGN.md à jour
+
+## Bloquée par
+
+- Phases 48 à 51 (mêmes fichiers)
+
+---
+
+## Phase 53 : Annulation et suppression en rouge, Confirmer en vert
+
+**User stories** : US-167, US-168, US-169, US-171
+
+### Ce qu'on livre
+
+Deux variantes de bouton en tokens `--harbor-*` : danger plein (fond Erreur, texte blanc) et succès plein (fond Succès, texte blanc), chacune avec un état pressé plus foncé et la transition de 120 ms. Appliquées à « Annuler cette date », « Annuler toutes les dates », « Annuler l'annonce », « Supprimer définitivement » (fenêtres de suppression de bar, d'annonce et de compte) et « Confirmer » (pastille). L'entrée « Annuler » du menu « ⋯ » passe en texte Erreur, comme « Supprimer ». « ← Retour » reste secondaire.
+
+### Critères d'acceptation
+
+- [x] Couleur calculée Erreur sur chaque bouton d'annulation et de suppression, Succès sur « Confirmer »
+- [x] Texte blanc sur fond plein, contraste AA
+- [x] « ← Retour » inchangé à côté d'un bouton rouge
+- [x] Test Playwright (couleurs calculées et état pressé) et DESIGN.md à jour
+
+## Bloquée par
+
+- Phase 52
+
+---
+
+## Phase 54 : Audit des couleurs de tous les boutons et pastilles
+
+**User stories** : US-170
+
+### Ce qu'on livre
+
+Inventaire des boutons, liens-boutons et pastilles (`grep -rn "<button\|<Link\|<a "`), classement par fonction (principal Bleu signal, annulation/suppression Erreur, confirmation Succès, attente/relance Alerte, neutre blanc ou Voile) et correction des écarts restants. DESIGN.md consigne la règle « couleur = fonction ».
+
+### Critères d'acceptation
+
+- [ ] Aucun bouton ni pastille de l'inventaire n'est hors règle
+- [ ] Un échantillon par fonction vérifié par couleur calculée
+- [ ] Test `e2e/boutons-actifs.e2e.ts` étendu et DESIGN.md à jour
+
+## Bloquée par
+
+- Phase 53

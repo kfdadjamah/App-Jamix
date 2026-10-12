@@ -12,8 +12,9 @@
   --harbor-voile: #e6f1fa;
   --harbor-trait: #dde7ee;
   --harbor-succes: #17807e;
-  --harbor-alerte: #b7791f;
+  --harbor-alerte: #946010;
   --harbor-erreur: #b3261e;
+  --harbor-erreur-voile: #fbe9e7;
   --harbor-annulee: #6b7c8c;
 
   --harbor-rayon-petit: 6px;
@@ -113,6 +114,14 @@ body {
   border-radius: 9999px;
   padding: 8px 16px 8px 12px;
   white-space: nowrap;
+}
+
+.jam-sticker__pill {
+  transition: background-color 120ms;
+}
+
+.jam-sticker:active .jam-sticker__pill {
+  background: var(--harbor-bleu);
 }
 
 .jam-sticker__dot {
@@ -236,6 +245,13 @@ body {
   outline: none;
   border-color: var(--harbor-bleu);
   box-shadow: 0 0 0 2px var(--harbor-voile);
+}
+.champ-input[type="time"] {
+  min-width: 0;
+  width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 10px 8px;
 }
 .champ-input--fichier {
   font-size: 13px;

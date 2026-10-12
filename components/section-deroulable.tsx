@@ -29,7 +29,7 @@ export default function SectionDeroulable({
             onClick={() => setOuverte(!ouverte)}
             aria-expanded={ouverte}
             aria-controls={idContenu}
-            className="flex w-full items-center justify-between gap-3 text-left hover:underline focus-visible:underline focus-visible:outline-none"
+            className="flex w-full items-center justify-between gap-3 text-left hover:underline focus-visible:underline focus-visible:outline-none active:text-[var(--harbor-bleu)]"
           >
             {titre}
             <ChevronDown

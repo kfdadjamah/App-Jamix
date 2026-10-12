@@ -32,7 +32,7 @@ export default function BottomSheetBar({
         <button
           type="button"
           onClick={onFermer}
-          className="rounded-full bg-[var(--harbor-voile)] px-3 py-1.5 text-[12px] font-bold text-[var(--harbor-marine)]"
+          className="rounded-full bg-[var(--harbor-voile)] px-3 py-1.5 text-[12px] font-bold text-[var(--harbor-marine)] active:bg-[var(--harbor-trait)]"
         >
           Fermer
         </button>

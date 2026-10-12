@@ -76,7 +76,7 @@ export default function SuppressionCompte() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="self-start rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] disabled:opacity-60"
+          className="self-start rounded-[12px] px-4 py-2 text-[13px] font-bold bg-[var(--harbor-erreur)] text-white transition-colors duration-[120ms] hover:bg-[color-mix(in_srgb,var(--harbor-erreur),black_10%)] active:bg-[color-mix(in_srgb,var(--harbor-erreur),black_20%)] disabled:opacity-60"
         >
           {isSubmitting ? "Suppression…" : "Supprimer définitivement"}
         </button>

@@ -5,10 +5,14 @@ import { prisma } from "@/lib/prisma";
 import { recupererIdOrganisateurConnecte } from "@/lib/organisateur";
 import Bandeau from "@/components/bandeau";
 import HeaderOrganisateur from "@/components/header-organisateur";
-import { LIBELLES_STATUT_OCCURRENCE, libelleStyles } from "@/lib/annonce-constantes";
+import {
+  LIBELLES_STATUT_OCCURRENCE,
+  libelleStyles,
+} from "@/lib/annonce-constantes";
 import { statutAffiche } from "@/lib/annonces";
 import { messageRelance } from "@/lib/relances";
 import FiltreAnnonces from "./filtre-annonces";
+import CarteGlissable from "./carte-glissable";
 import MenuAnnonce from "./menu-annonce";
 import PiedDePage from "@/components/pied-de-page";
 
@@ -39,12 +43,10 @@ export default async function PageMesAnnonces() {
         <HeaderOrganisateur page="mes-annonces" />
 
         <div className="flex items-center justify-between gap-3">
-          <h1 className="titre-page">
-            Mes annonces
-          </h1>
+          <h1 className="titre-page">Mes annonces</h1>
           <Link
             href="/mes-annonces/nouvelle"
-            className="rounded-[12px] bg-[var(--harbor-bleu)] px-4 py-3 text-[14px] font-bold text-white transition-colors duration-[120ms] hover:bg-[var(--harbor-marine)]"
+            className="rounded-[12px] bg-[var(--harbor-bleu)] px-4 py-3 text-[14px] font-bold text-white transition-colors duration-[120ms] hover:bg-[var(--harbor-marine)] active:bg-[var(--harbor-marine)]"
           >
             Nouvelle
           </Link>
@@ -78,7 +80,7 @@ type AnnonceAvecDetails = Prisma.AnnonceGetPayload<{
 
 function CarteAnnonce({ annonce }: { annonce: AnnonceAvecDetails }) {
   const occurrencesTriees = [...annonce.occurrences].sort(
-    (a, b) => a.date.getTime() - b.date.getTime()
+    (a, b) => a.date.getTime() - b.date.getTime(),
   );
   const premiereOccurrence = occurrencesTriees[0];
   const datesAnnulables =
@@ -95,79 +97,100 @@ function CarteAnnonce({ annonce }: { annonce: AnnonceAvecDetails }) {
             }),
           }))
       : [];
+  // Toutes les dates, annulées comprises ; vide pour un brouillon sans date.
+  const datesSupprimables = occurrencesTriees.map((occurrence) => ({
+    id: occurrence.id,
+    libelle: new Date(occurrence.date).toLocaleDateString("fr-FR", {
+      weekday: "short",
+      day: "numeric",
+      month: "long",
+      timeZone: "UTC",
+    }),
+  }));
   return (
-    <div className="relative">
-      <Link
-        href={`/mes-annonces/${annonce.id}`}
-        className="flex flex-col gap-2 rounded-[16px] border border-[var(--harbor-trait)] bg-white p-4 shadow-[var(--harbor-ombre-carte)]"
-      >
-        <span className="truncate pr-12 text-[20px] font-extrabold tracking-[-0.025em] text-[var(--harbor-marine)]">
-          {annonce.bar.nom}
-        </span>
-        <div className="flex items-center gap-2 pr-12">
-          <span className="text-[12px] font-bold text-[var(--harbor-marine-2)]">
-            {annonce.statut === "BROUILLON" ? "Brouillon" : "Publiée"}
+    <CarteGlissable
+      annonceId={annonce.id}
+      datesSupprimables={datesSupprimables}
+      estRecurrente={annonce.estRecurrente}
+    >
+      <div className="relative">
+        <Link
+          href={`/mes-annonces/${annonce.id}`}
+          className="flex flex-col gap-2 rounded-[16px] border border-[var(--harbor-trait)] bg-white p-4 shadow-[var(--harbor-ombre-carte)] transition-colors duration-[120ms] active:bg-[var(--harbor-voile)]"
+        >
+          <span className="truncate pr-12 text-[20px] font-extrabold tracking-[-0.025em] text-[var(--harbor-marine)]">
+            {annonce.bar.nom}
           </span>
-          {annonce.estRecurrente && (
-            <span className="rounded-[9999px] border border-[var(--harbor-trait)] px-2 py-[2px] text-[12px] font-semibold text-[var(--harbor-marine-2)]">
-              Récurrente
+          <div className="flex items-center gap-2 pr-12">
+            <span className="text-[12px] font-bold text-[var(--harbor-marine-2)]">
+              {annonce.statut === "BROUILLON" ? "Brouillon" : "Publiée"}
+            </span>
+            {annonce.estRecurrente && (
+              <span className="rounded-[9999px] border border-[var(--harbor-trait)] px-2 py-[2px] text-[12px] font-semibold text-[var(--harbor-marine-2)]">
+                Récurrente
+              </span>
+            )}
+          </div>
+
+          {premiereOccurrence ? (
+            <span className="donnees text-[15px] font-semibold text-[var(--harbor-marine)]">
+              {premiereOccurrence.heureDebut}
+              {premiereOccurrence.heureFin
+                ? ` – ${premiereOccurrence.heureFin}`
+                : ""}
+            </span>
+          ) : (
+            <span className="text-[15px] text-[var(--harbor-marine-2)]">
+              Aucune date renseignée
             </span>
           )}
-        </div>
 
-        {premiereOccurrence ? (
-          <span className="donnees text-[15px] font-semibold text-[var(--harbor-marine)]">
-            {premiereOccurrence.heureDebut}
-            {premiereOccurrence.heureFin ? ` – ${premiereOccurrence.heureFin}` : ""}
-          </span>
-        ) : (
-          <span className="text-[15px] text-[var(--harbor-marine-2)]">
-            Aucune date renseignée
-          </span>
-        )}
+          {occurrencesTriees.length > 0 && (
+            <ul className="flex flex-wrap gap-2">
+              {occurrencesTriees.map((occurrence) => {
+                const relance = messageRelance(occurrence);
+                return (
+                  <li
+                    key={occurrence.id}
+                    className="flex flex-col rounded-[9999px] border border-[var(--harbor-trait)] px-3 py-1 text-[12px] font-semibold text-[var(--harbor-marine)]"
+                  >
+                    <span>
+                      {new Date(occurrence.date).toLocaleDateString("fr-FR", {
+                        day: "numeric",
+                        month: "short",
+                      })}{" "}
+                      · {LIBELLES_STATUT_OCCURRENCE[statutAffiche(occurrence)]}
+                    </span>
+                    {relance && (
+                      <span className="text-[var(--harbor-alerte)]">
+                        {relance}
+                      </span>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          )}
 
-        {occurrencesTriees.length > 0 && (
-          <ul className="flex flex-wrap gap-2">
-            {occurrencesTriees.map((occurrence) => {
-              const relance = messageRelance(occurrence);
-              return (
-                <li
-                  key={occurrence.id}
-                  className="flex flex-col rounded-[9999px] border border-[var(--harbor-trait)] px-3 py-1 text-[12px] font-semibold text-[var(--harbor-marine)]"
-                >
-                  <span>
-                    {new Date(occurrence.date).toLocaleDateString("fr-FR", {
-                      day: "numeric",
-                      month: "short",
-                    })}{" "}
-                    · {LIBELLES_STATUT_OCCURRENCE[statutAffiche(occurrence)]}
-                  </span>
-                  {relance && (
-                    <span className="text-[var(--harbor-alerte)]">{relance}</span>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-        )}
+          {annonce.styles.length > 0 && (
+            <span className="text-[12px] text-[var(--harbor-marine-2)]">
+              {libelleStyles(annonce.styles)}
+            </span>
+          )}
 
-        {annonce.styles.length > 0 && (
-          <span className="text-[12px] text-[var(--harbor-marine-2)]">
-            {libelleStyles(annonce.styles)}
-          </span>
-        )}
-
-        {annonce.description && (
-          <p className="line-clamp-2 whitespace-pre-line text-[12px] text-[var(--harbor-marine-2)]">
-            {annonce.description}
-          </p>
-        )}
-      </Link>
-      <MenuAnnonce
-        annonceId={annonce.id}
-        datesAnnulables={datesAnnulables}
-        estRecurrente={annonce.estRecurrente}
-      />
-    </div>
+          {annonce.description && (
+            <p className="line-clamp-2 whitespace-pre-line text-[12px] text-[var(--harbor-marine-2)]">
+              {annonce.description}
+            </p>
+          )}
+        </Link>
+        <MenuAnnonce
+          annonceId={annonce.id}
+          datesAnnulables={datesAnnulables}
+          datesSupprimables={datesSupprimables}
+          estRecurrente={annonce.estRecurrente}
+        />
+      </div>
+    </CarteGlissable>
   );
 }

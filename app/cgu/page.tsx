@@ -43,7 +43,7 @@ export default function PageCgu() {
         <Section titre="Éditeur et hébergeurs">
           <p>
             L&apos;éditeur, le directeur de la publication et les hébergeurs de Jammix sont
-            présentés dans les <Link href="/mentions-legales" className="underline">mentions légales</Link>.
+            présentés dans les <Link href="/mentions-legales" className="underline active:text-[var(--harbor-bleu)]">mentions légales</Link>.
           </p>
         </Section>
 

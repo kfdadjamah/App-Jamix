@@ -25,7 +25,7 @@ export default function AnnulerOccurrence({ occurrenceId }: { occurrenceId: stri
         type="button"
         onClick={surAnnulation}
         disabled={enCours}
-        className="rounded-[8px] px-2.5 py-1.5 text-[13px] font-bold text-[var(--harbor-marine)] underline-offset-2 transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] hover:underline disabled:opacity-60"
+        className="rounded-[8px] px-2.5 py-2 text-[13px] font-bold bg-[var(--harbor-erreur)] text-white transition-colors duration-[120ms] hover:bg-[color-mix(in_srgb,var(--harbor-erreur),black_10%)] active:bg-[color-mix(in_srgb,var(--harbor-erreur),black_20%)] disabled:opacity-60"
       >
         Annuler cette date
       </button>

@@ -89,7 +89,7 @@ export default function FormulaireConnexion({ reinitialise }: { reinitialise?: s
 
         <a
           href="/mot-de-passe-oublie"
-          className="-mt-2 self-start text-[13px] font-bold text-[var(--harbor-marine)] underline"
+          className="-mt-2 self-start text-[13px] font-bold text-[var(--harbor-marine)] underline active:text-[var(--harbor-bleu)]"
         >
           Mot de passe oublié ?
         </a>
@@ -103,7 +103,7 @@ export default function FormulaireConnexion({ reinitialise }: { reinitialise?: s
         <button
           type="submit"
           disabled={enCours}
-          className="mt-1 rounded-[12px] bg-[var(--harbor-bleu)] px-6 py-3 text-[14px] font-bold text-white transition-colors duration-[120ms] hover:bg-[var(--harbor-marine)] disabled:opacity-60"
+          className="mt-1 rounded-[12px] bg-[var(--harbor-bleu)] px-6 py-3 text-[14px] font-bold text-white transition-colors duration-[120ms] hover:bg-[var(--harbor-marine)] active:bg-[var(--harbor-marine)] disabled:opacity-60"
         >
           {enCours ? "Connexion…" : "Se connecter"}
         </button>
@@ -111,7 +111,7 @@ export default function FormulaireConnexion({ reinitialise }: { reinitialise?: s
 
       <p className="text-[12px] text-[var(--harbor-marine-2)]">
         Pas encore de compte ?{" "}
-        <a href="/inscription" className="text-[var(--harbor-marine)] underline">
+        <a href="/inscription" className="text-[var(--harbor-marine)] underline active:text-[var(--harbor-bleu)]">
           S&apos;inscrire
         </a>
       </p>

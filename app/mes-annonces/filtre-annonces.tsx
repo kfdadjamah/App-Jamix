@@ -28,8 +28,10 @@ export default function FiltreAnnonces({
               type="button"
               aria-pressed={actif}
               onClick={() => setBarId(option.id)}
-              className={`max-w-full truncate rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] ${
-                actif ? "bg-[var(--color-warm-cream)]/15" : ""
+              className={`max-w-full truncate rounded-[12px] border px-4 py-2 text-[13px] font-bold transition-colors duration-[120ms] ${
+                actif
+                  ? "border-[var(--harbor-bleu)] bg-[var(--harbor-bleu)] text-white"
+                  : "border-[var(--harbor-trait)] bg-white text-[var(--harbor-marine)] hover:bg-[var(--harbor-voile)] active:bg-[var(--harbor-trait)]"
               }`}
             >
               {option.nom}

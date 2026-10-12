@@ -137,7 +137,7 @@ export default function FormulaireInscription() {
           />
         </ChampFormulaire>
 
-        <ChampFormulaire label="Photo ou logo (optionnel)">
+        <ChampFormulaire label="Photo ou logo (option)">
           <input
             type="file"
             accept="image/jpeg,image/png,image/webp"
@@ -155,7 +155,7 @@ export default function FormulaireInscription() {
         <button
           type="submit"
           disabled={enCours}
-          className="mt-2 rounded-[12px] bg-[var(--harbor-bleu)] px-6 py-3 text-[14px] font-bold text-white transition-colors duration-[120ms] hover:bg-[var(--harbor-marine)] disabled:opacity-60"
+          className="mt-2 rounded-[12px] bg-[var(--harbor-bleu)] px-6 py-3 text-[14px] font-bold text-white transition-colors duration-[120ms] hover:bg-[var(--harbor-marine)] active:bg-[var(--harbor-marine)] disabled:opacity-60"
         >
           {enCours ? "Création en cours…" : "Créer mon compte"}
         </button>
@@ -163,7 +163,7 @@ export default function FormulaireInscription() {
 
       <p className="text-[12px] text-[var(--harbor-marine-2)]">
         Déjà un compte ?{" "}
-        <a href="/connexion" className="text-[var(--harbor-marine)] underline">
+        <a href="/connexion" className="text-[var(--harbor-marine)] underline active:text-[var(--harbor-bleu)]">
           Se connecter
         </a>
       </p>

@@ -240,7 +240,7 @@ export default function FormulaireAnnonce({
   const inactif = enCours || occupe;
 
   return (
-    <form ref={formRef} className="flex flex-col gap-8" noValidate>
+    <form ref={formRef} className="flex flex-col gap-5" noValidate>
       {fenetre?.type === "brouillon-enregistre" && (
         <FenetreSortie
           titre="Brouillon enregistré"
@@ -307,11 +307,11 @@ export default function FormulaireAnnonce({
       )}
 
       {nouvelleAnnonce && reprise && (
-        <div className="-mt-4 flex flex-col items-start gap-2">
+        <div className="flex flex-col items-start gap-2">
           <button
             type="button"
             onClick={reprendre}
-            className="rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)]"
+            className="rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] active:border-[var(--harbor-bleu-clair)] active:bg-[var(--harbor-voile)]"
           >
             Reprendre la dernière annonce de ce bar
           </button>
@@ -351,7 +351,7 @@ export default function FormulaireAnnonce({
                     type="button"
                     onClick={() => retirerDate(date)}
                     aria-label={`Retirer le ${date}`}
-                    className="text-[var(--harbor-marine-2)]"
+                    className="text-[var(--harbor-marine-2)] active:text-[var(--harbor-erreur)]"
                   >
                     ×
                   </button>
@@ -375,7 +375,7 @@ export default function FormulaireAnnonce({
               type="button"
               onClick={ajouterDate}
               disabled={dates.length >= NOMBRE_MAX_DATES}
-              className="whitespace-nowrap rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] disabled:opacity-60"
+              className="whitespace-nowrap rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] active:border-[var(--harbor-bleu-clair)] active:bg-[var(--harbor-voile)] disabled:opacity-60"
             >
               Ajouter une date
             </button>
@@ -389,21 +389,21 @@ export default function FormulaireAnnonce({
         )}
       </div>
 
-      <div key={`horaire-${cleReprise}`} className="flex gap-6">
+      <div key={`horaire-${cleReprise}`} className="grid grid-cols-2 items-stretch gap-3">
         <Champ label="Heure de début">
           <input
             type="time"
             name="heureDebut"
             defaultValue={valeurs.heureDebut}
-            className="champ-input"
+            className="champ-input mt-auto"
           />
         </Champ>
-        <Champ label="Heure de fin (optionnel)">
+        <Champ label="Heure de fin (option)">
           <input
             type="time"
             name="heureFin"
             defaultValue={valeurs.heureFin}
-            className="champ-input"
+            className="champ-input mt-auto"
           />
         </Champ>
       </div>
@@ -475,7 +475,7 @@ export default function FormulaireAnnonce({
             type="button"
             disabled={inactif}
             onClick={() => soumettre(actionBrouillon)}
-            className="rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] disabled:opacity-60"
+            className="rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] active:border-[var(--harbor-bleu-clair)] active:bg-[var(--harbor-voile)] disabled:opacity-60"
           >
             Enregistrer le brouillon
           </button>
@@ -485,7 +485,7 @@ export default function FormulaireAnnonce({
             type="button"
             disabled={inactif}
             onClick={() => soumettre(actionPublier)}
-            className="rounded-[12px] bg-[var(--harbor-bleu)] px-6 py-3 text-[14px] font-bold text-white transition-colors duration-[120ms] hover:bg-[var(--harbor-marine)] disabled:opacity-60"
+            className="rounded-[12px] bg-[var(--harbor-bleu)] px-6 py-3 text-[14px] font-bold text-white transition-colors duration-[120ms] hover:bg-[var(--harbor-marine)] active:bg-[var(--harbor-marine)] disabled:opacity-60"
           >
             Publier
           </button>
@@ -495,7 +495,7 @@ export default function FormulaireAnnonce({
             type="button"
             disabled={inactif}
             onClick={() => soumettre(actionModifier)}
-            className="rounded-[12px] bg-[var(--harbor-bleu)] px-6 py-3 text-[14px] font-bold text-white transition-colors duration-[120ms] hover:bg-[var(--harbor-marine)] disabled:opacity-60"
+            className="rounded-[12px] bg-[var(--harbor-bleu)] px-6 py-3 text-[14px] font-bold text-white transition-colors duration-[120ms] hover:bg-[var(--harbor-marine)] active:bg-[var(--harbor-marine)] disabled:opacity-60"
           >
             Enregistrer les modifications
           </button>
@@ -599,7 +599,7 @@ function EmplacementPhoto({
 }) {
   const [photoReprise, setPhotoReprise] = useState(photoRepriseInitiale);
   const refFichier = useRef<HTMLInputElement>(null);
-  const label = `Photo ${numero} (optionnel)`;
+  const label = `Photo ${numero} (option)`;
 
   // Structure stable : l'input fichier garde sa place, sinon React le remonterait et
   // perdrait le fichier choisi via « Remplacer ».
@@ -632,14 +632,14 @@ function EmplacementPhoto({
           <button
             type="button"
             onClick={() => refFichier.current?.click()}
-            className="text-[13px] font-bold text-[var(--harbor-marine)] underline"
+            className="text-[13px] font-bold text-[var(--harbor-marine)] underline active:text-[var(--harbor-bleu)]"
           >
             Remplacer
           </button>
           <button
             type="button"
             onClick={() => setPhotoReprise(null)}
-            className="text-[13px] font-bold text-[var(--harbor-marine)] underline"
+            className="text-[13px] font-bold text-[var(--harbor-marine)] underline active:text-[var(--harbor-bleu)]"
           >
             Retirer
           </button>
@@ -655,7 +655,7 @@ function ChampDescription({ valeurInitiale }: { valeurInitiale: string }) {
   return (
     <label className="flex flex-col gap-2">
       <span className="text-[13px] font-bold text-[var(--harbor-marine)]">
-        Description (optionnel)
+        Description (option)
       </span>
       <textarea
         name="description"
@@ -674,7 +674,7 @@ function ChampDescription({ valeurInitiale }: { valeurInitiale: string }) {
 
 function Champ({ label, children }: { label: string; children: React.ReactNode }) {
   return (
-    <label className="flex flex-1 flex-col gap-2">
+    <label className="flex min-w-0 flex-1 flex-col gap-2">
       <span className="text-[13px] font-bold text-[var(--harbor-marine)]">
         {label}
       </span>
