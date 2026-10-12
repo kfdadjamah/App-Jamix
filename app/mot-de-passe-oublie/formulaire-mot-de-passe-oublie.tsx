@@ -48,7 +48,7 @@ export default function FormulaireMotDePasseOublie() {
           Mot de passe oublié
         </h1>
         {!envoye && (
-          <p className="mt-3 text-[18px] leading-tight text-[color:var(--color-texte-secondaire)]">
+          <p className="mt-3 text-[18px] leading-tight text-[var(--harbor-marine-2)]">
             Saisissez l&apos;email de votre compte, nous vous enverrons un lien pour choisir un
             nouveau mot de passe.
           </p>
@@ -56,7 +56,7 @@ export default function FormulaireMotDePasseOublie() {
       </div>
 
       {envoye ? (
-        <p className="text-[18px] leading-tight text-[var(--color-warm-cream)]">
+        <p className="text-[18px] leading-tight text-[var(--harbor-marine)]">
           Si un compte existe pour cette adresse, un email contenant un lien de réinitialisation
           vient d&apos;être envoyé. Pensez à vérifier vos spams.
         </p>
@@ -72,7 +72,7 @@ export default function FormulaireMotDePasseOublie() {
           </ChampFormulaire>
 
           {erreurServeur && (
-            <p className="text-[12px] font-medium uppercase text-[var(--color-gold-elegance)]">
+            <p className="text-[13px] font-semibold text-[var(--harbor-erreur)]">
               {erreurServeur}
             </p>
           )}
@@ -80,7 +80,7 @@ export default function FormulaireMotDePasseOublie() {
           <button
             type="submit"
             disabled={enCours}
-            className="mt-2 rounded-[36px] bg-[var(--color-brass-copper)] px-6 py-[14px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)] disabled:opacity-60"
+            className="mt-2 rounded-[12px] bg-[var(--harbor-bleu)] px-6 py-3 text-[14px] font-bold text-white transition-colors duration-[120ms] hover:bg-[var(--harbor-marine)] disabled:opacity-60"
           >
             {enCours ? "Envoi…" : "Envoyer le lien"}
           </button>

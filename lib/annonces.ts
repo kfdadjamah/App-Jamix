@@ -51,6 +51,20 @@ export async function recupererAnnoncesPubliees(dateIso: string) {
   return occurrences;
 }
 
+/** Jours (AAAA-MM-JJ) de [debutIso, finIso] ayant une occurrence d'annonce publiée, annulée comprise. */
+export async function recupererJoursAvecJams(debutIso: string, finIso: string) {
+  const occurrences = await prisma.occurrenceJam.findMany({
+    where: {
+      date: { gte: new Date(debutIso), lte: new Date(finIso) },
+      annonce: { statut: "PUBLIEE" },
+    },
+    distinct: ["date"],
+    select: { date: true },
+  });
+
+  return occurrences.map((occurrence) => occurrence.date.toISOString().slice(0, 10));
+}
+
 /**
  * Occurrence consultable par un musicien (page d'une jam) : annonce publiée, date à venir
  * (aujourd'hui compris), annulée comprise. `null` sinon : inexistante, brouillon ou passée.

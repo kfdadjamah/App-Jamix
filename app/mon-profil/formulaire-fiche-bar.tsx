@@ -13,11 +13,13 @@ export default function FormulaireFicheBar({
   barId,
   nom,
   adresse,
+  codePostal,
   actionDroite,
 }: {
   barId: string;
   nom: string;
   adresse: string;
+  codePostal: string;
   // Affichée à droite d'« Enregistrer », sur la même ligne (ex. « Supprimer ce bar »).
   actionDroite?: React.ReactNode;
 }) {
@@ -32,7 +34,7 @@ export default function FormulaireFicheBar({
     formState: { errors, isSubmitting },
   } = useForm<ChampsFicheBar>({
     resolver: zodResolver(schemaFicheBar),
-    defaultValues: { nomBar: nom, adresseBar: adresse },
+    defaultValues: { nomBar: nom, adresseBar: adresse, codePostalBar: codePostal },
   });
 
   async function surSoumission(donnees: ChampsFicheBar) {
@@ -43,6 +45,7 @@ export default function FormulaireFicheBar({
     const formData = new FormData();
     formData.set("nomBar", donnees.nomBar);
     formData.set("adresseBar", donnees.adresseBar);
+    formData.set("codePostalBar", donnees.codePostalBar);
 
     const resultat = await mettreAJourFicheBar(barId, formData);
     if ("erreur" in resultat) {
@@ -54,31 +57,51 @@ export default function FormulaireFicheBar({
   }
 
   return (
-    <form onSubmit={handleSubmit(surSoumission)} className="flex flex-col gap-6" noValidate>
+    <form onSubmit={handleSubmit(surSoumission)} className="flex flex-col gap-4" noValidate>
       <ChampFormulaire label="Nom du bar" erreur={errors.nomBar?.message}>
-        <input type="text" {...register("nomBar")} className="champ-input" />
+        <input
+          type="text"
+          placeholder="Nom du bar"
+          {...register("nomBar")}
+          className="champ-input"
+        />
       </ChampFormulaire>
 
       <ChampFormulaire label="Adresse du bar" erreur={errors.adresseBar?.message}>
         <ChampAdresse
-            placeholder="12 rue de la République, Lyon"
+            placeholder="Adresse du bar"
             register={register("adresseBar")}
             setValue={(v) => setValue("adresseBar", v, { shouldValidate: true, shouldDirty: true })}
+            setCodePostal={(v) =>
+              setValue("codePostalBar", v, { shouldValidate: true, shouldDirty: true })
+            }
           />
       </ChampFormulaire>
 
+      <ChampFormulaire label="Code postal" erreur={errors.codePostalBar?.message}>
+        <input
+          type="text"
+          inputMode="numeric"
+          autoComplete="postal-code"
+          maxLength={5}
+          placeholder="Code postal"
+          {...register("codePostalBar")}
+          className="champ-input"
+        />
+      </ChampFormulaire>
+
       {erreurServeur && (
-        <p className="text-[12px] font-medium uppercase text-[var(--color-gold-elegance)]">
+        <p className="text-[13px] font-semibold text-[var(--harbor-erreur)]">
           {erreurServeur}
         </p>
       )}
       {succes && (
-        <p className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)]">
+        <p className="text-[13px] font-bold text-[var(--harbor-marine)]">
           Fiche bar enregistrée.
         </p>
       )}
       {adresseIntrouvable && (
-        <p className="text-[12px] font-medium uppercase text-[var(--color-gold-elegance)]">
+        <p className="text-[13px] font-semibold text-[var(--harbor-erreur)]">
           {AVERTISSEMENT_ADRESSE_INTROUVABLE}
         </p>
       )}
@@ -87,7 +110,7 @@ export default function FormulaireFicheBar({
         <button
           type="submit"
           disabled={isSubmitting}
-          className="rounded-[22.5px] border border-[var(--color-warm-cream)] px-4 py-[7.5px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)] disabled:opacity-60"
+          className="rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] disabled:opacity-60"
         >
           {isSubmitting ? "Enregistrement…" : "Enregistrer"}
         </button>

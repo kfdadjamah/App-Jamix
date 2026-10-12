@@ -4,6 +4,7 @@ import { applicationsCarto, detecterAppareil } from "./itineraire";
 const BAR = {
   nom: "Le Sirius",
   adresse: "4 quai Augagneur, Lyon",
+  codePostal: "69003",
   latitude: 45.7597,
   longitude: 4.8422,
 };
@@ -45,7 +46,7 @@ describe("applicationsCarto — le bar est la destination", () => {
   it("se rabat sur l'adresse quand le bar n'est pas géocodé", () => {
     const urls = applicationsCarto(BAR_SANS_COORDONNEES, IPHONE).map((app) => app.url);
     for (const url of urls) {
-      expect(url).toContain(encodeURIComponent(BAR.adresse));
+      expect(url).toContain(encodeURIComponent("4 quai Augagneur, 69003 Lyon"));
       expect(url).not.toContain("null");
     }
   });

@@ -76,10 +76,12 @@ test.describe("espace organisateur", () => {
     await expect(page).toHaveURL("/mes-annonces/nouvelle");
   });
 
-  test("le profil n'ouvre que « Mes bars » et la déconnexion ferme la session", async ({ page }) => {
+  test("le profil n'ouvre aucune section d'office et la déconnexion ferme la session", async ({ page }) => {
     await page.goto("/mon-profil");
     await expect(page.getByRole("heading", { level: 1, name: "Mon profil" })).toBeVisible();
-    await expect(page.getByRole("button", { name: "Mes bars" })).toHaveAttribute("aria-expanded", "true");
+    await expect(page.getByRole("button", { name: "Mes bars" })).toHaveAttribute("aria-expanded", "false");
+    await expect(page.getByRole("button", { name: "Nom et prénom" })).toHaveAttribute("aria-expanded", "false");
+    await expect(page.getByText("test-organisateur@jamix.fr")).toHaveCount(0);
     await expect(page.getByRole("button", { name: "Email" })).toHaveAttribute("aria-expanded", "false");
 
     await page.getByRole("button", { name: "Déconnexion" }).click();

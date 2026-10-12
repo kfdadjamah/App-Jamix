@@ -6,13 +6,12 @@ import { LienGarde } from "./garde-sortie";
 // des sorties gardées. Placé après le contenu, jamais fixé à l'écran.
 export default function PiedDePage({ page }: { page?: "cgu" | "mentions-legales" | "contact" }) {
   const annee = new Date().getFullYear();
-  const lien = (actif: boolean) =>
-    `text-[var(--color-warm-cream)] hover:underline focus-visible:underline${actif ? " underline" : ""}`;
+  const lien = (actif: boolean) => `hover:underline focus-visible:underline${actif ? " underline" : ""}`;
 
   return (
-    <footer className="w-full bg-[var(--color-walnut-shadow)]">
+    <footer className="w-full">
       <div className="mx-auto w-full max-w-md px-6 pb-6">
-        <div className="flex flex-col items-center gap-2 border-t border-dashed border-[var(--color-cork-border)] pt-6 text-center text-[11px] font-medium uppercase leading-[1.2] text-[color-mix(in_srgb,var(--color-warm-cream)_70%,transparent)]">
+        <div className="donnees flex flex-col items-center gap-2 border-t border-[var(--harbor-trait)] pt-6 text-center text-[12px] text-[var(--harbor-marine-3)]">
           <nav aria-label="Informations légales">
             <LienGarde
               href="/cgu"

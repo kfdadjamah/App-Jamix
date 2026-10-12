@@ -41,11 +41,12 @@ export default function FormulaireEmail() {
   }
 
   return (
-    <form onSubmit={handleSubmit(surSoumission)} className="flex flex-col gap-6" noValidate>
+    <form onSubmit={handleSubmit(surSoumission)} className="flex flex-col gap-4" noValidate>
       <ChampFormulaire label="Nouvel email" erreur={errors.nouvelEmail?.message}>
         <input
           type="email"
           autoComplete="email"
+          placeholder="Nouvel email"
           {...register("nouvelEmail")}
           className="champ-input"
         />
@@ -55,18 +56,19 @@ export default function FormulaireEmail() {
         <input
           type="password"
           autoComplete="current-password"
+          placeholder="Mot de passe actuel"
           {...register("motDePasseActuel")}
           className="champ-input"
         />
       </ChampFormulaire>
 
       {erreurServeur && (
-        <p className="text-[12px] font-medium uppercase text-[var(--color-gold-elegance)]">
+        <p className="text-[13px] font-semibold text-[var(--harbor-erreur)]">
           {erreurServeur}
         </p>
       )}
       {succes && (
-        <p className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)]">
+        <p className="text-[13px] font-bold text-[var(--harbor-marine)]">
           Email modifié.
         </p>
       )}
@@ -74,7 +76,7 @@ export default function FormulaireEmail() {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="self-start rounded-[22.5px] border border-[var(--color-warm-cream)] px-4 py-[7.5px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)] disabled:opacity-60"
+        className="self-start rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] disabled:opacity-60"
       >
         {isSubmitting ? "Enregistrement…" : "Changer d'email"}
       </button>

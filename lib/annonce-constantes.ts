@@ -39,11 +39,12 @@ export const LIBELLES_STATUT_OCCURRENCE: Record<string, string> = {
   ANNULEE: "Annulée",
 };
 
+// Palette Harbor, liste et carte (DESIGN.md).
 export const COULEURS_STATUT_OCCURRENCE: Record<string, string> = {
-  CONFIRMEE: "#22c55e",
-  PROGRAMMEE: "#a89a8c",
-  EN_ATTENTE_CONFIRMATION: "#a89a8c",
-  ANNULEE: "#6c5f51",
+  CONFIRMEE: "#17807E",
+  PROGRAMMEE: "#2B78BE",
+  EN_ATTENTE_CONFIRMATION: "#B7791F",
+  ANNULEE: "#6B7C8C",
 };
 
 export const PRIORITE_STATUT_OCCURRENCE: Record<string, number> = {

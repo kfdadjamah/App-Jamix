@@ -9,12 +9,12 @@ export default function ChampFormulaire({
 }) {
   return (
     <label className="flex flex-col gap-2">
-      <span className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)]">
+      <span className="text-[13px] font-bold text-[var(--harbor-marine)]">
         {label}
       </span>
       {children}
       {erreur && (
-        <span className="text-[10px] font-medium uppercase text-[var(--color-gold-elegance)]">
+        <span className="text-[13px] font-semibold text-[var(--harbor-erreur)]">
           {erreur}
         </span>
       )}

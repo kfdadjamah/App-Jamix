@@ -9,7 +9,10 @@ datasource db {
 
 model Organisateur {
   id                     String                  @id @default(cuid())
-  // Nom et prénom saisis à l'inscription ; null pour les comptes antérieurs à la phase 35.
+  // Prénom et nom, deux champs distincts. `prenom` est null pour les comptes antérieurs à la
+  // phase 42 ; leur `nom` peut alors contenir l'ancien « Prénom Nom » (jamais coupé automatiquement).
+  // `nom` est null pour les comptes antérieurs à la phase 35.
+  prenom                 String?
   nom                    String?
   email                  String                  @unique
   motDePasseHash         String
@@ -36,6 +39,8 @@ model Bar {
   id             String       @id @default(cuid())
   nom            String
   adresse        String
+  // Code postal à part (« 69002 ») ; vide pour un bar antérieur qui ne l'avait pas renseigné.
+  codePostal     String       @default("")
   latitude       Float?
   longitude      Float?
   photoUrl       String?

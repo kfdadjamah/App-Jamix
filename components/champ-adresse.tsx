@@ -3,15 +3,19 @@
 import { useEffect, useId, useRef, useState } from "react";
 import type { UseFormRegisterReturn } from "react-hook-form";
 import { LONGUEUR_MIN_ADRESSE } from "@/lib/suggestions-adresse";
+import { separerCodePostal } from "@/lib/adresse";
 
 // Champ libre + suggestions d'adresses complètes ; la valeur postée reste le texte du champ.
+// Un choix de suggestion met l'adresse sans code postal dans le champ et renvoie le code postal à part.
 export default function ChampAdresse({
   register,
   setValue,
+  setCodePostal,
   placeholder,
 }: {
   register: UseFormRegisterReturn;
   setValue: (valeur: string) => void;
+  setCodePostal?: (codePostal: string) => void;
   placeholder?: string;
 }) {
   const idListe = useId();
@@ -49,9 +53,11 @@ export default function ChampAdresse({
     };
   }, [saisie]);
 
-  function choisir(adresse: string) {
+  function choisir(libelle: string) {
+    const { adresse, codePostal } = separerCodePostal(libelle);
     choix.current = true;
     setValue(adresse);
+    if (codePostal) setCodePostal?.(codePostal);
     setSaisie(adresse);
     setSuggestions([]);
     setOuvert(false);
@@ -104,7 +110,7 @@ export default function ChampAdresse({
         <ul
           id={idListe}
           role="listbox"
-          className="absolute left-0 right-0 z-10 mt-1 border border-[var(--color-cork-border)] bg-[var(--color-walnut-shadow)]"
+          className="absolute left-0 right-0 z-10 mt-1 border border-[var(--harbor-trait)] bg-white"
         >
           {suggestions.map((s, i) => (
             <li
@@ -116,7 +122,7 @@ export default function ChampAdresse({
                 e.preventDefault();
                 choisir(s);
               }}
-              className={`cursor-pointer px-2 py-2 text-[12px] text-[var(--color-warm-cream)] ${
+              className={`cursor-pointer px-2 py-2 text-[12px] text-[var(--harbor-marine)] ${
                 i === actif ? "bg-[color-mix(in_srgb,var(--color-warm-cream)_15%,transparent)]" : ""
               }`}
             >

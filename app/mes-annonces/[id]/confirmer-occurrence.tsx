@@ -20,17 +20,17 @@ export default function ConfirmerOccurrence({ occurrenceId }: { occurrenceId: st
   }
 
   return (
-    <div className="flex flex-col gap-1">
+    <div className="flex flex-col items-end gap-1">
       <button
         type="button"
         onClick={surConfirmation}
         disabled={enCours}
-        className="rounded-[22.5px] border border-[var(--color-warm-cream)] px-4 py-[7.5px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)] disabled:opacity-60"
+        className="rounded-[8px] px-2.5 py-1.5 text-[13px] font-bold text-[var(--harbor-marine)] underline-offset-2 transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] hover:underline disabled:opacity-60"
       >
         Confirmer
       </button>
       {erreur && (
-        <span className="text-[10px] font-medium uppercase text-[var(--color-gold-elegance)]">
+        <span className="text-[13px] font-semibold text-[var(--harbor-erreur)]">
           {erreur}
         </span>
       )}

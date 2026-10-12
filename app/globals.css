@@ -1,40 +1,72 @@
 @import "tailwindcss";
 
+/* Harbor (clair, marine et bleu) : seul système de design de l'application (DESIGN.md). */
 :root {
-  --color-warm-cream: #ffedd7;
-  --color-walnut-shadow: #100904;
-  --color-brass-copper: #a8451f;
-  --color-cork-border: #40372e;
-  --color-driftwood: #6c5f51;
-  --color-gold-elegance: #fca311;
-  --color-texte-secondaire: color-mix(in srgb, var(--color-warm-cream) 70%, transparent);
+  --harbor-brume: #f7fafc;
+  --harbor-carte: #ffffff;
+  --harbor-marine: #0b3658;
+  --harbor-marine-2: #486984;
+  --harbor-marine-3: #688dac;
+  --harbor-bleu: #2b78be;
+  --harbor-bleu-clair: #4e9ad9;
+  --harbor-voile: #e6f1fa;
+  --harbor-trait: #dde7ee;
+  --harbor-succes: #17807e;
+  --harbor-alerte: #b7791f;
+  --harbor-erreur: #b3261e;
+  --harbor-annulee: #6b7c8c;
 
-  --background: var(--color-walnut-shadow);
-  --foreground: var(--color-warm-cream);
+  --harbor-rayon-petit: 6px;
+  --harbor-rayon-moyen: 12px;
+  --harbor-rayon-grand: 16px;
+  --harbor-ombre-carte: 0 12px 48px rgba(11, 54, 88, 0.08);
+  --harbor-ombre-menu: 0 4px 24px rgba(11, 54, 88, 0.08);
+
+  --background: var(--harbor-brume);
+  --foreground: var(--harbor-marine);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-inter);
+  --font-sans: var(--font-figtree);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
+  line-height: 1.5;
+  letter-spacing: -0.005em;
+}
+
+.donnees {
+  font-family: var(--font-figtree), ui-sans-serif, sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Carte d'annonce : Geist pour adresse, distance, horaires (voir DESIGN.md). */
+.donnees-carte {
+  font-family: var(--font-geist), ui-sans-serif, sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+
+.kicker {
+  font-family: var(--font-figtree), ui-sans-serif, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
 /* Titre de page unique (DESIGN.md) */
 .titre-page {
   font-size: 24px;
-  font-weight: 500;
-  text-transform: uppercase;
-  line-height: 1.09;
-  color: var(--color-warm-cream);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: var(--harbor-marine);
+  text-wrap: balance;
 }
 
 /* Carte */
@@ -43,12 +75,16 @@ body {
   height: 100%;
 }
 
+.maplibregl-ctrl-bottom-right {
+  z-index: 5;
+}
 .maplibregl-ctrl-attrib {
-  background: rgba(16, 9, 4, 0.7) !important;
-  color: var(--color-texte-secondaire) !important;
+  background: rgba(255, 255, 255, 0.8) !important;
+  color: var(--harbor-marine-2) !important;
+  font-family: var(--font-figtree), sans-serif;
 }
 .maplibregl-ctrl-attrib a {
-  color: var(--color-texte-secondaire) !important;
+  color: var(--harbor-marine-2) !important;
 }
 
 /* Sticker */
@@ -71,7 +107,8 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: rgba(16, 9, 4, 0.92);
+  background: rgba(11, 54, 88, 0.96);
+  box-shadow: var(--harbor-ombre-menu);
   border: 1px solid;
   border-radius: 9999px;
   padding: 8px 16px 8px 12px;
@@ -120,25 +157,28 @@ body {
 
 .jam-sticker__name {
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 800;
+  font-family: var(--font-figtree), sans-serif;
   text-transform: uppercase;
-  color: var(--color-warm-cream);
+  color: #ffffff;
   line-height: 1;
 }
 
 .jam-sticker__sub {
+  font-family: var(--font-figtree), sans-serif;
   font-size: 10px;
   font-weight: 500;
-  text-transform: uppercase;
-  color: rgba(255, 237, 215, 0.7);
+  text-transform: none;
+  color: rgba(255, 255, 255, 0.75);
   line-height: 1;
 }
 
 .jam-sticker__distance {
+  font-family: var(--font-figtree), sans-serif;
   font-size: 10px;
   font-weight: 500;
-  text-transform: uppercase;
-  color: rgba(255, 237, 215, 0.7);
+  text-transform: none;
+  color: rgba(255, 255, 255, 0.75);
   line-height: 1;
 }
 
@@ -151,75 +191,69 @@ body {
   margin-top: -1px;
 }
 
+
 /* Popup */
 .maplibregl-popup-content {
-  background: rgba(16, 9, 4, 0.95) !important;
-  border: 1px solid var(--color-cork-border);
+  background: #ffffff !important;
+  border: 1px solid var(--harbor-trait);
   border-radius: 12px !important;
   padding: 16px 18px !important;
-  box-shadow: none !important;
+  box-shadow: var(--harbor-ombre-menu) !important;
 }
 .maplibregl-popup-tip {
-  border-top-color: rgba(16, 9, 4, 0.95) !important;
-  border-bottom-color: rgba(16, 9, 4, 0.95) !important;
+  border-top-color: #ffffff !important;
+  border-bottom-color: #ffffff !important;
 }
 
 .jam-popup__title {
   font-size: 14px;
-  font-weight: 500;
-  text-transform: uppercase;
-  color: var(--color-warm-cream);
+  font-weight: 800;
+  color: var(--harbor-marine);
 }
 .jam-popup__addr {
   margin-top: 4px;
   font-size: 12px;
-  color: rgba(255, 237, 215, 0.7);
+  color: var(--harbor-marine-2);
 }
 .jam-popup__status {
   margin-top: 8px;
   font-size: 11px;
-  font-weight: 500;
-  text-transform: uppercase;
+  font-weight: 700;
 }
 
-/* Champ de formulaire souligné (DESIGN.md : Input Field Underline Only) */
+/* Champ de formulaire Harbor : fond blanc, bordure Trait, rayon 12 */
 .champ-input {
   width: 100%;
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid var(--color-warm-cream);
-  border-radius: 0;
-  padding: 1px 2px;
-  color: var(--color-warm-cream);
+  background: #ffffff;
+  border: 1px solid var(--harbor-trait);
+  border-radius: 12px;
+  padding: 10px 12px;
+  color: var(--harbor-marine);
   font-size: 15px;
-  color-scheme: dark;
+  transition: border-color 120ms, box-shadow 120ms;
 }
 .champ-input:focus {
   outline: none;
-  border-bottom-width: 2px;
-  padding-bottom: 0;
+  border-color: var(--harbor-bleu);
+  box-shadow: 0 0 0 2px var(--harbor-voile);
 }
 .champ-input--fichier {
-  border-bottom: 1px solid var(--color-cork-border);
-  font-size: 12px;
-}
-.champ-input--fichier:focus {
-  border-bottom-color: var(--color-warm-cream);
+  font-size: 13px;
 }
 
-/* Focus clavier (DESIGN.md : Warm Cream, 2 px max, pas d'ombre).
+/* Focus clavier (Bleu signal, 2 px).
    En @layer base pour que .champ-input:focus et les utilitaires Tailwind gardent la main. */
 @layer base {
   :where(a, button, input[type="file"], input[type="checkbox"]):not(.maplibregl-ctrl *):focus-visible {
-    outline: 2px solid var(--color-warm-cream);
+    outline: 2px solid var(--harbor-bleu);
     outline-offset: 2px;
   }
   input[type="checkbox"] {
-    accent-color: var(--color-warm-cream);
+    accent-color: var(--harbor-bleu);
   }
 }
 
-/* Fenêtre de sortie d'une annonce : fond Walnut Shadow voilé derrière la fenêtre, sans flou. */
+/* Fenêtre de sortie d'une annonce : fond Marine voilé derrière la fenêtre, sans flou. */
 .fenetre-sortie::backdrop {
-  background: rgb(16 9 4 / 0.8);
+  background: rgb(11 54 88 / 0.5);
 }

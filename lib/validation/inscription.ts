@@ -28,31 +28,57 @@ const champAdresseBar = z
   .min(1, "L'adresse du bar est requise.")
   .transform(nettoyerEspaces);
 
-// Nom et prénom : un seul champ, espaces de début et de fin ignorés.
-const NOM_COMPLET_MAX = 80;
-const champNomComplet = z
+const champCodePostal = z
   .string()
   .trim()
-  .min(1, "Le nom et prénom sont requis.")
-  .max(NOM_COMPLET_MAX, `Le nom et prénom ne doivent pas dépasser ${NOM_COMPLET_MAX} caractères.`);
+  .regex(/^\d{5}$/, "Le code postal doit contenir 5 chiffres.");
 
-export const schemaNomComplet = z.object({ nomComplet: champNomComplet });
-export type ChampsNomComplet = z.infer<typeof schemaNomComplet>;
+// Prénom et nom : deux champs distincts, espaces de début et de fin ignorés.
+const IDENTITE_MAX = 40;
+const champPrenom = z
+  .string()
+  .trim()
+  .min(1, "Le prénom est requis.")
+  .max(IDENTITE_MAX, `Le prénom ne doit pas dépasser ${IDENTITE_MAX} caractères.`);
+const champNomFamille = z
+  .string()
+  .trim()
+  .min(1, "Le nom est requis.")
+  .max(IDENTITE_MAX, `Le nom ne doit pas dépasser ${IDENTITE_MAX} caractères.`);
 
-// Au profil, le vide n'est accepté que pour un compte sans nom (décidé par l'appelant).
-export const schemaNomCompletVideAutorise = z.object({
-  nomComplet: z
-    .string()
-    .trim()
-    .max(NOM_COMPLET_MAX, `Le nom et prénom ne doivent pas dépasser ${NOM_COMPLET_MAX} caractères.`),
-});
+export const schemaIdentite = z.object({ prenom: champPrenom, nom: champNomFamille });
+export type ChampsIdentite = z.infer<typeof schemaIdentite>;
+
+// Au profil, le vide n'est accepté que pour un compte sans prénom (décidé par l'appelant).
+// Un seul des deux champs rempli reste refusé : l'autre devient requis.
+export const schemaIdentiteVideAutorise = z
+  .object({
+    prenom: z
+      .string()
+      .trim()
+      .max(IDENTITE_MAX, `Le prénom ne doit pas dépasser ${IDENTITE_MAX} caractères.`),
+    nom: z
+      .string()
+      .trim()
+      .max(IDENTITE_MAX, `Le nom ne doit pas dépasser ${IDENTITE_MAX} caractères.`),
+  })
+  .superRefine((champs, ctx) => {
+    if (champs.prenom === "" && champs.nom !== "") {
+      ctx.addIssue({ code: "custom", path: ["prenom"], message: "Le prénom est requis." });
+    }
+    if (champs.nom === "" && champs.prenom !== "") {
+      ctx.addIssue({ code: "custom", path: ["nom"], message: "Le nom est requis." });
+    }
+  });
 
 export const schemaInscription = z.object({
-  nomComplet: champNomComplet,
+  prenom: champPrenom,
+  nom: champNomFamille,
   email: champEmail,
   motDePasse: champMotDePasse,
   nomBar: champNomBar,
   adresseBar: champAdresseBar,
+  codePostalBar: champCodePostal,
   photo: z
     .union([schemaPhoto, z.literal(null)])
     .optional(),
@@ -75,6 +101,7 @@ export type ChampsConnexion = z.infer<typeof schemaConnexion>;
 export const schemaFicheBar = z.object({
   nomBar: champNomBar,
   adresseBar: champAdresseBar,
+  codePostalBar: champCodePostal,
 });
 
 export type ChampsFicheBar = z.infer<typeof schemaFicheBar>;

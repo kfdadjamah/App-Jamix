@@ -1,396 +1,74 @@
-# ORYZO AI — Style Reference
-> Darkroom product editorial. A lone object floating in warm darkness, cream typography the only decoration.
-
-**Theme:** dark
-
-Source measurements are normalized; roles and recommendations are interpreted. Font summary lists are independent, not paired by position. HTML examples are reconstructions, not source components.
-
-The ORYZO visual system treats a single product object like a museum artifact: full-bleed warm-dark canvas, cream typography floating in generous negative space, and zero UI chrome competing with the form. Every text element is uppercase at weight 500, with the sole exception of body copy at 29px/400 which is the system's only conversational voice. A single vivid orange appears only for credit lines and the studio link — never for buttons or CTAs — earning its rarity. The layout alternates between two modes: photographic hero (the product in context with tools and materials) and void-mode reveal (the product isolated on warm dark), connected by hairline dashed dividers and pill-shaped controls.
-
-## Tokens — Colors
-
-| Name | Value | Token | Role |
-|------|-------|-------|------|
-| Warm Cream | `#ffedd7` | `--color-warm-cream` | Light text on dark surfaces, inverse labels, and high-contrast captions. |
-| Walnut Shadow | `#100904` | `--color-walnut-shadow` | Page canvas and deepest background — warm near-black, not pure black. The void behind every product reveal |
-| Brass Copper | `#a8451f` | `--color-brass-copper` | Elevated surface and filled button background — the one chromatic step above the canvas, used for the single solid CTA, et fond du bandeau d'en-tête de Jammix |
-| Cork Border | `#40372e` | `--color-cork-border` | Hairline dividers, dashed section separators, subtle container borders — warmer than the canvas by one step |
-| Driftwood | `#6c5f51` | `--color-driftwood` | Mid-tone warm gray for secondary dividers and muted structural elements — the bridge between Bark and Cream |
-| Gold elegance | `#fca311` | `--color-gold-elegance` | Orange text accent for links, tags, and emphasized short phrases. |
-| Pure Black | `#000000` | `--color-pure-black` | SVG icon fills and decorative vector elements only — never used as a background or text color |
-
-## Tokens — Typography
-
-### halyard-display-variable — The only typeface. Weight 500 at 51px drives display headlines with extreme uppercase confidence; the same family at weight 400 / 29px becomes the system's sole mixed-case body voice. Letter-spacing stays normal — the geometric forms do the work without tightening. Substitute: 'Inter', 'Söhne', or 'Neue Haas Grotesk' for close structural match. · `--font-halyard-display-variable`
-- **Substitute:** Inter or Söhne
-- **Weights:** 400, 500
-- **Sizes:** 8, 10, 12, 14, 15, 18, 24, 29, 41, 51px
-- **Line height:** 0.90–1.26
-- **Letter spacing:** normal across all sizes — no negative tracking even at display scale, the font's geometry handles visual weight without compression
-- **OpenType features:** `"ss01" on`
-- **Role:** The only typeface. Weight 500 at 51px drives display headlines with extreme uppercase confidence; the same family at weight 400 / 29px becomes the system's sole mixed-case body voice. Letter-spacing stays normal — the geometric forms do the work without tightening. Substitute: 'Inter', 'Söhne', or 'Neue Haas Grotesk' for close structural match.
-
-### Arial — System fallback for micro-legal labels (8px uppercase credits like "* ADOBE ILLUSTRATOR"). Not a design choice — a necessity for system-rendered disclaimers. · `--font-arial`
-- **Substitute:** system-ui
-- **Weights:** 400, 500
-- **Sizes:** 8px
-- **Line height:** 1.20
-- **Role:** System fallback for micro-legal labels (8px uppercase credits like "* ADOBE ILLUSTRATOR"). Not a design choice — a necessity for system-rendered disclaimers.
-
-### Type Scale
-
-| Role | Family | Weight | Size | Line Height | Letter Spacing | Token |
-|------|--------|--------|------|-------------|----------------|-------|
-| subheading | — | — | 18px | 1 | 0px | `--text-subheading` |
-| heading-sm | — | — | 24px | 1.09 | 0px | `--text-heading-sm` |
-| body | — | — | 29px | 1.26 | 0px | `--text-body` |
-| heading | — | — | 41px | 0.9 | 0px | `--text-heading` |
-| display | — | — | 51px | 0.9 | 0px | `--text-display` |
-
-## Tokens — Spacing & Shapes
-
-**Density:** comfortable
-
-### Spacing Scale
-
-| Name | Value | Token |
-|------|-------|-------|
-| 6 | 6px | `--spacing-6` |
-| 8 | 8px | `--spacing-8` |
-| 9 | 9px | `--spacing-9` |
-| 10 | 10px | `--spacing-10` |
-| 12 | 12px | `--spacing-12` |
-| 14 | 14px | `--spacing-14` |
-| 18 | 18px | `--spacing-18` |
-| 24 | 24px | `--spacing-24` |
-| 31 | 31px | `--spacing-31` |
-| 41 | 41px | `--spacing-41` |
-| 45 | 45px | `--spacing-45` |
-| 68 | 68px | `--spacing-68` |
-| 204 | 204px | `--spacing-204` |
-
-### Border Radius
-
-| Element | Value |
-|---------|-------|
-| cards | 12px |
-| inputs | 0px |
-| full-round | 9999px |
-| buttons-pill | 36px |
-| buttons-outlined | 22.5px |
-
-### Layout
-
-- **Card padding:** 24px
-- **Element gap:** 18px
-
-## Components
-
-### Pill Button (Filled)
-**Role:** Primary solid CTA — used once on the page for the Lusion studio link
-
-36px border-radius, Brass Copper (#a8451f) background, Warm Cream (#ffedd7) text, 14px 24px vertical/horizontal padding, weight 500, uppercase, 8–14px size. The only filled action surface in the system — its rarity is the signal.
-
-### Outlined Ghost Button
-**Role:** Secondary action or decorative button — cream border on transparent fill
-
-22.5px border-radius, transparent background, 1px Warm Cream border, Warm Cream text, 7.5px vertical padding, 0px horizontal padding, weight 500, uppercase, 8–14px. Border does the work; no fill needed.
-
-Seule exception de remplissage Jammix : dans le filtre par bar de « Mes annonces », le bouton actif (« Tous » ou un bar) a un fond Warm Cream léger transparent (~15 %), sans soulignement. Un seul bouton actif à la fois ; les boutons passent à la ligne quand la largeur manque, et un nom trop long est tronqué par « … ». Aucun autre bouton fantôme n'a de fond.
-
-### Underline Text Link
-**Role:** Inline links and navigation items — borderless, relying on underline
-
-0px radius, transparent background, Warm Cream text, 0px padding, weight 500, uppercase, 12–14px. The default interaction — no container, just text with an underline indicator.
-
-### Input Field (Underline Only)
-**Role:** Minimal form input — bottom border only, no full outline
-
-0px radius, transparent background, 1px Warm Cream bottom border, Warm Cream text, 1px 2px padding, 36px right padding for an inline action. The form mirrors the ghost-button restraint — no boxes, just a line.
-
-### Fixed Top Navigation
-**Role:** Persistent site navigation — minimal, 4 items, uppercase micro-type
-
-Logo wordmark "ORYZO" left-aligned in Warm Cream at 12–14px weight 500 uppercase. Right-aligned nav items: INTRO (with dashed underline indicator for active), FEATURES, PRODUCT, CONTACT — all 12px weight 500 uppercase, Warm Cream. Transparent background over the hero photograph.
-
-### Bandeau d'en-tête (Jammix)
-**Role:** Adaptation Jammix de la Fixed Top Navigation — un même bandeau en haut de toutes les pages
-
-Collé en haut pendant le défilement (`position: sticky`), 56px de haut, fond Brass Copper (#a8451f) opaque, distinct du canvas Walnut Shadow du corps, filet inférieur 1px Gold elegance (#fca311) sur toute la largeur, sans ombre. Le fond et le filet occupent toute la largeur ; le contenu est aligné sur la colonne de la page (`max-w-md`, 24px de marge). À gauche : icône de maison 18px (trait 1.5) et « JAMMIX » en 14px weight 500 uppercase, Warm Cream, 6px d'écart ; souligné quand l'accueil est la page active. À droite : l'icône de profil (cercle 32px, bordure Warm Cream) si l'organisateur est connecté, sinon le bouton fantôme « Connexion organisateur » sur l'accueil uniquement. Pas de menu déroulant ni de menu « burger ».
-
-### Ligne « Accéder à mes annonces » (Jammix)
-**Role:** Seule ligne sous le bandeau dans l'espace organisateur — nombre de jams à confirmer
-
-12px uppercase Warm Cream, libellé en 700 (exception), nombre en 500. Trait 1px pointillé Cork Border sur toute la largeur de la colonne, 12px sous le texte. Sur le profil et les formulaires d'annonce : « 🔔 ACCÉDER À MES ANNONCES » sans chiffre, lien vers « Mes annonces » (souligné au survol et au focus) ; le nombre de jams à confirmer reste dans le libellé accessible. Sur « Mes annonces » : « 🔔 À CONFIRMER · N » en simple texte, affiché même à 0.
-
-### Pied de page (Jammix)
-**Role:** Exception Jammix à « no footer chrome » — un même pied de page discret en bas de toutes les pages
-
-Placé après le contenu, jamais fixé à l'écran. Fond Walnut Shadow (#100904), dans la continuité du corps. Contenu aligné sur la colonne de la page (`max-w-md`, 24px de marge) : filet 1px pointillé Cork Border (#40372e) sur toute la largeur de la colonne, puis 24px plus bas deux lignes centrées en 11px weight 500 uppercase, 8px d'écart : « CGU · Contact » puis « © <année en cours> Jammix · Tous droits réservés · v<version> », 24px de marge basse. Texte en Warm Cream atténué (Warm Cream à 60 % d'opacité, contraste AA sur Walnut Shadow) ; les liens en Warm Cream plein, soulignés au survol, au focus et sur leur page active. Sur les formulaires d'annonce, ses liens sont des sorties gardées.
-
-**Role:** Edge branding — vertical text running down the right margin
-
-Rotated 90° text "ORYZO 1-MODEL" in Warm Cream, 10–12px uppercase, sits flush right. Functions as a product serial number — a physical-product artifact translated to UI.
-
-### Logo Wordmark
-**Role:** Brand identifier — the only graphical mark
-
-"ORYZO" in Halyard Display Variable weight 500 uppercase, up to 51px+ at display scale with 0.9 line-height. Used at two sizes: navigation lockup (12–14px) and hero lockup (51px+). No icon, no symbol — pure typographic identity.
-
-### Hero Overlay Info Card
-**Role:** Semi-transparent attribution card in the hero
-
-12px border-radius, semi-transparent Warm Cream or dark fill with low opacity, contains uppercase heading "DESIGNED BY LUSION, THE AWARD-WINNING DESIGN STUDIO." plus a dashed divider and body text. Overlays the hero photograph bottom-left.
-
-### Product Reveal Section
-**Role:** Full-viewport void-mode section — centered 3D render with flanking text
-
-100vh height, Walnut Shadow (#100904) background, centered 3D product render, left-aligned heading at 41px uppercase "ISN'T JUST A COASTER.", right-aligned body copy at 29px weight 400 mixed-case. The signature layout pattern — three columns, generous gutters.
-
-### Menu « ⋯ » des cartes d'annonces (Jammix)
-**Role:** Actions d'une annonce depuis « Mes annonces », sans ouvrir l'annonce
-
-Bouton « ⋯ » (18px, weight 500, Warm Cream, sans bordure ni fond) en haut à droite de la carte (`top-2 right-2`), frère du lien de la carte et non son enfant ; zone tactile 44×44px, libellé accessible « Actions de l'annonce », `aria-haspopup="menu"` et `aria-expanded`. Le texte de la carte réserve 48px à droite pour ne jamais passer dessous. Le menu est un panneau de 12px de rayon, bordure 1px Cork Border, fond Walnut Shadow, sans ombre, avec deux entrées au plus (« Modifier », « Annuler ») en 12px weight 500 uppercase Warm Cream, soulignées au survol et au focus. Échap ou un clic extérieur le ferme.
-
-La fenêtre d'annulation est un `<dialog>` natif modal : 12px de rayon, bordure Cork Border, fond Walnut Shadow, voile noir à 60 %, 24px de marge intérieure, largeur de 384px au plus et marge de 24px à 360px. Titre en 18px uppercase, choix de portée en boutons radio 12px uppercase, puis deux boutons fantômes : « Annuler l'annonce » (bordure 1px) et « ← Retour » (bordure 2px). Une erreur s'affiche dans la fenêtre en 10px uppercase Gold elegance. Aucun bouton plein.
-
-### Section Divider (Dashed Hairline)
-**Role:** Visual separator between content blocks
-
-1px dashed line in Cork Border (#40372e) or Driftwood (#6c5f51). Used sparingly between text blocks, never as decoration — always carrying structural meaning.
-
-### Video Thumbnail Card
-**Role:** Embedded video preview with play indicator
-
-Small rectangular card, 12px radius, positioned in the lower-right of the hero. Contains a miniature ORYZO wordmark and a play icon. Functions as a secondary entry point without competing with the primary CTA.
-
-### Legal/Disclaimer Text
-**Role:** System-rendered micro-copy in Arial 8px
-
-Fallback font (Arial 8px weight 500 uppercase) for things like "* ADOBE ILLUSTRATOR" footnotes. Visually subordinate — intentionally uses a different typeface to signal "this is not design, this is compliance."
-
-## Do's and Don'ts
-
-### Do
-- Set all UI text in #ffedd7 (Warm Cream) — never use pure #fff; the warm tint is the system's signature.
-- Use #fca311 (Gold elegance) only for credit lines, the "Built by" label, and the Lusion studio link — a single accent earns its rarity through restraint.
-- Seul usage structurel autorisé du Gold elegance : le filet inférieur 1px du bandeau d'en-tête de Jammix, sur toute la largeur. Il n'est pas interactif. Le bandeau à fond plein doré et tout autre trait doré (séparateurs, bordures de carte, boutons) restent interdits.
-- Seul usage de surface du Brass Copper en dehors du bouton plein : le fond du bandeau d'en-tête de Jammix. Aucun autre fond (cartes, sections, fenêtres) n'est cuivré.
-- Set type in uppercase weight 500 across the entire interface; use weight 400 / mixed case only for the 29px body copy that explains the product.
-- Seule exception de remplissage d'un bouton fantôme : le bouton actif du filtre par bar de « Mes annonces », à fond Warm Cream léger transparent (~15 %). Jamais de fond plein, crème ou cuivré, sur un bouton fantôme.
-- Seul pied de page autorisé : le pied de page Jammix (fond Walnut Shadow, filet pointillé Cork Border, texte Warm Cream atténué à 70 %), placé après le contenu, jamais fixé à l'écran. Aucun autre « footer chrome ».
-- Titre de page unique (`h1`, classe `.titre-page`) : 24px, graisse 500, majuscules, interligne 1.09, sur une seule ligne, tronqué par « … » en cas de débordement. Le 41px reste réservé aux sections éditoriales, jamais aux titres de page.
-- Texte secondaire : Warm Cream à 70 % (`--color-texte-secondaire`). Le Driftwood est réservé aux séparateurs et bordures structurels, jamais au texte.
-- Bouton « ← Retour » : fantôme, graisse 500, bordure 2px Warm Cream, texte Warm Cream.
-- Seule exception de graisse Jammix : le libellé « À CONFIRMER » de la ligne sous le bandeau de l'espace organisateur est en 700. Le nombre qui le suit et tout autre texte restent en 400 ou 500.
-- Use 36px border-radius for the one filled CTA and 22.5px for outlined ghost buttons; 12px for cards; 0px for inputs and inline links — these four values are the entire radius vocabulary.
-- Set section gaps at 100vh — each section gets its own full viewport, never compress product reveals into bands.
-- Use 1px dashed lines in #40372 for section dividers; avoid solid dividers and avoid any divider thicker than 2px.
-- Center the 3D product render in every void-mode section with text flanking symmetrically left and right at 18px gutters.
-
-### Don't
-- Never use pure #fff for text or #000 for backgrounds — the warm cream and walnut shadow are the system; purity reads as wrong here.
-- Never apply #fca311 to buttons, CTAs, or interactive surfaces — the orange is editorial credit only.
-- Never use lowercase or sentence-case for headings, nav, or labels; the only mixed-case text is the 29px body description.
-- Never add drop shadows to cards, buttons, or sections — depth comes from the two-step surface stack (#100904 → #a8451f), not from blur.
-- Never use border-radius below 12px on containers — the geometry is deliberately chunky, not sharp.
-- Never use more than one filled action button per section; restraint is the design language. Exception Jammix : l'option active d'un sélecteur d'état (toggle Liste/Carte de l'accueil) peut être pleine Brass Copper ; ce n'est pas une action.
-- Never center-align body copy — headings and body text are always left-aligned, even when flanking a centered image.
-
-## Surfaces
-
-| Level | Name | Value | Purpose |
-|-------|------|-------|---------|
-| 0 | Walnut Shadow | `#100904` | Full-bleed page canvas and section background |
-| 1 | Brass Copper | `#a8451f` | Filled button surface, the only elevated solid |
-| 2 | Cork Border | `#40372` | Hairline borders, dashed dividers, card outlines |
-| 3 | Warm Cream | `#ffedd7` | Foreground text, navigation, interactive borders |
-
-## Elevation
-
-The system rejects shadow-based elevation entirely. Depth is achieved through a two-step surface stack: #100904 (canvas) → #a8451f (elevated solid). There are no blur, no offset, no opacity-based shadows — only a 1–2 value luminance step. This keeps the interface flat and editorial, letting the 3D product renders provide all visual depth in void-mode sections. Le bandeau d'en-tête de Jammix utilise la même marche de surface #100904 → #a8451f (corps → bandeau), toujours sans ombre.
-
-## Imagery
-
-Photography is editorial, top-down, and in-context: the cork coaster sits on a green cutting mat surrounded by pencils, a craft knife, and a paperclip — tools of the craft visible in frame. The green cutting mat (#445231) is a hero-only element, not a UI token. 3D renders dominate the product reveal sections: the cork coaster is shown isolated against Walnut Shadow, lit from the upper right with a warm rim light, rotating from top-down to 3/4 angle between sections. No lifestyle photography, no people, no stock imagery — the object is the hero and the tools are its context. Images are full-bleed, sharp-edged (no rounded masks), and treated with high contrast and warm grading.
-
-## Layout
-
-Full-bleed throughout — no max-width container, every section spans 100vw. Hero: full-viewport top-down photograph with a massive ORYZO wordmark (51px+) in the upper-left, tagline above, fixed minimal nav upper-right, vertical sidebar label running down the right edge, semi-transparent info card lower-left, video thumbnail lower-right. Subsequent sections: full-viewport Walnut Shadow canvas with a centered 3D product render flanked by left-aligned heading and right-aligned body copy — a three-column grid (text / object / text) with generous 18px gutters. Section transitions are seamless dark-on-dark; the only breaks are hairline dashed dividers. Navigation is fixed, transparent, and 4 items max. No sidebar, no footer chrome (seule exception Jammix : le pied de page discret décrit plus haut), no cards-within-cards — every screen is a single statement.
-
-## Typography Voice
-
-The system has exactly two typographic modes:
-
-1. UPPERCASE WEIGHT 500 — the default for everything: nav, headings, labels, links, button text, legal. The voice is declarative, confident, museum-label. Sizes range from 8px (legal) to 51px (display). Line-height tightens with size: 1.2 at caption, 1.0 at body-sm, 0.9 at display. No letter-spacing adjustment — the font's geometry is tight enough at every scale.
-
-2. MIXED CASE WEIGHT 400 — the exception, used only at 29px for the descriptive body copy that explains the product. This is the system's only conversational voice: "Designed to lift, insulate, and grip in all the right ways. Oryzo makes the simplest moment feel considered." The weight drop and case change are the signal — when the text shifts from 500/UPPER to 400/mixed, the user knows they are reading description, not label.
-
-The bold signature: line-height 0.9 at 41–51px display sizes. This is unusually tight — most editorial sites use 1.0–1.1. At 0.9, the uppercase letterforms overlap their line-height bounds, creating a sculptural block effect. The display type doesn't sit in lines; it stacks as solid form.
-
-## Agent Prompt Guide
-
-## Quick Color Reference
-- text: #ffedd7 (Warm Cream)
-- background: #100904 (Walnut Shadow)
-- surface: #a8451f (Brass Copper)
-- border: #40372e (Cork Border)
-- accent: #fca311 (Gold elegance)
-- primary action: #a8451f (Brass Copper) — filled CTA surface
-
-## 3-5 Example Component Prompts
-
-1. **Hero Lockup:** Full-bleed Walnut Shadow (#100904) canvas. ORYZO wordmark at 51px Halyard Display Variable weight 500 uppercase, line-height 0.9, color #ffedd7, positioned upper-left with 24px margin. Tagline "MADE FOR MUGS, BUILT FOR TABLES." at 12px weight 500 uppercase above the wordmark, also #ffedd7.
-
-2. **Filled Primary Button:** Brass Copper (#a8451f) background, 36px border-radius, Warm Cream (#ffedd7) text at 12px weight 500 uppercase, 14px 24px padding. The single solid CTA surface — used once per section.
-
-3. **Ghost Outline Button:** Transparent background, 1px Warm Cream (#ffedd7) border, 22.5px border-radius, 7.5px vertical padding, Warm Cream text at 12px weight 500 uppercase. The secondary action vocabulary.
-
-4. **Product Reveal Section:** Full-viewport (100vh) Walnut Shadow (#100904) background. Centered 3D product render occupying the middle 40% of width. Left column: heading "ISN'T JUST A COASTER." at 41px weight 500 uppercase, line-height 0.9, #ffedd7, left-aligned. Right column: body copy at 29px weight 400 mixed-case, line-height 1.26, #ffedd7, left-aligned within the column. 18px gutter between the centered object and each text column.
-
-5. **Top Navigation:** Fixed position, transparent background, full-width. Left: ORYZO wordmark at 12px Halyard weight 500 uppercase #ffedd7. Right: four nav items (INTRO, FEATURES, PRODUCT, CONTACT) at 12px weight 500 uppercase #ffedd7, with a 1px dashed #40372e underline beneath the active item.
-
-## Similar Brands
-
-- **Lusion (the studio credited in the design)** — Same warm-dark editorial canvas, single-product hero treatment, pill-button controls, and 3D product renders as the visual centerpiece
-- **Active Theory** — Full-bleed dark mode with a single interactive 3D object commanding the viewport, minimal UI chrome, and oversized uppercase type
-- **Resn** — Editorial product-showcase sites with top-down craft photography, warm grading, and typography that steps back to let the object speak
-- **Tool of North America** — Studio portfolio sites that treat a single concept object with museum-presentation gravity — dark void, cream labels, generous negative space
-- **Buck (studio)** — Work-reveal layouts that alternate between photographic context and isolated product renders against near-black backgrounds
-
-## Quick Start
-
-### CSS Custom Properties
-
-```css
-:root {
-  /* Colors */
-  --color-warm-cream: #ffedd7;
-  --color-walnut-shadow: #100904;
-  --color-brass-copper: #a8451f;
-  --color-cork-border: #40372e;
-  --color-driftwood: #6c5f51;
-  --color-gold-elegance: #fca311;
-  --color-pure-black: #000000;
-
-  /* Typography — Font Families */
-  --font-halyard-display-variable: 'halyard-display-variable', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-
-  /* Typography — Scale */
-  --text-subheading: 18px;
-  --leading-subheading: 1;
-  --tracking-subheading: 0px;
-  --text-heading-sm: 24px;
-  --leading-heading-sm: 1.09;
-  --tracking-heading-sm: 0px;
-  --text-body: 29px;
-  --leading-body: 1.26;
-  --tracking-body: 0px;
-  --text-heading: 41px;
-  --leading-heading: 0.9;
-  --tracking-heading: 0px;
-  --text-display: 51px;
-  --leading-display: 0.9;
-  --tracking-display: 0px;
-
-  /* Typography — Weights */
-  --font-weight-regular: 400;
-  --font-weight-medium: 500;
-
-  /* Spacing */
-  --spacing-6: 6px;
-  --spacing-8: 8px;
-  --spacing-9: 9px;
-  --spacing-10: 10px;
-  --spacing-12: 12px;
-  --spacing-14: 14px;
-  --spacing-18: 18px;
-  --spacing-24: 24px;
-  --spacing-31: 31px;
-  --spacing-41: 41px;
-  --spacing-45: 45px;
-  --spacing-68: 68px;
-  --spacing-204: 204px;
-
-  /* Layout */
-  --card-padding: 24px;
-  --element-gap: 18px;
-
-  /* Border Radius */
-  --radius-xl: 12px;
-  --radius-2xl: 22.5px;
-  --radius-3xl: 36px;
-  --radius-full: 9999px;
-
-  /* Named Radii */
-  --radius-cards: 12px;
-  --radius-inputs: 0px;
-  --radius-full-round: 9999px;
-  --radius-buttons-pill: 36px;
-  --radius-buttons-outlined: 22.5px;
-
-  /* Surfaces */
-  --surface-walnut-shadow: #100904;
-  --surface-brass-copper: #a8451f;
-  --surface-cork-border: #40372;
-  --surface-warm-cream: #ffedd7;
-}
-```
-
-### Tailwind v4
-
-```css
-@theme {
-  /* Colors */
-  --color-warm-cream: #ffedd7;
-  --color-walnut-shadow: #100904;
-  --color-brass-copper: #a8451f;
-  --color-cork-border: #40372e;
-  --color-driftwood: #6c5f51;
-  --color-gold-elegance: #fca311;
-  --color-pure-black: #000000;
-
-  /* Typography */
-  --font-halyard-display-variable: 'halyard-display-variable', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-arial: 'Arial', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-
-  /* Typography — Scale */
-  --text-subheading: 18px;
-  --leading-subheading: 1;
-  --tracking-subheading: 0px;
-  --text-heading-sm: 24px;
-  --leading-heading-sm: 1.09;
-  --tracking-heading-sm: 0px;
-  --text-body: 29px;
-  --leading-body: 1.26;
-  --tracking-body: 0px;
-  --text-heading: 41px;
-  --leading-heading: 0.9;
-  --tracking-heading: 0px;
-  --text-display: 51px;
-  --leading-display: 0.9;
-  --tracking-display: 0px;
-
-  /* Spacing */
-  --spacing-6: 6px;
-  --spacing-8: 8px;
-  --spacing-9: 9px;
-  --spacing-10: 10px;
-  --spacing-12: 12px;
-  --spacing-14: 14px;
-  --spacing-18: 18px;
-  --spacing-24: 24px;
-  --spacing-31: 31px;
-  --spacing-41: 41px;
-  --spacing-45: 45px;
-  --spacing-68: 68px;
-  --spacing-204: 204px;
-
-  /* Border Radius */
-  --radius-xl: 12px;
-  --radius-2xl: 22.5px;
-  --radius-3xl: 36px;
-  --radius-full: 9999px;
-}
-```
+# Harbor — système de design de Jammix
+
+> Clair, marine et bleu. Une interface nette, sérieuse sans être froide, pensée pour consulter vite en mobile.
+
+Harbor est le seul système de design de l'application (accueil, connexion, espace organisateur, pages légales, e-mails). Il remplace l'ancien système ORYZO (sombre, cuivre). **Thème clair uniquement** : un mode sombre est prévu plus tard, sans date. Les tokens vivent dans `:root` (`app/globals.css`, variables `--harbor-*`). Référence visuelle de l'accueil : `design-harbor-preview.html` (dossier mémoire du projet).
+
+## Couleurs
+
+| Nom | Valeur | Rôle |
+|-----|--------|------|
+| Brume | `#F7FAFC` | Fond de page |
+| Carte | `#FFFFFF` | Fond des cartes, champs, menus, fenêtres |
+| Marine | `#0B3658` | Texte principal, entête, étiquettes de carte |
+| Marine 2 | `#486984` | Texte secondaire |
+| Marine 3 | `#688DAC` | Texte discret, pied de page, kickers |
+| Bleu signal | `#2B78BE` | Action principale, jour sélectionné, statut « programmée » |
+| Bleu clair | `#4E9AD9` | Filet sous l'entête, accents sur marine |
+| Voile | `#E6F1FA` | Fonds teintés : bascule, boutons discrets, survols, chips |
+| Trait | `#DDE7EE` | Bordures et séparateurs |
+| Succès | `#17807E` | Statut « confirmée » |
+| Alerte | `#B7791F` | Statut « en attente de confirmation », relances |
+| Erreur | `#B3261E` | Erreurs de saisie et d'envoi |
+| Annulée | `#6B7C8C` | Statut « annulée » : carte à 60 % d'opacité, nom barré |
+
+**Statuts d'occurrence (liste, carte, Mes annonces)** : confirmée `#17807E`, programmée `#2B78BE`, en attente `#B7791F`, annulée `#6B7C8C`. Table `COULEURS_STATUT_OCCURRENCE` dans `lib/annonce-constantes.ts`. Le statut d'annonce (Brouillon/Publiée) et celui d'occurrence restent distincts.
+
+## Typographie
+
+- **Figtree**, police unique (inspirée du style Refero) : les rôles passent par la graisse et la taille, 400 corps, 600 emphase, 700 sous-titres, 800 titres. Corps 16 px, interligne 1,5, interlettrage −0,005 em.
+- Données (horaires, distances, dates) : classe `.donnees`, Figtree avec `font-variant-numeric: tabular-nums`.
+- Kickers : classe `.kicker`, Figtree 12 px, 700, capitales, interlettrage 0,1 em.
+- Chargée via `next/font/google` en variable CSS `--font-figtree` (`app/layout.tsx`). JetBrains Mono n'est plus utilisée.
+- **Exception : la carte d'annonce** reprend les polices du preview : **Plus Jakarta Sans** (nom du bar, 800) et **Geist** (adresse, distance, horaires, « Sera confirmée le … », en `tabular-nums`), chargées via `next/font/google` en variables `--font-jakarta` et `--font-geist`. Statut et pastilles restent en Figtree. Ailleurs, Figtree seule.
+- Mot-symbole « Jammix » (sous l'entête, toutes pages) : Plus Jakarta Sans 800, fluide `clamp(44px, 13vw, 56px)`, « Jam » Marine, « mix » Bleu, avec dessous « Les Jams à Lyon, ce soir ». Plus de « Jammix » dans l'entête.
+- **Titre de page** (`h1`, classe `.titre-page`) : 24 px, 700, interlettrage −0,03 em, Marine, retour à la ligne équilibré. Jamais tronqué.
+- Libellé de champ : 13 px, 700. Texte d'aide ou secondaire : 12–13 px, Marine 2. Pas de majuscules typographiques, sauf les kickers.
+
+## Espacement, formes, ombres, mouvement
+
+- Base 4 px. Rayons : 6 (petits badges), 12 (boutons, champs, menus, fenêtres), 16 (cartes), pastille complète (chips, étiquettes de carte, icône de profil).
+- Ombres teintées marine : `0 12px 48px rgba(11,54,88,.08)` (cartes), `0 4px 24px rgba(11,54,88,.08)` (menus, éléments flottants). Pas d'autre ombre.
+- Mouvement minimal : transitions de couleur et de fond de 120 ms ; aucune animation décorative.
+- Colonne unique de 448 px au plus (`max-w-md`), marges de 24 px. Séparateurs : trait plein 1 px Trait. Le pointillé Trait est réservé aux états vides et aux emplacements de photo vides.
+- Focus clavier : contour 2 px Bleu signal, décalage 2 px.
+
+## Composants
+
+- **Entête** (toutes les pages) : fond Marine, 48 px, sticky, filet inférieur 3 px Bleu clair, sans ombre. Hors accueil, à gauche, icône maison seule (22 px, blanche, libellé accessible « Accueil », lien vers `/`), sans texte « Jammix » (aucun lien à gauche sur l'accueil) ; à droite, sur l'accueil, « Connexion organisateur » en pastille (`rgba(255,255,255,.12)`, texte blanc, 12 px, 600) ou, si l'organisateur est connecté, l'icône de profil (cercle 32 px, `rgba(255,255,255,.12)`, plein blanc quand `/mon-profil` est active). Sous l'entête, sur toutes les pages : mot-symbole et accroche (le mot-symbole est le `h1` de l'accueil, décor `aria-hidden` ailleurs). Ni menu déroulant ni « burger ».
+- **Bouton principal** : fond Bleu signal, texte blanc 14 px 700, rayon 12, survol Marine. Un seul bouton principal par section.
+- **Bouton secondaire** : fond blanc, bordure Trait, texte Marine 13 px 700, rayon 12, survol Voile. Sur l'accueil, « Accéder à mes annonces » est un bouton Voile pleine largeur.
+- **« ← Retour »** : bouton secondaire, `self-start`.
+- **Champ de formulaire** (classe `.champ-input`) : fond blanc, bordure 1 px Trait, rayon 12, remplissage 10×12, texte 15 px ; au focus bordure Bleu signal et halo Voile 2 px. Libellé au-dessus (13 px 700), erreur dessous (13 px 600 Erreur). **Placeholder = libellé du champ** (« Prénom », « Nom du bar », « Code postal »…), jamais un exemple de valeur. Les formulaires de bar ont un champ « Code postal » dédié (5 chiffres, clavier numérique) sous « Adresse du bar ».
+- **Lien texte** : Marine souligné, ou Bleu signal dans les menus.
+- **Ligne « Accéder à mes annonces » / « À confirmer · N »** (espace organisateur, sous l'entête) : 12 px 600 Marine, filet inférieur 1 px Trait, 12 px sous le texte. Profil et formulaires : « 🔔 Accéder à mes annonces » sans chiffre, lien vers Mes annonces (nombre dans le libellé accessible). Mes annonces : « 🔔 À confirmer · N » en simple texte, affiché même à 0.
+- **Bascule Liste/Carte** : segmentée, fond Voile, rayon 12, segment actif blanc avec ombre légère, texte 13 px 700, rayon 12.
+- **Accueil, ordre des blocs** : bloc d'accroche (commun à toutes les pages, rendu sous l'entête) : mot-symbole « Jammix » (interlettrage −0,045 em) et dessous « Les Jams à Lyon, ce soir » (Figtree 600 18 px, Marine 2), bascule Liste/Carte (avec le bouton calendrier à droite), ligne « ‹ [Aujourd'hui] › » (flèches et bouton, sans libellé de semaine), bandeau de 7 jours, cartes d'annonce, pied de page.
+- **Bandeau de 7 jours** : boutons ‹ › bordés (rayon 14), libellé de semaine 14 px 700, « Aujourd'hui » en pastille Voile. Sept jours en cartes blanches bordées Trait, rayon 16 (abréviation minuscule 13 px, numéro 20 px 800). Jour sélectionné plein Bleu signal, texte blanc. Point de 4 px Bleu signal (blanc sur le jour sélectionné) sous les jours qui ont au moins une occurrence d'annonce publiée, annulée comprise. Borne basse : aujourd'hui.
+- **Carte d'annonce** (accueil, Mes annonces) : fond blanc, rayon 16, bordure Trait, ombre menu (`0 4px 24px`), marge 16, 6 px entre les lignes. Dans l'ordre : **ligne 1** nom du bar (Plus Jakarta Sans 800, 20 px, interlettrage −0,025 em) à gauche et pastille de statut à droite (Figtree 600 12 px, remplissage 3×8, fond teinté à 12 %, rayon 6 ; elle peut passer sur deux lignes, 42 % de largeur au plus) ; adresse (Geist 400 13 px, Marine 2) avec la distance à droite sur la même ligne (Geist 600) ; horaires « début → fin » (Geist 600 13 px) ; **ligne « Styles »** : libellé 12 px 600 Marine 3 suivi des puces sur la même ligne ; **ligne « Instruments »** idem (retour à la ligne des puces si trop nombreuses). Puces : bordure Trait, rayon complet, 12 px 600, remplissage 3×10, Marine 2. « Sera confirmée le … » conservé. Annulée : 60 % d'opacité, nom barré. Bouton Itinéraire secondaire ; son menu est une carte blanche, rayon 12.
+- **Menu « ⋯ » des cartes d'annonces** : bouton sans bordure ni fond en haut à droite de la carte (zone tactile 44×44 px, libellé accessible « Actions de l'annonce », `aria-haspopup="menu"`, `aria-expanded`), frère du lien de la carte. Le texte de la carte réserve 48 px à droite. Menu : carte blanche, rayon 12, bordure Trait, ombre menu, deux entrées au plus (« Modifier », « Annuler ») en 13 px 600 Marine, survol Voile. Échap ou clic extérieur le ferme.
+- **Profil (`/mon-profil`)** : titre « Mon profil » (24 px) à gauche et « Déconnexion » (bouton secondaire) à droite sur la même ligne. Toutes les sections déroulables sont repliées à l'arrivée ; email actuel masqué. Lignes de bars resserrées (séparateur Trait, 8 px de marge verticale), photo affichée seulement si elle existe : aucun carré vide.
+- **Fenêtre modale** (`<dialog>` natif : annulation d'annonce, sortie d'un formulaire, suppression) : fond blanc, bordure Trait, rayon 12, marge intérieure 24 px, 384 px au plus, voile Marine à 50 % derrière, sans flou. Titre 18 px 800, boutons secondaires, un seul principal au plus. Erreur 13 px 600 Erreur.
+- **Étiquette de carte (pill)** : fond Marine à 96 %, bordure et pointe de la couleur du statut, nom en capitales 12 px blanc, sous-ligne statut/distance blanc à 75 %. Version compacte (point seul) en cas de chevauchement. Fond de carte OpenFreeMap `positron`. Attribution OSM en pastille blanche à 80 %, sans chevauchement avec les étiquettes.
+- **Feuille de bar** (bottom sheet) : fond blanc, bordure Trait, coins supérieurs 16, bouton de fermeture rond Voile.
+- **États vides** : bloc à bordure pointillée Trait ; chips de prochaines dates en Voile, rayon complet.
+- **Pied de page** (toutes les pages) : placé après le contenu, jamais fixé. Filet supérieur 1 px Trait, puis deux lignes centrées 12 px Marine 3 : « CGU · Mentions légales · Contact » et « © <année> Jammix · Tous droits réservés · v<version> ». Liens soulignés au survol, au focus et sur leur page active. Sur les formulaires d'annonce, ses liens sont des sorties gardées.
+- **E-mails** (`lib/email.ts`) : fond Brume, texte Marine, bouton Bleu signal texte blanc rayon 12, liens Bleu signal.
+
+## À faire / à ne pas faire
+
+- Utiliser uniquement les tokens `--harbor-*` ; pas de couleur de statut hors de la palette ci-dessus.
+- Pas de noir pur ni de fond sombre ; pas de majuscules typographiques hors kickers ; pas de rayon inférieur à 12 px sur un conteneur ni sur un champ.
+- Texte secondaire en Marine 2, jamais en gris neutre. Contraste AA minimal sur toutes les paires texte/fond.
+- Aucun nom de personne dans l'interface.
+- Ne pas modifier les règles métier en touchant au visuel (statuts d'annonce vs d'occurrence, J-7).

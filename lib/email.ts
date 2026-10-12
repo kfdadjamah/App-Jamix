@@ -102,17 +102,17 @@ export function gabaritEmail({
       .map((ligne) =>
         typeof ligne === "string"
           ? `<p style="margin:0 0 16px">${echapperHtml(ligne)}</p>`
-          : `<p style="margin:0 0 16px"><a href="${echapperHtml(ligne.lien.url)}" style="color:#a8451f;text-decoration:underline">${echapperHtml(ligne.lien.libelle)}</a></p>`
+          : `<p style="margin:0 0 16px"><a href="${echapperHtml(ligne.lien.url)}" style="color:#2B78BE;text-decoration:underline">${echapperHtml(ligne.lien.libelle)}</a></p>`
       )
       .join("");
   const texteParagraphe = (ligne: Paragraphe) =>
     typeof ligne === "string" ? ligne : `${ligne.lien.libelle} : ${ligne.lien.url}`;
 
   const blocBouton = bouton
-    ? `<p style="margin:24px 0"><a href="${echapperHtml(bouton.url)}" style="display:inline-block;background:#a8451f;color:#ffedd7;text-decoration:none;padding:14px 24px;border-radius:36px;font-weight:500;text-transform:uppercase;font-size:13px">${echapperHtml(bouton.libelle)}</a></p>`
+    ? `<p style="margin:24px 0"><a href="${echapperHtml(bouton.url)}" style="display:inline-block;background:#2B78BE;color:#ffffff;text-decoration:none;padding:12px 24px;border-radius:12px;font-weight:700;font-size:14px">${echapperHtml(bouton.libelle)}</a></p>`
     : "";
 
-  const html = `<!doctype html><html lang="fr"><body style="margin:0;padding:24px;background:#ffffff;color:#1c1917;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;font-size:15px;line-height:1.5"><div style="max-width:520px">${blocParagraphes(paragraphes)}${blocBouton}${blocParagraphes(finale ?? [])}<p style="margin:32px 0 0;color:#6c5f51;font-size:13px">Jammix — les jams à Lyon</p></div></body></html>`;
+  const html = `<!doctype html><html lang="fr"><body style="margin:0;padding:24px;background:#F7FAFC;color:#0B3658;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;font-size:15px;line-height:1.5"><div style="max-width:520px">${blocParagraphes(paragraphes)}${blocBouton}${blocParagraphes(finale ?? [])}<p style="margin:32px 0 0;color:#6c5f51;font-size:13px">Jammix — les jams à Lyon</p></div></body></html>`;
 
   const texte = [
     ...paragraphes.map(texteParagraphe),

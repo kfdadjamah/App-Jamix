@@ -23,7 +23,7 @@ export default function FormulaireAjoutBar({
     formState: { errors, isSubmitting },
   } = useForm<ChampsFicheBar>({
     resolver: zodResolver(schemaFicheBar),
-    defaultValues: { nomBar: "", adresseBar: "" },
+    defaultValues: { nomBar: "", adresseBar: "", codePostalBar: "" },
   });
 
   async function surSoumission(donnees: ChampsFicheBar, evenement?: BaseSyntheticEvent) {
@@ -32,6 +32,7 @@ export default function FormulaireAjoutBar({
     const formData = new FormData();
     formData.set("nomBar", donnees.nomBar);
     formData.set("adresseBar", donnees.adresseBar);
+    formData.set("codePostalBar", donnees.codePostalBar);
     const photo = new FormData(evenement?.target as HTMLFormElement).get("photo");
     if (photo instanceof File && photo.size > 0) {
       formData.set("photo", photo);
@@ -46,17 +47,37 @@ export default function FormulaireAjoutBar({
   }
 
   return (
-    <form onSubmit={handleSubmit(surSoumission)} className="flex flex-col gap-6" noValidate>
+    <form onSubmit={handleSubmit(surSoumission)} className="flex flex-col gap-4" noValidate>
       <ChampFormulaire label="Nom du bar" erreur={errors.nomBar?.message}>
-        <input type="text" {...register("nomBar")} className="champ-input" />
+        <input
+          type="text"
+          placeholder="Nom du bar"
+          {...register("nomBar")}
+          className="champ-input"
+        />
       </ChampFormulaire>
 
       <ChampFormulaire label="Adresse du bar" erreur={errors.adresseBar?.message}>
         <ChampAdresse
-            placeholder="12 rue de la République, Lyon"
+            placeholder="Adresse du bar"
             register={register("adresseBar")}
             setValue={(v) => setValue("adresseBar", v, { shouldValidate: true, shouldDirty: true })}
+            setCodePostal={(v) =>
+              setValue("codePostalBar", v, { shouldValidate: true, shouldDirty: true })
+            }
           />
+      </ChampFormulaire>
+
+      <ChampFormulaire label="Code postal" erreur={errors.codePostalBar?.message}>
+        <input
+          type="text"
+          inputMode="numeric"
+          autoComplete="postal-code"
+          maxLength={5}
+          placeholder="Code postal"
+          {...register("codePostalBar")}
+          className="champ-input"
+        />
       </ChampFormulaire>
 
       <ChampFormulaire label="Photo ou logo (optionnel)">
@@ -69,7 +90,7 @@ export default function FormulaireAjoutBar({
       </ChampFormulaire>
 
       {erreurServeur && (
-        <p className="text-[12px] font-medium uppercase text-[var(--color-gold-elegance)]">
+        <p className="text-[13px] font-semibold text-[var(--harbor-erreur)]">
           {erreurServeur}
         </p>
       )}
@@ -77,7 +98,7 @@ export default function FormulaireAjoutBar({
       <button
         type="submit"
         disabled={isSubmitting}
-        className="self-start rounded-[22.5px] border border-[var(--color-warm-cream)] px-4 py-[7.5px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)] disabled:opacity-60"
+        className="self-start rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] disabled:opacity-60"
       >
         {isSubmitting ? "Ajout…" : "Ajouter"}
       </button>

@@ -21,20 +21,20 @@ function calculerStatutInitial(date) {
   return { statut: "CONFIRMEE", confirmationJ7: null };
 }
 
-async function creerOrganisateurAvecBar({ email, motDePasse, nom = null, nomBar, adresse, latitude, longitude }) {
+async function creerOrganisateurAvecBar({ email, motDePasse, prenom = null, nom = null, nomBar, adresse, codePostal, latitude, longitude }) {
   const motDePasseHash = await bcrypt.hash(motDePasse, 12);
   const organisateur = await p.organisateur.upsert({
     where: { email },
-    update: { motDePasseHash, nom },
-    create: { email, motDePasseHash, nom },
+    update: { motDePasseHash, prenom, nom },
+    create: { email, motDePasseHash, prenom, nom },
   });
   // Plusieurs bars par compte (phase 18) : on retrouve le bar du seed par sa clé (compte, nom, adresse).
   const bar = await p.bar.upsert({
     where: {
       organisateurId_nom_adresse: { organisateurId: organisateur.id, nom: nomBar, adresse },
     },
-    update: { latitude, longitude },
-    create: { nom: nomBar, adresse, latitude, longitude, organisateurId: organisateur.id },
+    update: { codePostal, latitude, longitude },
+    create: { nom: nomBar, adresse, codePostal, latitude, longitude, organisateurId: organisateur.id },
   });
   return { organisateur, bar };
 }
@@ -84,9 +84,11 @@ async function main() {
   const { bar: sousSol } = await creerOrganisateurAvecBar({
     email: "test-organisateur@jamix.fr",
     motDePasse: "test1234",
-    nom: "Camille Test",
+    prenom: "Camille",
+    nom: "Test",
     nomBar: "Le Sous-Sol",
     adresse: "18 rue Sainte-Hélène, Lyon",
+    codePostal: "69002",
     latitude: 45.754825,
     longitude: 4.829521,
   });
@@ -97,6 +99,7 @@ async function main() {
     motDePasse: "test1234",
     nomBar: "Chez Mimi",
     adresse: "5 rue Burdeau, Lyon",
+    codePostal: "69001",
     latitude: 45.769,
     longitude: 4.831,
   });
@@ -106,6 +109,7 @@ async function main() {
     motDePasse: "test1234",
     nomBar: "Jam Session Croix-Rousse",
     adresse: "12 boulevard de la Croix-Rousse, Lyon",
+    codePostal: "69004",
     latitude: 45.775,
     longitude: 4.827,
   });

@@ -19,8 +19,8 @@ maplibregl.setWorkerUrl("/maplibre/maplibre-gl-worker.mjs");
 
 const CENTRE_LYON: [number, number] = [4.835, 45.764];
 
-// Style vectoriel sombre OpenFreeMap : gratuit, sans clé API (Carto exige désormais une clé).
-const STYLE_FOND_CARTE = "https://tiles.openfreemap.org/styles/dark";
+// Style vectoriel clair OpenFreeMap (positron) : gratuit, sans clé API.
+const STYLE_FOND_CARTE = "https://tiles.openfreemap.org/styles/positron";
 
 // Marge (px) en dessous de laquelle deux étiquettes sont considérées comme superposées.
 const MARGE_CHEVAUCHEMENT = 4;
@@ -109,7 +109,11 @@ interface JamMapProps {
   onSelectionBar: (barId: string) => void;
 }
 
-export default function JamMap({ occurrences, positionMusicien, onSelectionBar }: JamMapProps) {
+export default function JamMap({
+  occurrences,
+  positionMusicien,
+  onSelectionBar,
+}: JamMapProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
 
@@ -124,11 +128,6 @@ export default function JamMap({ occurrences, positionMusicien, onSelectionBar }
       attributionControl: { compact: true },
     });
 
-    map.on("style.load", () => {
-      if (map.getLayer("background")) {
-        map.setPaintProperty("background", "background-color", "#100904");
-      }
-    });
     map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
     mapRef.current = map;
 

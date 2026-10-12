@@ -71,7 +71,7 @@ export default function FenetreSuppressionBar({
       onClick={(e) => {
         if (e.target === refDialog.current) annuler();
       }}
-      className="fenetre-sortie m-auto w-[calc(100%-32px)] max-w-md rounded-[12px] border border-[var(--color-cork-border)] bg-[var(--color-walnut-shadow)] p-0 text-[var(--color-warm-cream)]"
+      className="fenetre-sortie m-auto w-[calc(100%-32px)] max-w-md rounded-[12px] border border-[var(--harbor-trait)] bg-white p-0 text-[var(--harbor-marine)]"
     >
       <form
         onSubmit={(e) => {
@@ -82,11 +82,11 @@ export default function FenetreSuppressionBar({
       >
         <h2
           id="fenetre-suppression-bar-titre"
-          className="text-[18px] font-medium uppercase leading-none text-[var(--color-warm-cream)]"
+          className="text-[18px] font-semibold leading-none text-[var(--harbor-marine)]"
         >
           Supprimer {nomBar}
         </h2>
-        <p className="text-[15px] text-[var(--color-warm-cream)]">
+        <p className="text-[15px] text-[var(--harbor-marine)]">
           {messageSuppressionBar(nombreAnnonces, datesAVenirPubliees)}
         </p>
 
@@ -103,7 +103,7 @@ export default function FenetreSuppressionBar({
         </ChampFormulaire>
 
         {erreur && (
-          <p className="text-[12px] font-medium uppercase text-[var(--color-gold-elegance)]">
+          <p className="text-[13px] font-semibold text-[var(--harbor-erreur)]">
             {erreur}
           </p>
         )}
@@ -112,7 +112,7 @@ export default function FenetreSuppressionBar({
           <button
             type="submit"
             disabled={!nomValide || enCours}
-            className="rounded-[36px] bg-[var(--color-brass-copper)] px-6 py-[14px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)] disabled:opacity-60"
+            className="rounded-[12px] bg-[var(--harbor-bleu)] px-6 py-3 text-[14px] font-bold text-white transition-colors duration-[120ms] hover:bg-[var(--harbor-marine)] disabled:opacity-60"
           >
             {enCours ? "Suppression…" : "Supprimer définitivement"}
           </button>
@@ -120,7 +120,7 @@ export default function FenetreSuppressionBar({
             type="button"
             onClick={annuler}
             disabled={enCours}
-            className="rounded-[22.5px] border border-[var(--color-warm-cream)] px-4 py-[7.5px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)] disabled:opacity-60"
+            className="rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] disabled:opacity-60"
           >
             Annuler
           </button>

@@ -6,6 +6,7 @@ import {
   MENTION_DERNIER_BAR,
   NOMBRE_MAX_BARS,
 } from "@/lib/bars";
+import { adresseComplete } from "@/lib/adresse";
 import GestionPhotoBar from "./gestion-photo-bar";
 import FormulaireFicheBar from "./formulaire-fiche-bar";
 import FormulaireAjoutBar from "./formulaire-ajout-bar";
@@ -15,6 +16,7 @@ export type BarDuProfil = {
   id: string;
   nom: string;
   adresse: string;
+  codePostal: string;
   photoUrl: string | null;
   surLaCarte: boolean;
   // Toutes les annonces du bar, brouillons compris.
@@ -27,11 +29,11 @@ export type BarDuProfil = {
 type Panneau = string | "ajout" | null;
 
 const classeBoutonFantome =
-  "whitespace-nowrap rounded-[22.5px] border border-[var(--color-warm-cream)] px-4 py-[7.5px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)] disabled:opacity-60";
+  "whitespace-nowrap rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] disabled:opacity-60";
 
 export default function MesBars({ bars }: { bars: BarDuProfil[] }) {
-  // Un compte d'un seul bar voit sa fiche dépliée d'office.
-  const [panneau, setPanneau] = useState<Panneau>(bars.length === 1 ? bars[0].id : null);
+  // Aucune fiche dépliée d'office : l'organisateur ouvre lui-même ce qu'il veut modifier.
+  const [panneau, setPanneau] = useState<Panneau>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [barASupprimer, setBarASupprimer] = useState<BarDuProfil | null>(null);
   const limiteAtteinte = bars.length >= NOMBRE_MAX_BARS;
@@ -50,11 +52,8 @@ export default function MesBars({ bars }: { bars: BarDuProfil[] }) {
   }
 
   function surSuppression() {
-    // La liste des bars est déjà revalidée par l'action : il en reste `bars.length - 1`.
-    const restants = bars.filter((bar) => bar.id !== barASupprimer?.id);
     setBarASupprimer(null);
-    // Un compte d'un seul bar voit sa fiche dépliée d'office, y compris après une suppression.
-    setPanneau(restants.length === 1 ? restants[0].id : null);
+    setPanneau(null);
     setMessage("Bar supprimé.");
   }
 
@@ -66,28 +65,26 @@ export default function MesBars({ bars }: { bars: BarDuProfil[] }) {
           return (
             <li
               key={bar.id}
-              className="flex flex-col gap-6 border-t border-dashed border-[var(--color-cork-border)] py-4 first:border-t-0 first:pt-0"
+              className="flex flex-col gap-4 border-t border-[var(--harbor-trait)] py-2 first:border-t-0 first:pt-0"
             >
               <div className="flex items-center gap-3">
-                {bar.photoUrl ? (
+                {bar.photoUrl && (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={bar.photoUrl}
                     alt=""
                     className="h-12 w-12 shrink-0 rounded-[12px] object-cover"
                   />
-                ) : (
-                  <div className="h-12 w-12 shrink-0 rounded-[12px] border border-dashed border-[var(--color-cork-border)]" />
                 )}
                 <div className="flex min-w-0 flex-1 flex-col gap-1">
-                  <span className="truncate text-[14px] font-medium uppercase text-[var(--color-warm-cream)]">
+                  <span className="truncate text-[14px] font-semibold text-[var(--harbor-marine)]">
                     {bar.nom}
                   </span>
-                  <span className="truncate text-[12px] text-[color:var(--color-texte-secondaire)]">
-                    {bar.adresse}
+                  <span className="truncate text-[12px] text-[var(--harbor-marine-2)]">
+                    {adresseComplete(bar)}
                   </span>
                   {!bar.surLaCarte && (
-                    <span className="text-[10px] font-medium uppercase text-[var(--color-gold-elegance)]">
+                    <span className="text-[13px] font-semibold text-[var(--harbor-erreur)]">
                       Absent de la carte
                     </span>
                   )}
@@ -103,13 +100,14 @@ export default function MesBars({ bars }: { bars: BarDuProfil[] }) {
               </div>
 
               {deplie && (
-                <div className="flex flex-col gap-6">
+                <div className="flex flex-col gap-4">
                   <GestionPhotoBar barId={bar.id} photoUrl={bar.photoUrl} />
                   <div className="flex flex-col gap-2">
                     <FormulaireFicheBar
                       barId={bar.id}
                       nom={bar.nom}
                       adresse={bar.adresse}
+                      codePostal={bar.codePostal}
                       actionDroite={
                         bars.length > 1 && (
                           <button
@@ -123,7 +121,7 @@ export default function MesBars({ bars }: { bars: BarDuProfil[] }) {
                       }
                     />
                     {bars.length === 1 && (
-                      <span className="text-[12px] font-medium uppercase text-[color:var(--color-texte-secondaire)]">
+                      <span className="text-[12px] font-semibold text-[var(--harbor-marine-2)]">
                         {MENTION_DERNIER_BAR}
                       </span>
                     )}
@@ -136,7 +134,7 @@ export default function MesBars({ bars }: { bars: BarDuProfil[] }) {
       </ul>
 
       {message && (
-        <p className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)]">
+        <p className="text-[13px] font-bold text-[var(--harbor-marine)]">
           {message}
         </p>
       )}
@@ -153,9 +151,9 @@ export default function MesBars({ bars }: { bars: BarDuProfil[] }) {
       )}
 
       {panneau === "ajout" ? (
-        <div className="flex flex-col gap-6 rounded-[12px] border border-[var(--color-cork-border)] p-6">
+        <div className="flex flex-col gap-4 rounded-[12px] border border-[var(--harbor-trait)] p-6">
           <div className="flex items-center justify-between gap-3">
-            <h3 className="text-[18px] font-medium uppercase leading-none text-[var(--color-warm-cream)]">
+            <h3 className="text-[18px] font-semibold leading-none text-[var(--harbor-marine)]">
               Nouveau bar
             </h3>
             <button type="button" onClick={() => basculer("ajout")} className={classeBoutonFantome}>
@@ -175,7 +173,7 @@ export default function MesBars({ bars }: { bars: BarDuProfil[] }) {
             Ajouter un bar
           </button>
           {limiteAtteinte && (
-            <span className="text-[12px] font-medium uppercase text-[color:var(--color-texte-secondaire)]">
+            <span className="text-[12px] font-semibold text-[var(--harbor-marine-2)]">
               Limite de {NOMBRE_MAX_BARS} bars atteinte
             </span>
           )}

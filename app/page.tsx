@@ -1,10 +1,15 @@
 import Link from "next/link";
 import { sessionCourante } from "@/auth";
-import { recupererAnnoncesPubliees, recupererProchainesDatesDisponibles } from "@/lib/annonces";
+import {
+  recupererAnnoncesPubliees,
+  recupererJoursAvecJams,
+  recupererProchainesDatesDisponibles,
+} from "@/lib/annonces";
+import { fenetreSept } from "@/lib/semaine";
 import Bandeau from "@/components/bandeau";
-import SelecteurDate from "./selecteur-date";
+import SelecteurDate, { BoutonCalendrier } from "./selecteur-date";
 import ConsultationMusicien from "./consultation-musicien";
-import type { Vue } from "./toggle-vue";
+import ToggleVue, { type Vue } from "./toggle-vue";
 import PiedDePage from "@/components/pied-de-page";
 
 const NOMBRE_DATES_SUGGEREES = 3;
@@ -36,51 +41,55 @@ export default async function Home({
       ? await recupererProchainesDatesDisponibles(dateSelectionnee, NOMBRE_DATES_SUGGEREES)
       : [];
 
-  return (
-    <>
-      <Bandeau page="accueil" />
-      <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-8 px-6 py-8">
-        <div>
-          <h1 className="titre-page">
-            Jammix
-          </h1>
-          <p className="mt-2 text-[15px] text-[color:var(--color-texte-secondaire)]">
-            Les jams à Lyon, ce soir.
-          </p>
-        </div>
+  const aujourdhui = aujourdHuiIso();
+  const fenetre = fenetreSept(dateSelectionnee, aujourdhui);
+  const joursAvecJams = await recupererJoursAvecJams(fenetre.debut, fenetre.fin);
 
+  return (
+    <div className="flex flex-1 flex-col">
+      <Bandeau page="accueil" />
+      <main className="mx-auto flex w-full max-w-md flex-1 flex-col gap-5 px-6 pb-6 pt-5">
         {session?.user?.id && (
           <Link
             href="/mes-annonces"
-            className="w-full rounded-[36px] bg-[var(--color-brass-copper)] px-6 py-[14px] text-center text-[12px] font-medium uppercase text-[var(--color-warm-cream)]"
+            className="w-full rounded-[12px] bg-[var(--harbor-voile)] px-6 py-3 text-center text-[14px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-trait)]"
           >
             Accéder à mes annonces
           </Link>
         )}
 
-        <label className="flex flex-col gap-2">
-          <span className="text-[12px] font-medium uppercase text-[color:var(--color-warm-cream)]">
-            Date
-          </span>
-          <SelecteurDate dateSelectionnee={dateSelectionnee} />
-        </label>
+        <div className="flex gap-2">
+          <div className="flex-1">
+            <ToggleVue vue={vueSelectionnee} dateSelectionnee={dateSelectionnee} />
+          </div>
+          <BoutonCalendrier
+            dateSelectionnee={dateSelectionnee}
+            aujourdhui={aujourdhui}
+            vue={vueSelectionnee}
+          />
+        </div>
+
+        <SelecteurDate
+          dateSelectionnee={dateSelectionnee}
+          aujourdhui={aujourdhui}
+          vue={vueSelectionnee}
+          joursAvecJams={joursAvecJams}
+        />
 
         {occurrences.length === 0 ? (
-          <div className="flex flex-col gap-4">
-            <p className="text-[18px] leading-[1.26] text-[color:var(--color-warm-cream)]">
+          <div className="flex flex-col gap-4 rounded-[16px] border border-dashed border-[var(--harbor-trait)] p-4">
+            <p className="text-[16px] font-semibold">
               Aucune jam publiée à cette date pour le moment.
             </p>
             {prochainesDates.length > 0 && (
               <div className="flex flex-col gap-2">
-                <span className="text-[12px] font-medium uppercase text-[color:var(--color-texte-secondaire)]">
-                  Prochaines dates
-                </span>
-                <div className="flex flex-wrap gap-4">
+                <span className="kicker text-[var(--harbor-marine-3)]">Prochaines dates</span>
+                <div className="flex flex-wrap gap-2">
                   {prochainesDates.map((date) => (
                     <Link
                       key={date}
                       href={`/?date=${date}`}
-                      className="text-[12px] font-medium uppercase text-[color:var(--color-warm-cream)] underline"
+                      className="rounded-full bg-[var(--harbor-voile)] px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)]"
                     >
                       {formaterDateCourte(date)}
                     </Link>
@@ -92,12 +101,12 @@ export default async function Home({
         ) : (
           <ConsultationMusicien
             occurrences={occurrences}
-            dateSelectionnee={dateSelectionnee}
             vue={vueSelectionnee}
+           
           />
         )}
       </main>
       <PiedDePage />
-    </>
+    </div>
   );
 }

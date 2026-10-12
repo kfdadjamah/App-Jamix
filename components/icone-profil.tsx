@@ -1,20 +1,16 @@
 import { LienGarde } from "./garde-sortie";
 import { UserRound } from "lucide-react";
 
-// Cercle ghost button ; rempli en Warm Cream quand /mon-profil est la page active.
+// Pastille ronde sur l'entête marine ; blanche sur toutes les pages (l'état actif passe par aria-current).
 export default function IconeProfil({ actif = false }: { actif?: boolean }) {
   return (
     <LienGarde
       href="/mon-profil"
       aria-label="Mon profil"
       aria-current={actif ? "page" : undefined}
-      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-[9999px] border border-[var(--color-warm-cream)] ${
-        actif
-          ? "bg-[var(--color-warm-cream)] text-[var(--color-walnut-shadow)]"
-          : "text-[var(--color-warm-cream)]"
-      }`}
+      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[9999px] bg-white text-[var(--harbor-marine)]"
     >
-      <UserRound size={18} strokeWidth={1.5} aria-hidden="true" />
+      <UserRound size={18} strokeWidth={1.75} aria-hidden="true" />
     </LienGarde>
   );
 }

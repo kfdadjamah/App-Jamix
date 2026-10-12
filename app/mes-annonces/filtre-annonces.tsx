@@ -18,7 +18,7 @@ export default function FiltreAnnonces({
   const barChoisi = bars.find((bar) => bar.id === barId);
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-3">
       <div className="flex flex-wrap gap-2">
         {options.map((option) => {
           const actif = option.id === barId;
@@ -28,7 +28,7 @@ export default function FiltreAnnonces({
               type="button"
               aria-pressed={actif}
               onClick={() => setBarId(option.id)}
-              className={`max-w-full truncate rounded-[22.5px] border border-[var(--color-warm-cream)] px-4 py-[7.5px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)] ${
+              className={`max-w-full truncate rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] ${
                 actif ? "bg-[var(--color-warm-cream)]/15" : ""
               }`}
             >
@@ -39,7 +39,7 @@ export default function FiltreAnnonces({
       </div>
 
       {annoncesFiltrees.length === 0 && barChoisi && (
-        <p className="break-words text-[15px] text-[color:var(--color-texte-secondaire)]">
+        <p className="break-words text-[15px] text-[var(--harbor-marine-2)]">
           Aucune annonce pour {barChoisi.nom}.
         </p>
       )}

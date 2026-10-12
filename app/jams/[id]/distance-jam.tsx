@@ -13,7 +13,7 @@ export default function DistanceJam({
   if (distanceKm === null) return null;
 
   return (
-    <span className="whitespace-nowrap text-[12px] text-[color:var(--color-texte-secondaire)]">
+    <span className="whitespace-nowrap text-[12px] text-[var(--harbor-marine-2)]">
       {formaterDistance(distanceKm)}
     </span>
   );

@@ -34,7 +34,7 @@
   - *Verrou de statut (Phase 18)* : une annonce Publiée ne peut ni repasser en Brouillon ni être republiée côté serveur (seule l'action « modifier » est acceptée), ce qui empêcherait sinon de contourner le bar figé. Un `barId` différent envoyé pour une annonce Publiée est refusé avec « Le bar d'une annonce publiée ne peut pas être changé. ».
   - *Géocodage en échec (Phase 18)* : à l'ajout et à la modification d'un bar, un message prévient que l'adresse est introuvable et que le bar n'apparaîtra pas sur la carte ; la ligne compacte d'un bar sans coordonnées porte en permanence la mention « Absent de la carte ».
 - **Filtre par bar sur plusieurs lignes (Phase 26)** : aucune migration de schéma. Seul le rendu de `app/mes-annonces/filtre-annonces.tsx` change : conteneur `flex-wrap` au lieu du défilement horizontal, bouton actif à fond Warm Cream léger transparent (~15 %) au lieu du soulignement, nom tronqué (`truncate`) dans un bouton limité à la largeur de la colonne. `aria-pressed` conservé. DESIGN.md consigne l'exception de remplissage pour ce seul filtre.
-- **Sections déroulables du profil (Phase 27)** : aucune migration de schéma ni nouvelle route. Un composant client unique de section déroulable (`components/section-deroulable.tsx`) : toute la ligne de titre est un bouton (`aria-expanded`, `aria-controls`) avec un chevron `ChevronDown` de `lucide-react` qui pivote quand la section est déroulée, et un sous-titre optionnel toujours visible (email actuel). Aucun état mémorisé : « Mes bars » ouverte et les autres repliées à chaque visite. Le contenu replié reste monté mais masqué (`hidden`), si bien que la saisie et l'état interne de « Mes bars » sont conservés, y compris au re-rendu de `/mon-profil` après un changement de mot de passe (Phase 17). Les titres internes de `MesBars`, `FormulaireEmail`, `FormulaireMotDePasse` et `SuppressionCompte` passent dans la section ; `SuppressionCompte` perd son état d'ouverture, son bouton intermédiaire et « Annuler ».
+- **Sections déroulables du profil (Phase 27)** : aucune migration de schéma ni nouvelle route. Un composant client unique de section déroulable (`components/section-deroulable.tsx`) : toute la ligne de titre est un bouton (`aria-expanded`, `aria-controls`) avec un chevron `ChevronDown` de `lucide-react` qui pivote quand la section est déroulée, et un sous-titre optionnel toujours visible (email actuel). Aucun état mémorisé : « Mes bars » ouverte et les autres repliées à chaque visite *(remplacé par la Phase 42 : tout est replié, sans sous-titre email)*. Le contenu replié reste monté mais masqué (`hidden`), si bien que la saisie et l'état interne de « Mes bars » sont conservés, y compris au re-rendu de `/mon-profil` après un changement de mot de passe (Phase 17). Les titres internes de `MesBars`, `FormulaireEmail`, `FormulaireMotDePasse` et `SuppressionCompte` passent dans la section ; `SuppressionCompte` perd son état d'ouverture, son bouton intermédiaire et « Annuler ».
 - **Libellé des instruments et titres du formulaire (Phase 28)** : aucune migration de schéma. Le titre d'un brouillon devient « Modifier le brouillon » (« Compléter le brouillon » mesurait 325px en 24px, pour une colonne de 312px à 360px). Seuls les libellés changent (« Instruments disponibles » dans le formulaire, « Instruments : » dans `app/carte-annonce.tsx`) ; la valeur stockée `Annonce.instruments` et la liste `INSTRUMENTS_BACKLINE` (`lib/annonce-constantes.ts`) restent inchangées.
 - **Description d'une annonce (Phase 29)** : nouveau champ `Annonce.description String?` (texte brut, 500 caractères maximum, validé côté serveur dans le schéma zod de l'annonce, brouillon comme publication ; chaîne vide → `null`). Appliqué par `prisma db push` (pas de dossier de migrations) ; les annonces existantes restent à `null`, aucun script. Champ de l'annonce, donc commun à toutes ses occurrences : la portée ciblée/globale ne concerne que l'horaire (`synchroniserOccurrences`, `app/mes-annonces/actions.ts`). Ajouté à `ValeursReprises` / `valeursReprisesParBar` (`lib/annonces.ts`). Garde de sortie : le `<textarea name="description">` est lu par `instantane()` via le `FormData`, sans code dédié. Le navigateur envoie les retours à la ligne en `\r\n` alors que `maxLength` les compte pour 1 : le schéma les normalise en `\n` et retire les espaces de début et de fin avant de compter. Côté musicien, un seul composant de carte (`app/carte-annonce.tsx`) avec une prop `mode` : `"liste"` (extrait `line-clamp-3`, nom du bar en lien étendu à toute la carte par un pseudo-élément, « Itinéraire » au-dessus en `relative z-10`) et `"fiche"` (marqueur de la carte : description complète, sans lien). Description en `whitespace-pre-line`, 15px, 400, casse mixte, Warm Cream. Dans « Mes annonces », extrait `line-clamp-2` en 12px Driftwood.
 - **Page d'une jam (Phase 29)** : nouvelle route publique `/jams/[id]`, une page par occurrence (hors `matcher` du proxy). Lecture par `recupererOccurrencePubliee` (`lib/annonces.ts`) : annonce `PUBLIEE`, date ≥ `aujourdHuiUTC()`, annulées comprises ; sinon `notFound()` et `app/jams/[id]/not-found.tsx` (« Cette jam n'est plus disponible », code 404). « ← Retour » vers `/?date=<date de l'occurrence>`. Distance calculée côté client par le hook `usePositionMusicien` (`lib/position-musicien.ts`), extrait de `app/consultation-musicien.tsx` et partagé ; jamais de position dans l'URL. Variante `"jam"` du bandeau (droite : icône de profil si connecté, sinon vide).
@@ -46,6 +46,7 @@
   - *Limite d'envois* : nouveau modèle `EnvoiContact` (`id`, `empreinteIp` = HMAC-SHA-256 de l'IP avec `AUTH_SECRET`, jamais l'IP brute ni un hash simple réversible par force brute, `creeLe`), appliqué par `prisma db push`. Seuls les envois réussis sont enregistrés ; au plus 5 envois par empreinte sur une heure glissante ; les lignes de plus de 24 h sont purgées à chaque envoi. Champ piège invisible : rempli, il renvoie un faux succès sans rien envoyer ni enregistrer.
   - *Validation* : schéma zod `lib/validation/contact.ts`, sur le modèle de `lib/validation/inscription.ts` (nom 1–100, email valide, message 10–2000 après normalisation `\r\n` → `\n` et trim, comme la description de la Phase 29).
   - *Anonymat* : aucun nom de personne dans `/cgu` ni ailleurs ; l'éditeur est « un particulier non professionnel », joignable via `/contact`.
+- **Prénom et nom séparés, profil replié (Phase 42)** : nouveau champ `Organisateur.prenom String?` (nullable), appliqué par `prisma db push` (pas de dossier de migrations, **à relancer sur la base de production avant le déploiement**). `nom` est conservé : pour un compte antérieur, il peut contenir l'ancien « Prénom Nom », jamais coupé automatiquement (une coupure au premier espace est fausse pour les noms composés). `lib/validation/inscription.ts` : `schemaNomComplet` et `schemaNomCompletVideAutorise` remplacés par `schemaIdentite` (prénom et nom, 1 à 40 caractères chacun) et `schemaIdentiteVideAutorise` (vide accepté ; un seul champ rempli → l'autre est requis) ; `schemaInscription` prend `prenom` et `nom`. `changerNomComplet` devient `changerIdentite` (`app/mon-profil/actions.ts`) : les deux vides sont acceptés seulement si le compte n'a pas de prénom. `formulaire-nom-complet.tsx` devient `formulaire-identite.tsx`. Profil : plus de `ouverteParDefaut` sur « Mes bars », plus de `sousTitre` email, `MesBars` démarre sans panneau ouvert. Placeholders = libellés des champs. Le seed de test crée « Camille » / « Test ». L'affichage du prénom sur la carte d'annonce est hors périmètre ; il contredit la convention « éditeur anonyme » de `CLAUDE.md`, à réviser avant de le brancher.
 - **Nom et prénom de l'organisateur (Phase 35)** : nouveau champ `Organisateur.nom String?` (nullable : les comptes existants restent intacts, sans script), appliqué par `prisma db push` (pas de dossier de migrations). Champ `nomComplet` ajouté aux schémas client et serveur de `lib/validation/inscription.ts` (espaces de début et de fin retirés, 1 à 80 caractères), réutilisé par le formulaire et l'action d'inscription. Au profil, une section déroulable sur le modèle de `formulaire-email.tsx`, avec son action dans `app/mon-profil/actions.ts` ; le nom vide n'y est accepté que pour un compte sans nom. Mention de la donnée dans `/cgu`. La convention « éditeur anonyme » ne concerne pas les organisateurs. L'affichage sur les cartes est hors périmètre.
 
 ---
@@ -455,7 +456,7 @@ Aujourd'hui la session est un JWT contenant uniquement l'identifiant de l'organi
 
 ### Ce qu'on livre
 
-Un compte peut gérer jusqu'à 10 bars. Sur `/mon-profil`, la section « Mon bar » devient « Mes bars » : une liste compacte (miniature, nom, adresse, « Modifier ») dont un seul bar est déplié à la fois (photo, nom, adresse), et un bouton « Ajouter un bar » qui déplie un formulaire vide. Un compte d'un seul bar voit sa fiche dépliée d'office. Les doublons dans un même compte et un 11e bar sont refusés. Le formulaire d'annonce commence par un champ « Bar », présélectionné s'il n'y en a qu'un, obligatoire dès le brouillon, modifiable en Brouillon et figé une fois Publiée. Chaque annonce de « Mes annonces » affiche le nom de son bar (première ligne de la carte, même avec un seul bar). La suppression de `recupererBarDeLOrganisateurConnecte` impose dès cette phase que « Mes annonces » liste les annonces de tous les bars, que l'alerte de l'en-tête compte les relances de tous les bars et que la suppression du compte efface tous ses bars (critères correspondants des phases 19 et 20 livrés en avance). Migration : relation 1–N `Organisateur` → `Bar`, contrainte `@@unique([organisateurId, nom, adresse])` et champ `Annonce.publieeLe`.
+Un compte peut gérer jusqu'à 10 bars. Sur `/mon-profil`, la section « Mon bar » devient « Mes bars » : une liste compacte (miniature, nom, adresse, « Modifier ») dont un seul bar est déplié à la fois (photo, nom, adresse), et un bouton « Ajouter un bar » qui déplie un formulaire vide. Un compte d'un seul bar voit sa fiche dépliée d'office *(remplacé par la Phase 42 : plus de dépliage d'office)*. Les doublons dans un même compte et un 11e bar sont refusés. Le formulaire d'annonce commence par un champ « Bar », présélectionné s'il n'y en a qu'un, obligatoire dès le brouillon, modifiable en Brouillon et figé une fois Publiée. Chaque annonce de « Mes annonces » affiche le nom de son bar (première ligne de la carte, même avec un seul bar). La suppression de `recupererBarDeLOrganisateurConnecte` impose dès cette phase que « Mes annonces » liste les annonces de tous les bars, que l'alerte de l'en-tête compte les relances de tous les bars et que la suppression du compte efface tous ses bars (critères correspondants des phases 19 et 20 livrés en avance). Migration : relation 1–N `Organisateur` → `Bar`, contrainte `@@unique([organisateurId, nom, adresse])` et champ `Annonce.publieeLe`.
 
 ### Critères d'acceptation
 
@@ -519,7 +520,7 @@ Dans la fiche dépliée d'un bar, « Supprimer ce bar » ouvre une fenêtre qui 
 - **Accords du message** : N = 0 → « Ce bar sera supprimé définitivement. » ; singulier → « Ce bar et son annonce (dont 1 date à venir publiée) seront supprimés définitivement. » ; M = 0 → sans parenthèse **et sans** « Les musiciens ne les verront plus. » (rien n'est visible côté musicien).
 - **Fenêtre dédiée** (`FenetreSuppressionBar`, pas `FenetreSortie`) : même aspect (Walnut Shadow, bordure Cork Border, rayon 12px, sans ombre). Focus d'office dans le champ du nom ; Échap et clic hors fenêtre = « Annuler » (jamais la suppression) ; pendant la suppression, boutons inactifs et Échap sans effet ; une erreur serveur s'affiche dans la fenêtre, qui reste ouverte. `FenetreSortie` reste inchangée.
 - **Placement** : « Supprimer ce bar » est un bouton fantôme à droite, sur la même ligne qu'« Enregistrer » (formulaire de la fiche dépliée, `justify-between`). Dernier bar : « Enregistrer » seul sur sa ligne, la mention « Un compte doit garder au moins un bar ; pour tout supprimer, supprimez votre compte » juste en dessous (12px, majuscules, Driftwood).
-- **Après la suppression** : la fenêtre se ferme, l'organisateur reste sur `/mon-profil`, message « Bar supprimé. » à l'emplacement de « Bar ajouté. ». Toutes les fiches sont repliées, sauf s'il ne reste qu'un bar : sa fiche est dépliée d'office (la règle s'applique aussi après suppression, pas seulement au chargement).
+- **Après la suppression** : la fenêtre se ferme, l'organisateur reste sur `/mon-profil`, message « Bar supprimé. » à l'emplacement de « Bar ajouté. ». Toutes les fiches sont repliées *(Phase 42 : y compris s'il ne reste qu'un bar ; l'ancienne règle du dépliage d'office d'un bar unique est supprimée)*.
 - **Serveur** : action `supprimerBar(barId, nomSaisi)` dans `app/mon-profil/actions.ts`. Propriété vérifiée (`recupererBarDuCompte`), nom saisi revérifié (même comparaison normalisée), dernier bar refusé. Transaction : annonces du bar (occurrences en cascade) puis bar ; photos du bar et des annonces retirées ensuite avec `del`, sans bloquer. `revalidatePath` sur `/`, `/mes-annonces`, `/mon-profil`. Aucun email.
 - **Logique pure** dans `lib/bars.ts` avec tests Vitest : construction du message (N/M, accords, M = 0), comparaison du nom saisi, photos d'un bar (réutilise `urlsPhotosDuCompte`).
 - **Texte de « Supprimer mon compte »** : « Vos bars, vos annonces, leurs dates et leurs photos seront supprimés définitivement. » (au lieu de « Votre bar… »).
@@ -719,7 +720,7 @@ Dans « Mes annonces », dès 2 bars, les boutons du filtre « Tous » / un bout
 
 ### Ce qu'on livre
 
-Sur `/mon-profil`, « Mes bars », « Email », « Mot de passe » et « Supprimer mon compte » deviennent des sections déroulables : un clic sur la ligne de titre, qui porte un chevron, déroule ou replie la section, indépendamment des autres. À chaque visite, seule « Mes bars » est déroulée. L'email actuel reste visible sous « Email ». Replier une section n'efface pas la saisie. « Supprimer mon compte » déroulé montre directement le formulaire de suppression. « Déconnexion » ne change pas. Le titre « Mon profil » passe à la taille de « Mes annonces » (24px). Aucune migration de schéma.
+Sur `/mon-profil`, « Mes bars », « Email », « Mot de passe » et « Supprimer mon compte » deviennent des sections déroulables : un clic sur la ligne de titre, qui porte un chevron, déroule ou replie la section, indépendamment des autres. À chaque visite, seule « Mes bars » est déroulée. L'email actuel reste visible sous « Email ». *(Remplacé par la Phase 42.)* *(Remplacé par la Phase 42 : tout est replié, email masqué.)* Replier une section n'efface pas la saisie. « Supprimer mon compte » déroulé montre directement le formulaire de suppression. « Déconnexion » ne change pas. Le titre « Mon profil » passe à la taille de « Mes annonces » (24px). Aucune migration de schéma.
 
 ### Critères d'acceptation
 
@@ -928,7 +929,7 @@ Le pied de page affiche « CGU · Mentions légales · Contact ». « Mentions l
 
 ### Ce qu'on livre
 
-L'inscription demande « Nom et prénom » en premier champ (obligatoire, 1 à 80 caractères), avant l'email, le mot de passe, le nom et l'adresse du bar. Le nom est enregistré avec le compte et modifiable depuis `/mon-profil`, dans une section repliée « Nom et prénom ». Les comptes existants n'ont pas de nom et ne sont jamais contraints d'en saisir un. La page `/cgu` mentionne le nom parmi les données collectées. L'affichage du nom sur les cartes d'organisateur est une phase future.
+*(Remplacé par la Phase 42 : « Prénom » et « Nom » en deux champs.)* L'inscription demande « Nom et prénom » en premier champ (obligatoire, 1 à 80 caractères), avant l'email, le mot de passe, le nom et l'adresse du bar. Le nom est enregistré avec le compte et modifiable depuis `/mon-profil`, dans une section repliée « Nom et prénom ». Les comptes existants n'ont pas de nom et ne sont jamais contraints d'en saisir un. La page `/cgu` mentionne le nom parmi les données collectées. L'affichage du nom sur les cartes d'organisateur est une phase future.
 
 ### Critères d'acceptation
 
@@ -959,7 +960,7 @@ Tous les titres de page passent à 24px sur une ligne (classe commune `.titre-pa
 - [x] Sur toutes les pages, le `h1` tient sur une ligne à 390px et a la même taille calculée (24px) ; un titre trop long est tronqué par « … »
 - [x] Les textes secondaires sont en crème ~70 % (plus de `--color-driftwood` en texte) ; le Driftwood reste sur les séparateurs et bordures
 - [x] « ← Retour » a une bordure de 2px et une graisse 500
-- [x] À l'inscription, à l'ajout et à la modification d'un bar, des suggestions (5 maximum) apparaissent dès 3 caractères ; un clic remplit « n° rue, code postal ville »
+- [x] À l'inscription, à l'ajout et à la modification d'un bar, des suggestions (5 maximum) apparaissent dès 3 caractères ; un clic remplit « n° rue, code postal ville » *(Phase 44 : adresse sans code postal + champ « Code postal » dédié)*
 - [x] Le champ d'adresse est accessible (`role="combobox"`, navigation clavier, Échap) et accepte la saisie libre ; une panne de l'API Adresse n'affiche aucune erreur
 - [x] Le géocodage serveur (`lib/geocode.ts`) est inchangé
 - [x] DESIGN.md documente le titre unique, le texte secondaire et le bouton Retour
@@ -1018,3 +1019,153 @@ La ligne sous le bandeau de l'espace organisateur (`components/header-organisate
 ## Bloquée par
 
 - Phase 37 (menu « ⋯ » sur les cartes d'annonces)
+
+---
+
+## Phase 39 : Design Harbor, accueil musicien (pilote)
+
+**User stories** : US-136, US-137, US-138, US-139, US-140, US-141
+
+### Ce qu'on livre
+
+L'accueil musicien passe en design Harbor (clair, marine/bleu), derrière le drapeau `NEXT_PUBLIC_THEME_HARBOR` (éteint en production). Le reste de l'application ne change pas. Branche `feat/design-test`.
+
+- `docs/DESIGN.md` : ajout d'une section « Harbor (pilote, accueil musicien) » (tokens, typo, composants, portée « accueil seul », mode sombre prévu plus tard). Le contenu ORYZO n'est pas réécrit.
+- `app/layout.tsx` : Plus Jakarta Sans, Geist, JetBrains Mono via `next/font/google` (Context7 d'abord) ; Inter conservée. `app/globals.css` : bloc `.theme-harbor` sans toucher `:root`.
+- `lib/annonce-constantes.ts` : table `COULEURS_STATUT_HARBOR` à côté de l'existante.
+- `app/page.tsx` : enrobage `.theme-harbor`, titre « Jammix » + accroche, bouton « Accéder à mes annonces » restylé, encart « aucune jam » en chips.
+- `components/bandeau.tsx` et `components/pied-de-page.tsx` : variante Harbor pour l'accueil (marine, sans logo, « Connexion organisateur » ou icône de profil).
+- `app/selecteur-date.tsx` : bandeau de 7 jours (flèches ± 7 jours, « Aujourd'hui », icône calendrier + `<input type="date">` caché pour les dates lointaines, navigation par l'URL, borne basse = aujourd'hui) ; `app/toggle-vue.tsx` segmenté.
+- `lib/annonces.ts` : `recupererJoursAvecJams(debutIso, finIso)` (annonces publiées, annulées comprises) appelée depuis `page.tsx` ; points sous les jours.
+- `app/carte-annonce.tsx`, `app/bouton-itineraire.tsx` : prop `theme` (`"oryzo"` par défaut) ; `app/bottom-sheet-bar.tsx` et `components/JamMap.tsx` (style positron, étiquettes marine, attribution corrigée) en variante Harbor. J-7, photos et statuts d'occurrence inchangés.
+
+### Critères d'acceptation
+
+- [ ] Drapeau actif : titre, accroche et bandeau de 7 jours visibles ; flèches, « Aujourd'hui » et clic sur un jour mettent à jour `?date=` ; la date minimale est aujourd'hui
+- [ ] L'icône calendrier ouvre le sélecteur natif et permet d'atteindre une date lointaine
+- [ ] Un point apparaît sous chaque jour ayant au moins une occurrence d'annonce publiée (annulée comprise), et seulement sous ceux-là
+- [ ] Carte d'annonce : nom du bar et statut sur une ligne, adresse/distance, horaires, styles et instruments sur une ligne avec ellipsis, « Sera confirmée le … » conservé, annulée grisée et barrée ; menu Itinéraire fonctionnel
+- [ ] Visiteur : seul « Connexion organisateur » à droite, sans logo ; organisateur connecté : icône de profil et bouton « Accéder à mes annonces » sous l'accroche
+- [ ] Vue Carte : fond clair OpenFreeMap positron, étiquettes lisibles, attribution OSM sans chevauchement
+- [ ] `/mes-annonces`, `/jams/[id]`, `/connexion` visuellement inchangées (captures avant/après)
+- [ ] Drapeau éteint : l'accueil actuel (champ date, bandeau cuivré) est servi sans changement
+- [ ] Tests Playwright : suite principale lancée drapeau actif (`e2e/musicien.e2e.ts` mis à jour, lecture seule) ; projet smoke séparé, drapeau éteint ; `pied-de-page.e2e.ts` et `contact.e2e.ts` verts ; captures mobile 400 px (liste et carte)
+- [ ] `npx tsc --noEmit`, `npm run lint`, `npx vitest run`, `npm run build` et toute la suite Playwright passent
+
+## Bloquée par
+
+- Phase 38 (bandeau « Accéder à mes annonces » et photos masquées)
+
+---
+
+## Phase 40 : Bascule Harbor, toute l'application
+
+**Livré en un seul push** (branche `feat/design-test`) : tous les écrans passent en design Harbor, sans drapeau.
+
+- `app/globals.css` : tokens `--harbor-*` dans `:root`, composants `.champ-input`, `.titre-page`, carte, étiquettes ; ORYZO retiré. `app/layout.tsx` : Inter retirée.
+- Toutes les pages (`/jams/[id]`, connexion, inscription, mot de passe, Mes annonces, formulaires d'annonce, profil, CGU, mentions légales, contact), entête (logo « Jammix » hors accueil), pied de page, modales, menus et e-mails (`lib/email.ts`) migrés.
+- Retrait de `lib/theme.ts`, de la prop `theme`, du drapeau `NEXT_PUBLIC_THEME_HARBOR`, du projet Playwright smoke ; `COULEURS_STATUT_OCCURRENCE` reprend la palette Harbor.
+- `docs/DESIGN.md` réécrit (Harbor seul).
+- Critères : `tsc`, `lint`, `vitest`, `build` et toute la suite Playwright verts ; captures mobile 400 px de chaque page relues ; mode sombre hors périmètre.
+
+---
+
+## Phase 41 : Carte d'annonce compacte (polices du preview)
+
+**User stories** : US-142
+
+### Ce qu'on livre
+
+La carte d'annonce de l'accueil (`app/carte-annonce.tsx`, modes `liste` et `fiche`) prend moins de place verticalement et reprend les polices et tailles du preview Harbor. Aucune règle métier ne change.
+
+- **Visuel validé d'abord** : maquette avant/après de 3 cartes (confirmée, en attente avec échéance, annulée avec nom long et 6 styles), aucun changement dans l'appli avant accord.
+- `app/carte-annonce.tsx` : ligne 1 `flex items-start justify-between gap-3` (nom du bar, `after:absolute` conservé pour rendre toute la carte cliquable ; statut à droite, `max-w-[42%]`, retour à la ligne autorisé car « En attente de confirmation » est long) ; `ligneChips` réécrit en `flex flex-wrap items-center gap-1.5` avec libellé `shrink-0` à gauche et pastilles à droite ; rayon 16, ombre menu.
+- Tailles : nom Plus Jakarta Sans 800 20 px (−0,025 em) ; statut 600 12 px, 3×8, rayon 6 ; adresse/distance Geist 13 px `tabular-nums` ; horaires Geist 600 13 px ; pastilles 600 12 px, 3×10.
+- `app/layout.tsx` : Plus Jakarta Sans et Geist via `next/font/google` (Context7 d'abord), variables `--font-jakarta` et `--font-geist` ; `app/globals.css` : `.donnees` pour la carte. Figtree reste la police du reste de l'application.
+- `docs/DESIGN.md` : section Typographie (exception de la carte) et composant « Carte d'annonce » mis à jour.
+
+### Critères d'acceptation
+
+- [ ] Nom du bar et statut sur une ligne ; « Styles » + pastilles et « Instruments » + pastilles chacun sur une ligne, retour à la ligne des pastilles si trop nombreuses
+- [ ] Bar au nom long et 6 styles : aucun débordement horizontal à 390 px (liste et fiche carte)
+- [ ] Toute la carte reste cliquable en mode liste ; menu Itinéraire fonctionnel ; annulée à 60 % d'opacité, nom barré ; « Sera confirmée le … » conservé ; libellés de statut inchangés
+- [ ] Polices Plus Jakarta Sans et Geist chargées sur la carte uniquement (Figtree ailleurs)
+- [ ] `npx tsc --noEmit`, `npm run lint`, `npx playwright test e2e/musicien.e2e.ts e2e/lisibilite-adresse.e2e.ts --workers=1` verts (sélecteurs sur nom, statut, « Styles », « Instruments » vérifiés) ; captures Playwright mobile 390 px en liste et en fiche carte
+
+## Bloquée par
+
+- Phase 40 (bascule Harbor sur toute l'application)
+
+
+---
+
+## Phase 42 : Profil replié, prénom et nom séparés, placeholders
+
+**User stories** : US-143, US-144, US-145, US-146
+
+### Ce qu'on livre
+
+Sur `/mon-profil`, rien n'est déplié d'office : « Mes bars », « Nom et prénom », « Email », « Mot de passe » et « Supprimer mon compte » sont repliées, la fiche d'un compte à un seul bar aussi, et l'email actuel n'est plus affiché tant que « Email » est repliée. « Nom et prénom » contient deux champs, « Prénom » et « Nom », repris à l'inscription (en premier et deuxième champs). Chaque champ à remplir du profil porte son libellé en placeholder. Les comptes existants gardent leur ancien « Prénom Nom » dans « Nom », sans coupure automatique.
+
+### Critères d'acceptation
+
+- [x] À l'arrivée sur `/mon-profil`, toutes les sections sont repliées (`aria-expanded="false"`), l'email actuel n'est pas affiché, « Déconnexion » reste visible
+- [x] Un compte à un seul bar n'a pas sa fiche dépliée d'office, ni à l'arrivée ni après une suppression de bar
+- [x] L'inscription affiche « Prénom » puis « Nom » avant « Email » ; vide ou plus de 40 caractères (espaces de début et de fin ignorés) est refusé sous le champ concerné, la saisie conservée
+- [x] Le profil préremplit « Prénom » et « Nom » ; la modification est enregistrée et confirmée
+- [x] Un compte sans prénom enregistre les deux champs vides sans erreur ; un seul champ rempli est refusé ; un prénom enregistré ne peut plus être vidé
+- [x] Placeholders = libellés : Prénom, Nom, Nouvel email, Mot de passe actuel, Nouveau mot de passe, Confirmation, Nom du bar, Adresse du bar, Code postal, phrase de confirmation de suppression du compte
+- [x] Aucune migration destructive : `Organisateur.prenom` est nullable, `nom` est inchangé
+- [x] `npx tsc --noEmit`, `npm run lint`, `npx vitest run` et toute la suite Playwright verts ; `e2e/nom-complet.e2e.ts` devient `e2e/identite.e2e.ts`
+- [x] `prisma db push` appliqué sur la base de production avant le déploiement (2026-10-12)
+
+## Bloquée par
+
+- Phase 41 (carte d'annonce compacte)
+
+---
+
+## Phase 43 : Bandeau allégé, mot-symbole sous le bandeau, pastille de profil
+
+**User stories** : US-147, US-148
+
+### Ce qu'on livre
+
+*(Livrée avant formalisation : commits `19a2b25`, `b6bfc46`, `199cfc6`.)* Le bandeau (48 px, Marine) ne porte plus le texte « Jammix » : hors accueil, une icône maison seule (libellé accessible « Accueil ») ; à droite, « Connexion organisateur » ou l'icône de profil en pastille blanche translucide, identique sur toutes les pages. Sous le bandeau, sur toutes les pages, le mot-symbole « Jammix » (fluide) et l'accroche « Les Jams à Lyon, ce soir ». La page de connexion resserre ses espacements et son sous-titre devient « Accédez à l'espace de gestion de vos jams. ». Aucune migration ni règle métier touchée.
+
+### Critères d'acceptation
+
+- [x] Hors accueil, le bandeau n'affiche que l'icône maison (lien `/`, libellé « Accueil ») ; aucun texte « Jammix » dans le bandeau
+- [x] Mot-symbole et accroche visibles sous le bandeau sur toutes les pages ; `h1` sur l'accueil uniquement
+- [x] L'icône de profil est la même pastille blanche sur toutes les pages, pleine sur `/mon-profil`
+- [x] Sous-titre de connexion mis à jour, espacements resserrés
+- [x] Tests Playwright (`e2e/musicien.e2e.ts`, `e2e/icone-profil.e2e.ts`) et DESIGN.md à jour
+
+## Bloquée par
+
+- Phase 40 (bascule Harbor sur toute l'application)
+
+---
+
+## Phase 44 : Code postal dédié, profil resserré, Déconnexion en haut, placeholders d'inscription
+
+**User stories** : US-149, US-150, US-151, US-152
+
+### Ce qu'on livre
+
+*(Livrée avant formalisation : commits `8336858`, `d744b53` ; placeholders d'inscription corrigés ensuite.)* Le code postal d'un bar devient un champ dédié « Code postal » (5 chiffres) à l'inscription, à l'ajout et à la modification d'un bar ; choisir une suggestion d'adresse met l'adresse sans code postal dans son champ et renseigne le code postal. L'adresse s'affiche recomposée « n° rue, code postal ville » (cartes, fiche d'annonce, profil) et le géocodage l'utilise en entier. Sur `/mon-profil`, « Déconnexion » passe à droite du titre, les lignes de bars sont resserrées et le carré de photo vide disparaît. Les placeholders de l'inscription reprennent les libellés (« Nom du bar », « Adresse du bar », « Code postal »).
+
+### Critères d'acceptation
+
+- [x] Champ « Code postal » (5 chiffres, `inputMode="numeric"`, `autoComplete="postal-code"`) aux trois formulaires de bar ; erreur « Le code postal doit contenir 5 chiffres. » sous le champ, saisie conservée
+- [x] Choisir une suggestion renseigne l'adresse (sans code postal) et le code postal
+- [x] `Bar.codePostal` (défaut vide, migration non destructive) ; un bar antérieur sans code postal s'affiche tel quel et exige un code postal valide à sa prochaine modification
+- [x] Adresse affichée « n° rue, code postal ville » sur cartes, fiche d'annonce et profil ; géocodage sur l'adresse complète
+- [x] « Déconnexion » à droite du titre « Mon profil » ; plus de carré de photo vide ; lignes de bars resserrées
+- [x] Placeholders d'inscription = libellés (Nom du bar, Adresse du bar, Code postal)
+- [x] Tests : `lib/adresse.test.ts`, `lib/validation/inscription.test.ts`, `e2e/lisibilite-adresse.e2e.ts`
+- [x] `prisma db push` (colonnes `Organisateur.prenom` et `Bar.codePostal`) appliqué sur la base de production avant le déploiement (2026-10-12)
+
+## Bloquée par
+
+- Phase 42 (profil replié, prénom et nom séparés)

@@ -28,17 +28,17 @@ L'organisateur accède à son espace depuis la page d'accueil, retrouve toutes l
 
 Un même compte peut gérer jusqu'à 10 bars, ajoutés, modifiés ou supprimés depuis le profil. Chaque annonce porte sur un bar choisi par l'organisateur ; « Mes annonces » affiche le nom du bar sur chaque annonce et permet de filtrer par bar. Sur une nouvelle annonce, un bouton reprend en un clic l'horaire, les styles, et les instruments de la dernière annonce publiée du bar choisi ; il ne reste qu'à ajouter les dates.
 
-Chaque page affiche en haut un même bandeau à fond cuivré, la couleur des boutons pleins, distinct du corps sombre de la page, fixé pendant le défilement et souligné d'un filet doré. À gauche, un bouton « Jammix » avec une icône de petite maison ramène à l'accueil, à la date du jour, en vue liste, sans rechargement complet. À droite, on trouve l'icône de profil de l'organisateur connecté ou, sur l'accueil, le bouton « Connexion organisateur ». Sur l'accueil, l'organisateur connecté trouve un bouton « Accéder à mes annonces » qui l'y mène en un clic. Dans son espace, une seule ligne sous le bandeau, « 🔔 Accéder à mes annonces » en gras suivi du nombre de jams à confirmer, puis un trait, remplace le lien « Mes annonces » et l'alerte des relances. Le titre « Mes annonces » tient sur une ligne à côté de « Nouvelle », y compris sur mobile.
+Chaque page (sauf l'accueil en pilote Harbor, voir US-136 à US-141) affiche en haut un même bandeau à fond cuivré, la couleur des boutons pleins, distinct du corps sombre de la page, fixé pendant le défilement et souligné d'un filet doré. À gauche, un bouton « Jammix » avec une icône de petite maison ramène à l'accueil, à la date du jour, en vue liste, sans rechargement complet. À droite, on trouve l'icône de profil de l'organisateur connecté ou, sur l'accueil, le bouton « Connexion organisateur ». Sur l'accueil, l'organisateur connecté trouve un bouton « Accéder à mes annonces » qui l'y mène en un clic. Dans son espace, une seule ligne sous le bandeau, « 🔔 Accéder à mes annonces » en gras suivi du nombre de jams à confirmer, puis un trait, remplace le lien « Mes annonces » et l'alerte des relances. Le titre « Mes annonces » tient sur une ligne à côté de « Nouvelle », y compris sur mobile.
 
 Dans « Mes annonces », les boutons du filtre par bar passent à la ligne quand la largeur manque, sans défilement horizontal. Le bouton actif se distingue par un fond crème léger, sans soulignement. Un nom de bar trop long est tronqué par « … » et ne dépasse jamais la colonne.
 
-Sur le profil, les sections « Mes bars », « Email », « Mot de passe » et « Supprimer mon compte » se déroulent et se referment d'un clic sur leur titre, qui porte un chevron. À l'arrivée, seule « Mes bars » est déroulée. « Déconnexion » reste affiché tel quel. Le titre « Mon profil » prend la taille du titre « Mes annonces ».
+Sur le profil, les sections « Mes bars », « Email », « Mot de passe » et « Supprimer mon compte » se déroulent et se referment d'un clic sur leur titre, qui porte un chevron. À l'arrivée, rien n'est déplié *(remplacé par la Phase 42)*. « Déconnexion » est placé en haut de la page, à droite du titre « Mon profil » *(Phase 44)*. Le titre « Mon profil » prend la taille du titre « Mes annonces ».
 
 Dans le formulaire d'annonce, le titre prend la taille de « Mes annonces » et tient sur une ligne. Un champ « Description », facultatif et limité à 500 caractères, permet d'ajouter des précisions libres, affichées au musicien sous les instruments. Dans la liste, le musicien en voit le début et ouvre, d'un clic sur la carte, la page de la jam qui montre toute l'annonce. Une case « Tous les styles » remplace en un clic la liste des styles. Les instruments s'intitulent « Instruments disponibles » dans le formulaire et « Instruments » côté musicien : le mot « backline » disparaît de l'écran.
 
 Chaque page se termine par un pied de page discret : les liens « CGU », « Mentions légales » et « Contact », puis « © <année> Jammix · Tous droits réservés · v<version> ». « CGU » ouvre une page courte qui réunit les règles d'usage d'un service gratuit et les données personnelles. « Mentions légales » ouvre une page dédiée : éditeur, directeur de la publication, hébergeurs, contact et signalement, propriété intellectuelle. « Contact » ouvre un formulaire (nom, adresse mail, message) ; la réponse de l'équipe arrive par email. L'éditeur, un particulier, reste anonyme : aucun nom de personne n'apparaît dans l'application.
 
-L'inscription d'un organisateur demande désormais, dans cet ordre, « Nom et prénom », « Email », « Mot de passe », « Nom du bar » et « Adresse du bar » (photo toujours facultative). Le nom et prénom se modifie ensuite depuis le profil.
+L'inscription d'un organisateur demande désormais, dans cet ordre, « Prénom », « Nom », « Email », « Mot de passe », « Nom du bar » et « Adresse du bar » (photo toujours facultative). Le prénom et le nom se modifient ensuite depuis le profil, où aucune section n'est dépliée d'office et où chaque champ à remplir porte son nom en placeholder.
 
 Sur chaque carte de « Mes annonces », un bouton « ⋯ » en haut à droite ouvre un petit menu : « Modifier » mène au formulaire de l'annonce ; « Annuler » ouvre une fenêtre de confirmation, avec choix de la portée (« Cette date seulement » + date, ou « Toutes les dates ») pour une annonce récurrente.
 
@@ -165,7 +165,7 @@ US-113. En tant que visiteur, je veux savoir que l'éditeur est un particulier n
 US-114. En tant que visiteur, je veux savoir comment joindre l'équipe et signaler un contenu illicite, afin de faire retirer une annonce problématique.
 US-115. En tant que visiteur, je veux connaître la propriété intellectuelle de Jammix et des contenus publiés, afin de savoir ce que je peux réutiliser.
 US-116. En tant qu'organisateur, je veux saisir mon nom et prénom à l'inscription, afin qu'ils soient associés à mon compte.
-US-117. En tant que visiteur sur l'inscription, je veux un message clair sous « Nom et prénom » s'il est vide ou trop long, afin de corriger sans perdre ma saisie.
+US-117. En tant que visiteur sur l'inscription, je veux un message clair sous « Prénom » ou « Nom » s'il est vide ou trop long, afin de corriger sans perdre ma saisie. *(Précisé par US-144.)*
 US-118. En tant qu'organisateur, je veux modifier mon nom et prénom depuis mon profil, afin de le corriger.
 US-119. En tant qu'organisateur déjà inscrit sans nom, je veux pouvoir le renseigner depuis mon profil sans y être contraint, afin de continuer à utiliser mon compte.
 US-120. En tant que visiteur ou organisateur, je veux que le titre de chaque page ait la même taille et tienne sur une ligne, afin de naviguer dans une interface homogène.
@@ -184,6 +184,23 @@ US-132. En tant qu'organisateur, je veux qu'un clic sur « ⋯ » n'ouvre pas la
 US-133. En tant qu'organisateur, je veux que la ligne sous le bandeau s'intitule « 🔔 Accéder à mes annonces » (sans chiffre) sur mon profil et dans la saisie d'annonce, et « 🔔 À confirmer · N » sur « Mes annonces », afin de comprendre qu'un clic m'emmène à mes annonces et que le compteur n'apparaît qu'une fois sur place.
 US-134. En tant qu'organisateur sur « Mes annonces », je veux que cette ligne reste un simple texte non cliquable, afin de ne pas me renvoyer vers la page où je suis déjà.
 US-135. En tant qu'organisateur, je ne veux plus voir d'emplacements photo sur le formulaire ni sur la page d'une annonce, afin d'attendre la V2 qui n'en prévoira qu'un seul ; les photos déjà enregistrées restent visibles côté musicien.
+US-136. En tant que musicien, je veux voir les 7 jours à partir d'aujourd'hui dans un bandeau, avec le jour choisi mis en évidence, afin de choisir une date en un geste.
+US-137. En tant que musicien, je veux un point sous les jours qui ont au moins une jam (annulée comprise), afin de voir d'un coup d'œil où il se passe quelque chose.
+US-138. En tant que musicien, je veux naviguer de 7 jours en 7 jours, revenir à « Aujourd'hui » et ouvrir un calendrier pour une date lointaine, afin d'atteindre n'importe quelle date à venir.
+US-139. En tant que musicien, je veux le titre « Jammix » et l'accroche « Choisis une date. Vois où jouer ce soir. » en haut de l'accueil, afin de comprendre tout de suite à quoi sert la page.
+US-140. En tant que musicien, je veux des cartes d'annonce plus lisibles (nom du bar et statut sur une ligne, adresse et distance, horaires, styles et instruments, itinéraire) sur un fond clair avec une carte claire, afin de comparer rapidement les jams.
+US-141. En tant qu'organisateur connecté, je veux retrouver sur l'accueil mon icône de profil et le bouton « Accéder à mes annonces », afin de garder mes repères avec le nouveau design (pilote Harbor).
+US-142. En tant que musicien, je veux des cartes d'annonce plus compactes (nom du bar et statut sur une même ligne, « Styles » et « Instruments » chacun sur une ligne avec leurs pastilles), afin de voir plus de jams à l'écran sans défiler.
+US-143. En tant qu'organisateur, je veux que toutes les sections de mon profil soient repliées à l'arrivée (« Mes bars » et la fiche d'un bar unique comprises, email actuel masqué), afin de choisir moi-même ce que je déplie.
+US-144. En tant qu'organisateur, je veux saisir mon prénom et mon nom dans deux champs distincts, à l'inscription et au profil, afin de pouvoir afficher plus tard seulement mon prénom.
+US-145. En tant qu'organisateur, je veux que chaque champ à remplir du profil porte son nom en placeholder, afin de savoir ce qu'on attend de moi même sans lire le libellé.
+US-146. En tant qu'organisateur déjà inscrit avec un ancien « Prénom Nom » dans un seul champ, je veux le retrouver tel quel et le corriger moi-même, afin de ne pas voir mes données coupées de travers.
+US-147. En tant que visiteur ou organisateur, je veux que le bandeau ne porte qu'une icône maison (hors accueil) et que le mot « Jammix » avec son accroche « Les Jams à Lyon, ce soir » s'affiche sous le bandeau sur toutes les pages, afin de garder une identité identique partout.
+US-148. En tant qu'organisateur connecté, je veux une icône de profil en pastille blanche identique sur toutes les pages, afin de la reconnaître d'un coup d'œil.
+US-149. En tant qu'organisateur, je veux saisir le code postal de mon bar dans un champ dédié, à l'inscription, à l'ajout et à la modification d'un bar, rempli automatiquement quand je choisis une suggestion d'adresse, afin de corriger l'adresse et le code postal séparément.
+US-150. En tant qu'organisateur, je veux que « Déconnexion » soit en haut de mon profil, à droite du titre, afin de me déconnecter sans défiler.
+US-151. En tant qu'organisateur, je veux des lignes de bars resserrées et sans carré de photo vide dans « Mes bars », afin de voir plus de bars à l'écran.
+US-152. En tant qu'organisateur dont le bar n'a pas de code postal, je veux que l'adresse s'affiche telle quelle et que la modification demande un code postal valide, afin de ne pas perdre mes bars existants.
 
 ## Critères de succès
 
@@ -208,7 +225,7 @@ US-135. En tant qu'organisateur, je ne veux plus voir d'emplacements photo sur l
 - À 360px de large, avec 10 bars, tous les boutons du filtre par bar sont visibles sans défilement horizontal.
 - Dans le filtre par bar, un seul bouton à la fois a le fond crème léger : « Tous » ou le bar choisi.
 - Aucun bouton du filtre par bar n'est plus large que la colonne, quelle que soit la longueur du nom du bar.
-- À l'arrivée sur le profil, « Mes bars » est déroulée ; les formulaires d'email, de mot de passe et de suppression sont masqués ; l'email actuel et « Déconnexion » sont visibles.
+- À l'arrivée sur le profil, aucune section n'est dépliée *(Phase 42, remplace « Mes bars » déroulée)* ; l'email actuel est masqué ; « Déconnexion » est visible en haut de page, à droite du titre *(Phase 44)*.
 - Les quatre titres de section du profil portent un chevron.
 - Un clic sur un titre de section du profil, « Mes bars » comprise, affiche son contenu ; un second clic le masque.
 - Une saisie faite dans une section du profil reste présente après l'avoir refermée puis rouverte.
@@ -229,12 +246,17 @@ US-135. En tant qu'organisateur, je ne veux plus voir d'emplacements photo sur l
 - La page Mentions légales s'ouvre sans compte, depuis le pied de page de chaque page, et ne contient aucun nom de personne ; le pied de page à 3 liens tient à 360px sans débordement.
 - Un message valide envoyé depuis le formulaire Contact arrive à l'adresse de contact, et « Répondre » vise l'adresse saisie par l'expéditeur.
 - Le 6ᵉ envoi en moins d'une heure depuis une même connexion est refusé avec un message.
-- Un compte créé avec un nom et prénom le retrouve prérempli dans son profil ; sans nom, l'inscription est refusée avec un message sous le champ ; un compte ancien sans nom se connecte normalement.
+- Un compte créé avec un prénom et un nom les retrouve préremplis dans son profil ; sans l'un des deux, l'inscription est refusée avec un message sous le champ ; un compte ancien sans prénom se connecte normalement. À l'arrivée sur `/mon-profil`, aucune section n'est dépliée et l'email actuel n'est pas affiché.
 - Aucun `h1` n'occupe plus d'une ligne à 390px, et tous les `h1` ont la même taille calculée (24px) sur toutes les pages ; un titre trop long est tronqué par « … ».
 - Les textes secondaires sont en crème à environ 70 % d'opacité, plus aucun en Driftwood ; le bouton « ← Retour » a une bordure de 2px et une graisse 500.
-- Dès 3 caractères saisis dans l'adresse d'un bar (inscription, ajout, modification), jusqu'à 5 suggestions s'affichent ; un clic remplit le champ avec l'adresse complète (« n° rue, code postal ville »).
+- Dès 3 caractères saisis dans l'adresse d'un bar (inscription, ajout, modification), jusqu'à 5 suggestions s'affichent ; un clic remplit le champ d'adresse avec « n° rue, ville » et le champ « Code postal » avec les 5 chiffres *(Phase 44 : le code postal est un champ dédié)* ; l'adresse affichée reste « n° rue, code postal ville ».
 - Une adresse saisie librement, sans suggestion choisie, est acceptée comme avant ; si le service de suggestions est indisponible, le champ reste un champ libre sans message d'erreur.
 - Le bouton « ⋯ » est présent sur chaque carte de « Mes annonces » ; « Modifier » mène à la page d'édition en un clic depuis la liste ; après confirmation, les dates concernées affichent « annulée » dans la liste sans recharger manuellement ; sans confirmation, rien n'est annulé.
+- Carte d'annonce compacte : le nom du bar et le statut tiennent sur une ligne ; « Styles » et « Instruments » suivis de leurs pastilles sur une même ligne (retour à la ligne si trop nombreuses) ; un nom de bar long ou 6 styles ne font pas déborder la carte à 390 px ; statuts inchangés.
+- Design Harbor : l'accueil affiche le titre, l'accroche et le bandeau de 7 jours ; un clic sur un jour met à jour `?date=` ; les jours avec jams ont un point ; toutes les autres pages (jam, connexion, espace organisateur, pages légales) adoptent le même design clair.
+- Le bandeau n'affiche plus le texte « Jammix » : icône maison seule hors accueil (lien « Accueil »), mot-symbole et accroche sous le bandeau sur toutes les pages (`h1` sur l'accueil seulement) ; l'icône de profil est une pastille blanche sur toutes les pages (Phase 43).
+- Un champ « Code postal » (5 chiffres, erreur sous le champ si invalide) existe à l'inscription, à l'ajout et à la modification d'un bar ; choisir une suggestion renseigne adresse sans code postal et code postal ; l'adresse s'affiche « n° rue, code postal ville » sur les cartes, la fiche d'annonce et le profil ; le géocodage utilise l'adresse complète (Phase 44).
+- Sur `/mon-profil`, « Déconnexion » est à droite du titre, aucun carré de photo vide n'apparaît, les lignes de bars sont resserrées ; un bar sans code postal s'affiche et reste modifiable (Phase 44).
 
 ## Hors périmètre
 
@@ -300,13 +322,13 @@ US-135. En tant qu'organisateur, je ne veux plus voir d'emplacements photo sur l
 - Pied de page fixé en bas de l'écran.
 - Affichage du nom de l'organisateur sur les cartes ou côté musicien (phase future).
 - Nom et prénom exigés des comptes existants.
-- Champs prénom et nom séparés.
 - Nom de l'organisateur dans l'email de bienvenue.
 - Changement de taille des sous-titres `h2` et des titres du bandeau.
 - Suggestions d'adresse côté musicien, y compris pour l'adresse de recherche.
 - Suppression d'une annonce ou d'un brouillon ; autres actions dans le menu des cartes (dupliquer, confirmer une date) ; menu sur les cartes côté musicien.
 - Annulation d'une date unique d'une annonce ponctuelle distincte de « Toutes les dates » (une annonce ponctuelle = une fenêtre de confirmation simple).
 - Ajout, modification et retrait de photos d'annonce (reporté en V2, avec un seul emplacement).
+- Mode sombre Harbor, migration des autres écrans vers Harbor et activation du drapeau en production (phases suivantes).
 
 ## Décisions d'implémentation
 
@@ -409,12 +431,20 @@ US-135. En tant qu'organisateur, je ne veux plus voir d'emplacements photo sur l
 - La page Contact est publique, avec « ← Retour » vers l'accueil. Le formulaire a 3 champs obligatoires : nom (100 caractères maximum), adresse mail (format valide), message (10 à 2000 caractères, avec un compteur « N/2000 »). Un organisateur connecté trouve son email prérempli, modifiable. Une phrase sous le bouton explique l'usage des données, avec un lien vers les CGU, sans case à cocher.
 - Après l'envoi : « Message envoyé, nous vous répondrons par email. » et le formulaire se vide. En cas d'échec : un message d'erreur et la saisie conservée. Une erreur de saisie s'affiche sous le champ concerné, la saisie conservée.
 - Au-delà de 5 envois en une heure depuis une même connexion : « Trop de messages envoyés, réessayez plus tard. »
-- « Nom et prénom » est un champ unique, obligatoire à l'inscription, de 1 à 80 caractères (espaces de début et de fin ignorés), placé en premier du formulaire. Une erreur s'affiche sous le champ, la saisie conservée. Au profil, une section repliée « Nom et prénom » (même comportement que les autres sections) enregistre la modification et confirme son succès. Le champ n'est facultatif que pour les comptes existants, qui n'ont pas de nom tant qu'ils n'en saisissent pas.
+- **Prénom et nom (remplace le champ unique « Nom et prénom » de la Phase 35, voir Phase 42)** : deux champs distincts, « Prénom » puis « Nom », obligatoires à l'inscription, de 1 à 40 caractères chacun (espaces de début et de fin ignorés), placés en premier du formulaire. Une erreur s'affiche sous le champ concerné, la saisie conservée. Au profil, une section repliée « Nom et prénom » contient les deux champs, enregistre la modification et confirme son succès. Les comptes existants n'ont pas de prénom ; leur ancien « Prénom Nom » reste dans « Nom », sans coupure automatique. Un compte sans prénom peut enregistrer les deux champs vides ; remplir l'un sans l'autre est refusé ; un prénom enregistré ne peut plus être vidé.
+- **Profil replié (remplace la règle « Mes bars déroulée d'office » de la Phase 27)** : à chaque visite de `/mon-profil`, « Mes bars », « Nom et prénom », « Email », « Mot de passe » et « Supprimer mon compte » sont repliées, y compris la fiche du bar d'un compte à un seul bar ; l'email actuel n'est pas affiché sous « Email » tant que la section est repliée. Chaque champ à remplir porte son libellé en placeholder (Prénom, Nom, Nouvel email, Mot de passe actuel, Nouveau mot de passe, Confirmation, Nom du bar, Adresse du bar, Code postal, phrase de confirmation de suppression).
 - Tous les titres de page (`h1`) font 24px, graisse 500, majuscules, sur une seule ligne ; un débordement est tronqué par « … ». Les titres de 41px (accueil, contact, connexion, inscription, mot de passe) passent à 24px.
 - Les textes secondaires utilisent un crème à environ 70 % d'opacité ; le Driftwood est réservé aux séparateurs et bordures structurels. Les textes à 60 % d'opacité passent à 70 %.
 - « ← Retour » reste un bouton fantôme, avec une bordure de 2px, une graisse 500 et une couleur crème.
 - Le champ d'adresse d'un bar propose une liste déroulante après 3 caractères (5 suggestions au maximum), utilisable au clavier et fermée par Échap. La valeur envoyée est le texte du champ ; le géocodage serveur est inchangé (un échec laisse le bar absent de la carte).
 - Le bouton « ⋯ » des cartes de « Mes annonces » a une zone tactile d'au moins 44px et le libellé accessible « Actions de l'annonce » ; le menu a deux entrées au maximum. La fenêtre d'annulation propose « Annuler l'annonce » / « Retour » et affiche un message d'erreur dans la fenêtre si l'annulation échoue.
+- Design Harbor (Phases 39 et 40) : toute l'application passe à un design clair (voir DESIGN.md), sans drapeau : tokens `--harbor-*` dans `:root`, ORYZO retiré, e-mails compris. Aucune règle métier ne change.
+- Sur l'accueil Harbor, un seul bandeau d'entête marine : pas de logo « Jammix » (le grand titre le remplace), « Connexion organisateur » ou l'icône de profil à droite ; l'organisateur connecté trouve « Accéder à mes annonces » en bouton secondaire sous l'accroche.
+- Bandeau de 7 jours : borne basse = aujourd'hui, flèches ± 7 jours, bouton « Aujourd'hui », icône calendrier ouvrant un sélecteur de date natif pour les dates lointaines ; navigation par l'URL (`/?date=…&vue=…`). Un point marque tout jour ayant au moins une occurrence d'annonce publiée, annulée comprise.
+- Carte d'annonce (Phase 41) : polices et tailles du preview Harbor limitées à la carte (Plus Jakarta Sans pour le nom du bar, Geist pour adresse, distance et horaires), Figtree conservée partout ailleurs ; rayon 16, padding 16. Aucune règle métier ne change (statuts d'occurrence, J-7).
+- **Bandeau commun, mot-symbole et pastille de profil (Phase 43)** : aucune migration. Le bandeau ne porte que l'icône maison (hors accueil) et, à droite, la connexion ou l'icône de profil (pastille blanche translucide, pleine sur `/mon-profil`) ; le mot-symbole « Jammix » (Plus Jakarta Sans 800, fluide) et l'accroche sont rendus sous le bandeau par chaque page. L'accueil porte le `h1`. Page de connexion : espacements resserrés, sous-titre « Accédez à l'espace de gestion de vos jams. ».
+- **Code postal dédié, profil resserré (Phase 44)** : nouveau champ `Bar.codePostal String @default("")` (migration non destructive ; vide pour les bars antérieurs). L'adresse est stockée sans code postal (« 18 rue X, Lyon ») ; `lib/adresse.ts` fournit `separerCodePostal` (à la sélection d'une suggestion) et `adresseComplete` (affichage « 18 rue X, 69002 Lyon » et géocodage). Validation : 5 chiffres exactement. « Déconnexion » monte à droite du titre « Mon profil ». Lignes de bars à `py-2`, carré de photo vide supprimé.
+- Palette de statuts Harbor (liste et carte) : confirmée `#17807E`, programmée `#2B78BE`, en attente `#B7791F`, annulée `#6B7C8C` (grisée, nom barré).
 
 ## Notes complémentaires
 
@@ -459,3 +489,5 @@ Les suggestions d'adresse dépendent de l'API Adresse (data.gouv.fr). En cas d'i
 Le menu « ⋯ » réutilise les règles d'annulation existantes (statut « annulée » par occurrence, confirmation J-7 effacée) ; aucun email ni SMS. DESIGN.md devra consigner le menu et la fenêtre.
 
 Les photos d'annonce sont masquées en V1 sans suppression de code ni de données : le schéma (`photoUrl1/2`), l'affichage côté musicien et les composants de saisie restent en place pour la V2. Le bandeau devient « Accéder à mes annonces » (sans chiffre, nombre conservé dans le libellé accessible) hors de « Mes annonces », où il reste « À confirmer · N » ; DESIGN.md renomme la section correspondante.
+
+La migration Harbor a été livrée en une seule fois (Phase 40) : le pilote de l'accueil (Phase 39) a été étendu à tous les écrans, le drapeau `NEXT_PUBLIC_THEME_HARBOR` et le projet smoke ont été retirés, et DESIGN.md a été réécrit. Le mode sombre reste prévu plus tard, sans date.

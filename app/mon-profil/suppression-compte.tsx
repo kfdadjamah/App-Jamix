@@ -38,16 +38,17 @@ export default function SuppressionCompte() {
 
   return (
     <>
-      <p className="text-[15px] leading-[1.26] text-[color:var(--color-texte-secondaire)]">
+      <p className="text-[15px] leading-[1.26] text-[var(--harbor-marine-2)]">
         Vos bars, vos annonces, leurs dates et leurs photos seront supprimés
         définitivement. Cette action est irréversible.
       </p>
 
-      <form onSubmit={handleSubmit(surSoumission)} className="flex flex-col gap-6" noValidate>
+      <form onSubmit={handleSubmit(surSoumission)} className="flex flex-col gap-4" noValidate>
         <ChampFormulaire label="Mot de passe actuel" erreur={errors.motDePasseActuel?.message}>
           <input
             type="password"
             autoComplete="current-password"
+            placeholder="Mot de passe actuel"
             {...register("motDePasseActuel")}
             className="champ-input"
           />
@@ -60,13 +61,14 @@ export default function SuppressionCompte() {
           <input
             type="text"
             autoComplete="off"
+            placeholder={`Saisissez ${MOT_CONFIRMATION_SUPPRESSION} pour confirmer`}
             {...register("confirmation")}
             className="champ-input"
           />
         </ChampFormulaire>
 
         {erreurServeur && (
-          <p className="text-[12px] font-medium uppercase text-[var(--color-gold-elegance)]">
+          <p className="text-[13px] font-semibold text-[var(--harbor-erreur)]">
             {erreurServeur}
           </p>
         )}
@@ -74,7 +76,7 @@ export default function SuppressionCompte() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="self-start rounded-[22.5px] border border-[var(--color-warm-cream)] px-4 py-[7.5px] text-[12px] font-medium uppercase text-[var(--color-warm-cream)] disabled:opacity-60"
+          className="self-start rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] disabled:opacity-60"
         >
           {isSubmitting ? "Suppression…" : "Supprimer définitivement"}
         </button>

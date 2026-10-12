@@ -10,6 +10,7 @@ import { prisma } from "@/lib/prisma";
 import { TOURS_HASHING } from "@/lib/auth-constantes";
 import { emailAvisChangementEmail, emailAvisMotDePasse, envoyerEmail } from "@/lib/email";
 import { recadrerEtUploaderPhoto } from "@/lib/image";
+import { adresseComplete } from "@/lib/adresse";
 import { coordonneesApresModification, urlsPhotosDuCompte } from "@/lib/compte";
 import { geocoderAdresse } from "@/lib/geocode";
 import { recupererBarDuCompte } from "@/lib/organisateur";
@@ -27,7 +28,7 @@ import {
   schemaChangementEmail,
   schemaChangementMotDePasse,
   schemaFicheBar,
-  schemaNomCompletVideAutorise,
+  schemaIdentiteVideAutorise,
   schemaPhoto,
   schemaSuppressionCompte,
 } from "@/lib/validation/inscription";
@@ -69,13 +70,14 @@ export async function ajouterBar(formData: FormData): Promise<ResultatActionBar>
   const resultat = schemaAjoutBar.safeParse({
     nomBar: formData.get("nomBar"),
     adresseBar: formData.get("adresseBar"),
+    codePostalBar: formData.get("codePostalBar"),
     photo: photoBrute instanceof File && photoBrute.size > 0 ? photoBrute : null,
   });
   if (!resultat.success) {
     return { erreur: resultat.error.issues[0]?.message ?? "Formulaire invalide." };
   }
 
-  const { nomBar, adresseBar, photo } = resultat.data;
+  const { nomBar, adresseBar, codePostalBar, photo } = resultat.data;
   const organisateurId = await recupererIdOrganisateurConnecte();
   const bars = await prisma.bar.findMany({
     where: { organisateurId },
@@ -94,7 +96,7 @@ export async function ajouterBar(formData: FormData): Promise<ResultatActionBar>
   try {
     [photoUrl, coordonnees] = await Promise.all([
       photo ? recadrerEtUploaderPhoto(photo, "bars") : Promise.resolve(null),
-      geocoderAdresse(adresseBar),
+      geocoderAdresse(adresseComplete({ adresse: adresseBar, codePostal: codePostalBar })),
     ]);
   } catch {
     return { erreur: "La photo n'a pas pu être traitée." };
@@ -106,6 +108,7 @@ export async function ajouterBar(formData: FormData): Promise<ResultatActionBar>
         organisateurId,
         nom: nomBar,
         adresse: adresseBar,
+        codePostal: codePostalBar,
         latitude: coordonnees?.latitude ?? null,
         longitude: coordonnees?.longitude ?? null,
         photoUrl,
@@ -129,12 +132,13 @@ export async function mettreAJourFicheBar(
   const resultat = schemaFicheBar.safeParse({
     nomBar: formData.get("nomBar"),
     adresseBar: formData.get("adresseBar"),
+    codePostalBar: formData.get("codePostalBar"),
   });
   if (!resultat.success) {
     return { erreur: resultat.error.issues[0]?.message ?? "Formulaire invalide." };
   }
 
-  const { nomBar, adresseBar } = resultat.data;
+  const { nomBar, adresseBar, codePostalBar } = resultat.data;
   const bar = await recupererBarDuCompte(barId);
   if (!bar) return { erreur: ERREUR_BAR_INTROUVABLE };
 
@@ -147,12 +151,15 @@ export async function mettreAJourFicheBar(
   }
 
   // Adresse modifiée : re-géocodage ; en cas d'échec, le bar sort de la carte.
-  const coordonnees = await coordonneesApresModification(bar.adresse, adresseBar);
+  const coordonnees = await coordonneesApresModification(
+    adresseComplete(bar),
+    adresseComplete({ adresse: adresseBar, codePostal: codePostalBar })
+  );
 
   try {
     await prisma.bar.update({
       where: { id: bar.id },
-      data: { nom: nomBar, adresse: adresseBar, ...coordonnees },
+      data: { nom: nomBar, adresse: adresseBar, codePostal: codePostalBar, ...coordonnees },
     });
   } catch (erreur) {
     if (estViolationUnicite(erreur)) return { erreur: ERREUR_BAR_EN_DOUBLE };
@@ -243,31 +250,32 @@ export async function deconnecterOrganisateur() {
   await signOut({ redirectTo: "/" });
 }
 
-export async function changerNomComplet(formData: FormData): Promise<ResultatAction> {
-  const resultat = schemaNomCompletVideAutorise.safeParse({
-    nomComplet: formData.get("nomComplet"),
+export async function changerIdentite(formData: FormData): Promise<ResultatAction> {
+  const resultat = schemaIdentiteVideAutorise.safeParse({
+    prenom: formData.get("prenom"),
+    nom: formData.get("nom"),
   });
   if (!resultat.success) {
     return { erreur: resultat.error.issues[0]?.message ?? "Formulaire invalide." };
   }
 
-  const { nomComplet } = resultat.data;
+  const { prenom, nom } = resultat.data;
   const organisateurId = await recupererIdOrganisateurConnecte();
   const organisateur = await prisma.organisateur.findUnique({
     where: { id: organisateurId },
-    select: { nom: true },
+    select: { prenom: true },
   });
   if (!organisateur) return { erreur: "Compte introuvable." };
 
-  if (nomComplet === "") {
-    // Un compte sans nom n'est jamais contraint d'en saisir un ; un nom existant ne se retire pas.
-    if (organisateur.nom) return { erreur: "Le nom et prénom sont requis." };
+  if (prenom === "") {
+    // Un compte sans prénom n'est jamais contraint d'en saisir un ; un prénom existant ne se retire pas.
+    if (organisateur.prenom) return { erreur: "Le prénom est requis." };
     return { succes: true };
   }
 
   await prisma.organisateur.update({
     where: { id: organisateurId },
-    data: { nom: nomComplet },
+    data: { prenom, nom },
   });
   revalidatePath("/mon-profil");
   return { succes: true };

@@ -1,3 +1,4 @@
+import { adresseComplete } from "@/lib/adresse";
 import { cache } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -62,14 +63,14 @@ export default async function PageJam({ params }: { params: Promise<{ id: string
           <h1 className="titre-page">
             {annonce.bar.nom}
           </h1>
-          <span className="text-[15px] text-[var(--color-warm-cream)]">
+          <span className="text-[15px] text-[var(--harbor-marine)]">
             {formaterDateLongue(occurrence.date)}
           </span>
-          <span className="text-[12px] font-medium uppercase text-[var(--color-warm-cream)]">
+          <span className="text-[13px] font-bold text-[var(--harbor-marine)]">
             {LIBELLES_STATUT_OCCURRENCE[statut]}
           </span>
           {afficherEcheance && (
-            <span className="text-[12px] text-[color:var(--color-texte-secondaire)]">
+            <span className="text-[12px] text-[var(--harbor-marine-2)]">
               Sera confirmée le {formaterDateCourte(new Date(occurrence.confirmationJ7!))}
             </span>
           )}
@@ -77,21 +78,21 @@ export default async function PageJam({ params }: { params: Promise<{ id: string
 
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between gap-2">
-            <span className="text-[12px] text-[color:var(--color-texte-secondaire)]">{annonce.bar.adresse}</span>
+            <span className="text-[12px] text-[var(--harbor-marine-2)]">{adresseComplete(annonce.bar)}</span>
             <DistanceJam bar={annonce.bar} />
           </div>
-          <span className="text-[15px] text-[var(--color-warm-cream)]">
+          <span className="text-[15px] text-[var(--harbor-marine)]">
             {occurrence.heureDebut}
             {occurrence.heureFin ? ` – ${occurrence.heureFin}` : ""}
           </span>
           {annonce.styles.length > 0 && (
-            <span className="text-[12px] uppercase text-[color:var(--color-texte-secondaire)]">
+            <span className="text-[12px] text-[var(--harbor-marine-2)]">
               {libelleStyles(annonce.styles)}
               {annonce.styleAutre ? ` (${annonce.styleAutre})` : ""}
             </span>
           )}
           {annonce.instruments.length > 0 && (
-            <span className="text-[12px] text-[color:var(--color-texte-secondaire)]">
+            <span className="text-[12px] text-[var(--harbor-marine-2)]">
               Instruments : {annonce.instruments.join(", ")}
               {annonce.instrumentAutre ? ` (${annonce.instrumentAutre})` : ""}
             </span>
@@ -99,7 +100,7 @@ export default async function PageJam({ params }: { params: Promise<{ id: string
         </div>
 
         {annonce.description && (
-          <p className="whitespace-pre-line text-[15px] text-[var(--color-warm-cream)]">
+          <p className="whitespace-pre-line text-[15px] text-[var(--harbor-marine)]">
             {annonce.description}
           </p>
         )}
