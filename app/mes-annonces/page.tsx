@@ -95,6 +95,16 @@ function CarteAnnonce({ annonce }: { annonce: AnnonceAvecDetails }) {
             }),
           }))
       : [];
+  // Toutes les dates, annulées comprises ; vide pour un brouillon sans date.
+  const datesSupprimables = occurrencesTriees.map((occurrence) => ({
+    id: occurrence.id,
+    libelle: new Date(occurrence.date).toLocaleDateString("fr-FR", {
+      weekday: "short",
+      day: "numeric",
+      month: "long",
+      timeZone: "UTC",
+    }),
+  }));
   return (
     <div className="relative">
       <Link
@@ -166,6 +176,7 @@ function CarteAnnonce({ annonce }: { annonce: AnnonceAvecDetails }) {
       <MenuAnnonce
         annonceId={annonce.id}
         datesAnnulables={datesAnnulables}
+        datesSupprimables={datesSupprimables}
         estRecurrente={annonce.estRecurrente}
       />
     </div>

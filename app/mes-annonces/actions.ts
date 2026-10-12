@@ -349,6 +349,42 @@ export async function annulerAnnonce(annonceId: string): Promise<Resultat> {
   return { succes: true };
 }
 
+export async function supprimerAnnonce(annonceId: string): Promise<Resultat> {
+  const annonce = await verifierProprietaireAnnonce(annonceId);
+
+  // Les occurrences partent avec l'annonce (onDelete: Cascade).
+  await prisma.annonce.delete({ where: { id: annonceId } });
+  await supprimerPhotos(
+    [annonce.photoUrl1, annonce.photoUrl2].filter((url): url is string => url !== null)
+  );
+
+  revalidatePath("/mes-annonces");
+  revalidatePath("/");
+  return { succes: true };
+}
+
+export async function supprimerOccurrence(occurrenceId: string): Promise<Resultat> {
+  const occurrence = await prisma.occurrenceJam.findUnique({ where: { id: occurrenceId } });
+  if (!occurrence || !(await recupererAnnonceDuCompte(occurrence.annonceId))) {
+    return { erreur: "Occurrence introuvable." };
+  }
+
+  // Supprimer la dernière date supprime l'annonce.
+  const nombreDates = await prisma.occurrenceJam.count({
+    where: { annonceId: occurrence.annonceId },
+  });
+  if (nombreDates <= 1) {
+    return supprimerAnnonce(occurrence.annonceId);
+  }
+
+  await prisma.occurrenceJam.delete({ where: { id: occurrenceId } });
+
+  revalidatePath(`/mes-annonces/${occurrence.annonceId}`);
+  revalidatePath("/mes-annonces");
+  revalidatePath("/");
+  return { succes: true };
+}
+
 export async function mettreAJourPhotoAnnonce(
   annonceId: string,
   emplacement: 1 | 2,

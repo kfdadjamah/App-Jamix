@@ -82,7 +82,8 @@ test("brouillon : seule l'entrée « Modifier » est proposée, et elle ouvre l'
   await expect(bouton).toHaveAttribute("aria-expanded", "true");
 
   await expect(page).toHaveURL("/mes-annonces");
-  await expect(page.getByRole("menuitem")).toHaveCount(1);
+  await expect(page.getByRole("menuitem")).toHaveCount(2);
+  await expect(page.getByRole("menuitem", { name: "Supprimer" })).toBeVisible();
   await page.getByRole("menuitem", { name: "Modifier" }).click();
   await expect(page).toHaveURL(`/mes-annonces/${id}`);
 });
@@ -93,7 +94,7 @@ test("Échap et clic extérieur ferment le menu", async ({ page }) => {
 
   const bouton = carte(page, id).getByRole("button", { name: "Actions de l'annonce" });
   await bouton.click();
-  await expect(page.getByRole("menuitem")).toHaveCount(2);
+  await expect(page.getByRole("menuitem")).toHaveCount(3);
   await page.keyboard.press("Escape");
   await expect(page.getByRole("menu")).toHaveCount(0);
   await expect(bouton).toBeFocused();
@@ -122,7 +123,7 @@ test("annonce ponctuelle : Annuler → confirmation → date annulée, entrée �
   expect(await statutsEnBase(id)).toEqual(["ANNULEE"]);
 
   await ouvrirMenu(page, id);
-  await expect(page.getByRole("menuitem")).toHaveCount(1);
+  await expect(page.getByRole("menuitem")).toHaveCount(2);
 });
 
 test("annonce récurrente : « Cette date seulement » n'annule que la date choisie", async ({
@@ -180,6 +181,126 @@ test("« Retour » et Échap ferment la fenêtre sans rien annuler", async ({ pa
   await expect(fenetre).toHaveCount(0);
 
   expect(await statutsEnBase(id)).toEqual(["PROGRAMMEE", "PROGRAMMEE"]);
+});
+
+async function ouvrirSuppression(page: Page, annonceId: string) {
+  await ouvrirMenu(page, annonceId);
+  await page.getByRole("menuitem", { name: "Supprimer" }).click();
+  return page.getByRole("dialog");
+}
+
+async function annonceEnBase(annonceId: string) {
+  return prisma.annonce.findUnique({ where: { id: annonceId } });
+}
+
+test("suppression d'un brouillon : confirmation simple, la carte disparaît", async ({ page }) => {
+  const id = await creerAnnonce("BROUILLON", []);
+  await page.reload();
+
+  const fenetre = await ouvrirSuppression(page, id);
+  await expect(fenetre.getByRole("heading", { name: "Supprimer l'annonce ?" })).toBeVisible();
+  await expect(fenetre.getByText("Cette suppression est définitive.")).toBeVisible();
+  await expect(fenetre.getByRole("radio")).toHaveCount(0);
+  await fenetre.getByRole("button", { name: "Supprimer définitivement" }).click();
+
+  await expect(fenetre).toHaveCount(0);
+  await expect(page.locator(`a[href="/mes-annonces/${id}"]`)).toHaveCount(0);
+  expect(await annonceEnBase(id)).toBeNull();
+});
+
+test("suppression d'une ponctuelle déjà annulée : possible, confirmation simple", async ({
+  page,
+}) => {
+  const id = await creerAnnonce("PUBLIEE", [30]);
+  await prisma.occurrenceJam.updateMany({ where: { annonceId: id }, data: { statut: "ANNULEE" } });
+  await page.reload();
+
+  const fenetre = await ouvrirSuppression(page, id);
+  await expect(fenetre.getByRole("radio")).toHaveCount(0);
+  await fenetre.getByRole("button", { name: "Supprimer définitivement" }).click();
+
+  await expect(page.locator(`a[href="/mes-annonces/${id}"]`)).toHaveCount(0);
+  expect(await annonceEnBase(id)).toBeNull();
+});
+
+test("récurrente : « Cette date seulement » ne supprime que la date choisie, annulées comprises", async ({
+  page,
+}) => {
+  const id = await creerAnnonce("PUBLIEE", [30, 40, 50]);
+  await prisma.occurrenceJam.updateMany({
+    where: { annonceId: id, date: dansNJours(40) },
+    data: { statut: "ANNULEE" },
+  });
+  await page.reload();
+
+  const fenetre = await ouvrirSuppression(page, id);
+  await expect(fenetre.getByRole("radio", { name: "Cette date seulement" })).toBeChecked();
+  await expect(fenetre.locator('input[name^="date-suppression"]')).toHaveCount(3);
+  await fenetre.getByRole("radio").nth(2).check(); // 2e date, annulée
+  await fenetre.getByRole("button", { name: "Supprimer définitivement" }).click();
+
+  await expect(fenetre).toHaveCount(0);
+  expect(await statutsEnBase(id)).toEqual(["PROGRAMMEE", "PROGRAMMEE"]);
+  expect(await annonceEnBase(id)).not.toBeNull();
+});
+
+test("récurrente : « Toutes les dates » supprime l'annonce", async ({ page }) => {
+  const id = await creerAnnonce("PUBLIEE", [30, 40]);
+  await page.reload();
+
+  const fenetre = await ouvrirSuppression(page, id);
+  await fenetre.getByRole("radio", { name: "Toutes les dates" }).check();
+  await fenetre.getByRole("button", { name: "Supprimer définitivement" }).click();
+
+  await expect(page.locator(`a[href="/mes-annonces/${id}"]`)).toHaveCount(0);
+  expect(await annonceEnBase(id)).toBeNull();
+});
+
+test("supprimer la dernière date supprime l'annonce", async ({ page }) => {
+  const id = await creerAnnonce("PUBLIEE", [30, 40]);
+  await page.reload();
+
+  let fenetre = await ouvrirSuppression(page, id);
+  await fenetre.getByRole("button", { name: "Supprimer définitivement" }).click();
+  await expect(fenetre).toHaveCount(0);
+  expect(await statutsEnBase(id)).toHaveLength(1);
+
+  // Il ne reste qu'une date : confirmation simple, et l'annonce disparaît avec elle.
+  fenetre = await ouvrirSuppression(page, id);
+  await expect(fenetre.getByRole("radio")).toHaveCount(0);
+  await fenetre.getByRole("button", { name: "Supprimer définitivement" }).click();
+  await expect(page.locator(`a[href="/mes-annonces/${id}"]`)).toHaveCount(0);
+  expect(await annonceEnBase(id)).toBeNull();
+});
+
+test("« Retour » et Échap ferment la fenêtre de suppression sans rien supprimer", async ({
+  page,
+}) => {
+  const id = await creerAnnonce("PUBLIEE", [30, 40]);
+  await page.reload();
+
+  let fenetre = await ouvrirSuppression(page, id);
+  await fenetre.getByRole("button", { name: "← Retour" }).click();
+  await expect(fenetre).toHaveCount(0);
+
+  fenetre = await ouvrirSuppression(page, id);
+  await expect(fenetre).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(fenetre).toHaveCount(0);
+
+  expect(await statutsEnBase(id)).toEqual(["PROGRAMMEE", "PROGRAMMEE"]);
+  await expect(page.locator(`a[href="/mes-annonces/${id}"]`)).toHaveCount(1);
+});
+
+test("annonce introuvable ou hors du compte : la suppression échoue avec le message d'erreur", async ({ page }) => {
+  const id = await creerAnnonce("PUBLIEE", [30]);
+  await page.reload();
+  const fenetre = await ouvrirSuppression(page, id);
+
+  // Le compte perd l'annonce entre l'ouverture et la confirmation : l'erreur s'affiche, rien n'est perdu.
+  await prisma.annonce.delete({ where: { id } });
+  await fenetre.getByRole("button", { name: "Supprimer définitivement" }).click();
+  await expect(fenetre.getByRole("alert")).toHaveText("La suppression a échoué. Réessayez.");
 });
 
 test("tient à 360px sans débordement horizontal, bouton tactile d'au moins 44px", async ({

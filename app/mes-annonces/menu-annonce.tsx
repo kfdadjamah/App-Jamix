@@ -2,27 +2,32 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { annulerAnnonce, annulerOccurrence } from "./actions";
+import { annulerAnnonce, annulerOccurrence, supprimerAnnonce, supprimerOccurrence } from "./actions";
 
 type Resultat = { erreur: string } | { succes: true };
 type Portee = "date" | "toutes";
 
 export type DateAnnulable = { id: string; libelle: string };
+export type DateSupprimable = DateAnnulable;
 
 // Menu « ⋯ » d'une carte de « Mes annonces ». Frère du lien de la carte (jamais dedans),
 // donc cliquer dessus n'ouvre pas l'annonce.
 export default function MenuAnnonce({
   annonceId,
   datesAnnulables,
+  datesSupprimables,
   estRecurrente,
 }: {
   annonceId: string;
   // Vide pour un brouillon ou quand toutes les dates sont déjà annulées : « Annuler » est alors absent.
   datesAnnulables: DateAnnulable[];
+  // Toutes les dates, annulées comprises.
+  datesSupprimables: DateSupprimable[];
   estRecurrente: boolean;
 }) {
   const [menuOuvert, setMenuOuvert] = useState(false);
   const [fenetreOuverte, setFenetreOuverte] = useState(false);
+  const [suppressionOuverte, setSuppressionOuverte] = useState(false);
   const conteneur = useRef<HTMLDivElement>(null);
   const bouton = useRef<HTMLButtonElement>(null);
   const premiereEntree = useRef<HTMLAnchorElement>(null);
@@ -92,6 +97,17 @@ export default function MenuAnnonce({
               Annuler
             </button>
           )}
+          <button
+            type="button"
+            role="menuitem"
+            onClick={() => {
+              setMenuOuvert(false);
+              setSuppressionOuverte(true);
+            }}
+            className="px-4 py-3 text-left text-[13px] font-bold text-[var(--harbor-erreur)] hover:underline focus:underline"
+          >
+            Supprimer
+          </button>
         </div>
       )}
 
@@ -106,7 +122,152 @@ export default function MenuAnnonce({
           }}
         />
       )}
+
+      {suppressionOuverte && (
+        <FenetreSuppression
+          annonceId={annonceId}
+          dates={datesSupprimables}
+          estRecurrente={estRecurrente}
+          surFermeture={() => {
+            setSuppressionOuverte(false);
+            bouton.current?.focus();
+          }}
+        />
+      )}
     </div>
+  );
+}
+
+function FenetreSuppression({
+  annonceId,
+  dates,
+  estRecurrente,
+  surFermeture,
+}: {
+  annonceId: string;
+  dates: DateSupprimable[];
+  estRecurrente: boolean;
+  surFermeture: () => void;
+}) {
+  const fenetre = useRef<HTMLDialogElement>(null);
+  const [portee, setPortee] = useState<Portee>("date");
+  const [occurrenceId, setOccurrenceId] = useState(dates[0]?.id ?? "");
+  const [enCours, setEnCours] = useState(false);
+  const [erreur, setErreur] = useState<string | null>(null);
+
+  // Une seule date : les deux portées sont équivalentes, simple confirmation.
+  const choixDePortee = estRecurrente && dates.length > 1;
+
+  useEffect(() => {
+    fenetre.current?.showModal();
+  }, []);
+
+  async function confirmer() {
+    setErreur(null);
+    setEnCours(true);
+    try {
+      const resultat: Resultat =
+        choixDePortee && portee === "date"
+          ? await supprimerOccurrence(occurrenceId)
+          : await supprimerAnnonce(annonceId);
+      if ("erreur" in resultat) {
+        setErreur(resultat.erreur);
+        return;
+      }
+    } catch {
+      setErreur("La suppression a échoué. Réessayez.");
+      return;
+    } finally {
+      setEnCours(false);
+    }
+    surFermeture();
+  }
+
+  return (
+    <dialog
+      ref={fenetre}
+      aria-labelledby={`titre-suppression-${annonceId}`}
+      onClose={surFermeture}
+      className="m-auto w-[calc(100%-48px)] max-w-sm rounded-[12px] border border-[var(--harbor-trait)] bg-white p-6 text-[var(--harbor-marine)] backdrop:bg-black/60"
+    >
+      <div className="flex flex-col gap-4">
+        <h2
+          id={`titre-suppression-${annonceId}`}
+          className="text-[18px] font-semibold leading-none"
+        >
+          Supprimer l&apos;annonce ?
+        </h2>
+        <p className="text-[12px] font-semibold text-[var(--harbor-marine-2)]">
+          Cette suppression est définitive.
+        </p>
+
+        {choixDePortee && (
+          <fieldset className="flex flex-col gap-3">
+            <legend className="sr-only">Portée de la suppression</legend>
+            <label className="flex items-center gap-2 text-[12px] font-medium">
+              <input
+                type="radio"
+                name={`portee-suppression-${annonceId}`}
+                checked={portee === "date"}
+                onChange={() => setPortee("date")}
+              />
+              Cette date seulement
+            </label>
+            {portee === "date" && (
+              <ul className="ml-6 flex flex-col gap-2">
+                {dates.map((date) => (
+                  <li key={date.id}>
+                    <label className="flex items-center gap-2 text-[12px] font-semibold text-[var(--harbor-marine-2)]">
+                      <input
+                        type="radio"
+                        name={`date-suppression-${annonceId}`}
+                        checked={occurrenceId === date.id}
+                        onChange={() => setOccurrenceId(date.id)}
+                      />
+                      {date.libelle}
+                    </label>
+                  </li>
+                ))}
+              </ul>
+            )}
+            <label className="flex items-center gap-2 text-[12px] font-medium">
+              <input
+                type="radio"
+                name={`portee-suppression-${annonceId}`}
+                checked={portee === "toutes"}
+                onChange={() => setPortee("toutes")}
+              />
+              Toutes les dates
+            </label>
+          </fieldset>
+        )}
+
+        {erreur && (
+          <p role="alert" className="text-[13px] font-semibold text-[var(--harbor-erreur)]">
+            {erreur}
+          </p>
+        )}
+
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={confirmer}
+            disabled={enCours}
+            className="rounded-[12px] border border-[var(--harbor-erreur)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-erreur)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] disabled:opacity-60"
+          >
+            Supprimer définitivement
+          </button>
+          <button
+            type="button"
+            onClick={() => fenetre.current?.close()}
+            disabled={enCours}
+            className="rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] disabled:opacity-60"
+          >
+            ← Retour
+          </button>
+        </div>
+      </div>
+    </dialog>
   );
 }
 
