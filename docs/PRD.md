@@ -201,6 +201,12 @@ US-149. En tant qu'organisateur, je veux saisir le code postal de mon bar dans u
 US-150. En tant qu'organisateur, je veux que « Déconnexion » soit en haut de mon profil, à droite du titre, afin de me déconnecter sans défiler.
 US-151. En tant qu'organisateur, je veux des lignes de bars resserrées et sans carré de photo vide dans « Mes bars », afin de voir plus de bars à l'écran.
 US-152. En tant qu'organisateur dont le bar n'a pas de code postal, je veux que l'adresse s'affiche telle quelle et que la modification demande un code postal valide, afin de ne pas perdre mes bars existants.
+US-153. En tant qu'organisateur, je veux que le filtre par bar actif soit coloré, afin de savoir d'un coup d'œil quelles annonces sont affichées.
+US-154. En tant qu'organisateur, je veux « Supprimer » dans le menu « ⋯ » d'une carte, à côté de « Modifier » et « Annuler », afin de retirer une annonce dont je n'ai plus besoin.
+US-155. En tant qu'organisateur, je veux confirmer la suppression dans une fenêtre qui m'avertit qu'elle est définitive, afin de ne rien effacer par erreur.
+US-156. En tant qu'organisateur d'une annonce récurrente, je veux choisir entre « Cette date seulement » (avec la date) et « Toutes les dates » avant de supprimer, afin de ne retirer que ce que je veux.
+US-157. En tant qu'organisateur, je veux glisser une carte vers la gauche pour faire apparaître un bouton « Supprimer », afin de supprimer rapidement au doigt.
+US-158. En tant qu'organisateur, je veux glisser une carte vers la droite pour faire apparaître un bouton « Modifier », afin d'ouvrir le formulaire rapidement.
 
 ## Critères de succès
 
@@ -257,6 +263,9 @@ US-152. En tant qu'organisateur dont le bar n'a pas de code postal, je veux que 
 - Le bandeau n'affiche plus le texte « Jammix » : icône maison seule hors accueil (lien « Accueil »), mot-symbole et accroche sous le bandeau sur toutes les pages (`h1` sur l'accueil seulement) ; l'icône de profil est une pastille blanche sur toutes les pages (Phase 43).
 - Un champ « Code postal » (5 chiffres, erreur sous le champ si invalide) existe à l'inscription, à l'ajout et à la modification d'un bar ; choisir une suggestion renseigne adresse sans code postal et code postal ; l'adresse s'affiche « n° rue, code postal ville » sur les cartes, la fiche d'annonce et le profil ; le géocodage utilise l'adresse complète (Phase 44).
 - Sur `/mon-profil`, « Déconnexion » est à droite du titre, aucun carré de photo vide n'apparaît, les lignes de bars sont resserrées ; un bar sans code postal s'affiche et reste modifiable (Phase 44).
+- Sur « Mes annonces », le bouton du filtre par bar actif a un fond distinct des inactifs, et « Tous » est actif à l'arrivée (Phase 45).
+- Le menu « ⋯ » propose « Supprimer » ; après confirmation, l'annonce (ou la date choisie) disparaît de « Mes annonces » et du côté musicien, photos comprises ; supprimer la dernière date supprime l'annonce ; « Retour » ou Échap ne supprime rien (Phase 46).
+- Un glissé à gauche révèle « Supprimer », à droite « Modifier » ; le geste seul ne supprime ni n'ouvre rien, un simple tap ouvre toujours la carte et le défilement vertical reste fluide (Phase 47).
 
 ## Hors périmètre
 
@@ -325,7 +334,7 @@ US-152. En tant qu'organisateur dont le bar n'a pas de code postal, je veux que 
 - Nom de l'organisateur dans l'email de bienvenue.
 - Changement de taille des sous-titres `h2` et des titres du bandeau.
 - Suggestions d'adresse côté musicien, y compris pour l'adresse de recherche.
-- Suppression d'une annonce ou d'un brouillon ; autres actions dans le menu des cartes (dupliquer, confirmer une date) ; menu sur les cartes côté musicien.
+- Autres actions dans le menu des cartes (dupliquer, confirmer une date) ; menu sur les cartes côté musicien ; annulation d'une suppression (suppression définitive, pas de corbeille) ; glissé sur les cartes côté musicien.
 - Annulation d'une date unique d'une annonce ponctuelle distincte de « Toutes les dates » (une annonce ponctuelle = une fenêtre de confirmation simple).
 - Ajout, modification et retrait de photos d'annonce (reporté en V2, avec un seul emplacement).
 - Mode sombre Harbor, migration des autres écrans vers Harbor et activation du drapeau en production (phases suivantes).
@@ -437,9 +446,12 @@ US-152. En tant qu'organisateur dont le bar n'a pas de code postal, je veux que 
 - Les textes secondaires utilisent un crème à environ 70 % d'opacité ; le Driftwood est réservé aux séparateurs et bordures structurels. Les textes à 60 % d'opacité passent à 70 %.
 - « ← Retour » reste un bouton fantôme, avec une bordure de 2px, une graisse 500 et une couleur crème.
 - Le champ d'adresse d'un bar propose une liste déroulante après 3 caractères (5 suggestions au maximum), utilisable au clavier et fermée par Échap. La valeur envoyée est le texte du champ ; le géocodage serveur est inchangé (un échec laisse le bar absent de la carte).
-- Le bouton « ⋯ » des cartes de « Mes annonces » a une zone tactile d'au moins 44px et le libellé accessible « Actions de l'annonce » ; le menu a deux entrées au maximum. La fenêtre d'annulation propose « Annuler l'annonce » / « Retour » et affiche un message d'erreur dans la fenêtre si l'annulation échoue.
+- Le bouton « ⋯ » des cartes de « Mes annonces » a une zone tactile d'au moins 44px et le libellé accessible « Actions de l'annonce » ; le menu a trois entrées au maximum (Modifier, Annuler, Supprimer). La fenêtre d'annulation propose « Annuler l'annonce » / « Retour » et affiche un message d'erreur dans la fenêtre si l'annulation échoue.
 - Design Harbor (Phases 39 et 40) : toute l'application passe à un design clair (voir DESIGN.md), sans drapeau : tokens `--harbor-*` dans `:root`, ORYZO retiré, e-mails compris. Aucune règle métier ne change.
 - Sur l'accueil Harbor, un seul bandeau d'entête marine : pas de logo « Jammix » (le grand titre le remplace), « Connexion organisateur » ou l'icône de profil à droite ; l'organisateur connecté trouve « Accéder à mes annonces » en bouton secondaire sous l'accroche.
+- « Supprimer » (Phase 46) : suppression définitive, avec fenêtre de confirmation (« Cette suppression est définitive. », « Supprimer définitivement » / « Retour »). Annonce récurrente : portée explicite « Cette date seulement » / « Toutes les dates » ; ponctuelle ou brouillon : confirmation simple. La portée « toutes les dates » supprime l'annonce, ses occurrences et ses photos ; supprimer la dernière date d'une annonce supprime l'annonce. Seul le propriétaire peut supprimer. Aucun changement de schéma.
+- Glissé sur la carte (Phase 47) : le glissé révèle un bouton, le geste seul ne déclenche rien ; « Supprimer » (gauche) et « Modifier » (droite) font exactement ce que fait le menu « ⋯ », qui reste l'accès clavier et lecteur d'écran.
+- Filtre par bar (Phase 45) : le bouton actif prend le fond Bleu signal et le texte blanc (l'ancienne variable ORYZO n'existe plus sous Harbor).
 - Bandeau de 7 jours : borne basse = aujourd'hui, flèches ± 7 jours, bouton « Aujourd'hui », icône calendrier ouvrant un sélecteur de date natif pour les dates lointaines ; navigation par l'URL (`/?date=…&vue=…`). Un point marque tout jour ayant au moins une occurrence d'annonce publiée, annulée comprise.
 - Carte d'annonce (Phase 41) : polices et tailles du preview Harbor limitées à la carte (Plus Jakarta Sans pour le nom du bar, Geist pour adresse, distance et horaires), Figtree conservée partout ailleurs ; rayon 16, padding 16. Aucune règle métier ne change (statuts d'occurrence, J-7).
 - **Bandeau commun, mot-symbole et pastille de profil (Phase 43)** : aucune migration. Le bandeau ne porte que l'icône maison (hors accueil) et, à droite, la connexion ou l'icône de profil (pastille blanche translucide, pleine sur `/mon-profil`) ; le mot-symbole « Jammix » (Plus Jakarta Sans 800, fluide) et l'accroche sont rendus sous le bandeau par chaque page. L'accueil porte le `h1`. Page de connexion : espacements resserrés, sous-titre « Accédez à l'espace de gestion de vos jams. ».
@@ -487,6 +499,8 @@ Le nom et prénom de l'organisateur est une donnée personnelle : la page CGU do
 Les suggestions d'adresse dépendent de l'API Adresse (data.gouv.fr). En cas d'indisponibilité, le champ reste un champ libre. DESIGN.md devra consigner le titre de page unique, le texte secondaire en crème 70 % et le bouton « Retour » à bordure de 2px.
 
 Le menu « ⋯ » réutilise les règles d'annulation existantes (statut « annulée » par occurrence, confirmation J-7 effacée) ; aucun email ni SMS. DESIGN.md devra consigner le menu et la fenêtre.
+
+Les Phases 45 à 47 devront aussi consigner dans DESIGN.md le menu à trois entrées (« Supprimer » en Erreur), le bouton de filtre actif et la carte glissable.
 
 Les photos d'annonce sont masquées en V1 sans suppression de code ni de données : le schéma (`photoUrl1/2`), l'affichage côté musicien et les composants de saisie restent en place pour la V2. Le bandeau devient « Accéder à mes annonces » (sans chiffre, nombre conservé dans le libellé accessible) hors de « Mes annonces », où il reste « À confirmer · N » ; DESIGN.md renomme la section correspondante.
 

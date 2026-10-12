@@ -22,6 +22,7 @@
 - **Bandeau commun « Jammix » (Phase 22)** : aucune migration de schéma. Un composant unique de bandeau, rendu par chaque page (pas dans `app/layout.tsx`) pour rester à l'intérieur de `FournisseurGardeSortie` sur les formulaires d'annonce ; il remplace `HeaderPublic` et la ligne haute de `HeaderOrganisateur`. Bandeau `position: sticky` en haut, fond Walnut Shadow (Brass Copper depuis la Phase 23), filet inférieur 1px Gold elegance (nouvel usage structurel, ajouté à DESIGN.md dans la phase). « Jammix » est un `LienGarde` vers `/` sans paramètre : la date et la vue de l'accueil vivant dans l'URL (`?date=&vue=`), ce lien suffit à revenir à aujourd'hui en vue liste, en navigation client. La partie droite est choisie par une prop de variante (accueil / organisateur / parcours de connexion) et la session. « Mes annonces » et l'alerte des relances restent dans `HeaderOrganisateur`, affiché sous le bandeau (remplacés par la ligne « À confirmer » en Phase 25).
 - **Bandeau cuivré (Phase 23)** : aucune migration de schéma. Seul le fond du composant de bandeau commun change (Walnut Shadow → Brass Copper). Le filet Gold elegance, la hauteur, le sticky et le contenu restent inchangés. DESIGN.md autorise le Brass Copper comme fond du bandeau uniquement.
 - **Accès aux annonces (Phases 24 et 25)** : aucune migration de schéma. Le bouton « Accéder à mes annonces » de l'accueil est rendu côté serveur selon `sessionCourante()`, comme la partie droite de `components/bandeau.tsx`. `HeaderOrganisateur` (`components/header-organisateur.tsx`) est réduit à une ligne « À confirmer » ; le nombre vient de `compterRelancesActives` (`lib/relances.ts`), déjà utilisé pour l'alerte. Il reçoit une variante distincte pour « Mes annonces » (ligne non cliquable), les formulaires d'annonce et le profil (lien vers `/mes-annonces`) ; aujourd'hui les formulaires passent `page="mes-annonces"`. Sur les formulaires, le lien passe par `LienGarde` (`components/garde-sortie.tsx`) pour suivre la garde de sortie.
+- **Mes annonces : filtre, suppression, glissé (Phases 45 à 47)** : aucune migration de schéma, pas de `prisma db push`. Server actions `supprimerAnnonce` et `supprimerOccurrence` (`app/mes-annonces/actions.ts`) avec contrôle de propriétaire (`verifierProprietaireAnnonce`, `recupererAnnonceDuCompte`) ; photos retirées via `supprimerPhotos`, occurrences en cascade ; supprimer la dernière date supprime l'annonce. `FenetreAnnulation` est généralisée en fenêtre à deux modes (annuler / supprimer). Le glissé passe par un composant client `CarteGlissable` qui réutilise la même fenêtre.
 - **Plusieurs bars par compte (Phases 18 à 21)** :
   - *Modèle* : `Organisateur` 1–N `Bar` ; on retire `@unique` sur `Bar.organisateurId` et `Organisateur.bar` devient `bars Bar[]`. Contrainte `@@unique([organisateurId, nom, adresse])` en base comme filet ; la détection des doublons se fait côté application avec comparaison normalisée (espaces en début/fin retirés, espaces multiples réduits, casse ignorée), à l'ajout comme à la modification. Nom et adresse sont stockés tels que saisis, débarrassés des espaces superflus. Limite de 10 bars vérifiée côté serveur. Migration sans perte : les données existantes sont déjà conformes.
   - *Date de publication* : nouveau champ `Annonce.publieeLe DateTime?`, écrit une seule fois au passage Brouillon → Publiée, en même temps que le calcul J-7 (Phase 6). Ajouté par la migration de la Phase 18 ; les annonces déjà publiées sont remplies avec `createdAt`.
@@ -1169,3 +1170,69 @@ Sur `/mon-profil`, rien n'est déplié d'office : « Mes bars », « Nom et pré
 ## Bloquée par
 
 - Phase 42 (profil replié, prénom et nom séparés)
+
+---
+
+## Phase 45 : Filtre par bar, état actif coloré
+
+**User stories** : US-153
+
+### Ce qu'on livre
+
+Dans `app/mes-annonces/filtre-annonces.tsx`, le bouton actif prend le fond Bleu signal (`--harbor-bleu`), le texte blanc et la bordure Bleu signal ; les inactifs sont inchangés. L'ancienne variable `--color-warm-cream` (ORYZO) n'existe plus et n'avait aucun effet. `aria-pressed` est conservé.
+
+### Critères d'acceptation
+
+- [ ] Le bouton actif a un fond différent des inactifs (couleur calculée vérifiée)
+- [ ] « Tous » est actif à l'arrivée ; changer de bar déplace l'état actif
+- [ ] Contraste AA (blanc sur `#2B78BE`)
+- [ ] Test `e2e/filtre-annonces.e2e.ts` et DESIGN.md à jour
+
+## Bloquée par
+
+- Aucune
+
+---
+
+## Phase 46 : « Supprimer » dans le menu « ⋯ », avec confirmation et portée
+
+**User stories** : US-154, US-155, US-156
+
+### Ce qu'on livre
+
+Une troisième entrée « Supprimer » (texte `--harbor-erreur`, visible aussi sur un brouillon) dans le menu « ⋯ ». Elle ouvre la fenêtre de confirmation (« Supprimer l'annonce ? », « Cette suppression est définitive. », « Supprimer définitivement » / « ← Retour »). Annonce récurrente : choix de portée « Cette date seulement » / « Toutes les dates » (toutes les dates listées, annulées comprises). Ponctuelle ou brouillon : confirmation simple. Actions `supprimerAnnonce` et `supprimerOccurrence` ; `page.tsx` transmet à `MenuAnnonce` la liste `datesSupprimables`.
+
+### Critères d'acceptation
+
+- [ ] Le menu propose trois entrées ; « Retour » ou Échap ne supprime rien
+- [ ] Ponctuelle ou brouillon : confirmation simple ; récurrente : choix de portée
+- [ ] Après confirmation, la carte (ou la date) disparaît sans rechargement manuel et l'annonce n'apparaît plus côté musicien ; photos supprimées
+- [ ] Supprimer la dernière date supprime l'annonce
+- [ ] En cas d'échec, le message « La suppression a échoué. Réessayez. » s'affiche dans la fenêtre
+- [ ] Un autre compte ne peut pas supprimer l'annonce
+- [ ] Tests : `e2e/menu-annonce.e2e.ts` étendu (suppression, portée, annulation de la fenêtre) ; DESIGN.md à jour
+
+## Bloquée par
+
+- Aucune (indépendante de la Phase 45)
+
+---
+
+## Phase 47 : Glissé sur la carte, « Supprimer » à gauche et « Modifier » à droite
+
+**User stories** : US-157, US-158
+
+### Ce qu'on livre
+
+Un composant client `CarteGlissable` (`app/mes-annonces/carte-glissable.tsx`) enveloppe la carte : pointer events (souris et doigt), `touch-action: pan-y`, seuil d'environ 72 px pour rester ouvert. Glissé à gauche : bouton « Supprimer » (Erreur) qui ouvre la fenêtre de la Phase 46 ; glissé à droite : bouton « Modifier » (Bleu signal) vers `/mes-annonces/[id]`. Un seul côté à la fois ; le clic fantôme sur le lien de la carte est supprimé après un glissé ; les boutons fermés sont `aria-hidden` et `tabIndex=-1` (le menu « ⋯ » reste l'accès clavier). Transition de 120 ms, sans ressort.
+
+### Critères d'acceptation
+
+- [ ] Glissé à gauche révèle « Supprimer », à droite « Modifier »
+- [ ] Le geste seul ne supprime ni n'ouvre rien ; toucher « Supprimer » ouvre la confirmation ; toucher « Modifier » mène au formulaire
+- [ ] Un simple tap sur la carte l'ouvre toujours ; le défilement vertical reste fluide
+- [ ] Test `e2e/glisse-annonce.e2e.ts` (souris, émulation mobile 360 px) et DESIGN.md à jour
+
+## Bloquée par
+
+- Phase 46 (fenêtre de suppression)
