@@ -4,7 +4,7 @@ import BoutonRetour from "@/components/bouton-retour";
 import PiedDePage from "@/components/pied-de-page";
 
 // Modèle à faire relire avant l'ouverture au grand public (PRD).
-// Éditeur anonyme : aucun nom de personne sur cette page. Éditeur, hébergeurs et propriété
+// Éditeur anonyme : aucun nom de personne de l'éditeur sur cette page (les prénoms d'organisateurs, non). Éditeur, hébergeurs et propriété
 // des contenus sont dans /mentions-legales.
 const DATE_MISE_A_JOUR = "10 octobre 2026";
 
@@ -90,7 +90,11 @@ export default function PageCgu() {
           <Liste>
             <li>
               organisateurs : nom et prénom, adresse email, mot de passe (enregistré sous forme chiffrée), bars
-              (nom, adresse, photo) et annonces (textes, photos) ;
+              (nom, adresse, photo) et annonces (textes, photos, prénom d&apos;un éventuel co-organisateur) ;
+            </li>
+            <li>
+              le prénom de l&apos;organisateur et celui du co-organisateur éventuel sont affichés
+              publiquement sur les annonces (« Organisé par … ») ;
             </li>
             <li>
               visiteurs : aucune. Si vous l&apos;autorisez, votre position sert, dans votre

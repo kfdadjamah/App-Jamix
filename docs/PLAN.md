@@ -1437,12 +1437,12 @@ Le formulaire d'annonce propose un champ facultatif « Co-organisateur », repri
 
 ### Critères d'acceptation
 
-- [ ] Sans co-organisateur, la carte affiche « Organisé par Prénom » ; avec, « Organisé par Prénom et Co-organisateur »
-- [ ] Le champ est facultatif, limité à 40 caractères, espaces de début et de fin ignorés
-- [ ] Le co-organisateur est repris à la création d'une annonce du même bar et modifiable
-- [ ] La mention figure sur l'accueil, la carte, la fiche d'une jam et « Mes annonces », sans débordement à 360 px
-- [ ] `CLAUDE.md` (convention « éditeur anonyme ») et `/cgu` mis à jour
-- [ ] Test e2e ; DESIGN.md à jour
+- [x] Sans co-organisateur, la carte affiche « Organisé par Prénom » ; avec, « Organisé par Prénom et Co-organisateur »
+- [x] Le champ est facultatif, limité à 40 caractères, espaces de début et de fin ignorés
+- [x] Le co-organisateur est repris à la création d'une annonce du même bar et modifiable
+- [x] La mention figure sur l'accueil, la carte, la fiche d'une jam et « Mes annonces », sans débordement à 360 px
+- [x] `CLAUDE.md` (convention « éditeur anonyme ») et `/cgu` mis à jour
+- [x] Test e2e ; DESIGN.md à jour
 
 ## Bloquée par
 

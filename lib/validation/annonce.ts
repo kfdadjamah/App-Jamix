@@ -33,6 +33,22 @@ const schemaDescription = z
       )
   );
 
+export const LONGUEUR_MAX_CO_ORGANISATEUR = 40;
+
+// Espaces de début et de fin retirés ; vide → absent.
+const schemaCoOrganisateur = z
+  .string()
+  .optional()
+  .transform((texte) => (texte ?? "").trim())
+  .pipe(
+    z
+      .string()
+      .max(
+        LONGUEUR_MAX_CO_ORGANISATEUR,
+        `Le co-organisateur ne peut pas dépasser ${LONGUEUR_MAX_CO_ORGANISATEUR} caractères.`
+      )
+  );
+
 const champsCommuns = {
   dates: schemaDates.default([]),
   heureDebut: z.string().regex(regexHeure, "Heure invalide.").optional().or(z.literal("")),
@@ -42,6 +58,7 @@ const champsCommuns = {
   instruments: z.array(z.enum(INSTRUMENTS_BACKLINE)).default([]),
   instrumentAutre: z.string().trim().optional(),
   description: schemaDescription,
+  coOrganisateur: schemaCoOrganisateur,
   photo1: schemaPhotoAnnonce,
   photo2: schemaPhotoAnnonce,
 };

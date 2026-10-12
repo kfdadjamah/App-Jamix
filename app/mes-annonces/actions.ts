@@ -40,6 +40,7 @@ function extraireChampsFormulaire(formData: FormData) {
     instruments: formData.getAll("instruments"),
     instrumentAutre: formData.get("instrumentAutre") ?? "",
     description: formData.get("description") ?? "",
+    coOrganisateur: formData.get("coOrganisateur") ?? "",
   };
 }
 
@@ -202,6 +203,7 @@ export async function creerAnnonce(
           instruments: donnees.instruments,
           instrumentAutre: donnees.instrumentAutre || null,
           description: donnees.description || null,
+          coOrganisateur: donnees.coOrganisateur || null,
           photoUrl1,
           photoUrl2,
         },
@@ -279,6 +281,7 @@ export async function modifierAnnonce(
           instrumentAutre: donnees.instrumentAutre || null,
           // Champ de l'annonce : toutes ses dates, quelle que soit la portée choisie.
           description: donnees.description || null,
+          coOrganisateur: donnees.coOrganisateur || null,
         },
       });
       await synchroniserOccurrences(

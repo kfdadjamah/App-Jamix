@@ -84,3 +84,16 @@ describe("« Tous les styles »", () => {
     expect(schemaAnnonceBrouillon.safeParse({ styles: [] }).success).toBe(true);
   });
 });
+
+describe("coOrganisateur", () => {
+  it("espaces retirés, vide ou absent → chaîne vide", () => {
+    expect(schemaAnnonceBrouillon.parse({ coOrganisateur: "  Marc  " }).coOrganisateur).toBe("Marc");
+    expect(schemaAnnonceBrouillon.parse({ coOrganisateur: "   " }).coOrganisateur).toBe("");
+    expect(schemaAnnonceBrouillon.parse({}).coOrganisateur).toBe("");
+  });
+
+  it("40 caractères acceptés, 41 refusés", () => {
+    expect(schemaAnnonceBrouillon.safeParse({ coOrganisateur: "a".repeat(40) }).success).toBe(true);
+    expect(schemaAnnonceBrouillon.safeParse({ coOrganisateur: "a".repeat(41) }).success).toBe(false);
+  });
+});

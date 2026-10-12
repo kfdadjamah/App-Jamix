@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { calculerStatutInitial, statutAffiche, valeursReprisesParBar } from "./annonces";
+import {
+  calculerStatutInitial,
+  mentionOrganisePar,
+  statutAffiche,
+  valeursReprisesParBar,
+} from "./annonces";
 
 const AUJOURDHUI = new Date("2026-09-23");
 
@@ -66,6 +71,7 @@ describe("valeursReprisesParBar", () => {
       instruments: ["Batterie"],
       instrumentAutre: null,
       description: null,
+      coOrganisateur: null,
       photoUrl1: null,
       photoUrl2: null,
       occurrences: [{ date: joursApres(5), heureDebut: "20:00", heureFin: "23:00" }],
@@ -149,5 +155,21 @@ describe("valeursReprisesParBar", () => {
     ]);
     expect(table["bar-a"].description).toBe("Inscription sur place.\nNiveau libre.");
     expect(table["bar-b"].description).toBe("");
+  });
+});
+
+describe("mentionOrganisePar", () => {
+  it("prénom seul", () => {
+    expect(mentionOrganisePar("Léa", null)).toBe("Organisé par Léa");
+    expect(mentionOrganisePar("Léa", "  ")).toBe("Organisé par Léa");
+  });
+
+  it("avec co-organisateur", () => {
+    expect(mentionOrganisePar("Léa", " Marc ")).toBe("Organisé par Léa et Marc");
+  });
+
+  it("sans prénom : aucune mention, co-organisateur compris", () => {
+    expect(mentionOrganisePar(null, "Marc")).toBeNull();
+    expect(mentionOrganisePar("  ", "Marc")).toBeNull();
   });
 });
