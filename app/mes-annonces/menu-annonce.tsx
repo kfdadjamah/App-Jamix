@@ -138,7 +138,7 @@ export default function MenuAnnonce({
   );
 }
 
-function FenetreSuppression({
+export function FenetreSuppression({
   annonceId,
   dates,
   estRecurrente,

@@ -1228,10 +1228,10 @@ Un composant client `CarteGlissable` (`app/mes-annonces/carte-glissable.tsx`) en
 
 ### Critères d'acceptation
 
-- [ ] Glissé à gauche révèle « Supprimer », à droite « Modifier »
-- [ ] Le geste seul ne supprime ni n'ouvre rien ; toucher « Supprimer » ouvre la confirmation ; toucher « Modifier » mène au formulaire
-- [ ] Un simple tap sur la carte l'ouvre toujours ; le défilement vertical reste fluide
-- [ ] Test `e2e/glisse-annonce.e2e.ts` (souris, émulation mobile 360 px) et DESIGN.md à jour
+- [x] Glissé à gauche révèle « Supprimer », à droite « Modifier »
+- [x] Le geste seul ne supprime ni n'ouvre rien ; toucher « Supprimer » ouvre la confirmation ; toucher « Modifier » mène au formulaire
+- [x] Un simple tap sur la carte l'ouvre toujours ; le défilement vertical reste fluide
+- [x] Test `e2e/glisse-annonce.e2e.ts` (souris, émulation mobile 360 px) et DESIGN.md à jour
 
 ## Bloquée par
 
