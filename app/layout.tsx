@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Figtree, Geist, Plus_Jakarta_Sans } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import ActiverPressionTactile from "@/components/activer-pression-tactile";
 
@@ -37,6 +38,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col">
         {children}
         <ActiverPressionTactile />        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
