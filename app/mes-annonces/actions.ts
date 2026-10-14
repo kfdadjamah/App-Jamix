@@ -12,10 +12,20 @@ import {
   recupererIdOrganisateurConnecte,
 } from "@/lib/organisateur";
 import { ERREUR_BAR_REQUIS, barApresModification } from "@/lib/bars";
+import { aujourdHuiIso, ERREUR_REGLE_INCOMPLETE } from "@/lib/recurrence";
 import {
+  cleRegle,
+  estUneAUne,
+  planRecreation,
+  saisieDeLAnnonce,
+  type SaisieRegle,
+} from "@/lib/modification-regle";
+import {
+  resoudreDates,
   schemaAnnonceBrouillon,
   schemaAnnoncePublication,
   type ChampsAnnonceBrouillon,
+  type DatesResolues,
 } from "@/lib/validation/annonce";
 
 type Resultat = { erreur: string } | { succes: true; destination?: string };
@@ -25,6 +35,7 @@ const ERREUR_BAR_INTROUVABLE = "Bar introuvable.";
 const ERREUR_DEJA_PUBLIEE = "Cette annonce est déjà publiée.";
 const ERREUR_PHOTO_REPRISE_INTROUVABLE = "Photo reprise introuvable.";
 const ERREUR_PHOTO_REPRISE_COPIE = "La photo reprise n'a pas pu être copiée.";
+const ERREUR_HEURE_REQUISE = "L'heure de début est requise.";
 
 async function supprimerPhotos(urls: string[]) {
   await Promise.all(urls.map((url) => del(url).catch(() => undefined)));
@@ -32,6 +43,14 @@ async function supprimerPhotos(urls: string[]) {
 
 function extraireChampsFormulaire(formData: FormData) {
   return {
+    typeJam: formData.get("typeJam") ?? undefined,
+    dateUnique: formData.get("dateUnique") ?? "",
+    rythme: formData.get("rythme") ?? "",
+    jourSemaine: formData.get("jourSemaine") ?? "",
+    semaineDuMois: formData.get("semaineDuMois") ?? "",
+    debutRecurrence: formData.get("debutRecurrence") ?? "",
+    finRecurrence: formData.get("finRecurrence") ?? "",
+    datesRetirees: formData.getAll("datesRetirees"),
     dates: formData.getAll("dates"),
     heureDebut: formData.get("heureDebut") ?? "",
     heureFin: formData.get("heureFin") ?? "",
@@ -41,6 +60,20 @@ function extraireChampsFormulaire(formData: FormData) {
     instrumentAutre: formData.get("instrumentAutre") ?? "",
     description: formData.get("description") ?? "",
     coOrganisateur: formData.get("coOrganisateur") ?? "",
+  };
+}
+
+/** Type et règle de récurrence à écrire sur l'annonce (phases 60 et 61). */
+function champsRegle(resolues: DatesResolues) {
+  const versDate = (iso: string | null) => (iso ? new Date(iso) : null);
+  return {
+    estRecurrente: resolues.estRecurrente,
+    rythme: resolues.rythme,
+    jourSemaine: resolues.jourSemaine,
+    semaineDuMois: resolues.semaineDuMois,
+    debutRecurrence: versDate(resolues.debutRecurrence),
+    finRecurrence: versDate(resolues.finRecurrence),
+    datesRetirees: resolues.datesRetirees.map((date) => new Date(date)),
   };
 }
 
@@ -85,6 +118,8 @@ async function synchroniserOccurrences(
   tx: Prisma.TransactionClient,
   annonceId: string,
   donnees: ChampsAnnonceBrouillon,
+  // Dates recalculées par le serveur (`resoudreDates`), ignorées une fois l'annonce publiée.
+  dates: string[],
   annonceEtaitDejaPubliee: boolean,
   nouveauStatut: "BROUILLON" | "PUBLIEE",
   porteeOccurrenceId?: string
@@ -103,14 +138,14 @@ async function synchroniserOccurrences(
   }
 
   // Création ou Brouillon : aucune occurrence n'a d'état à préserver,
-  // on resynchronise par remplacement complet à partir des dates soumises.
+  // on resynchronise par remplacement complet à partir des dates recalculées.
   await tx.occurrenceJam.deleteMany({ where: { annonceId } });
-  if (donnees.dates.length === 0) return;
+  if (dates.length === 0) return;
 
   const vientDEtrePubliee = nouveauStatut === "PUBLIEE" && !annonceEtaitDejaPubliee;
 
   await tx.occurrenceJam.createMany({
-    data: donnees.dates.map((date) => {
+    data: dates.map((date) => {
       const statutInitial = vientDEtrePubliee
         ? calculerStatutInitial(new Date(date))
         : null;
@@ -123,6 +158,92 @@ async function synchroniserOccurrences(
       };
     }),
   });
+}
+
+/** Règle à enregistrer (absente pour des dates choisies une à une) et dates à venir visées. */
+type Recreation = { regle: DatesResolues | null; dates: string[] };
+
+function saisieSoumise(donnees: ChampsAnnonceBrouillon): SaisieRegle {
+  return {
+    typeJam: donnees.typeJam,
+    dateUnique: donnees.dateUnique ?? "",
+    rythme: donnees.rythme || "CHAQUE_SEMAINE",
+    jourSemaine: donnees.jourSemaine ?? "",
+    semaineDuMois: donnees.semaineDuMois ?? "",
+    debutRecurrence: donnees.debutRecurrence ?? "",
+    finRecurrence: donnees.finRecurrence ?? "",
+    datesRetirees: donnees.datesRetirees,
+    datesUneAUne: donnees.dates,
+  };
+}
+
+/**
+ * Annonce publiée (phase 62) : null si la règle soumise ne change pas ses dates (rien n'est recréé),
+ * sinon la nouvelle règle et ses dates à venir, contrôlées comme à la publication. La comparaison est
+ * refaite ici, sans se fier au client.
+ */
+function preparerRecreation(
+  annonce: Parameters<typeof saisieDeLAnnonce>[0],
+  datesExistantes: string[],
+  donnees: ChampsAnnonceBrouillon
+): { erreur: string } | Recreation | null {
+  const aujourdHui = aujourdHuiIso();
+  const avant = saisieDeLAnnonce(annonce, datesExistantes, { publiee: true, aujourdHui });
+  const apres = saisieSoumise(donnees);
+  if (cleRegle(avant) === cleRegle(apres)) return null;
+  if (!donnees.heureDebut) return { erreur: ERREUR_HEURE_REQUISE };
+
+  // Ancienne annonce aux dates choisies une à une, sans rythme choisi : le « × » en retire, rien
+  // n'en ajoute, et la règle reste absente.
+  if (avant.datesUneAUne.length > 0 && estUneAUne(apres)) {
+    const aVenir = new Set(avant.datesUneAUne);
+    const dates = apres.datesUneAUne.filter((date) => aVenir.has(date)).sort();
+    if (dates.length === 0) return { erreur: ERREUR_REGLE_INCOMPLETE };
+    return { regle: null, dates };
+  }
+
+  const resolues = resoudreDates(donnees, { publication: true, aujourdHui });
+  if ("erreur" in resolues) return resolues;
+  return { regle: resolues, dates: resolues.dates };
+}
+
+/**
+ * Passe les dates à venir (aujourd'hui compris) à celles de la nouvelle règle : une date commune garde
+ * son occurrence et son statut, une date qui disparaît est supprimée, une nouvelle suit J-7 évaluée
+ * maintenant. Les dates passées ne bougent pas. L'horaire du formulaire vaut pour toutes les dates :
+ * la portée ciblée est ignorée quand la règle change.
+ */
+async function recreerDatesAVenir(
+  tx: Prisma.TransactionClient,
+  annonceId: string,
+  donnees: ChampsAnnonceBrouillon,
+  dates: string[]
+) {
+  const heureDebut = donnees.heureDebut!;
+  const heureFin = donnees.heureFin || null;
+  const existantes = await tx.occurrenceJam.findMany({ where: { annonceId }, select: { date: true } });
+  const { aSupprimer, aCreer } = planRecreation(
+    existantes.map(({ date }) => date.toISOString().slice(0, 10)),
+    dates
+  );
+
+  if (aSupprimer.length > 0) {
+    await tx.occurrenceJam.deleteMany({
+      where: { annonceId, date: { in: aSupprimer.map((date) => new Date(date)) } },
+    });
+  }
+  await tx.occurrenceJam.updateMany({ where: { annonceId }, data: { heureDebut, heureFin } });
+  if (aCreer.length > 0) {
+    await tx.occurrenceJam.createMany({
+      data: aCreer.map((date) => ({
+        annonceId,
+        date: new Date(date),
+        heureDebut,
+        heureFin,
+        ...calculerStatutInitial(new Date(date)),
+      })),
+    });
+  }
 }
 
 export async function creerAnnonce(
@@ -152,6 +273,8 @@ export async function creerAnnonce(
   const bar = await recupererBarDuCompte(barId);
   if (!bar) return { erreur: ERREUR_BAR_INTROUVABLE };
   const donnees = resultat.data;
+  const resolues = resoudreDates(donnees, { publication: action === "publier" });
+  if ("erreur" in resolues) return resolues;
 
   // Photos reprises (phase 21) : un fichier choisi pour l'emplacement l'emporte.
   const reprise1 = photo1 ? null : lirePhotoReprise(formData, "photoReprise1");
@@ -197,7 +320,7 @@ export async function creerAnnonce(
           barId: bar.id,
           statut,
           publieeLe: statut === "PUBLIEE" ? new Date() : null,
-          estRecurrente: donnees.dates.length > 1,
+          ...champsRegle(resolues),
           styles: donnees.styles,
           styleAutre: donnees.styleAutre || null,
           instruments: donnees.instruments,
@@ -208,7 +331,7 @@ export async function creerAnnonce(
           photoUrl2,
         },
       });
-      await synchroniserOccurrences(tx, annonce.id, donnees, false, statut);
+      await synchroniserOccurrences(tx, annonce.id, donnees, resolues.dates, false, statut);
     });
   } catch (erreur) {
     console.error("Création d'annonce impossible :", erreur);
@@ -251,6 +374,30 @@ export async function modifierAnnonce(
   }
   const donnees = resultat.data;
 
+  const datesExistantes = (
+    await prisma.occurrenceJam.findMany({
+      where: { annonceId },
+      select: { date: true },
+      orderBy: { date: "asc" },
+    })
+  ).map(({ date }) => date.toISOString().slice(0, 10));
+
+  let resolues: DatesResolues | null = null;
+  let recreation: Recreation | null = null;
+  if (!annonceEtaitDejaPubliee) {
+    const resultatDates = resoudreDates(donnees, {
+      publication: action === "publier",
+      datesExistantes,
+    });
+    if ("erreur" in resultatDates) return resultatDates;
+    resolues = resultatDates;
+  } else {
+    // Phase 62 : une annonce publiée dont la règle change voit ses dates à venir recalculées.
+    const resultatRecreation = preparerRecreation(annonceExistante, datesExistantes, donnees);
+    if (resultatRecreation && "erreur" in resultatRecreation) return resultatRecreation;
+    recreation = resultatRecreation;
+  }
+
   const nouveauStatut =
     action === "publier" ? "PUBLIEE" : action === "brouillon" ? "BROUILLON" : annonceExistante.statut;
 
@@ -272,9 +419,8 @@ export async function modifierAnnonce(
             nouveauStatut === "PUBLIEE"
               ? (annonceExistante.publieeLe ?? new Date())
               : annonceExistante.publieeLe,
-          estRecurrente: annonceEtaitDejaPubliee
-            ? annonceExistante.estRecurrente
-            : donnees.dates.length > 1,
+          ...(resolues ? champsRegle(resolues) : {}),
+          ...(recreation?.regle ? champsRegle(recreation.regle) : {}),
           styles: donnees.styles,
           styleAutre: donnees.styleAutre || null,
           instruments: donnees.instruments,
@@ -284,10 +430,15 @@ export async function modifierAnnonce(
           coOrganisateur: donnees.coOrganisateur || null,
         },
       });
+      if (recreation) {
+        await recreerDatesAVenir(tx, annonceId, donnees, recreation.dates);
+        return;
+      }
       await synchroniserOccurrences(
         tx,
         annonceId,
         donnees,
+        resolues?.dates ?? [],
         annonceEtaitDejaPubliee,
         nouveauStatut,
         porteeOccurrenceId
@@ -395,7 +546,14 @@ export async function supprimerOccurrence(occurrenceId: string): Promise<Resulta
     return supprimerAnnonce(occurrence.annonceId);
   }
 
-  await prisma.occurrenceJam.delete({ where: { id: occurrenceId } });
+  // Une date supprimée seule rejoint les dates retirées : une recréation ne la fait pas revenir (phase 62).
+  await prisma.$transaction([
+    prisma.occurrenceJam.delete({ where: { id: occurrenceId } }),
+    prisma.annonce.update({
+      where: { id: occurrence.annonceId },
+      data: { datesRetirees: { push: occurrence.date } },
+    }),
+  ]);
 
   revalidatePath(`/mes-annonces/${occurrence.annonceId}`);
   revalidatePath("/mes-annonces");

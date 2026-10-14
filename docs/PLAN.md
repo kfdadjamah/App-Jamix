@@ -13,7 +13,7 @@
 - **Relances de confirmation** : canal in-app uniquement (jamais d'email ni de SMS pour les relances J-7) ; l'email est réservé aux messages de compte (Phases 13 et 14).
 - **Géolocalisation** : basée sur l'API de géolocalisation du navigateur, demandée à la consultation ; dégradation gracieuse (pas de distance affichée) si refusée.
 - **Frontière tierce** : pas de SMS ; email uniquement pour les messages de compte, via **Resend** (réinitialisation du mot de passe, bienvenue, avis de changement de mot de passe ou d'email — Phases 13 et 14), jamais pour les relances J-7. Dépendances externes limitées à : Resend (clé `RESEND_API_KEY`), géolocalisation navigateur, géocodage des adresses de bar (API Adresse data.gouv.fr), fond de carte vectoriel gratuit et sans clé API (Phase 9), et applications de cartographie externes (Google Maps, Plans, Waze, Citymapper) ouvertes par simple lien universel avec le bar comme destination — aucun calcul d'itinéraire ni clé API côté application (Phase 10).
-- **Récurrence (Phase 5)** : le champ `estRecurrente` est dérivé automatiquement du nombre d'occurrences (`occurrences.length > 1`), pas de toggle dédié dans l'UI ; l'horaire (`heureDebut`/`heureFin`) est unique par annonce et s'applique à toutes ses occurrences ; jusqu'à 12 dates maximum par annonce, sans doublon (contrainte `@@unique([annonceId, date])` en base + validation applicative) ; les dates ne sont librement modifiables (ajout/retrait) que tant que l'annonce est en Brouillon — une fois Publiée, la modification des dates relève de la Phase 8 (portée ciblée/globale). Tant que l'annonce est en Brouillon, chaque sauvegarde resynchronise ses occurrences par remplacement complet (suppression puis recréation à partir des dates soumises), sans diff fin — aucune donnée par occurrence n'a encore d'état à préserver à ce stade. Une fois Publiée, les autres champs (horaire, style, instruments, photos) restent modifiables et s'appliquent alors à toutes les occurrences existantes.
+- **Récurrence (Phase 5)** *(remplacé par « Récurrence par règle (Phases 59 à 63) » : plus de liste de dates ni de limite de 12 dates)* : le champ `estRecurrente` est dérivé automatiquement du nombre d'occurrences (`occurrences.length > 1`), pas de toggle dédié dans l'UI ; l'horaire (`heureDebut`/`heureFin`) est unique par annonce et s'applique à toutes ses occurrences ; jusqu'à 12 dates maximum par annonce, sans doublon (contrainte `@@unique([annonceId, date])` en base + validation applicative) ; les dates ne sont librement modifiables (ajout/retrait) que tant que l'annonce est en Brouillon — une fois Publiée, la modification des dates relève de la Phase 8 (portée ciblée/globale). Tant que l'annonce est en Brouillon, chaque sauvegarde resynchronise ses occurrences par remplacement complet (suppression puis recréation à partir des dates soumises), sans diff fin — aucune donnée par occurrence n'a encore d'état à préserver à ce stade. Une fois Publiée, les autres champs (horaire, style, instruments, photos) restent modifiables et s'appliquent alors à toutes les occurrences existantes.
 - **Routes** : consultation musicien publique sur `/` ; `/inscription`, `/connexion`, `/mot-de-passe-oublie` et `/reinitialiser-mot-de-passe` publiques ; espace organisateur protégé (redirection vers `/connexion` si non connecté) sur `/mes-annonces` (annonces, confirmations, relances) et `/mon-profil` (fiche bar, email, mot de passe, déconnexion, suppression). Depuis la Phase 12, `/mon-profil` remplace `/mon-bar` et `/mon-compte`, qui redirigent vers lui. Après connexion ou inscription, l'organisateur arrive sur `/mes-annonces`.
 - **Réinitialisation du mot de passe (Phase 13)** : modèle `JetonReinitialisation` (cascade à la suppression de l'organisateur) ; seul le hash SHA-256 du jeton est stocké, jamais le jeton brut ; validité 1 h ; une nouvelle demande supprime les jetons existants ; une réinitialisation réussie supprime tous les jetons de l'organisateur (usage unique). Message de retour identique que l'email soit connu ou non.
 - **Emails d'avis (Phase 14)** : envoyés après la réponse (`after()`), une fois l'écriture en base faite ; `envoyerEmail` journalise un échec sans remonter l'erreur, qui ne bloque donc jamais l'action. Les avis de mot de passe sont datés (heure de Paris, affichage seul) et renvoient vers `/mot-de-passe-oublie`, sans jeton créé d'office. L'avis de changement d'email part vers l'ancienne adresse, nouvelle adresse masquée, et seulement si l'email change réellement. `EMAIL_CONTACT` (optionnelle) sert de `Reply-To` à tous les emails de compte.
@@ -50,6 +50,15 @@
 - **Prénom et nom séparés, profil replié (Phase 42)** : nouveau champ `Organisateur.prenom String?` (nullable), appliqué par `prisma db push` (pas de dossier de migrations, **à relancer sur la base de production avant le déploiement**). `nom` est conservé : pour un compte antérieur, il peut contenir l'ancien « Prénom Nom », jamais coupé automatiquement (une coupure au premier espace est fausse pour les noms composés). `lib/validation/inscription.ts` : `schemaNomComplet` et `schemaNomCompletVideAutorise` remplacés par `schemaIdentite` (prénom et nom, 1 à 40 caractères chacun) et `schemaIdentiteVideAutorise` (vide accepté ; un seul champ rempli → l'autre est requis) ; `schemaInscription` prend `prenom` et `nom`. `changerNomComplet` devient `changerIdentite` (`app/mon-profil/actions.ts`) : les deux vides sont acceptés seulement si le compte n'a pas de prénom. `formulaire-nom-complet.tsx` devient `formulaire-identite.tsx`. Profil : plus de `ouverteParDefaut` sur « Mes bars », plus de `sousTitre` email, `MesBars` démarre sans panneau ouvert. Placeholders = libellés des champs. Le seed de test crée « Camille » / « Test ». L'affichage du prénom sur la carte d'annonce est hors périmètre ; il contredit la convention « éditeur anonyme » de `CLAUDE.md`, à réviser avant de le brancher. *(Levé par les Phases 56 et 57.)*
 - **Nom et prénom de l'organisateur (Phase 35)** : nouveau champ `Organisateur.nom String?` (nullable : les comptes existants restent intacts, sans script), appliqué par `prisma db push` (pas de dossier de migrations). Champ `nomComplet` ajouté aux schémas client et serveur de `lib/validation/inscription.ts` (espaces de début et de fin retirés, 1 à 80 caractères), réutilisé par le formulaire et l'action d'inscription. Au profil, une section déroulable sur le modèle de `formulaire-email.tsx`, avec son action dans `app/mon-profil/actions.ts` ; le nom vide n'y est accepté que pour un compte sans nom. Mention de la donnée dans `/cgu`. La convention « éditeur anonyme » ne concerne pas les organisateurs. L'affichage sur les cartes est hors périmètre.
 - **Prénom affiché, co-organisateur, confirmation d'édition (Phases 56 à 58)** : le prénom devient requis pour tout compte (les comptes existants sans prénom sont redirigés vers `/mon-profil` depuis la zone `/mes-annonces`) ; `Organisateur.prenom` reste nullable en base, la contrainte est applicative. Nouveau champ `Annonce.coOrganisateur String?` (porté par l'annonce, pas par l'occurrence), appliqué par `prisma db push` (à relancer en production avant le déploiement), validé par `lib/validation/annonce.ts` (1 à 40 caractères, facultatif). Le prénom d'affichage se lit via `annonce.bar.organisateur.prenom`. La page d'édition passe une destination à `FormulaireAnnonce` : fiche `/jams/<id>` de la prochaine occurrence à venir, sinon `/mes-annonces`. Le pop-up réutilise `components/fenetre-sortie.tsx`. `CLAUDE.md` précise que « éditeur anonyme » ne vise que l'éditeur du service ; `/cgu` mentionne les prénoms affichés.
+- **Récurrence par règle (Phases 59 à 63)** *(remplace la décision « Récurrence (Phase 5) » sur la liste de dates et la limite de 12 dates)* :
+  - *Schéma* : nouveaux champs facultatifs sur `Annonce`, appliqués par `prisma db push` sans perte de données (les annonces existantes restent sans règle ; à relancer en production avant le déploiement) : `rythme RythmeRecurrence?`, avec l'enum `CHAQUE_SEMAINE | UNE_SEMAINE_SUR_DEUX | MENSUEL` ; `jourSemaine Int?` (1 = lundi … 7 = dimanche) ; `semaineDuMois Int?` (1 à 4, -1 = dernier) ; `debutRecurrence DateTime? @db.Date` et `finRecurrence DateTime? @db.Date` ; `datesRetirees DateTime[] @db.Date`. `estRecurrente` reste la source du type (récurrente / exceptionnelle). `OccurrenceJam` ne change pas.
+  - *Génération* : une fonction pure unique (dans `lib/`) produit les dates à partir de la règle et des dates retirées, en UTC, date seule, comme le reste de l'app. Elle sert à l'aperçu côté client et au serveur. Le serveur ne fait jamais confiance aux dates envoyées par le client : il les recalcule depuis la règle. La validation zod (`lib/validation/annonce.ts`) remplace `NOMBRE_MAX_DATES` par la limite de 12 mois.
+  - *Mention* : une fonction unique (dans `lib/annonces.ts`, à côté de `mentionOrganisePar`) rend le libellé depuis la règle, sinon le déduit des occurrences. Elle est utilisée par `app/carte-annonce.tsx`, `app/jams/[id]`, `app/mes-annonces/page.tsx` et la fiche du marqueur.
+  - *Décisions de la Phase 60* : une annonce publiée garde son affichage (dates figées, pas de champs de règle) et le serveur ignore ses champs de règle jusqu'à la Phase 62. Les dates passées sont filtrées à la publication et dans l'aperçu (la règle garde sa date de début) ; la limite de 12 mois se compte depuis la date de début (même jour, un an plus tard, inclus). Une jam exceptionnelle n'a pas de rythme ; sa date est aussi gardée dans `debutRecurrence`, pour qu'un brouillon sans horaire (donc sans occurrence) la retrouve. Ancien brouillon sans règle : une date → « Jam exceptionnelle » avec cette date ; plusieurs → « Jam récurrente », règle vide, dates sous « Dates choisies une à une » (retirables) ; réenregistré en brouillon, il ne garde que celles déjà en base parmi celles envoyées ; sa publication exige une règle complète (« Choisissez un jour, une date de début et une date de fin. »). « Reprendre la dernière annonce de ce bar » reprend aussi le type, le rythme et le jour, jamais les dates. Fonctions : `lib/recurrence.ts` (génération, bornes), `resoudreDates` (`lib/validation/annonce.ts`), `mentionAnnonce` (`lib/rythme.ts`, plutôt que `lib/annonces.ts` qui importe Prisma).
+  - *Décisions de la Phase 61* : « Une semaine sur deux » compte 14 jours à partir de la première date de la règle (premier jour choisi à partir du début), même si elle est passée ou retirée. Mensuel : le jour de la semaine du mois choisie, chaque mois entre le début et la fin ; un mois dont cette date précède le début ou suit la fin est sauté ; pas de 5e semaine (« Dernier » la couvre). « Semaine du mois » démarre vide : la règle reste incomplète (pas d'aperçu) tant qu'elle n'est pas choisie, et la publication en mensuel est refusée avec « Choisissez un jour, une semaine du mois, une date de début et une date de fin. » ; le brouillon l'accepte vide. `semaineDuMois` n'est enregistrée que pour le rythme mensuel (sinon `null`). « Reprendre la dernière annonce de ce bar » reprend aussi le rythme et la semaine du mois. La mention vient de la règle (`mentionAnnonce`). Aucun changement de schéma (champs déjà ajoutés en Phase 60).
+  - *Décisions de la Phase 62* : la recréation garde les dates communes à l'ancienne et à la nouvelle règle, avec leur statut (confirmation ou annulation) ; seules les dates qui disparaissent sont supprimées, ce que dit la fenêtre. Aujourd'hui compte comme une date à venir, comme dans `datesAPublier`. Une règle est « modifiée » quand elle change les dates produites (`cleRegle`, `lib/modification-regle.ts`) : type, rythme, jour, semaine du mois (mensuel seulement), début, fin, dates retirées produites par la règle, ou dates choisies une à une ; une règle partielle d'une ancienne annonce sans règle ne compte pas. Le serveur refait la comparaison sans se fier au client, puis contrôle la règle comme à la publication. Règle modifiée : le sélecteur « Appliquer l'horaire à » disparaît, la portée est ignorée et l'horaire du formulaire vaut pour toutes les dates. Le « × » des pastilles reste sur une annonce publiée et compte comme une modification (fenêtre, puis suppression de la date). Ancienne annonce publiée sans règle : seules ses dates à venir apparaissent sous « Dates choisies une à une ». La limite de 12 mois se compte toujours depuis la date de début : pour prolonger au-delà, on avance le début (une date de début passée inchangée reste acceptée). Fenêtre : « Retour » est l'action par défaut (focus, Échap, clic extérieur), « Recréer les dates » est en fond Erreur. Aucun changement de schéma.
+  - *Recréation* : sur une annonce publiée dont la règle change, une seule transaction passe les occurrences de date ≥ aujourd'hui à celles de la nouvelle règle : une date commune garde son occurrence et son statut, une date qui disparaît est supprimée, une nouvelle date suit J-7 avec le même calcul qu'à la publication (Phase 6). Les dates passées ne sont pas touchées. `supprimerOccurrence` ajoute la date à `datesRetirees`. `choixDePortee` (`app/mes-annonces/menu-annonce.tsx`) continue de dépendre de `estRecurrente`.
+  - *Routes* : aucune nouvelle route.
 
 ---
 
@@ -338,9 +347,9 @@ Depuis la page de connexion, un lien « Mot de passe oublié » mène à `/mot-d
 - [x] La page de connexion propose un lien « Mot de passe oublié »
 - [x] La demande affiche toujours le même message, que l'email soit connu ou non
 - [x] Un email contenant le lien de réinitialisation est envoyé si le compte existe
-- [ ] Le lien expire au bout d'1 h
+- [x] Le lien expire au bout d'1 h
 - [x] Le lien ne fonctionne qu'une fois ; un lien déjà utilisé, expiré ou remplacé affiche un message clair et propose d'en demander un nouveau
-- [ ] Une nouvelle demande invalide le lien précédent
+- [x] Une nouvelle demande invalide le lien précédent
 - [x] Le nouveau mot de passe respecte les règles existantes (8 caractères minimum, confirmation identique)
 - [x] Après réinitialisation, l'organisateur est renvoyé vers `/connexion` avec un message de succès et peut se connecter avec son nouveau mot de passe
 - [x] Seul le hash du jeton est stocké en base ; les jetons sont supprimés avec le compte
@@ -532,7 +541,7 @@ Dans la fiche dépliée d'un bar, « Supprimer ce bar » ouvre une fenêtre qui 
 - [x] « Supprimer ce bar » ouvre une fenêtre : « Ce bar et ses N annonces (dont M dates à venir publiées) seront supprimés définitivement. Les musiciens ne les verront plus. », ou « Ce bar sera supprimé définitivement. » s'il n'a aucune annonce
 - [x] « Supprimer définitivement » reste inactif tant que le nom saisi ne correspond pas au nom du bar (casse et espaces en trop ignorés) ; aucun mot de passe n'est demandé
 - [x] La fenêtre respecte DESIGN.md (Walnut Shadow, Warm Cream, un seul bouton plein Brass Copper pour « Supprimer définitivement », « Annuler » en fantôme, sans ombre)
-- [ ] La suppression retire, en une transaction, les annonces du bar (occurrences en cascade) puis le bar ; les photos du bar et des annonces sont ensuite retirées du stockage, sans bloquer en cas d'échec
+- [x] La suppression retire, en une transaction, les annonces du bar (occurrences en cascade) puis le bar ; les photos du bar et des annonces sont ensuite retirées du stockage, sans bloquer en cas d'échec
 - [x] Après la suppression, aucune annonce du bar n'est visible, ni côté musicien (liste et carte) ni dans « Mes annonces »
 - [x] Aucun email n'est envoyé
 - [x] Le dernier bar d'un compte n'a pas de bouton de suppression, mais la mention « Un compte doit garder au moins un bar ; pour tout supprimer, supprimez votre compte » ; une suppression du dernier bar est aussi refusée côté serveur
@@ -1043,16 +1052,16 @@ L'accueil musicien passe en design Harbor (clair, marine/bleu), derrière le dra
 
 ### Critères d'acceptation
 
-- [ ] Drapeau actif : titre, accroche et bandeau de 7 jours visibles ; flèches, « Aujourd'hui » et clic sur un jour mettent à jour `?date=` ; la date minimale est aujourd'hui
-- [ ] L'icône calendrier ouvre le sélecteur natif et permet d'atteindre une date lointaine
-- [ ] Un point apparaît sous chaque jour ayant au moins une occurrence d'annonce publiée (annulée comprise), et seulement sous ceux-là
-- [ ] Carte d'annonce : nom du bar et statut sur une ligne, adresse/distance, horaires, styles et instruments sur une ligne avec ellipsis, « Sera confirmée le … » conservé, annulée grisée et barrée ; menu Itinéraire fonctionnel
-- [ ] Visiteur : seul « Connexion organisateur » à droite, sans logo ; organisateur connecté : icône de profil et bouton « Accéder à mes annonces » sous l'accroche
-- [ ] Vue Carte : fond clair OpenFreeMap positron, étiquettes lisibles, attribution OSM sans chevauchement
-- [ ] `/mes-annonces`, `/jams/[id]`, `/connexion` visuellement inchangées (captures avant/après)
-- [ ] Drapeau éteint : l'accueil actuel (champ date, bandeau cuivré) est servi sans changement
-- [ ] Tests Playwright : suite principale lancée drapeau actif (`e2e/musicien.e2e.ts` mis à jour, lecture seule) ; projet smoke séparé, drapeau éteint ; `pied-de-page.e2e.ts` et `contact.e2e.ts` verts ; captures mobile 400 px (liste et carte)
-- [ ] `npx tsc --noEmit`, `npm run lint`, `npx vitest run`, `npm run build` et toute la suite Playwright passent
+- [x] Drapeau actif : titre, accroche et bandeau de 7 jours visibles ; flèches, « Aujourd'hui » et clic sur un jour mettent à jour `?date=` ; la date minimale est aujourd'hui
+- [x] L'icône calendrier ouvre le sélecteur natif et permet d'atteindre une date lointaine
+- [x] Un point apparaît sous chaque jour ayant au moins une occurrence d'annonce publiée (annulée comprise), et seulement sous ceux-là
+- [x] Carte d'annonce : nom du bar et statut sur une ligne, adresse/distance, horaires, styles et instruments sur une ligne avec ellipsis, « Sera confirmée le … » conservé, annulée grisée et barrée ; menu Itinéraire fonctionnel
+- [x] Visiteur : seul « Connexion organisateur » à droite, sans logo ; organisateur connecté : icône de profil et bouton « Accéder à mes annonces » sous l'accroche
+- [x] Vue Carte : fond clair OpenFreeMap positron, étiquettes lisibles, attribution OSM sans chevauchement
+- [x] `/mes-annonces`, `/jams/[id]`, `/connexion` visuellement inchangées (captures avant/après)
+- [x] Drapeau éteint : l'accueil actuel (champ date, bandeau cuivré) est servi sans changement
+- [x] Tests Playwright : suite principale lancée drapeau actif (`e2e/musicien.e2e.ts` mis à jour, lecture seule) ; projet smoke séparé, drapeau éteint ; `pied-de-page.e2e.ts` et `contact.e2e.ts` verts ; captures mobile 400 px (liste et carte)
+- [x] `npx tsc --noEmit`, `npm run lint`, `npx vitest run`, `npm run build` et toute la suite Playwright passent
 
 ## Bloquée par
 
@@ -1088,11 +1097,11 @@ La carte d'annonce de l'accueil (`app/carte-annonce.tsx`, modes `liste` et `fich
 
 ### Critères d'acceptation
 
-- [ ] Nom du bar et statut sur une ligne ; « Styles » + pastilles et « Instruments » + pastilles chacun sur une ligne, retour à la ligne des pastilles si trop nombreuses
-- [ ] Bar au nom long et 6 styles : aucun débordement horizontal à 390 px (liste et fiche carte)
-- [ ] Toute la carte reste cliquable en mode liste ; menu Itinéraire fonctionnel ; annulée à 60 % d'opacité, nom barré ; « Sera confirmée le … » conservé ; libellés de statut inchangés
-- [ ] Polices Plus Jakarta Sans et Geist chargées sur la carte uniquement (Figtree ailleurs)
-- [ ] `npx tsc --noEmit`, `npm run lint`, `npx playwright test e2e/musicien.e2e.ts e2e/lisibilite-adresse.e2e.ts --workers=1` verts (sélecteurs sur nom, statut, « Styles », « Instruments » vérifiés) ; captures Playwright mobile 390 px en liste et en fiche carte
+- [x] Nom du bar et statut sur une ligne ; « Styles » + pastilles et « Instruments » + pastilles chacun sur une ligne, retour à la ligne des pastilles si trop nombreuses
+- [x] Bar au nom long et 6 styles : aucun débordement horizontal à 390 px (liste et fiche carte)
+- [x] Toute la carte reste cliquable en mode liste ; menu Itinéraire fonctionnel ; annulée à 60 % d'opacité, nom barré ; « Sera confirmée le … » conservé ; libellés de statut inchangés
+- [x] Polices Plus Jakarta Sans et Geist chargées sur la carte uniquement (Figtree ailleurs)
+- [x] `npx tsc --noEmit`, `npm run lint`, `npx playwright test e2e/musicien.e2e.ts e2e/lisibilite-adresse.e2e.ts --workers=1` verts (sélecteurs sur nom, statut, « Styles », « Instruments » vérifiés) ; captures Playwright mobile 390 px en liste et en fiche carte
 
 ## Bloquée par
 
@@ -1184,10 +1193,10 @@ Dans `app/mes-annonces/filtre-annonces.tsx`, le bouton actif prend le fond Bleu 
 
 ### Critères d'acceptation
 
-- [ ] Le bouton actif a un fond différent des inactifs (couleur calculée vérifiée)
-- [ ] « Tous » est actif à l'arrivée ; changer de bar déplace l'état actif
-- [ ] Contraste AA (blanc sur `#2B78BE`)
-- [ ] Test `e2e/filtre-annonces.e2e.ts` et DESIGN.md à jour
+- [x] Le bouton actif a un fond différent des inactifs (couleur calculée vérifiée)
+- [x] « Tous » est actif à l'arrivée ; changer de bar déplace l'état actif
+- [x] Contraste AA (blanc sur `#2B78BE`)
+- [x] Test `e2e/filtre-annonces.e2e.ts` et DESIGN.md à jour
 
 ## Bloquée par
 
@@ -1205,13 +1214,13 @@ Une troisième entrée « Supprimer » (texte `--harbor-erreur`, visible aussi s
 
 ### Critères d'acceptation
 
-- [ ] Le menu propose trois entrées ; « Retour » ou Échap ne supprime rien
-- [ ] Ponctuelle ou brouillon : confirmation simple ; récurrente : choix de portée
-- [ ] Après confirmation, la carte (ou la date) disparaît sans rechargement manuel et l'annonce n'apparaît plus côté musicien ; photos supprimées
-- [ ] Supprimer la dernière date supprime l'annonce
-- [ ] En cas d'échec, le message « La suppression a échoué. Réessayez. » s'affiche dans la fenêtre
-- [ ] Un autre compte ne peut pas supprimer l'annonce
-- [ ] Tests : `e2e/menu-annonce.e2e.ts` étendu (suppression, portée, annulation de la fenêtre) ; DESIGN.md à jour
+- [x] Le menu propose trois entrées ; « Retour » ou Échap ne supprime rien
+- [x] Ponctuelle ou brouillon : confirmation simple ; récurrente : choix de portée
+- [x] Après confirmation, la carte (ou la date) disparaît sans rechargement manuel et l'annonce n'apparaît plus côté musicien ; photos supprimées
+- [x] Supprimer la dernière date supprime l'annonce
+- [x] En cas d'échec, le message « La suppression a échoué. Réessayez. » s'affiche dans la fenêtre
+- [x] Un autre compte ne peut pas supprimer l'annonce
+- [x] Tests : `e2e/menu-annonce.e2e.ts` étendu (suppression, portée, annulation de la fenêtre) ; DESIGN.md à jour
 
 ## Bloquée par
 
@@ -1416,10 +1425,10 @@ Un organisateur dont le compte n'a pas de prénom est redirigé vers « Mon prof
 
 ### Critères d'acceptation
 
-- [ ] Un compte sans prénom ouvrant `/mes-annonces` (ou une page d'annonce) est redirigé vers `/mon-profil` avec un message explicite
-- [ ] Après enregistrement du prénom, l'accès à « Mes annonces » est rétabli, annonces intactes
-- [ ] Le profil ne permet plus d'enregistrer deux champs vides pour un compte sans prénom
-- [ ] Test e2e ; DESIGN.md à jour
+- [x] Un compte sans prénom ouvrant `/mes-annonces` (ou une page d'annonce) est redirigé vers `/mon-profil` avec un message explicite
+- [x] Après enregistrement du prénom, l'accès à « Mes annonces » est rétabli, annonces intactes
+- [x] Le profil ne permet plus d'enregistrer deux champs vides pour un compte sans prénom
+- [x] Test e2e ; DESIGN.md à jour
 
 ## Bloquée par
 
@@ -1469,3 +1478,119 @@ Après « Enregistrer » sur la page d'édition, un pop-up « La modification a 
 ## Bloquée par
 
 - Aucune — démarrable immédiatement
+
+---
+
+## Phase 59 : Mention « Tous les mardis » / « Exceptionnelle » sur les jams
+
+**User stories** : US-193, US-194, US-195, US-196
+
+### Ce qu'on livre
+
+Chaque jam affiche son rythme en clair (« Tous les mardis », « Un mardi sur deux », « Le 1er vendredi du mois », « Le dernier jeudi du mois ») ou « Exceptionnelle », déduit des dates existantes, sans changement de schéma. La mention apparaît côté musicien (carte de la liste, fiche du marqueur, page de la jam) et remplace la pastille « Récurrente » dans « Mes annonces ». Une annonce aux dates irrégulières affiche « Récurrente ». La valeur est visible tout de suite sur les annonces en production.
+
+### Critères d'acceptation
+
+- [x] Une annonce dont les dates sont des mardis consécutifs affiche « Tous les mardis », sans action de l'organisateur
+- [x] Des mardis espacés de 14 jours affichent « Un mardi sur deux » ; des derniers jeudis de mois consécutifs, « Le dernier jeudi du mois »
+- [x] Une annonce à une seule date affiche « Exceptionnelle » ; des dates irrégulières, « Récurrente »
+- [x] La mention est en texte à côté de l'horaire, jamais en pastille de statut, sur la carte de la liste, la fiche du marqueur, la page de la jam et « Mes annonces »
+- [x] Aucun débordement à 360 px
+- [x] Test e2e ; DESIGN.md à jour
+
+## Bloquée par
+
+- Aucune — démarrable immédiatement
+
+---
+
+## Phase 60 : Choix récurrente / exceptionnelle, rythme hebdomadaire
+
+**User stories** : US-182, US-183, US-184 (chaque semaine), US-186, US-187, US-188, US-189, US-190
+
+### Ce qu'on livre
+
+Le formulaire d'annonce remplace la liste « Ajouter une date » par deux boutons radio, « Jam récurrente » (présélectionné) et « Jam exceptionnelle ». Exceptionnelle : une seule date. Récurrente : rythme « Chaque semaine », jour, date de début et date de fin (au plus 12 mois). Les dates générées s'affichent en aperçu dans les pastilles existantes, chacune retirable par « × ». Le schéma de la règle est ajouté, le serveur recalcule les dates depuis la règle et applique J-7 à chacune. La mention vient de la règle.
+
+### Critères d'acceptation
+
+- [x] « Tous les mardis » du 3 nov. 2026 au 26 janv. 2027 produit 13 dates, toutes des mardis, visibles dans l'aperçu avant publication
+- [x] Une date retirée de l'aperçu n'apparaît ni côté musicien ni dans « Mes annonces » après publication
+- [x] Une date de fin antérieure au début, ou à plus de 12 mois, bloque la publication avec le message prévu, et rien n'est enregistré ; idem si aucune date ne correspond au rythme
+- [x] Jam exceptionnelle sans date : « Choisissez une date. »
+- [x] Le brouillon s'enregistre avec une règle incomplète
+- [x] Le serveur ignore les dates envoyées par le client et les recalcule depuis la règle
+- [x] Chaque date générée suit la règle J-7 (programmée ou confirmée selon l'écart)
+- [x] Aucun débordement à 360 px
+- [x] Test e2e avec restauration des données (base partagée) ; DESIGN.md à jour
+
+## Bloquée par
+
+- Phase 59
+
+---
+
+## Phase 61 : Une semaine sur deux et mensuel
+
+**User stories** : US-184 (autres rythmes), US-185
+
+### Ce qu'on livre
+
+Le rythme propose aussi « Une semaine sur deux » et « Une fois par mois ». Pour le mensuel, un champ « Semaine du mois » (1er, 2e, 3e, 4e, dernier) apparaît. L'aperçu, la publication et la mention suivent ces rythmes.
+
+### Critères d'acceptation
+
+- [x] « Un mardi sur deux » produit des dates espacées de 14 jours exactement, à partir de la première date
+- [x] « Le dernier jeudi du mois » sur 6 mois produit 6 dates, chacune le dernier jeudi de son mois
+- [x] « Semaine du mois » n'apparaît que pour le rythme mensuel
+- [x] La mention affiche « Un mardi sur deux », « Le 1er vendredi du mois », « Le dernier jeudi du mois »
+- [x] Test e2e ; DESIGN.md à jour
+
+## Bloquée par
+
+- Phase 60
+
+---
+
+## Phase 62 : Modifier la règle d'une annonce publiée
+
+**User stories** : US-191, US-192, US-198
+
+### Ce qu'on livre
+
+Sur une annonce publiée, modifier le type, le rythme, le jour, la semaine du mois, le début ou la fin ouvre une fenêtre d'avertissement (« Recréer les dates » / « Retour »). Après validation, les dates à venir sont recréées selon la nouvelle règle, J-7 évalué au moment de la modification ; les dates passées ne bougent pas. Une ancienne annonce sans règle montre ses dates « Dates choisies une à une » et peut passer à un rythme. Une date supprimée par « Cette date seulement » rejoint les dates retirées.
+
+### Critères d'acceptation
+
+- [x] Modifier la règle d'une annonce publiée ouvre la fenêtre d'avertissement ; « Retour » ne modifie rien
+- [x] Après « Recréer les dates », les dates à venir correspondent à la nouvelle règle (les dates communes gardent leur statut), les nouvelles suivent J-7 évalué à la modification, toutes prennent l'horaire du formulaire ; les dates passées sont inchangées
+- [x] Modifier seulement l'horaire, le style, les instruments ou la description n'ouvre pas la fenêtre et ne recrée rien (portée ciblée/globale inchangée)
+- [x] Une ancienne annonce sans règle affiche ses dates telles quelles et peut passer à un rythme
+- [x] Une date supprimée par « Cette date seulement » ne réapparaît pas après une recréation
+- [x] Test e2e avec restauration des données (base partagée) ; DESIGN.md à jour
+
+## Bloquée par
+
+- Phase 60
+
+---
+
+## Phase 63 : Cartes de « Mes annonces » lisibles avec beaucoup de dates
+
+**User stories** : US-197
+
+### Ce qu'on livre
+
+Une carte de « Mes annonces » affiche d'abord toutes les dates à confirmer (relance en cours), puis les prochaines dates, jusqu'à 6 pastilles au total, suivies de « + N autres dates » qui mène à la page de modification.
+
+### Critères d'acceptation
+
+- [x] Une jam hebdomadaire sur 12 mois n'affiche pas plus de 6 pastilles, plus « + N autres dates »
+- [x] Les dates à confirmer passent avant les autres et sont toutes affichées
+- [x] « + N autres dates » mène à la page de modification de l'annonce
+- [x] Aucun débordement à 360 px
+- [x] Test e2e ; DESIGN.md à jour
+
+## Bloquée par
+
+- Aucune — démarrable immédiatement (utile dès la Phase 60)

@@ -1,4 +1,4 @@
-import { StatutOccurrence } from "@prisma/client";
+import { RythmeRecurrence, StatutOccurrence } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 
 const JOURS_LIMITE_CONFIRMATION_AUTO = 7;
@@ -43,7 +43,12 @@ export async function recupererAnnoncesPubliees(dateIso: string) {
       annonce: { statut: "PUBLIEE" },
     },
     include: {
-      annonce: { include: { bar: { include: { organisateur: { select: { prenom: true } } } } } },
+      annonce: {
+        include: {
+          bar: { include: { organisateur: { select: { prenom: true } } } },
+          occurrences: { select: { date: true } },
+        },
+      },
     },
     orderBy: { heureDebut: "asc" },
   });
@@ -77,7 +82,12 @@ export async function recupererOccurrencePubliee(occurrenceId: string) {
       annonce: { statut: "PUBLIEE" },
     },
     include: {
-      annonce: { include: { bar: { include: { organisateur: { select: { prenom: true } } } } } },
+      annonce: {
+        include: {
+          bar: { include: { organisateur: { select: { prenom: true } } } },
+          occurrences: { select: { date: true } },
+        },
+      },
     },
   });
 }
@@ -113,6 +123,12 @@ export type ValeursReprises = {
   heureDebut: string;
   heureFin: string;
   publieeLe: string;
+  // Type, rythme, jour (phase 60) et semaine du mois (phase 61) ; type null pour une ancienne
+  // annonce récurrente sans règle.
+  typeJam: "recurrente" | "exceptionnelle" | null;
+  rythme: RythmeRecurrence | null;
+  jourSemaine: string;
+  semaineDuMois: string;
 };
 
 type AnnoncePourReprise = {
@@ -127,6 +143,10 @@ type AnnoncePourReprise = {
   coOrganisateur: string | null;
   photoUrl1: string | null;
   photoUrl2: string | null;
+  estRecurrente?: boolean;
+  rythme?: RythmeRecurrence | null;
+  jourSemaine?: number | null;
+  semaineDuMois?: number | null;
   occurrences: { date: Date; heureDebut: string; heureFin: string | null }[];
 };
 
@@ -164,6 +184,10 @@ export function valeursReprisesParBar(
       heureDebut: premiereOccurrence?.heureDebut ?? "",
       heureFin: premiereOccurrence?.heureFin ?? "",
       publieeLe: annonce.publieeLe.toISOString(),
+      typeJam: !annonce.estRecurrente ? "exceptionnelle" : annonce.rythme ? "recurrente" : null,
+      rythme: annonce.rythme ?? null,
+      jourSemaine: annonce.jourSemaine ? String(annonce.jourSemaine) : "",
+      semaineDuMois: annonce.semaineDuMois ? String(annonce.semaineDuMois) : "",
     };
   }
   return table;

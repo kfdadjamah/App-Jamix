@@ -20,6 +20,8 @@ Un visiteur ou un organisateur qui veut poser une question, signaler une annonce
 
 Un organisateur n'a aucun nom propre dans son compte : seule la fiche de son bar l'identifie. Cela empêchera de présenter un organisateur aux musiciens le jour où ses informations seront affichées.
 
+Pour une jam hebdomadaire, l'organisateur doit aujourd'hui ajouter chaque date à la main, et il est bloqué à 12 dates, soit à peine trois mois de mardis. Il republie donc régulièrement la même annonce. De son côté, le musicien qui découvre une jam ne sait pas si elle revient chaque semaine ou si c'est un événement unique, alors que c'est ce qui décide s'il y va ce soir ou une prochaine fois.
+
 ## Solution
 
 L'outil centralise les annonces de jams publiées par les organisateurs des bars lyonnais. Le musicien sélectionne une date et consulte les annonces disponibles ce jour-là : lieu, adresse, distance jusqu'à chez lui, horaire, style musical et instruments mis à disposition sur place. Quand aucune jam n'est publiée à la date choisie, l'outil lui suggère les prochaines dates où des jams ont lieu. À terme, l'outil s'ouvrira aussi au grand public souhaitant assister à une jam.
@@ -42,6 +44,8 @@ L'inscription d'un organisateur demande désormais, dans cet ordre, « Prénom �
 
 Sur chaque carte de « Mes annonces », un bouton « ⋯ » en haut à droite ouvre un petit menu : « Modifier » mène au formulaire de l'annonce ; « Annuler » ouvre une fenêtre de confirmation, avec choix de la portée (« Cette date seulement » + date, ou « Toutes les dates ») pour une annonce récurrente.
 
+En créant une annonce, l'organisateur choisit « Jam récurrente » ou « Jam exceptionnelle ». Pour une jam récurrente, il choisit un rythme (tous les mardis, un mardi sur deux, le 1er vendredi du mois…), une date de début et une date de fin. L'application en déduit les dates, qu'il vérifie et peut retirer une à une avant de publier. Pour une jam exceptionnelle, il choisit une seule date. Le musicien voit sur chaque jam son rythme en clair ou la mention « Exceptionnelle ».
+
 ## Utilisateur cible
 
 - Musicien amateur ou semi-professionnel, tous instruments et styles confondus, qui joue régulièrement en dehors de tout groupe fixe et cherche des occasions de jouer en live sans avoir à monter un concert. Il vit à Lyon ou y passe.
@@ -54,7 +58,7 @@ US-2. En tant qu'organisateur, je veux pouvoir ajouter une photo ou un logo à l
 US-3. En tant qu'organisateur, je veux publier une annonce de jam avec une ou plusieurs dates, un horaire, un style musical et les instruments disponibles sur place, afin d'informer les musiciens de l'événement.
 US-4. En tant qu'organisateur, je veux pouvoir ajouter des photos à une annonce de jam, afin de l'illustrer pour les musiciens. (Reporté en V2 : masqué en V1, voir US-135.)
 US-5. En tant qu'organisateur, je veux pouvoir enregistrer une annonce en brouillon avant de la publier, afin de pouvoir la compléter plus tard sans qu'elle soit visible des musiciens.
-US-6. En tant qu'organisateur, je veux pouvoir rendre une annonce récurrente en sélectionnant plusieurs dates lors de la publication, afin de ne pas avoir à republier la même annonce chaque semaine et de simplement confirmer chaque échéance.
+US-6. En tant qu'organisateur, je veux pouvoir rendre une annonce récurrente en choisissant un rythme, une date de début et une date de fin, afin de ne pas avoir à republier la même annonce chaque semaine et de simplement confirmer chaque échéance.
 US-7. En tant qu'organisateur, je veux pouvoir publier une annonce sans limite de délai à l'avance, afin d'annoncer une jam dès que je connais la date.
 US-8. En tant qu'organisateur ayant publié une date de jam plus de 7 jours à l'avance, je veux devoir la confirmer 7 jours avant cette date, afin de garantir aux musiciens une information à jour.
 US-9. En tant qu'organisateur, je veux que chaque date de mon annonce affiche « Jam programmée, sera confirmée le [date J-7] » tant que je ne l'ai pas confirmée, afin que les musiciens sachent que l'information n'est pas encore définitive.
@@ -230,6 +234,23 @@ US-178. En tant qu'organisateur, quand je clique sur « Enregistrer » après av
 US-179. En tant qu'organisateur, après avoir fermé ce pop-up, je veux que le formulaire se ferme et que la page de visualisation de l'annonce s'affiche, afin de vérifier le résultat.
 US-180. En tant qu'organisateur modifiant un brouillon, ou une annonce sans date à venir, je veux revenir à « Mes annonces » après le pop-up, afin de ne pas tomber sur une page introuvable.
 US-181. En tant qu'organisateur, si l'enregistrement échoue, je veux voir un message d'erreur et rester dans le formulaire sans pop-up de succès, afin de corriger ma saisie.
+US-182. En tant qu'organisateur, je veux choisir entre « Jam récurrente » et « Jam exceptionnelle » en créant une annonce, afin de ne pas saisir chaque date à la main.
+US-183. En tant qu'organisateur d'une jam exceptionnelle, je veux choisir une seule date, afin d'annoncer un événement unique.
+US-184. En tant qu'organisateur d'une jam récurrente, je veux choisir un rythme (chaque semaine, une semaine sur deux, une fois par mois) et un jour de la semaine, afin de décrire ma jam comme je la pratique.
+US-185. En tant qu'organisateur d'une jam mensuelle, je veux choisir la semaine du mois (1er, 2e, 3e, 4e ou dernier), afin d'annoncer par exemple « le dernier jeudi du mois ».
+US-186. En tant qu'organisateur d'une jam récurrente, je veux choisir une date de début et une date de fin, au plus 12 mois après le début, afin de publier jusqu'à un an de jams en une fois.
+US-187. En tant qu'organisateur, je veux voir la liste des dates générées avant de publier, afin de vérifier qu'elles correspondent à ma jam.
+US-188. En tant qu'organisateur, je veux retirer une date de cette liste (vacances, jour férié), afin de ne pas annoncer une jam qui n'aura pas lieu, sans casser le rythme.
+US-189. En tant qu'organisateur, je veux un message d'erreur clair si la date de fin précède le début, dépasse 12 mois, ou si aucune date ne correspond au rythme choisi, afin de corriger ma saisie.
+US-190. En tant qu'organisateur, je veux enregistrer un brouillon même si la récurrence est incomplète, afin de finir plus tard.
+US-191. En tant qu'organisateur d'une annonce publiée, je veux modifier le type, le rythme, le jour, le début ou la fin, afin de suivre les changements de ma jam.
+US-192. En tant qu'organisateur, je veux être averti avant d'enregistrer une telle modification que les dates à venir seront recalculées et que celles qui disparaissent seront supprimées avec leurs confirmations, afin de décider en connaissance de cause (« Retour » ne change rien).
+US-193. En tant que musicien, je veux voir le rythme d'une jam récurrente en clair (« Tous les mardis », « Un mardi sur deux », « Le 1er vendredi du mois ») sur sa carte, dans la fiche du marqueur et sur la page de la jam, afin de savoir quand je pourrai revenir.
+US-194. En tant que musicien, je veux voir la mention « Exceptionnelle » sur une jam à date unique, afin de ne pas la manquer.
+US-195. En tant que musicien, je veux que les annonces publiées avant ce changement affichent aussi leur rythme quand leurs dates sont régulières, ou « Récurrente » sinon, afin que toutes les jams soient lisibles de la même façon.
+US-196. En tant qu'organisateur, je veux voir la même mention sur mes cartes de « Mes annonces », à la place de la pastille « Récurrente », afin de reconnaître mes annonces d'un coup d'œil.
+US-197. En tant qu'organisateur d'une jam récurrente à nombreuses dates, je veux que sa carte de « Mes annonces » montre les dates à confirmer et les prochaines dates, avec « + N autres dates », afin que la liste reste lisible.
+US-198. En tant qu'organisateur d'une ancienne annonce aux dates saisies une à une, je veux retrouver ces dates dans le formulaire et pouvoir passer à un rythme, afin de ne rien perdre.
 
 ## Critères de succès
 
@@ -292,6 +313,16 @@ US-181. En tant qu'organisateur, si l'enregistrement échoue, je veux voir un me
 - Sur « Mes annonces », chaque pastille de date a le fond plein de la couleur de son statut (mêmes couleurs que l'accueil et la carte) avec un texte blanc lisible, y compris la relance ; une date annulée reste identifiable (Phase 55).
 - Après chaque modification réussie d'une annonce, un pop-up de confirmation apparaît ; une fois validé, la page affichée est la visualisation de l'annonce (ou « Mes annonces » pour un brouillon ou une annonce sans date à venir) (Phase 58).
 - Chaque carte d'annonce affiche « Organisé par <prénom> », complété de « et <co-organisateur> » quand il est renseigné ; aucun compte sans prénom ne peut ouvrir « Mes annonces » (Phases 56 et 57).
+- Créer « Tous les mardis » du 3 nov. 2026 au 26 janv. 2027 produit 13 dates, toutes des mardis, visibles dans l'aperçu avant publication.
+- Une date retirée de l'aperçu n'apparaît ni côté musicien ni dans « Mes annonces » après publication.
+- Une date de fin à plus de 12 mois du début, ou antérieure au début, bloque la publication avec un message d'erreur, et rien n'est enregistré.
+- « Le dernier jeudi du mois » sur 6 mois produit 6 dates, chacune le dernier jeudi de son mois.
+- « Un mardi sur deux » produit des dates espacées de 14 jours exactement.
+- La carte musicien d'une jam récurrente affiche son rythme en toutes lettres ; une jam à date unique affiche « Exceptionnelle » ; c'est le cas aussi dans la fiche du marqueur et sur la page de la jam.
+- Une annonce existante dont les dates sont des mardis consécutifs affiche « Tous les mardis » sans aucune action de l'organisateur ; une annonce aux dates irrégulières affiche « Récurrente ».
+- Modifier la règle d'une annonce publiée ouvre une fenêtre d'avertissement ; après validation, les dates à venir correspondent à la nouvelle règle et suivent la règle J-7 évaluée au moment de la modification ; les dates passées ne bougent pas ; « Retour » ne modifie rien.
+- Une carte de « Mes annonces » d'une jam hebdomadaire sur 12 mois n'affiche pas plus de 6 pastilles de date, plus « + N autres dates ».
+- Aucun débordement à 360 px de large (formulaire, cartes, mention).
 
 ## Hors périmètre
 
@@ -366,6 +397,16 @@ US-181. En tant qu'organisateur, si l'enregistrement échoue, je veux voir un me
 - Ajout, modification et retrait de photos d'annonce (reporté en V2, avec un seul emplacement).
 - Mode sombre Harbor, migration des autres écrans vers Harbor et activation du drapeau en production (phases suivantes).
 - Mode sombre et nouvelle couleur hors palette pour les boutons (Phases 53 et 54).
+- Plusieurs jours de la semaine dans une même annonce (« mardis et jeudis ») : l'organisateur crée deux annonces.
+- Date fixe du mois (« le 15 de chaque mois ») et 5e [jour] du mois.
+- Autres rythmes (toutes les 3 semaines, deux fois par mois…).
+- Récurrence sans date de fin, ou au-delà de 12 mois.
+- Ajout manuel d'une date hors rythme à une jam récurrente (une date exceptionnelle supplémentaire = une autre annonce).
+- Conservation des confirmations quand la règle est modifiée après publication.
+- Prolongation automatique d'une récurrence arrivée à sa fin, et rappel de fin de récurrence.
+- Exclusion automatique des jours fériés ou des vacances scolaires.
+- Horaire différent selon la date au moment de la création (inchangé).
+- Filtre « récurrentes / exceptionnelles » côté musicien.
 
 ## Décisions d'implémentation
 
@@ -376,10 +417,10 @@ US-181. En tant qu'organisateur, si l'enregistrement échoue, je veux voir un me
 - Une annonce de jam peut être enregistrée en statut **brouillon** : elle est incomplète ou en cours de préparation, invisible en consultation musicien, et aucune de ses dates n'entre dans le cycle de confirmation J-7. L'organisateur la complète et la publie explicitement quand elle est prête, ce qui la fait basculer en statut **publiée** et démarre, pour chaque date, le cycle de statuts (confirmée / programmée / en attente de confirmation / annulée).
 - Les photos d'annonce sont reportées en V2 : le formulaire n'en propose plus en V1, et la V2 n'en prévoira qu'un seul emplacement. Les photos déjà enregistrées (2 emplacements au maximum) restent en base et visibles côté musicien ; leur absence n'empêche jamais la création, le brouillon ou la publication.
 - Toute photo importée (fiche bar ou annonce) est automatiquement ajustée/recadrée au format d'affichage prévu par l'application, sans contrôle manuel du cadrage par l'organisateur.
-- Une annonce de jam peut être ponctuelle (une seule date) ou récurrente : l'organisateur ajoute une ou plusieurs dates lors de la publication, jusqu'à 12 dates maximum par annonce, via une liste de dates ajoutables/supprimables ; le caractère récurrent de l'annonce est déduit automatiquement dès que plus d'une date est renseignée (pas de bascule ponctuelle/récurrente distincte à activer). Chaque date est une occurrence à part entière, avec son propre statut et sa propre échéance de confirmation à J-7.
+- Une annonce de jam est soit récurrente (un rythme entre une date de début et une date de fin), soit exceptionnelle (une seule date). Chaque date est une occurrence à part entière, avec son propre statut et sa propre échéance de confirmation à J-7. *(Remplace la liste de 12 dates au plus, au caractère récurrent déduit du nombre de dates : voir les puces « Jam récurrente / Jam exceptionnelle » ci-dessous.)*
 - Pour une annonce récurrente, l'horaire est unique et s'applique à toutes les dates de l'annonce ; il n'est pas possible de définir un horaire différent par date au moment de la publication.
 - Une même annonce ne peut pas contenir deux fois la même date.
-- Tant qu'une annonce est en statut Brouillon, l'organisateur peut librement ajouter ou retirer des dates. Une fois l'annonce Publiée, la liste des dates n'est plus modifiable depuis le formulaire de création ; sa modification (portée ciblée ou globale) relève du mécanisme de modification/annulation décrit ci-dessous. Les autres champs de l'annonce (horaire, style musical, instruments, photos) restent modifiables même une fois l'annonce Publiée, et s'appliquent alors uniformément à toutes ses occurrences existantes.
+- Tant qu'une annonce est en statut Brouillon, l'organisateur peut librement ajouter ou retirer des dates. Une fois l'annonce Publiée, la règle de récurrence (type, rythme, jour, semaine du mois, début, fin) reste modifiable depuis le formulaire, avec recréation des dates à venir après avertissement (voir les puces « Jam récurrente / Jam exceptionnelle » ci-dessous) ; l'annulation ou la suppression d'une date seule relève du mécanisme de portée ciblée ou globale décrit ci-dessous. Les autres champs de l'annonce (horaire, style musical, instruments, photos) restent modifiables même une fois l'annonce Publiée, et s'appliquent alors uniformément à toutes ses occurrences existantes.
 - Pas de limite de délai pour publier une annonce à l'avance ; le musicien ne peut consulter que les jams à venir (pas d'historique des jams passées).
 - Si une date d'une annonce est publiée plus de 7 jours à l'avance, l'organisateur doit la confirmer 7 jours avant cette date (J-7) ; jusque-là, l'occurrence affiche « Jam programmée, sera confirmée le [date J-7] ». Si la date est publiée à 7 jours ou moins de son échéance (ex. publiée à J-2), l'occurrence est directement au statut confirmée dès la publication, sans cycle de confirmation ni relance. Pour une annonce récurrente publiée avec plusieurs dates en une seule fois, cette règle J-7/J-2 s'évalue indépendamment pour chaque date : une date à plus de 7 jours peut être « Programmée » tandis qu'une autre date de la même annonce, à 7 jours ou moins, est directement « Confirmée ».
 - Si l'organisateur ne confirme pas une date à J-7, cette occurrence reste visible avec le statut « en attente de confirmation » (pas de suppression ni d'annulation automatique).
@@ -488,6 +529,17 @@ US-181. En tant qu'organisateur, si l'enregistrement échoue, je veux voir un me
 - **Co-organisateur et « Organisé par » (Phase 57)** : champ « Co-organisateur » facultatif dans le formulaire d'annonce, prénom en texte libre de 40 caractères maximum (espaces de début et de fin ignorés), repris d'une annonce précédente du même bar comme les styles. La mention s'écrit « Organisé par Prénom », ou « Organisé par Prénom et Co-organisateur », sous le nom du bar sur les cartes de l'accueil, de la carte et de « Mes annonces », et sur la fiche d'une jam. Le co-organisateur appartient à l'annonce (toutes ses dates).
 - **Prénom obligatoire pour tous (Phase 56)** : un compte sans prénom est redirigé vers « Mon profil » avant d'accéder à « Mes annonces », avec un message l'invitant à renseigner son prénom ; une fois enregistré, il retrouve ses annonces intactes.
 - **Confirmation d'une modification (Phase 58)** : après « Enregistrer » (modification, « Publier » ou « Enregistrer le brouillon » depuis la page d'édition), un pop-up indique « La modification a été prise en compte » avec un bouton unique ; Échap ou un clic à l'extérieur équivaut au bouton. Le formulaire se ferme alors sur la fiche de la prochaine date à venir de l'annonce, ou sur « Mes annonces » pour un brouillon ou une annonce sans date à venir. En cas d'échec, le message d'erreur s'affiche et le formulaire reste ouvert. La portée (date seule ou toutes les dates) se choisit avant l'enregistrement, inchangée.
+- **Jam récurrente / Jam exceptionnelle (Phases 59 à 63)** : le formulaire propose deux boutons radio exclusifs, « Jam récurrente » (présélectionné, cas le plus courant) et « Jam exceptionnelle », à la place de la liste « Ajouter une date ».
+- Jam exceptionnelle : un seul champ date, à partir d'aujourd'hui.
+- Jam récurrente : « Rythme » (« Chaque semaine », « Une semaine sur deux », « Une fois par mois »), « Jour » (lundi à dimanche) et, pour le rythme mensuel uniquement, « Semaine du mois » (1er, 2e, 3e, 4e, dernier). Ensuite « Date de début » (à partir d'aujourd'hui) et « Date de fin » (obligatoire, au plus 12 mois après le début).
+- La première date est le premier jour choisi à partir de la date de début. « Une semaine sur deux » compte à partir de cette première date.
+- Les dates générées s'affichent dès que la règle est complète, dans les pastilles de date existantes ; chacune a un « × » pour la retirer. Une date retirée ne revient pas tant que la règle produit cette date. Une date supprimée après publication (« Cette date seulement ») est retirée de la même façon.
+- Messages d'erreur à la publication : « Choisissez une date. », « La date de fin doit suivre la date de début. », « La récurrence ne peut pas dépasser 12 mois. », « Aucune date ne correspond à ce rythme entre ces deux dates. ». Le brouillon accepte une règle incomplète.
+- L'horaire reste unique pour toutes les dates. La règle J-7 s'évalue indépendamment pour chaque date générée (inchangé).
+- Modifier le type, le rythme, le jour, la semaine du mois, le début ou la fin d'une annonce publiée ouvre une fenêtre « Recréer les dates ? » : « Les dates à venir seront recalculées selon le nouveau rythme. Celles qui disparaissent seront supprimées, avec leurs confirmations et annulations. Les dates passées ne changent pas. », avec les boutons « Recréer les dates » / « Retour » (« Retour » par défaut). Une date à venir que la nouvelle règle produit encore garde son statut (Phase 62). Les dates passées ne changent pas. Les nouvelles dates suivent la règle J-7 évaluée au moment de la modification ; toutes prennent l'horaire du formulaire. Modifier seulement l'horaire, le style, les instruments ou la description ne recrée rien (portée ciblée/globale inchangée).
+- Côté musicien, la mention s'affiche en texte, à côté de l'horaire, sur la carte de la liste, dans la fiche du marqueur et sur la page de la jam. Elle ne prend pas l'aspect d'une pastille de statut, pour ne pas être confondue avec confirmée / programmée / en attente / annulée. Libellés : « Tous les mardis », « Un mardi sur deux », « Le 1er vendredi du mois », « Le dernier jeudi du mois », « Exceptionnelle », et « Récurrente » pour une ancienne annonce aux dates irrégulières.
+- Annonces existantes sans règle : une seule date donne « Exceptionnelle » ; des dates régulières donnent le rythme reconnu ; sinon « Récurrente ». Dans le formulaire, leurs dates restent affichées telles quelles (« Dates choisies une à une ») tant que l'organisateur ne choisit pas un rythme.
+- « Mes annonces » : la pastille « Récurrente » est remplacée par la même mention. Une carte affiche toutes les dates à confirmer (relance en cours) puis les prochaines dates, jusqu'à 6 pastilles au total, suivies de « + N autres dates » qui mène à la page de modification.
 
 ## Notes complémentaires
 
@@ -544,3 +596,11 @@ Les Phases 53 et 54 colorent les boutons selon leur fonction. Les boutons d'annu
 La Phase 55 corrige un oubli de l'audit de la Phase 54 : les pastilles de date de « Mes annonces » étaient restées neutres (blanc, liseré), alors que l'accueil et la carte colorent déjà le statut. Elles réutilisent la table de couleurs existante, sans nouveau token.
 
 La Phase 57 affiche des prénoms publiquement : la convention « éditeur anonyme » de `CLAUDE.md` doit être précisée (elle ne vise que l'éditeur du service) et `/cgu` doit mentionner que le prénom de l'organisateur et celui du co-organisateur apparaissent sur les annonces. Aucune page de lecture dédiée à l'organisateur n'existe : la visualisation après modification réutilise la fiche publique d'une jam.
+
+Risque : quand la règle d'une annonce publiée change, un musicien peut voir une date confirmée disparaître puis réapparaître en « programmée », ou une date annulée redevenir active. L'avertissement de l'organisateur est le seul garde-fou.
+
+Hypothèse : aucun bar ne tient la même jam plusieurs jours par semaine dans une seule annonce. Sinon, il crée deux annonces.
+
+La limite de 12 dates par annonce disparaît au profit de la limite de 12 mois (au plus 53 dates en hebdomadaire). Une carte de « Mes annonces » peut donc porter beaucoup de dates, d'où la limite d'affichage.
+
+DESIGN.md consigne les boutons radio du formulaire, la mention de rythme sur les cartes et « + N autres dates » (Phases 59 à 63).

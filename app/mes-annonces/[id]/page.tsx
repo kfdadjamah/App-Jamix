@@ -14,6 +14,7 @@ import { statutAffiche } from "@/lib/annonces";
 import { messageRelance } from "@/lib/relances";
 import { LIBELLES_STATUT_OCCURRENCE, formaterDateCourte } from "@/lib/annonce-constantes";
 import PiedDePage from "@/components/pied-de-page";
+import { saisieDeLAnnonce } from "@/lib/modification-regle";
 
 export default async function PageEditionAnnonce({
   params,
@@ -40,6 +41,11 @@ export default async function PageEditionAnnonce({
   const occurrencesNonAnnulees = occurrencesTriees.filter(
     (occurrence) => statutAffiche(occurrence) !== "ANNULEE"
   );
+
+  const datesIso = occurrencesTriees.map((o) => new Date(o.date).toISOString().slice(0, 10));
+  // Brouillon (phase 60) et annonce publiée (phase 62) : sa règle ; une ancienne annonce sans règle garde
+  // ses « dates choisies une à une » (à venir seulement une fois publiée).
+  const choixDates = saisieDeLAnnonce(annonce, datesIso, { publiee: estPubliee });
 
   const enregistrerBrouillon = modifierAnnonce.bind(null, annonce.id, "brouillon");
   const publier = modifierAnnonce.bind(null, annonce.id, "publier");
@@ -121,7 +127,9 @@ export default async function PageEditionAnnonce({
                 }
           }
           afficherPhotos={false}
-          datesModifiables={!estPubliee}
+          dateMinimale={
+            estPubliee ? choixDates.debutRecurrence || choixDates.dateUnique || undefined : undefined
+          }
           occurrencesPourPortee={
             estPubliee && annonce.estRecurrente
               ? occurrencesNonAnnulees.map((occurrence) => ({
@@ -131,7 +139,7 @@ export default async function PageEditionAnnonce({
               : undefined
           }
           valeursInitiales={{
-            dates: occurrencesTriees.map((o) => new Date(o.date).toISOString().slice(0, 10)),
+            choixDates,
             heureDebut: premiereOccurrence?.heureDebut ?? "",
             heureFin: premiereOccurrence?.heureFin ?? "",
             styles: annonce.styles,

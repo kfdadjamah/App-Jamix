@@ -4,7 +4,8 @@ import { useEffect, useRef } from "react";
 
 // Fenêtre modale (DESIGN.md) : Walnut Shadow, bordure Cork Border, rayon 12px, sans ombre,
 // un seul bouton plein (l'action par défaut, qui reçoit le focus), l'autre en fantôme.
-// Échap et clic hors fenêtre déclenchent l'action par défaut.
+// Échap et clic hors fenêtre déclenchent l'action par défaut. Une action secondaire destructrice
+// (« Recréer les dates », phase 62) est en fond Erreur plein ; l'action par défaut, « Retour », est alors neutre.
 export default function FenetreSortie({
   titre,
   message,
@@ -12,6 +13,7 @@ export default function FenetreSortie({
   surDefaut,
   libelleSecondaire,
   surSecondaire,
+  secondaireDanger = false,
 }: {
   titre: string;
   message: React.ReactNode;
@@ -19,6 +21,7 @@ export default function FenetreSortie({
   surDefaut: () => void;
   libelleSecondaire?: string;
   surSecondaire?: () => void;
+  secondaireDanger?: boolean;
 }) {
   const refDialog = useRef<HTMLDialogElement>(null);
   const refBoutonDefaut = useRef<HTMLButtonElement>(null);
@@ -57,7 +60,11 @@ export default function FenetreSortie({
             ref={refBoutonDefaut}
             type="button"
             onClick={surDefaut}
-            className="rounded-[12px] bg-[var(--harbor-bleu)] px-6 py-3 text-[14px] font-bold text-white transition-colors duration-[120ms] hover:bg-[var(--harbor-marine)] active:bg-[var(--harbor-marine)]"
+            className={
+              secondaireDanger
+                ? "rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] active:border-[var(--harbor-bleu-clair)] active:bg-[var(--harbor-voile)]"
+                : "rounded-[12px] bg-[var(--harbor-bleu)] px-6 py-3 text-[14px] font-bold text-white transition-colors duration-[120ms] hover:bg-[var(--harbor-marine)] active:bg-[var(--harbor-marine)]"
+            }
           >
             {libelleDefaut}
           </button>
@@ -65,7 +72,11 @@ export default function FenetreSortie({
             <button
               type="button"
               onClick={surSecondaire}
-              className="rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] active:border-[var(--harbor-bleu-clair)] active:bg-[var(--harbor-voile)]"
+              className={
+                secondaireDanger
+                  ? "rounded-[12px] bg-[var(--harbor-erreur)] px-4 py-2 text-[13px] font-bold text-white transition-colors duration-[120ms] hover:bg-[color-mix(in_srgb,var(--harbor-erreur),black_10%)] active:bg-[color-mix(in_srgb,var(--harbor-erreur),black_20%)]"
+                  : "rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] active:border-[var(--harbor-bleu-clair)] active:bg-[var(--harbor-voile)]"
+              }
             >
               {libelleSecondaire}
             </button>

@@ -173,3 +173,48 @@ describe("mentionOrganisePar", () => {
     expect(mentionOrganisePar("  ", "Marc")).toBeNull();
   });
 });
+
+describe("valeursReprisesParBar : type, rythme et jour (phase 60)", () => {
+  const base = {
+    barId: "bar-a",
+    statut: "PUBLIEE" as const,
+    publieeLe: new Date("2026-10-01"),
+    styles: [],
+    styleAutre: null,
+    instruments: [],
+    instrumentAutre: null,
+    description: null,
+    coOrganisateur: null,
+    photoUrl1: null,
+    photoUrl2: null,
+    occurrences: [],
+  };
+
+  it("jam récurrente à règle : type, rythme et jour repris", () => {
+    const table = valeursReprisesParBar([
+      { ...base, estRecurrente: true, rythme: "CHAQUE_SEMAINE", jourSemaine: 2 },
+    ]);
+    expect(table["bar-a"]).toMatchObject({
+      typeJam: "recurrente",
+      rythme: "CHAQUE_SEMAINE",
+      jourSemaine: "2",
+    });
+  });
+
+  it("jam mensuelle : semaine du mois reprise (phase 61)", () => {
+    const table = valeursReprisesParBar([
+      { ...base, estRecurrente: true, rythme: "MENSUEL", jourSemaine: 4, semaineDuMois: -1 },
+    ]);
+    expect(table["bar-a"]).toMatchObject({ rythme: "MENSUEL", jourSemaine: "4", semaineDuMois: "-1" });
+  });
+
+  it("jam exceptionnelle : seul le type est repris", () => {
+    const table = valeursReprisesParBar([{ ...base, estRecurrente: false, rythme: null }]);
+    expect(table["bar-a"]).toMatchObject({ typeJam: "exceptionnelle", jourSemaine: "" });
+  });
+
+  it("ancienne annonce récurrente sans règle : rien de la règle", () => {
+    const table = valeursReprisesParBar([{ ...base, estRecurrente: true, rythme: null }]);
+    expect(table["bar-a"]).toMatchObject({ typeJam: null, rythme: null, jourSemaine: "" });
+  });
+});

@@ -10,6 +10,7 @@ import {
   libelleStyles,
 } from "@/lib/annonce-constantes";
 import { mentionOrganisePar, statutAffiche, type recupererAnnoncesPubliees } from "@/lib/annonces";
+import { mentionAnnonce } from "@/lib/rythme";
 
 type Occurrence = Awaited<ReturnType<typeof recupererAnnoncesPubliees>>[number];
 
@@ -31,6 +32,7 @@ export default function CarteAnnonce({
   const { annonce } = occurrence;
   const annulee = statut === "ANNULEE";
   const mention = mentionOrganisePar(annonce.bar.organisateur.prenom, annonce.coOrganisateur);
+  const rythme = mentionAnnonce(annonce);
   const nomClasses = `min-w-0 break-words font-[family-name:var(--font-jakarta)] text-[20px] font-extrabold leading-[1.2] tracking-[-0.025em] text-[var(--harbor-marine)]     annulee ? "line-through" : ""
   }`;
   const styles = annonce.styles.includes(TOUS_LES_STYLES)
@@ -95,9 +97,10 @@ export default function CarteAnnonce({
           </span>
         )}
       </div>
-      <p className="donnees-carte text-[13px] font-semibold text-[var(--harbor-marine)]">
+      <p className="donnees-carte break-words text-[13px] font-semibold text-[var(--harbor-marine)]">
         {occurrence.heureDebut}
         {occurrence.heureFin ? ` → ${occurrence.heureFin}` : ""}
+        {rythme && <span className="text-[var(--harbor-marine-2)]"> · {rythme}</span>}
       </p>
       {afficherEcheance && (
         <span className="donnees-carte text-[12px] text-[var(--harbor-marine-2)]">

@@ -11,7 +11,8 @@ import {
   libelleStyles,
 } from "@/lib/annonce-constantes";
 import { mentionOrganisePar, statutAffiche } from "@/lib/annonces";
-import { messageRelance } from "@/lib/relances";
+import { messageRelance, pastillesDeCarte } from "@/lib/relances";
+import { mentionAnnonce } from "@/lib/rythme";
 import FiltreAnnonces from "./filtre-annonces";
 import CarteGlissable from "./carte-glissable";
 import MenuAnnonce from "./menu-annonce";
@@ -86,8 +87,11 @@ function CarteAnnonce({ annonce }: { annonce: AnnonceAvecDetails }) {
   const occurrencesTriees = [...annonce.occurrences].sort(
     (a, b) => a.date.getTime() - b.date.getTime(),
   );
-  const premiereOccurrence = occurrencesTriees[0];
+  const { affichees, autres, aVenir } = pastillesDeCarte(occurrencesTriees);
+  // Horaires de la prochaine date ; à défaut (tout est passé), de la première.
+  const premiereOccurrence = affichees[0] ?? occurrencesTriees[0];
   const mention = mentionOrganisePar(annonce.bar.organisateur.prenom, annonce.coOrganisateur);
+  const rythme = mentionAnnonce(annonce);
   const datesAnnulables =
     annonce.statut === "PUBLIEE"
       ? occurrencesTriees
@@ -135,19 +139,19 @@ function CarteAnnonce({ annonce }: { annonce: AnnonceAvecDetails }) {
             <span className="text-[12px] font-bold text-[var(--harbor-marine-2)]">
               {annonce.statut === "BROUILLON" ? "Brouillon" : "Publiée"}
             </span>
-            {annonce.estRecurrente && (
-              <span className="rounded-[9999px] border border-[var(--harbor-trait)] px-2 py-[2px] text-[12px] font-semibold text-[var(--harbor-marine-2)]">
-                Récurrente
-              </span>
-            )}
           </div>
 
           {premiereOccurrence ? (
-            <span className="donnees text-[15px] font-semibold text-[var(--harbor-marine)]">
-              {premiereOccurrence.heureDebut}
-              {premiereOccurrence.heureFin
-                ? ` – ${premiereOccurrence.heureFin}`
-                : ""}
+            <span className="break-words text-[15px] font-semibold text-[var(--harbor-marine)]">
+              <span className="donnees">
+                {premiereOccurrence.heureDebut}
+                {premiereOccurrence.heureFin
+                  ? ` – ${premiereOccurrence.heureFin}`
+                  : ""}
+              </span>
+              {rythme && (
+                <span className="donnees-carte text-[12px] text-[var(--harbor-marine-2)]"> · {rythme}</span>
+              )}
             </span>
           ) : (
             <span className="text-[15px] text-[var(--harbor-marine-2)]">
@@ -155,9 +159,13 @@ function CarteAnnonce({ annonce }: { annonce: AnnonceAvecDetails }) {
             </span>
           )}
 
-          {occurrencesTriees.length > 0 && (
-            <ul className="flex flex-wrap gap-2">
-              {occurrencesTriees.map((occurrence) => {
+          {occurrencesTriees.length > 0 && aVenir === 0 && (
+            <span className="text-[12px] text-[var(--harbor-marine-2)]">Aucune date à venir</span>
+          )}
+
+          {affichees.length > 0 && (
+            <ul className="flex flex-wrap items-start gap-2">
+              {affichees.map((occurrence) => {
                 const relance = messageRelance(occurrence);
                 const statut = statutAffiche(occurrence);
                 return (
@@ -180,6 +188,12 @@ function CarteAnnonce({ annonce }: { annonce: AnnonceAvecDetails }) {
                   </li>
                 );
               })}
+              {autres > 0 && (
+                // Toute la carte mène déjà à la modification : un <a> imbriqué serait invalide.
+                <li className="py-1 text-[12px] font-semibold leading-[1.25] text-[var(--harbor-bleu)] hover:underline">
+                  + {autres} {autres === 1 ? "autre date" : "autres dates"}
+                </li>
+              )}
             </ul>
           )}
 

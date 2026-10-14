@@ -41,3 +41,25 @@ export function compterRelancesActives(
   return occurrences.filter((occurrence) => messageRelance(occurrence, aujourdHui) !== null)
     .length;
 }
+
+export const PASTILLES_MAX_CARTE = 6;
+
+// Carte de Mes annonces (Phase 63) : dates à venir seulement (J0 compris), toutes les dates à confirmer
+// d'abord, puis les suivantes, annulées comprises, jusqu'à PASTILLES_MAX_CARTE au total.
+export function pastillesDeCarte<
+  T extends { statut: StatutOccurrence; confirmationJ7: Date | null; date: Date },
+>(
+  occurrences: T[],
+  aujourdHui: Date = aujourdHuiUTC()
+): { affichees: T[]; autres: number; aVenir: number } {
+  const aVenir = occurrences
+    .filter((occurrence) => joursAvantDate(occurrence.date, aujourdHui) >= 0)
+    .sort((a, b) => a.date.getTime() - b.date.getTime());
+  const aConfirmer = aVenir.filter((occurrence) => messageRelance(occurrence, aujourdHui) !== null);
+  const suivantes = aVenir.filter((occurrence) => messageRelance(occurrence, aujourdHui) === null);
+  const affichees = [
+    ...aConfirmer,
+    ...suivantes.slice(0, Math.max(0, PASTILLES_MAX_CARTE - aConfirmer.length)),
+  ];
+  return { affichees, autres: aVenir.length - affichees.length, aVenir: aVenir.length };
+}
