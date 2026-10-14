@@ -10,26 +10,16 @@ import {
   erreurBornes,
   finMaximale,
   retireesPertinentes,
-  type RegleRecurrence,
   type Rythme,
 } from "@/lib/recurrence";
+import { regleDeLaSaisie, type SaisieRegle } from "@/lib/modification-regle";
 
-export type TypeJam = "recurrente" | "exceptionnelle";
-
-/** État des dates du formulaire d'annonce (phases 60 et 61), hors annonce publiée. */
-export type ValeursDates = {
-  typeJam: TypeJam;
-  dateUnique: string;
-  rythme: Rythme;
-  jourSemaine: string;
-  // Rythme mensuel seulement (« 1 » à « 4 », « -1 » = dernier) ; ignorée par les autres rythmes.
-  semaineDuMois: string;
-  debutRecurrence: string;
-  finRecurrence: string;
-  datesRetirees: string[];
-  // Ancien brouillon aux dates saisies une à une, sans règle : affichées tant que la règle est incomplète.
-  datesUneAUne: string[];
-};
+/**
+ * État des dates du formulaire d'annonce (phases 60 à 62). Semaine du mois : rythme mensuel seulement
+ * (« 1 » à « 4 », « -1 » = dernier). Dates choisies une à une : ancienne annonce sans règle, affichées
+ * tant que la règle est incomplète.
+ */
+export type ValeursDates = SaisieRegle;
 
 export const valeursDatesVides: ValeursDates = {
   typeJam: "recurrente",
@@ -43,19 +33,6 @@ export const valeursDatesVides: ValeursDates = {
   datesUneAUne: [],
 };
 
-function regleComplete(valeurs: ValeursDates): RegleRecurrence | null {
-  if (!valeurs.jourSemaine || !valeurs.debutRecurrence || !valeurs.finRecurrence) return null;
-  const mensuel = valeurs.rythme === "MENSUEL";
-  if (mensuel && !valeurs.semaineDuMois) return null;
-  return {
-    rythme: valeurs.rythme,
-    jourSemaine: Number(valeurs.jourSemaine),
-    semaineDuMois: mensuel ? Number(valeurs.semaineDuMois) : null,
-    debut: valeurs.debutRecurrence,
-    fin: valeurs.finRecurrence,
-  };
-}
-
 function formaterPastille(date: string) {
   return new Date(date).toLocaleDateString("fr-FR", {
     weekday: "short",
@@ -67,14 +44,18 @@ function formaterPastille(date: string) {
 export default function ChoixDates({
   valeurs,
   onChange,
+  dateMinimale,
 }: {
   valeurs: ValeursDates;
   onChange: (valeurs: ValeursDates) => void;
+  // Annonce publiée (phase 62) : sa date de début déjà passée reste acceptée telle quelle.
+  dateMinimale?: string;
 }) {
   const aujourdHui = aujourdHuiIso();
+  const minimum = dateMinimale && dateMinimale < aujourdHui ? dateMinimale : aujourdHui;
   const maj = (champs: Partial<ValeursDates>) => onChange({ ...valeurs, ...champs });
   const mensuel = valeurs.rythme === "MENSUEL";
-  const regle = valeurs.typeJam === "recurrente" ? regleComplete(valeurs) : null;
+  const regle = valeurs.typeJam === "recurrente" ? regleDeLaSaisie(valeurs) : null;
   const erreurRegle = regle ? erreurBornes(regle) : null;
   const retirees = regle && !erreurRegle ? retireesPertinentes(regle, valeurs.datesRetirees) : [];
   const apercu = regle && !erreurRegle ? datesAPublier(regle, retirees, aujourdHui) : [];
@@ -117,7 +98,7 @@ export default function ChoixDates({
           <input
             type="date"
             name="dateUnique"
-            min={aujourdHui}
+            min={minimum}
             value={valeurs.dateUnique}
             onChange={(e) => maj({ dateUnique: e.target.value })}
             className="champ-input"
@@ -181,7 +162,7 @@ export default function ChoixDates({
               <input
                 type="date"
                 name="debutRecurrence"
-                min={aujourdHui}
+                min={minimum}
                 value={valeurs.debutRecurrence}
                 onChange={(e) => maj({ debutRecurrence: e.target.value })}
                 className="champ-input"
@@ -191,7 +172,7 @@ export default function ChoixDates({
               <input
                 type="date"
                 name="finRecurrence"
-                min={valeurs.debutRecurrence || aujourdHui}
+                min={valeurs.debutRecurrence || minimum}
                 max={valeurs.debutRecurrence ? finMaximale(valeurs.debutRecurrence) : undefined}
                 value={valeurs.finRecurrence}
                 onChange={(e) => maj({ finRecurrence: e.target.value })}

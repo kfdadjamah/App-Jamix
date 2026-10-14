@@ -11,6 +11,7 @@ import { decisionSortie, instantane } from "@/lib/garde-sortie";
 import { useGardeSortie } from "@/components/garde-sortie";
 import FenetreSortie from "@/components/fenetre-sortie";
 import type { ValeursReprises } from "@/lib/annonces";
+import { regleModifiee } from "@/lib/modification-regle";
 import ChoixDates, { valeursDatesVides, type ValeursDates } from "./choix-dates";
 
 type Resultat = { erreur: string } | { succes: true; destination?: string };
@@ -21,7 +22,8 @@ type Fenetre =
   | { type: "brouillon-enregistre"; destination: string }
   | { type: "modification-prise-en-compte"; destination: string }
   | { type: "echec"; destination: string; raison: string }
-  | { type: "avertir-perte"; destination: string };
+  | { type: "avertir-perte"; destination: string }
+  | { type: "recreer-dates" };
 
 async function appelerAction(
   action: (formData: FormData) => Promise<Resultat>,
@@ -35,9 +37,7 @@ async function appelerAction(
 }
 
 export type ValeursInitialesAnnonce = {
-  // Annonce publiée : ses dates, figées (leur règle devient modifiable en phase 62).
-  dates: string[];
-  // Création ou brouillon : type de jam, règle et dates (phase 60).
+  // Type de jam, règle et dates (phase 60), modifiables aussi une fois publiée (phase 62).
   choixDates: ValeursDates;
   heureDebut: string;
   heureFin: string;
@@ -50,7 +50,6 @@ export type ValeursInitialesAnnonce = {
 };
 
 const valeursVides: ValeursInitialesAnnonce = {
-  dates: [],
   choixDates: valeursDatesVides,
   heureDebut: "",
   heureFin: "",
@@ -74,7 +73,7 @@ export default function FormulaireAnnonce({
   reprises,
   valeursInitiales,
   afficherPhotos,
-  datesModifiables = true,
+  dateMinimale,
   occurrencesPourPortee,
   actionBrouillon,
   actionPublier,
@@ -88,7 +87,8 @@ export default function FormulaireAnnonce({
   reprises?: Record<string, ValeursReprises>;
   valeursInitiales?: ValeursInitialesAnnonce;
   afficherPhotos: boolean;
-  datesModifiables?: boolean;
+  // Annonce publiée : sa date de début (ou sa date unique), acceptée même passée.
+  dateMinimale?: string;
   occurrencesPourPortee?: { id: string; date: string }[];
   actionBrouillon?: (formData: FormData) => Promise<Resultat>;
   actionPublier?: (formData: FormData) => Promise<Resultat>;
@@ -210,7 +210,6 @@ export default function FormulaireAnnonce({
       }));
     }
     setValeurs({
-      dates: [],
       choixDates: valeurs.choixDates,
       heureDebut: reprise.heureDebut,
       heureFin: reprise.heureFin,
@@ -250,6 +249,9 @@ export default function FormulaireAnnonce({
   }
 
   const inactif = enCours || occupe;
+  // Annonce publiée (phase 62) : une règle qui change les dates impose la fenêtre « Recréer les dates »
+  // et rend la portée sans objet (l'horaire vaut pour toutes les dates).
+  const regleChangee = Boolean(actionModifier) && regleModifiee(valeurs.choixDates, choixDates);
 
   return (
     <form ref={formRef} className="flex flex-col gap-5" noValidate>
@@ -282,6 +284,28 @@ export default function FormulaireAnnonce({
           surDefaut={() => setFenetre(null)}
           libelleSecondaire="Quitter sans enregistrer"
           surSecondaire={() => quitterVers(fenetre.destination)}
+        />
+      )}
+      {fenetre?.type === "recreer-dates" && actionModifier && (
+        <FenetreSortie
+          titre="Recréer les dates ?"
+          message={
+            <>
+              <p>
+                Les dates à venir seront recalculées selon le nouveau rythme. Celles qui disparaissent
+                seront supprimées, avec leurs confirmations et annulations.
+              </p>
+              <p>Les dates passées ne changent pas.</p>
+            </>
+          }
+          libelleDefaut="Retour"
+          surDefaut={() => setFenetre(null)}
+          libelleSecondaire="Recréer les dates"
+          surSecondaire={() => {
+            setFenetre(null);
+            soumettre(actionModifier);
+          }}
+          secondaireDanger
         />
       )}
       {fenetre?.type === "avertir-perte" && (
@@ -351,35 +375,7 @@ export default function FormulaireAnnonce({
         </div>
       )}
 
-      {datesModifiables ? (
-        <ChoixDates valeurs={choixDates} onChange={setChoixDates} />
-      ) : (
-        <div className="flex flex-col gap-3">
-          <span className="text-[13px] font-bold text-[var(--harbor-marine)]">
-            {valeurs.dates.length > 1 ? "Dates (annonce récurrente)" : "Date"}
-          </span>
-          {valeurs.dates.length > 0 ? (
-            <ul className="flex flex-wrap gap-2">
-              {valeurs.dates.map((date) => (
-                <li
-                  key={date}
-                  className="rounded-[9999px] border border-[var(--harbor-trait)] px-3 py-1 text-[12px] text-[var(--harbor-marine)]"
-                >
-                  {new Date(date).toLocaleDateString("fr-FR", {
-                    weekday: "short",
-                    day: "numeric",
-                    month: "short",
-                  })}
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <span className="text-[15px] text-[var(--harbor-marine-2)]">
-              Aucune date renseignée
-            </span>
-          )}
-        </div>
-      )}
+      <ChoixDates valeurs={choixDates} onChange={setChoixDates} dateMinimale={dateMinimale} />
 
       <div key={`horaire-${cleReprise}`} className="grid grid-cols-2 items-stretch gap-3">
         <Champ label="Heure de début">
@@ -400,7 +396,7 @@ export default function FormulaireAnnonce({
         </Champ>
       </div>
 
-      {occurrencesPourPortee && occurrencesPourPortee.length > 0 && (
+      {!regleChangee && occurrencesPourPortee && occurrencesPourPortee.length > 0 && (
         <div className="flex flex-col gap-3">
           <span className="text-[13px] font-bold text-[var(--harbor-marine)]">
             Appliquer l&apos;horaire à
@@ -501,7 +497,9 @@ export default function FormulaireAnnonce({
           <button
             type="button"
             disabled={inactif}
-            onClick={() => soumettre(actionModifier)}
+            onClick={() =>
+              regleChangee ? setFenetre({ type: "recreer-dates" }) : soumettre(actionModifier)
+            }
             className="rounded-[12px] bg-[var(--harbor-bleu)] px-6 py-3 text-[14px] font-bold text-white transition-colors duration-[120ms] hover:bg-[var(--harbor-marine)] active:bg-[var(--harbor-marine)] disabled:opacity-60"
           >
             Enregistrer les modifications
