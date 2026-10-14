@@ -13,6 +13,7 @@ import {
 import { mentionOrganisePar, statutAffiche } from "@/lib/annonces";
 import { messageRelance, pastillesDeCarte } from "@/lib/relances";
 import { mentionAnnonce } from "@/lib/rythme";
+import { apercuDescription } from "@/lib/apercu";
 import FiltreAnnonces from "./filtre-annonces";
 import CarteGlissable from "./carte-glissable";
 import MenuAnnonce from "./menu-annonce";
@@ -92,6 +93,9 @@ function CarteAnnonce({ annonce }: { annonce: AnnonceAvecDetails }) {
   const premiereOccurrence = affichees[0] ?? occurrencesTriees[0];
   const mention = mentionOrganisePar(annonce.bar.organisateur.prenom, annonce.coOrganisateur);
   const rythme = mentionAnnonce(annonce);
+  const apercu = apercuDescription(annonce.description);
+  // La page de la jam n'existe que pour une annonce publiée, ouverte sur sa prochaine date.
+  const pageJam = annonce.statut === "PUBLIEE" && premiereOccurrence ? `/jams/${premiereOccurrence.id}` : null;
   const datesAnnulables =
     annonce.statut === "PUBLIEE"
       ? occurrencesTriees
@@ -123,13 +127,14 @@ function CarteAnnonce({ annonce }: { annonce: AnnonceAvecDetails }) {
       estRecurrente={annonce.estRecurrente}
     >
       <div className="relative">
-        <Link
-          href={`/mes-annonces/${annonce.id}`}
-          className="flex flex-col gap-2 rounded-[16px] border border-[var(--harbor-trait)] bg-white p-4 shadow-[var(--harbor-ombre-carte)] transition-colors duration-[120ms] active:bg-[var(--harbor-voile)]"
-        >
-          <span className="truncate pr-12 text-[20px] font-extrabold tracking-[-0.025em] text-[var(--harbor-marine)]">
+        {/* Toute la carte mène à la modification (lien étiré sur le nom) : « Voir le détail » ne peut pas être imbriqué dans un lien. */}
+        <div className="relative flex flex-col gap-2 rounded-[16px] border border-[var(--harbor-trait)] bg-white p-4 shadow-[var(--harbor-ombre-carte)] transition-colors duration-[120ms] active:bg-[var(--harbor-voile)]">
+          <Link
+            href={`/mes-annonces/${annonce.id}`}
+            className="truncate pr-12 text-[20px] font-extrabold tracking-[-0.025em] text-[var(--harbor-marine)] after:absolute after:inset-0 after:rounded-[16px] after:content-['']"
+          >
             {annonce.bar.nom}
-          </span>
+          </Link>
           {mention && (
             <span className="line-clamp-2 break-words text-[12px] text-[var(--harbor-marine-2)]">
               {mention}
@@ -203,12 +208,22 @@ function CarteAnnonce({ annonce }: { annonce: AnnonceAvecDetails }) {
             </span>
           )}
 
-          {annonce.description && (
-            <p className="line-clamp-2 whitespace-pre-line text-[12px] text-[var(--harbor-marine-2)]">
-              {annonce.description}
-            </p>
+          {apercu && (
+            <div className="flex flex-col gap-1">
+              <span className="break-words text-[12px] text-[var(--harbor-marine-2)]">
+                <span className="font-semibold">Description :</span> {apercu}
+              </span>
+              {pageJam && (
+                <Link
+                  href={pageJam}
+                  className="relative z-10 self-start text-[12px] font-semibold text-[var(--harbor-bleu)] hover:underline"
+                >
+                  Voir le détail
+                </Link>
+              )}
+            </div>
           )}
-        </Link>
+        </div>
         <MenuAnnonce
           annonceId={annonce.id}
           datesAnnulables={datesAnnulables}

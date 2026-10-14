@@ -11,10 +11,11 @@ import {
 } from "@/lib/annonce-constantes";
 import { mentionOrganisePar, statutAffiche, type recupererAnnoncesPubliees } from "@/lib/annonces";
 import { mentionAnnonce } from "@/lib/rythme";
+import { apercuDescription } from "@/lib/apercu";
 
 type Occurrence = Awaited<ReturnType<typeof recupererAnnoncesPubliees>>[number];
 
-// « liste » : extrait de la description, toute la carte mène à la page de la jam.
+// « liste » : « Description : » et le début de la description, puis « Voir le détail » ; toute la carte mène à la page de la jam.
 // « fiche » (marqueur de la carte) : description complète, sans lien.
 export default function CarteAnnonce({
   occurrence,
@@ -33,6 +34,7 @@ export default function CarteAnnonce({
   const annulee = statut === "ANNULEE";
   const mention = mentionOrganisePar(annonce.bar.organisateur.prenom, annonce.coOrganisateur);
   const rythme = mentionAnnonce(annonce);
+  const apercu = apercuDescription(annonce.description);
   const nomClasses = `min-w-0 break-words font-[family-name:var(--font-jakarta)] text-[20px] font-extrabold leading-[1.2] tracking-[-0.025em] text-[var(--harbor-marine)]     annulee ? "line-through" : ""
   }`;
   const styles = annonce.styles.includes(TOUS_LES_STYLES)
@@ -109,13 +111,26 @@ export default function CarteAnnonce({
       )}
       {ligneChips("Styles", styles)}
       {ligneChips("Instruments", instruments)}
-      {annonce.description && (
-        <p
-          className={`whitespace-pre-line text-[14px] text-[var(--harbor-marine)]             mode === "liste" ? "line-clamp-3" : ""
-          }`}
-        >
-          {annonce.description}
-        </p>
+      {mode === "liste" ? (
+        apercu && (
+          <div className="flex flex-col gap-1">
+            <p className="break-words text-[14px] text-[var(--harbor-marine)]">
+              <span className="font-semibold">Description :</span> {apercu}
+            </p>
+            <Link
+              href={`/jams/${occurrence.id}`}
+              className="relative z-10 self-start text-[13px] font-semibold text-[var(--harbor-bleu)] hover:underline"
+            >
+              Voir le détail
+            </Link>
+          </div>
+        )
+      ) : (
+        annonce.description && (
+          <p className="whitespace-pre-line break-words text-[14px] text-[var(--harbor-marine)]">
+            <span className="font-semibold">Description :</span> {annonce.description}
+          </p>
+        )
       )}
       {(annonce.photoUrl1 || annonce.photoUrl2) && (
         <div className="flex gap-3">
