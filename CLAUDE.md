@@ -32,3 +32,4 @@ Toujours lire DESIGN.md avant toute décision visuelle ou UI. Polices, couleurs,
 - Pour toute API ou librairie externe, consulte Context7 avant d'écrire. Pas d'invention de signature de mémoire.
 - Tout écran nouveau ou modifié doit être validé par un test Playwright avant que tu déclares "terminé".
 - Toute modification de la base (Neon, Prisma) passe par Prisma (`prisma db push`, Prisma Client) et le CLI Neon (`neonctl`), jamais de SQL direct. Toujours une lecture de vérification (ex. `prisma migrate diff` en lecture seule) avant tout ajout ou changement.
+- Secrets : ne jamais passer l'URL de connexion de la base (ni aucun secret) en argument d'une commande, `npx` l'affiche en clair. Passer par une variable d'environnement, appeler `node_modules/.bin/prisma` plutôt que `npx`, et filtrer la sortie avant de l'afficher. Ne renouveler un mot de passe qu'après une fuite réelle.
