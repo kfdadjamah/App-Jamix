@@ -19,7 +19,7 @@ function dansNJours(n: number) {
   return new Date(d.getTime() + n * MS_PAR_JOUR);
 }
 
-async function creerAnnonce(description: string | null, publieeLe = new Date()) {
+async function creerAnnonce(description: string | null, titre: string | null = null, publieeLe = new Date()) {
   const orga = await prisma.organisateur.findUniqueOrThrow({
     where: { email: COMPTE_TEST.email },
     include: { bars: { orderBy: { createdAt: "asc" }, take: 1 } },
@@ -31,6 +31,7 @@ async function creerAnnonce(description: string | null, publieeLe = new Date()) 
       publieeLe,
       styles: ["Jazz"],
       instruments: ["Batterie"],
+      titre,
       description,
       occurrences: {
         create: [
@@ -117,4 +118,27 @@ test("accueil à 360 px : mot très long sans débordement", async ({ page }) =>
   await page.goto(`/?date=${jour}`);
   await expect(page.getByText(`Description : ${"y".repeat(30)}…`).first()).toBeVisible();
   expect(await sansDebordement(page)).toBe(true);
+});
+
+test("titre : visible sur la carte d'accueil, la jam et dans Mes annonces", async ({ page }) => {
+  const annonce = await creerAnnonce(DESCRIPTION, "Soirée blues du jeudi");
+  const jour = dansNJours(21).toISOString().slice(0, 10);
+  await page.goto(`/?date=${jour}`);
+  await expect(page.getByText(`Description : ${APERCU}`, { exact: true }).first()).toBeVisible();
+  await expect(page.getByText("Soirée blues du jeudi").first()).toBeVisible();
+
+  await page.goto("/mes-annonces");
+  await expect(page.getByText("Soirée blues du jeudi")).toBeVisible();
+
+  await page.goto(`/jams/${annonce.occurrences[0].id}`);
+  await expect(page.getByRole("heading", { name: "Soirée blues du jeudi" })).toBeVisible();
+  await expect(page.getByText(DESCRIPTION)).toBeVisible();
+});
+
+test("formulaire : titre prérempli à la modification, limité à 60 caractères", async ({ page }) => {
+  const annonce = await creerAnnonce(DESCRIPTION, "Soirée blues du jeudi");
+  await page.goto(`/mes-annonces/${annonce.id}`);
+  const champ = page.getByLabel("Titre (option)");
+  await expect(champ).toHaveValue("Soirée blues du jeudi");
+  await expect(champ).toHaveAttribute("maxlength", "60");
 });

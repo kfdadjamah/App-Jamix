@@ -40,7 +40,7 @@ Dans le formulaire d'annonce, le titre prend la taille de « Mes annonces » et 
 
 Chaque page se termine par un pied de page discret : les liens « CGU », « Mentions légales » et « Contact », puis « © <année> Jammix · Tous droits réservés · v<version> ». « CGU » ouvre une page courte qui réunit les règles d'usage d'un service gratuit et les données personnelles. « Mentions légales » ouvre une page dédiée : éditeur, directeur de la publication, hébergeurs, contact et signalement, propriété intellectuelle. « Contact » ouvre un formulaire (nom, adresse mail, message) ; la réponse de l'équipe arrive par email. L'éditeur, un particulier, reste anonyme : aucun nom de personne n'apparaît dans l'application.
 
-L'inscription d'un organisateur demande désormais, dans cet ordre, « Prénom », « Nom », « Email », « Mot de passe », « Nom du bar » et « Adresse du bar » (photo toujours facultative). Le prénom et le nom se modifient ensuite depuis le profil, où aucune section n'est dépliée d'office et où chaque champ à remplir porte son nom en placeholder.
+L'inscription d'un organisateur demande désormais, dans cet ordre, « Prénom », « Nom », « Email », « Mot de passe », « Nom du bar » et « Adresse du bar » (la photo du bar n'est plus demandée à l'inscription, voir US-208). Le prénom et le nom se modifient ensuite depuis le profil, où aucune section n'est dépliée d'office et où chaque champ à remplir porte son nom en placeholder.
 
 Sur chaque carte de « Mes annonces », un bouton « ⋯ » en haut à droite ouvre un petit menu : « Modifier » mène au formulaire de l'annonce ; « Annuler » ouvre une fenêtre de confirmation, avec choix de la portée (« Cette date seulement » + date, ou « Toutes les dates ») pour une annonce récurrente.
 
@@ -231,8 +231,8 @@ US-175. En tant qu'organisateur, je veux que le co-organisateur saisi soit repri
 US-176. En tant que musicien, je veux voir « Organisé par <prénom> » (ou « Organisé par <prénom> et <co-organisateur> ») sur les cartes d'annonce et sur la fiche d'une jam, afin de savoir qui organise.
 US-177. En tant qu'organisateur, je veux voir la même mention sur mes cartes de « Mes annonces », afin de vérifier ce qui est affiché.
 US-178. En tant qu'organisateur, quand je clique sur « Enregistrer » après avoir modifié une annonce, je veux un pop-up m'informant que la modification a été prise en compte, afin d'être sûr qu'elle est enregistrée.
-US-179. En tant qu'organisateur, après avoir fermé ce pop-up, je veux que le formulaire se ferme et que la page de visualisation de l'annonce s'affiche, afin de vérifier le résultat.
-US-180. En tant qu'organisateur modifiant un brouillon, ou une annonce sans date à venir, je veux revenir à « Mes annonces » après le pop-up, afin de ne pas tomber sur une page introuvable.
+US-179. En tant qu'organisateur, après avoir fermé ce pop-up, je veux que le formulaire se ferme et que la page de visualisation de l'annonce s'affiche, afin de vérifier le résultat *(remplacé par la Phase 65 : l'organisateur reste sur la page de modification, voir US-204)*.
+US-180. En tant qu'organisateur modifiant un brouillon, ou une annonce sans date à venir, je veux revenir à « Mes annonces » après le pop-up, afin de ne pas tomber sur une page introuvable *(remplacé par la Phase 65, voir US-204)*.
 US-181. En tant qu'organisateur, si l'enregistrement échoue, je veux voir un message d'erreur et rester dans le formulaire sans pop-up de succès, afin de corriger ma saisie.
 US-182. En tant qu'organisateur, je veux choisir entre « Jam récurrente » et « Jam exceptionnelle » en créant une annonce, afin de ne pas saisir chaque date à la main.
 US-183. En tant qu'organisateur d'une jam exceptionnelle, je veux choisir une seule date, afin d'annoncer un événement unique.
@@ -251,6 +251,16 @@ US-195. En tant que musicien, je veux que les annonces publiées avant ce change
 US-196. En tant qu'organisateur, je veux voir la même mention sur mes cartes de « Mes annonces », à la place de la pastille « Récurrente », afin de reconnaître mes annonces d'un coup d'œil.
 US-197. En tant qu'organisateur d'une jam récurrente à nombreuses dates, je veux que sa carte de « Mes annonces » montre les dates à confirmer et les prochaines dates, avec « + N autres dates », afin que la liste reste lisible.
 US-198. En tant qu'organisateur d'une ancienne annonce aux dates saisies une à une, je veux retrouver ces dates dans le formulaire et pouvoir passer à un rythme, afin de ne rien perdre.
+US-199. En tant qu'organisateur, je veux donner un titre à mon annonce, facultatif et limité à 60 caractères, afin de la résumer en quelques mots.
+US-200. En tant que musicien, je veux voir sur la carte d'une annonce, sous les instruments, le titre puis le début de la description (30 caractères au plus, terminés par « … » si le texte est plus long, sans couper un mot), afin d'avoir un aperçu sans ouvrir la jam.
+US-201. En tant que musicien, je veux un lien « Voir le détail » sous cet aperçu, qui ouvre la page de la jam, afin de lire toute la description.
+US-202. En tant que musicien, je veux lire le titre et la description complète sur la page de la jam, afin de connaître toutes les précisions de l'organisateur.
+US-203. En tant qu'organisateur, je veux le même aperçu (titre, début de description, « Voir le détail ») sur mes cartes de « Mes annonces », et qu'une annonce sans titre ni description n'affiche ni aperçu ni lien, afin de garder des cartes cohérentes.
+US-204. En tant qu'organisateur qui modifie une annonce, quand je clique sur « Enregistrer », je veux un pop-up m'indiquant que les modifications sont prises en compte, puis rester sur la page de modification avec mes valeurs à jour, afin de continuer à modifier ou de faire retour vers les autres pages quand je veux.
+US-205. En tant qu'organisateur, si l'enregistrement échoue, je veux toujours voir un message d'erreur sans pop-up de succès et rester dans le formulaire, afin de corriger ma saisie.
+US-206. En tant qu'organisateur, je veux voir mon email actuel sous le titre « Email » du profil, section repliée comme dépliée (dans ce cas entre le titre et le premier champ de changement d'email), afin de le vérifier à tout moment.
+US-207. En tant qu'organisateur qui s'inscrit, je veux lire sous « Nom du bar » l'indication « Vous pouvez rajouter les autres bars dans le profil », afin de savoir que mes autres bars viendront plus tard.
+US-208. En tant qu'organisateur qui s'inscrit, je veux un formulaire sans champ « Photo ou logo », afin de m'inscrire plus vite ; la photo d'un bar s'ajoute plus tard depuis le profil.
 
 ## Critères de succès
 
@@ -323,6 +333,11 @@ US-198. En tant qu'organisateur d'une ancienne annonce aux dates saisies une à 
 - Modifier la règle d'une annonce publiée ouvre une fenêtre d'avertissement ; après validation, les dates à venir correspondent à la nouvelle règle et suivent la règle J-7 évaluée au moment de la modification ; les dates passées ne bougent pas ; « Retour » ne modifie rien.
 - Une carte de « Mes annonces » d'une jam hebdomadaire sur 12 mois n'affiche pas plus de 6 pastilles de date, plus « + N autres dates ».
 - Aucun débordement à 360 px de large (formulaire, cartes, mention).
+- Une annonce avec titre et description de plus de 30 caractères affiche, sur sa carte, le titre puis les 30 premiers caractères suivis de « … » et de « Voir le détail » ; le lien ouvre la page de la jam qui montre le titre et la description entière.
+- Une annonce sans titre ni description n'affiche ni aperçu ni « Voir le détail » ; le titre de plus de 60 caractères est refusé.
+- Après « Enregistrer » sur la page de modification, le pop-up de confirmation s'affiche, l'adresse reste celle de la page de modification et les valeurs enregistrées y figurent.
+- Sur le profil, l'email du compte est lisible sous le titre « Email » section repliée et section dépliée (au-dessus de « Nouvel email »).
+- Le formulaire d'inscription affiche « Vous pouvez rajouter les autres bars dans le profil » sous « Nom du bar » et ne contient aucun champ « Photo ou logo » ; l'inscription aboutit sans photo.
 
 ## Hors périmètre
 
@@ -407,6 +422,9 @@ US-198. En tant qu'organisateur d'une ancienne annonce aux dates saisies une à 
 - Exclusion automatique des jours fériés ou des vacances scolaires.
 - Horaire différent selon la date au moment de la création (inchangé).
 - Filtre « récurrentes / exceptionnelles » côté musicien.
+- Titre différent selon la date d'une annonce récurrente (le titre, comme la description, vaut pour toutes les dates).
+- Titre obligatoire : les annonces existantes restent valides sans titre.
+- Photo ou logo à l'inscription : reportée à une prochaine version (l'ajout reste possible depuis le profil).
 
 ## Décisions d'implémentation
 
@@ -540,6 +558,10 @@ US-198. En tant qu'organisateur d'une ancienne annonce aux dates saisies une à 
 - Côté musicien, la mention s'affiche en texte, à côté de l'horaire, sur la carte de la liste, dans la fiche du marqueur et sur la page de la jam. Elle ne prend pas l'aspect d'une pastille de statut, pour ne pas être confondue avec confirmée / programmée / en attente / annulée. Libellés : « Tous les mardis », « Un mardi sur deux », « Le 1er vendredi du mois », « Le dernier jeudi du mois », « Exceptionnelle », et « Récurrente » pour une ancienne annonce aux dates irrégulières.
 - Annonces existantes sans règle : une seule date donne « Exceptionnelle » ; des dates régulières donnent le rythme reconnu ; sinon « Récurrente ». Dans le formulaire, leurs dates restent affichées telles quelles (« Dates choisies une à une ») tant que l'organisateur ne choisit pas un rythme.
 - « Mes annonces » : la pastille « Récurrente » est remplacée par la même mention. Une carte affiche toutes les dates à confirmer (relance en cours) puis les prochaines dates, jusqu'à 6 pastilles au total, suivies de « + N autres dates » qui mène à la page de modification.
+- Carte d'annonce (liste musicien et « Mes annonces ») : sous les instruments, le titre en gras, puis le début de la description (30 caractères au plus, « … » si coupé, sans couper un mot), puis « Voir le détail » qui ouvre la page de la jam. Cet aperçu remplace l'affichage des 3 premières lignes de description (US-91, US-102) ; la fiche du marqueur et la page de la jam gardent la description entière.
+- Modification d'une annonce : le pop-up « Modification enregistrée » se ferme sur « OK » et laisse l'organisateur sur la page de modification (annonce publiée comme brouillon). La création d'une nouvelle annonce garde son retour vers « Mes annonces ».
+- Profil : l'email actuel est un sous-titre toujours visible de la section « Email », replié ou déplié.
+- Inscription : l'indication « Vous pouvez rajouter les autres bars dans le profil » s'affiche sous « Nom du bar » ; le champ « Photo ou logo » n'apparaît pas.
 
 ## Notes complémentaires
 

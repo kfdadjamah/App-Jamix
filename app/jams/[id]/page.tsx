@@ -108,6 +108,12 @@ export default async function PageJam({ params }: { params: Promise<{ id: string
           )}
         </div>
 
+        {annonce.titre && (
+          <h2 className="break-words text-[17px] font-extrabold tracking-[-0.02em] text-[var(--harbor-marine)]">
+            {annonce.titre}
+          </h2>
+        )}
+
         {annonce.description && (
           <p className="whitespace-pre-line text-[15px] text-[var(--harbor-marine)]">
             {annonce.description}

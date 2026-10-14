@@ -112,11 +112,16 @@ export default function CarteAnnonce({
       {ligneChips("Styles", styles)}
       {ligneChips("Instruments", instruments)}
       {mode === "liste" ? (
-        apercu && (
+        (annonce.titre || apercu) && (
           <div className="flex flex-col gap-1">
-            <p className="break-words text-[14px] text-[var(--harbor-marine)]">
-              <span className="font-semibold">Description :</span> {apercu}
-            </p>
+            {annonce.titre && (
+              <p className="break-words text-[14px] font-bold text-[var(--harbor-marine)]">{annonce.titre}</p>
+            )}
+            {apercu && (
+              <p className="break-words text-[14px] text-[var(--harbor-marine)]">
+                <span className="font-semibold">Description :</span> {apercu}
+              </p>
+            )}
             <Link
               href={`/jams/${occurrence.id}`}
               className="relative z-10 self-start text-[13px] font-semibold text-[var(--harbor-bleu)] hover:underline"

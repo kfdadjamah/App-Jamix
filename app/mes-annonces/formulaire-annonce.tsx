@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { STYLES_MUSICAUX, INSTRUMENTS_BACKLINE, TOUS_LES_STYLES } from "@/lib/annonce-constantes";
 import {
   LONGUEUR_MAX_CO_ORGANISATEUR,
+  LONGUEUR_MAX_TITRE,
   LONGUEUR_MAX_DESCRIPTION,
 } from "@/lib/validation/annonce";
 import { decisionSortie, instantane } from "@/lib/garde-sortie";
@@ -45,6 +46,7 @@ export type ValeursInitialesAnnonce = {
   styleAutre: string;
   instruments: string[];
   instrumentAutre: string;
+  titre: string;
   description: string;
   coOrganisateur: string;
 };
@@ -57,6 +59,7 @@ const valeursVides: ValeursInitialesAnnonce = {
   styleAutre: "",
   instruments: [],
   instrumentAutre: "",
+  titre: "",
   description: "",
   coOrganisateur: "",
 };
@@ -217,6 +220,7 @@ export default function FormulaireAnnonce({
       styleAutre: reprise.styleAutre,
       instruments: reprise.instruments,
       instrumentAutre: reprise.instrumentAutre,
+      titre: reprise.titre,
       description: reprise.description,
       coOrganisateur: reprise.coOrganisateur,
     });
@@ -452,6 +456,19 @@ export default function FormulaireAnnonce({
           name="coOrganisateur"
           maxLength={LONGUEUR_MAX_CO_ORGANISATEUR}
           defaultValue={valeurs.coOrganisateur}
+          autoComplete="off"
+          className="champ-input"
+        />
+      </label>
+
+      <label className="flex flex-col gap-2">
+        <span className="text-[13px] font-bold text-[var(--harbor-marine)]">Titre (option)</span>
+        <input
+          key={`titre-${cleReprise}`}
+          type="text"
+          name="titre"
+          maxLength={LONGUEUR_MAX_TITRE}
+          defaultValue={valeurs.titre}
           autoComplete="off"
           className="champ-input"
         />

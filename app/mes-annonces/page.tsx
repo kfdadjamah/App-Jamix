@@ -208,11 +208,18 @@ function CarteAnnonce({ annonce }: { annonce: AnnonceAvecDetails }) {
             </span>
           )}
 
-          {apercu && (
+          {(annonce.titre || apercu) && (
             <div className="flex flex-col gap-1">
-              <span className="break-words text-[12px] text-[var(--harbor-marine-2)]">
-                <span className="font-semibold">Description :</span> {apercu}
-              </span>
+              {annonce.titre && (
+                <span className="line-clamp-2 break-words text-[13px] font-bold text-[var(--harbor-marine)]">
+                  {annonce.titre}
+                </span>
+              )}
+              {apercu && (
+                <span className="break-words text-[12px] text-[var(--harbor-marine-2)]">
+                  <span className="font-semibold">Description :</span> {apercu}
+                </span>
+              )}
               {pageJam && (
                 <Link
                   href={pageJam}

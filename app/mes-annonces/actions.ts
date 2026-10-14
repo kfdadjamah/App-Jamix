@@ -58,6 +58,7 @@ function extraireChampsFormulaire(formData: FormData) {
     styleAutre: formData.get("styleAutre") ?? "",
     instruments: formData.getAll("instruments"),
     instrumentAutre: formData.get("instrumentAutre") ?? "",
+    titre: formData.get("titre") ?? "",
     description: formData.get("description") ?? "",
     coOrganisateur: formData.get("coOrganisateur") ?? "",
   };
@@ -325,6 +326,7 @@ export async function creerAnnonce(
           styleAutre: donnees.styleAutre || null,
           instruments: donnees.instruments,
           instrumentAutre: donnees.instrumentAutre || null,
+          titre: donnees.titre || null,
           description: donnees.description || null,
           coOrganisateur: donnees.coOrganisateur || null,
           photoUrl1,
@@ -426,6 +428,7 @@ export async function modifierAnnonce(
           instruments: donnees.instruments,
           instrumentAutre: donnees.instrumentAutre || null,
           // Champ de l'annonce : toutes ses dates, quelle que soit la portée choisie.
+          titre: donnees.titre || null,
           description: donnees.description || null,
           coOrganisateur: donnees.coOrganisateur || null,
         },

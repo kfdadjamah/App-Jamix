@@ -146,6 +146,7 @@ export default async function PageEditionAnnonce({
             styleAutre: annonce.styleAutre ?? "",
             instruments: annonce.instruments,
             instrumentAutre: annonce.instrumentAutre ?? "",
+            titre: annonce.titre ?? "",
             description: annonce.description ?? "",
             coOrganisateur: annonce.coOrganisateur ?? "",
           }}
