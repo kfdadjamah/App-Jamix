@@ -1632,12 +1632,12 @@ Sur la page de modification d'une annonce (publiée ou brouillon), « Enregistre
 
 ### Critères d'acceptation
 
-- [ ] Après « Enregistrer » puis « OK », l'adresse reste celle de la page de modification
-- [ ] Le formulaire affiche les valeurs qui viennent d'être enregistrées
-- [ ] Même comportement pour un brouillon et pour une annonce sans date à venir
-- [ ] Un échec d'enregistrement affiche l'erreur sans pop-up de succès
-- [ ] La création d'une nouvelle annonce redirige toujours vers « Mes annonces »
-- [ ] Test e2e (adaptation du test de la Phase 58) avec restauration des données ; DESIGN.md à jour
+- [x] Après « Enregistrer » puis « OK », l'adresse reste celle de la page de modification
+- [x] Le formulaire affiche les valeurs qui viennent d'être enregistrées
+- [x] Même comportement pour un brouillon et pour une annonce sans date à venir
+- [x] Un échec d'enregistrement affiche l'erreur sans pop-up de succès
+- [x] La création d'une nouvelle annonce redirige toujours vers « Mes annonces »
+- [x] Test e2e (adaptation du test de la Phase 58) avec restauration des données ; DESIGN.md à jour
 
 ## Bloquée par
 

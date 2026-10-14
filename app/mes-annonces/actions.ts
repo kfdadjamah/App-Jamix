@@ -28,7 +28,7 @@ import {
   type DatesResolues,
 } from "@/lib/validation/annonce";
 
-type Resultat = { erreur: string } | { succes: true; destination?: string };
+type Resultat = { erreur: string } | { succes: true };
 
 const ERREUR_ENREGISTREMENT = "L'annonce n'a pas pu être enregistrée. Réessayez.";
 const ERREUR_BAR_INTROUVABLE = "Bar introuvable.";
@@ -454,22 +454,7 @@ export async function modifierAnnonce(
 
   revalidatePath("/mes-annonces");
   revalidatePath(`/mes-annonces/${annonceId}`);
-  return { succes: true, destination: await destinationApresModification(annonceId, nouveauStatut) };
-}
-
-/** Fiche de la prochaine date non annulée d'une annonce publiée, sinon « Mes annonces ». */
-async function destinationApresModification(
-  annonceId: string,
-  statut: "BROUILLON" | "PUBLIEE"
-): Promise<string> {
-  if (statut !== "PUBLIEE") return "/mes-annonces";
-  const aujourdHui = new Date(new Date().toISOString().slice(0, 10));
-  const prochaine = await prisma.occurrenceJam.findFirst({
-    where: { annonceId, statut: { not: "ANNULEE" }, date: { gte: aujourdHui } },
-    orderBy: { date: "asc" },
-    select: { id: true },
-  });
-  return prochaine ? `/jams/${prochaine.id}` : "/mes-annonces";
+  return { succes: true };
 }
 
 export async function confirmerOccurrence(occurrenceId: string): Promise<Resultat> {
