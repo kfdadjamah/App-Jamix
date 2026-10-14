@@ -1,10 +1,12 @@
 export default function ChampFormulaire({
   label,
   erreur,
+  indication,
   children,
 }: {
   label: string;
   erreur?: string;
+  indication?: string;
   children: React.ReactNode;
 }) {
   return (
@@ -13,6 +15,9 @@ export default function ChampFormulaire({
         {label}
       </span>
       {children}
+      {indication && (
+        <span className="text-[12px] text-[var(--harbor-marine-2)]">{indication}</span>
+      )}
       {erreur && (
         <span className="text-[13px] font-semibold text-[var(--harbor-erreur)]">
           {erreur}

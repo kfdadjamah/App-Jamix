@@ -1677,11 +1677,11 @@ Sous « Nom du bar », l'indication « Vous pouvez rajouter les autres bars dans
 
 ### Critères d'acceptation
 
-- [ ] L'indication est visible sous « Nom du bar »
-- [ ] Aucun champ « Photo ou logo » ni sélecteur de fichier dans le formulaire
-- [ ] Une inscription sans photo crée le compte et la fiche du bar
-- [ ] L'ajout de photo depuis le profil reste possible
-- [ ] Test e2e avec suppression du compte créé ; DESIGN.md à jour
+- [x] L'indication est visible sous « Nom du bar »
+- [x] Aucun champ « Photo ou logo » ni sélecteur de fichier dans le formulaire
+- [x] Une inscription sans photo crée le compte et la fiche du bar
+- [x] L'ajout de photo depuis le profil reste possible
+- [x] Test e2e avec suppression du compte créé ; DESIGN.md à jour
 
 ## Bloquée par
 
