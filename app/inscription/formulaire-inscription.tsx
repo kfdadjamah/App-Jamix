@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import ChampAdresse from "@/components/champ-adresse";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,7 +15,6 @@ import { inscrireOrganisateur } from "./actions";
 export default function FormulaireInscription() {
   const [erreurServeur, setErreurServeur] = useState<string | null>(null);
   const [enCours, setEnCours] = useState(false);
-  const refPhoto = useRef<HTMLInputElement>(null);
 
   const {
     register,
@@ -44,10 +43,6 @@ export default function FormulaireInscription() {
     formData.set("nomBar", donnees.nomBar);
     formData.set("adresseBar", donnees.adresseBar);
     formData.set("codePostalBar", donnees.codePostalBar);
-    const fichierPhoto = refPhoto.current?.files?.[0];
-    if (fichierPhoto) {
-      formData.set("photo", fichierPhoto);
-    }
 
     const resultat = await inscrireOrganisateur(formData);
     setEnCours(false);
@@ -105,7 +100,11 @@ export default function FormulaireInscription() {
           />
         </ChampFormulaire>
 
-        <ChampFormulaire label="Nom du bar" erreur={errors.nomBar?.message}>
+        <ChampFormulaire
+          label="Nom du bar"
+          erreur={errors.nomBar?.message}
+          indication="Vous pouvez rajouter les autres bars dans le profil"
+        >
           <input
             type="text"
             placeholder="Nom du bar"
@@ -134,15 +133,6 @@ export default function FormulaireInscription() {
             placeholder="Code postal"
             {...register("codePostalBar")}
             className="champ-input"
-          />
-        </ChampFormulaire>
-
-        <ChampFormulaire label="Photo ou logo (option)">
-          <input
-            type="file"
-            accept="image/jpeg,image/png,image/webp"
-            ref={refPhoto}
-            className="champ-input champ-input--fichier"
           />
         </ChampFormulaire>
 
