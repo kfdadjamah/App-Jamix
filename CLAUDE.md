@@ -31,4 +31,4 @@ Toujours lire DESIGN.md avant toute décision visuelle ou UI. Polices, couleurs,
 ##Faire appel au context7
 - Pour toute API ou librairie externe, consulte Context7 avant d'écrire. Pas d'invention de signature de mémoire.
 - Tout écran nouveau ou modifié doit être validé par un test Playwright avant que tu déclares "terminé".
-- Toute modification de données en base passe par le CLI Supabase, jamais de SQL direct. Toujours une lecture de vérification avant tout ajout ou changement.
+- Toute modification de la base (Neon, Prisma) passe par Prisma (`prisma db push`, Prisma Client) et le CLI Neon (`neonctl`), jamais de SQL direct. Toujours une lecture de vérification (ex. `prisma migrate diff` en lecture seule) avant tout ajout ou changement.
