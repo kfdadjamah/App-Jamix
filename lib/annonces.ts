@@ -43,7 +43,12 @@ export async function recupererAnnoncesPubliees(dateIso: string) {
       annonce: { statut: "PUBLIEE" },
     },
     include: {
-      annonce: { include: { bar: { include: { organisateur: { select: { prenom: true } } } } } },
+      annonce: {
+        include: {
+          bar: { include: { organisateur: { select: { prenom: true } } } },
+          occurrences: { select: { date: true } },
+        },
+      },
     },
     orderBy: { heureDebut: "asc" },
   });
@@ -77,7 +82,12 @@ export async function recupererOccurrencePubliee(occurrenceId: string) {
       annonce: { statut: "PUBLIEE" },
     },
     include: {
-      annonce: { include: { bar: { include: { organisateur: { select: { prenom: true } } } } } },
+      annonce: {
+        include: {
+          bar: { include: { organisateur: { select: { prenom: true } } } },
+          occurrences: { select: { date: true } },
+        },
+      },
     },
   });
 }

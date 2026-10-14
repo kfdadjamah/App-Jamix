@@ -12,6 +12,7 @@ import {
 } from "@/lib/annonce-constantes";
 import { mentionOrganisePar, statutAffiche } from "@/lib/annonces";
 import { messageRelance } from "@/lib/relances";
+import { mentionRythme } from "@/lib/rythme";
 import FiltreAnnonces from "./filtre-annonces";
 import CarteGlissable from "./carte-glissable";
 import MenuAnnonce from "./menu-annonce";
@@ -88,6 +89,7 @@ function CarteAnnonce({ annonce }: { annonce: AnnonceAvecDetails }) {
   );
   const premiereOccurrence = occurrencesTriees[0];
   const mention = mentionOrganisePar(annonce.bar.organisateur.prenom, annonce.coOrganisateur);
+  const rythme = mentionRythme(occurrencesTriees.map((o) => o.date));
   const datesAnnulables =
     annonce.statut === "PUBLIEE"
       ? occurrencesTriees
@@ -135,19 +137,19 @@ function CarteAnnonce({ annonce }: { annonce: AnnonceAvecDetails }) {
             <span className="text-[12px] font-bold text-[var(--harbor-marine-2)]">
               {annonce.statut === "BROUILLON" ? "Brouillon" : "Publiée"}
             </span>
-            {annonce.estRecurrente && (
-              <span className="rounded-[9999px] border border-[var(--harbor-trait)] px-2 py-[2px] text-[12px] font-semibold text-[var(--harbor-marine-2)]">
-                Récurrente
-              </span>
-            )}
           </div>
 
           {premiereOccurrence ? (
-            <span className="donnees text-[15px] font-semibold text-[var(--harbor-marine)]">
-              {premiereOccurrence.heureDebut}
-              {premiereOccurrence.heureFin
-                ? ` – ${premiereOccurrence.heureFin}`
-                : ""}
+            <span className="break-words text-[15px] font-semibold text-[var(--harbor-marine)]">
+              <span className="donnees">
+                {premiereOccurrence.heureDebut}
+                {premiereOccurrence.heureFin
+                  ? ` – ${premiereOccurrence.heureFin}`
+                  : ""}
+              </span>
+              {rythme && (
+                <span className="donnees-carte text-[12px] text-[var(--harbor-marine-2)]"> · {rythme}</span>
+              )}
             </span>
           ) : (
             <span className="text-[15px] text-[var(--harbor-marine-2)]">
