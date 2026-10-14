@@ -1607,14 +1607,14 @@ Un champ « Titre (option) » de 60 caractères au plus dans le formulaire d'ann
 
 ### Critères d'acceptation
 
-- [ ] Une description de plus de 30 caractères est coupée à 30 au plus, sans couper un mot, avec « … » ; une description courte s'affiche en entier
-- [ ] Le titre s'affiche en gras au-dessus du début de description, sous les instruments
-- [ ] « Voir le détail » ouvre la page de la jam, qui affiche le titre et la description entière
-- [ ] Une annonce sans titre ni description n'affiche ni aperçu ni « Voir le détail » ; les anciennes annonces restent valides
-- [ ] Un titre de plus de 60 caractères est refusé
-- [ ] « Mes annonces » affiche le même aperçu ; aucun débordement à 360 px
-- [ ] Données modifiées via Prisma uniquement, avec vérification en lecture avant tout changement
-- [ ] Test e2e avec restauration des données (base partagée) ; DESIGN.md à jour
+- [x] Une description de plus de 30 caractères est coupée à 30 au plus, sans couper un mot, avec « … » ; une description courte s'affiche en entier
+- [x] Le titre s'affiche en gras au-dessus du début de description, sous les instruments
+- [x] « Voir le détail » ouvre la page de la jam, qui affiche le titre et la description entière
+- [x] Une annonce sans titre ni description n'affiche ni aperçu ni « Voir le détail » ; les anciennes annonces restent valides
+- [x] Un titre de plus de 60 caractères est refusé
+- [x] « Mes annonces » affiche le même aperçu ; aucun débordement à 360 px
+- [x] Données modifiées via Prisma uniquement, avec vérification en lecture avant tout changement
+- [x] Test e2e avec restauration des données (base partagée) ; DESIGN.md à jour
 
 ## Bloquée par
 
