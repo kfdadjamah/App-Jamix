@@ -1,4 +1,4 @@
-import { StatutOccurrence } from "@prisma/client";
+import { RythmeRecurrence, StatutOccurrence } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 
 const JOURS_LIMITE_CONFIRMATION_AUTO = 7;
@@ -123,6 +123,10 @@ export type ValeursReprises = {
   heureDebut: string;
   heureFin: string;
   publieeLe: string;
+  // Type, rythme et jour (phase 60) ; type null pour une ancienne annonce récurrente sans règle.
+  typeJam: "recurrente" | "exceptionnelle" | null;
+  rythme: RythmeRecurrence | null;
+  jourSemaine: string;
 };
 
 type AnnoncePourReprise = {
@@ -137,6 +141,9 @@ type AnnoncePourReprise = {
   coOrganisateur: string | null;
   photoUrl1: string | null;
   photoUrl2: string | null;
+  estRecurrente?: boolean;
+  rythme?: RythmeRecurrence | null;
+  jourSemaine?: number | null;
   occurrences: { date: Date; heureDebut: string; heureFin: string | null }[];
 };
 
@@ -174,6 +181,9 @@ export function valeursReprisesParBar(
       heureDebut: premiereOccurrence?.heureDebut ?? "",
       heureFin: premiereOccurrence?.heureFin ?? "",
       publieeLe: annonce.publieeLe.toISOString(),
+      typeJam: !annonce.estRecurrente ? "exceptionnelle" : annonce.rythme ? "recurrente" : null,
+      rythme: annonce.rythme ?? null,
+      jourSemaine: annonce.jourSemaine ? String(annonce.jourSemaine) : "",
     };
   }
   return table;

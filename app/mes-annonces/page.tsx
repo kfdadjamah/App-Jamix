@@ -12,7 +12,7 @@ import {
 } from "@/lib/annonce-constantes";
 import { mentionOrganisePar, statutAffiche } from "@/lib/annonces";
 import { messageRelance } from "@/lib/relances";
-import { mentionRythme } from "@/lib/rythme";
+import { mentionAnnonce } from "@/lib/rythme";
 import FiltreAnnonces from "./filtre-annonces";
 import CarteGlissable from "./carte-glissable";
 import MenuAnnonce from "./menu-annonce";
@@ -89,7 +89,7 @@ function CarteAnnonce({ annonce }: { annonce: AnnonceAvecDetails }) {
   );
   const premiereOccurrence = occurrencesTriees[0];
   const mention = mentionOrganisePar(annonce.bar.organisateur.prenom, annonce.coOrganisateur);
-  const rythme = mentionRythme(occurrencesTriees.map((o) => o.date));
+  const rythme = mentionAnnonce(annonce);
   const datesAnnulables =
     annonce.statut === "PUBLIEE"
       ? occurrencesTriees

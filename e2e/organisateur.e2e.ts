@@ -72,7 +72,7 @@ test.describe("espace organisateur", () => {
   test("publier un formulaire vide est refusé", async ({ page }) => {
     await page.goto("/mes-annonces/nouvelle");
     await page.getByRole("button", { name: "Publier" }).click();
-    await expect(page.getByText("Au moins une date est requise.")).toBeVisible();
+    await expect(page.getByText("L'heure de début est requise.")).toBeVisible();
     await expect(page).toHaveURL("/mes-annonces/nouvelle");
   });
 

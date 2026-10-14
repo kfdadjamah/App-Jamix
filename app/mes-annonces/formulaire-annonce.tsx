@@ -6,12 +6,12 @@ import { STYLES_MUSICAUX, INSTRUMENTS_BACKLINE, TOUS_LES_STYLES } from "@/lib/an
 import {
   LONGUEUR_MAX_CO_ORGANISATEUR,
   LONGUEUR_MAX_DESCRIPTION,
-  NOMBRE_MAX_DATES,
 } from "@/lib/validation/annonce";
 import { decisionSortie, instantane } from "@/lib/garde-sortie";
 import { useGardeSortie } from "@/components/garde-sortie";
 import FenetreSortie from "@/components/fenetre-sortie";
 import type { ValeursReprises } from "@/lib/annonces";
+import ChoixDates, { valeursDatesVides, type ValeursDates } from "./choix-dates";
 
 type Resultat = { erreur: string } | { succes: true; destination?: string };
 
@@ -35,7 +35,10 @@ async function appelerAction(
 }
 
 export type ValeursInitialesAnnonce = {
+  // Annonce publiée : ses dates, figées (leur règle devient modifiable en phase 62).
   dates: string[];
+  // Création ou brouillon : type de jam, règle et dates (phase 60).
+  choixDates: ValeursDates;
   heureDebut: string;
   heureFin: string;
   styles: string[];
@@ -48,6 +51,7 @@ export type ValeursInitialesAnnonce = {
 
 const valeursVides: ValeursInitialesAnnonce = {
   dates: [],
+  choixDates: valeursDatesVides,
   heureDebut: "",
   heureFin: "",
   styles: [],
@@ -106,8 +110,7 @@ export default function FormulaireAnnonce({
   const reprise = barChoisi ? reprises?.[barChoisi] : undefined;
   const [erreur, setErreur] = useState<string | null>(null);
   const [enCours, setEnCours] = useState(false);
-  const [dates, setDates] = useState<string[]>(valeurs.dates);
-  const [nouvelleDate, setNouvelleDate] = useState("");
+  const [choixDates, setChoixDates] = useState(valeurs.choixDates);
   const [porteeOccurrenceId, setPorteeOccurrenceId] = useState("");
   const formRef = useRef<HTMLFormElement>(null);
   const router = useRouter();
@@ -188,11 +191,24 @@ export default function FormulaireAnnonce({
   }
 
   // Écrase horaire, styles, instruments, précisions « Autre », description, co-organisateur et photos,
-  // y compris par du vide ; les dates ne sont jamais touchées.
+  // y compris par du vide, ainsi que le type, le rythme et le jour (phase 60) quand l'annonce reprise
+  // en a ; les dates (date unique, début, fin) ne sont jamais touchées.
   function reprendre() {
     if (!reprise) return;
+    if (reprise.typeJam) {
+      const typeJam = reprise.typeJam;
+      setChoixDates((choix) => ({
+        ...choix,
+        typeJam,
+        // Seul rythme proposé en phase 60 : le jour est repris, le rythme reste « Chaque semaine ».
+        ...(typeJam === "recurrente" && reprise.rythme === "CHAQUE_SEMAINE"
+          ? { rythme: reprise.rythme, jourSemaine: reprise.jourSemaine }
+          : {}),
+      }));
+    }
     setValeurs({
       dates: [],
+      choixDates: valeurs.choixDates,
       heureDebut: reprise.heureDebut,
       heureFin: reprise.heureFin,
       styles: reprise.styles,
@@ -205,25 +221,6 @@ export default function FormulaireAnnonce({
     setPhotosReprises([reprise.photoUrl1, reprise.photoUrl2]);
     setCleReprise((cle) => cle + 1);
     setRepriseDu(reprise.publieeLe);
-  }
-
-  function ajouterDate() {
-    if (!nouvelleDate) return;
-    if (dates.includes(nouvelleDate)) {
-      setErreur("Cette date est déjà dans la liste.");
-      return;
-    }
-    if (dates.length >= NOMBRE_MAX_DATES) {
-      setErreur(`${NOMBRE_MAX_DATES} dates maximum par annonce.`);
-      return;
-    }
-    setErreur(null);
-    setDates([...dates, nouvelleDate].sort());
-    setNouvelleDate("");
-  }
-
-  function retirerDate(date: string) {
-    setDates(dates.filter((d) => d !== date));
   }
 
   async function soumettre(action: (formData: FormData) => Promise<Resultat>) {
@@ -343,71 +340,43 @@ export default function FormulaireAnnonce({
                 month: "long",
                 year: "numeric",
               })}{" "}
-              — dates à ajouter
+              {choixDates.typeJam === "exceptionnelle"
+                ? "— date à choisir"
+                : "— dates de début et de fin à choisir"}
             </span>
           )}
         </div>
       )}
 
-      <div className="flex flex-col gap-3">
-        <span className="text-[13px] font-bold text-[var(--harbor-marine)]">
-          {dates.length > 1 ? "Dates (annonce récurrente)" : "Date"}
-        </span>
-
-        {dates.length > 0 && (
-          <ul className="flex flex-wrap gap-2">
-            {dates.map((date) => (
-              <li
-                key={date}
-                className="flex items-center gap-2 rounded-[9999px] border border-[var(--harbor-trait)] px-3 py-1 text-[12px] text-[var(--harbor-marine)]"
-              >
-                {new Date(date).toLocaleDateString("fr-FR", {
-                  weekday: "short",
-                  day: "numeric",
-                  month: "short",
-                })}
-                {datesModifiables && (
-                  <button
-                    type="button"
-                    onClick={() => retirerDate(date)}
-                    aria-label={`Retirer le ${date}`}
-                    className="text-[var(--harbor-marine-2)] active:text-[var(--harbor-erreur)]"
-                  >
-                    ×
-                  </button>
-                )}
-                <input type="hidden" name="dates" value={date} />
-              </li>
-            ))}
-          </ul>
-        )}
-
-        {datesModifiables ? (
-          <div className="flex items-end gap-3">
-            <input
-              type="date"
-              min={new Date().toISOString().slice(0, 10)}
-              value={nouvelleDate}
-              onChange={(e) => setNouvelleDate(e.target.value)}
-              className="champ-input"
-            />
-            <button
-              type="button"
-              onClick={ajouterDate}
-              disabled={dates.length >= NOMBRE_MAX_DATES}
-              className="whitespace-nowrap rounded-[12px] border border-[var(--harbor-trait)] bg-white px-4 py-2 text-[13px] font-bold text-[var(--harbor-marine)] transition-colors duration-[120ms] hover:bg-[var(--harbor-voile)] active:border-[var(--harbor-bleu-clair)] active:bg-[var(--harbor-voile)] disabled:opacity-60"
-            >
-              Ajouter une date
-            </button>
-          </div>
-        ) : (
-          dates.length === 0 && (
+      {datesModifiables ? (
+        <ChoixDates valeurs={choixDates} onChange={setChoixDates} />
+      ) : (
+        <div className="flex flex-col gap-3">
+          <span className="text-[13px] font-bold text-[var(--harbor-marine)]">
+            {valeurs.dates.length > 1 ? "Dates (annonce récurrente)" : "Date"}
+          </span>
+          {valeurs.dates.length > 0 ? (
+            <ul className="flex flex-wrap gap-2">
+              {valeurs.dates.map((date) => (
+                <li
+                  key={date}
+                  className="rounded-[9999px] border border-[var(--harbor-trait)] px-3 py-1 text-[12px] text-[var(--harbor-marine)]"
+                >
+                  {new Date(date).toLocaleDateString("fr-FR", {
+                    weekday: "short",
+                    day: "numeric",
+                    month: "short",
+                  })}
+                </li>
+              ))}
+            </ul>
+          ) : (
             <span className="text-[15px] text-[var(--harbor-marine-2)]">
               Aucune date renseignée
             </span>
-          )
-        )}
-      </div>
+          )}
+        </div>
+      )}
 
       <div key={`horaire-${cleReprise}`} className="grid grid-cols-2 items-stretch gap-3">
         <Champ label="Heure de début">

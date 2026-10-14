@@ -60,6 +60,13 @@ enum StatutAnnonce {
   PUBLIEE
 }
 
+// Rythme d'une annonce récurrente (phases 60 et 61).
+enum RythmeRecurrence {
+  CHAQUE_SEMAINE
+  UNE_SEMAINE_SUR_DEUX
+  MENSUEL
+}
+
 enum StatutOccurrence {
   CONFIRMEE
   PROGRAMMEE
@@ -83,6 +90,15 @@ model Annonce {
   coOrganisateur  String?
   photoUrl1       String?
   photoUrl2       String?
+  // Règle de récurrence (phases 59 à 63) : absente sur les annonces antérieures et les jams
+  // exceptionnelles ; `estRecurrente` reste la source du type. jourSemaine : 1 = lundi … 7 = dimanche ;
+  // semaineDuMois : 1 à 4, -1 = dernier. Une date retirée n'est pas recréée par la règle.
+  rythme          RythmeRecurrence?
+  jourSemaine     Int?
+  semaineDuMois   Int?
+  debutRecurrence DateTime?       @db.Date
+  finRecurrence   DateTime?       @db.Date
+  datesRetirees   DateTime[]      @db.Date
   // Écrit une seule fois, au passage Brouillon → Publiée.
   publieeLe       DateTime?
   occurrences     OccurrenceJam[]

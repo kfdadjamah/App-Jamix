@@ -13,9 +13,11 @@ import {
 } from "@/lib/organisateur";
 import { ERREUR_BAR_REQUIS, barApresModification } from "@/lib/bars";
 import {
+  resoudreDates,
   schemaAnnonceBrouillon,
   schemaAnnoncePublication,
   type ChampsAnnonceBrouillon,
+  type DatesResolues,
 } from "@/lib/validation/annonce";
 
 type Resultat = { erreur: string } | { succes: true; destination?: string };
@@ -32,6 +34,13 @@ async function supprimerPhotos(urls: string[]) {
 
 function extraireChampsFormulaire(formData: FormData) {
   return {
+    typeJam: formData.get("typeJam") ?? undefined,
+    dateUnique: formData.get("dateUnique") ?? "",
+    rythme: formData.get("rythme") ?? "",
+    jourSemaine: formData.get("jourSemaine") ?? "",
+    debutRecurrence: formData.get("debutRecurrence") ?? "",
+    finRecurrence: formData.get("finRecurrence") ?? "",
+    datesRetirees: formData.getAll("datesRetirees"),
     dates: formData.getAll("dates"),
     heureDebut: formData.get("heureDebut") ?? "",
     heureFin: formData.get("heureFin") ?? "",
@@ -41,6 +50,19 @@ function extraireChampsFormulaire(formData: FormData) {
     instrumentAutre: formData.get("instrumentAutre") ?? "",
     description: formData.get("description") ?? "",
     coOrganisateur: formData.get("coOrganisateur") ?? "",
+  };
+}
+
+/** Type et règle de récurrence à écrire sur l'annonce (phase 60). */
+function champsRegle(resolues: DatesResolues) {
+  const versDate = (iso: string | null) => (iso ? new Date(iso) : null);
+  return {
+    estRecurrente: resolues.estRecurrente,
+    rythme: resolues.rythme,
+    jourSemaine: resolues.jourSemaine,
+    debutRecurrence: versDate(resolues.debutRecurrence),
+    finRecurrence: versDate(resolues.finRecurrence),
+    datesRetirees: resolues.datesRetirees.map((date) => new Date(date)),
   };
 }
 
@@ -85,6 +107,8 @@ async function synchroniserOccurrences(
   tx: Prisma.TransactionClient,
   annonceId: string,
   donnees: ChampsAnnonceBrouillon,
+  // Dates recalculées par le serveur (`resoudreDates`), ignorées une fois l'annonce publiée.
+  dates: string[],
   annonceEtaitDejaPubliee: boolean,
   nouveauStatut: "BROUILLON" | "PUBLIEE",
   porteeOccurrenceId?: string
@@ -103,14 +127,14 @@ async function synchroniserOccurrences(
   }
 
   // Création ou Brouillon : aucune occurrence n'a d'état à préserver,
-  // on resynchronise par remplacement complet à partir des dates soumises.
+  // on resynchronise par remplacement complet à partir des dates recalculées.
   await tx.occurrenceJam.deleteMany({ where: { annonceId } });
-  if (donnees.dates.length === 0) return;
+  if (dates.length === 0) return;
 
   const vientDEtrePubliee = nouveauStatut === "PUBLIEE" && !annonceEtaitDejaPubliee;
 
   await tx.occurrenceJam.createMany({
-    data: donnees.dates.map((date) => {
+    data: dates.map((date) => {
       const statutInitial = vientDEtrePubliee
         ? calculerStatutInitial(new Date(date))
         : null;
@@ -152,6 +176,8 @@ export async function creerAnnonce(
   const bar = await recupererBarDuCompte(barId);
   if (!bar) return { erreur: ERREUR_BAR_INTROUVABLE };
   const donnees = resultat.data;
+  const resolues = resoudreDates(donnees, { publication: action === "publier" });
+  if ("erreur" in resolues) return resolues;
 
   // Photos reprises (phase 21) : un fichier choisi pour l'emplacement l'emporte.
   const reprise1 = photo1 ? null : lirePhotoReprise(formData, "photoReprise1");
@@ -197,7 +223,7 @@ export async function creerAnnonce(
           barId: bar.id,
           statut,
           publieeLe: statut === "PUBLIEE" ? new Date() : null,
-          estRecurrente: donnees.dates.length > 1,
+          ...champsRegle(resolues),
           styles: donnees.styles,
           styleAutre: donnees.styleAutre || null,
           instruments: donnees.instruments,
@@ -208,7 +234,7 @@ export async function creerAnnonce(
           photoUrl2,
         },
       });
-      await synchroniserOccurrences(tx, annonce.id, donnees, false, statut);
+      await synchroniserOccurrences(tx, annonce.id, donnees, resolues.dates, false, statut);
     });
   } catch (erreur) {
     console.error("Création d'annonce impossible :", erreur);
@@ -251,6 +277,21 @@ export async function modifierAnnonce(
   }
   const donnees = resultat.data;
 
+  // Une annonce publiée garde sa règle et ses dates : leur modification arrive en phase 62.
+  let resolues: DatesResolues | null = null;
+  if (!annonceEtaitDejaPubliee) {
+    const datesExistantes = await prisma.occurrenceJam.findMany({
+      where: { annonceId },
+      select: { date: true },
+    });
+    const resultatDates = resoudreDates(donnees, {
+      publication: action === "publier",
+      datesExistantes: datesExistantes.map(({ date }) => date.toISOString().slice(0, 10)),
+    });
+    if ("erreur" in resultatDates) return resultatDates;
+    resolues = resultatDates;
+  }
+
   const nouveauStatut =
     action === "publier" ? "PUBLIEE" : action === "brouillon" ? "BROUILLON" : annonceExistante.statut;
 
@@ -272,9 +313,7 @@ export async function modifierAnnonce(
             nouveauStatut === "PUBLIEE"
               ? (annonceExistante.publieeLe ?? new Date())
               : annonceExistante.publieeLe,
-          estRecurrente: annonceEtaitDejaPubliee
-            ? annonceExistante.estRecurrente
-            : donnees.dates.length > 1,
+          ...(resolues ? champsRegle(resolues) : {}),
           styles: donnees.styles,
           styleAutre: donnees.styleAutre || null,
           instruments: donnees.instruments,
@@ -288,6 +327,7 @@ export async function modifierAnnonce(
         tx,
         annonceId,
         donnees,
+        resolues?.dates ?? [],
         annonceEtaitDejaPubliee,
         nouveauStatut,
         porteeOccurrenceId

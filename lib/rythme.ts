@@ -44,3 +44,19 @@ export function mentionRythme(dates: Date[]): string | null {
   if (ecarts.every((ecart) => ecart % 14 === 0)) return `Un ${JOURS[jour]} sur deux`;
   return `Tous les ${JOURS[jour]}s`;
 }
+
+/**
+ * Mention d'une annonce : depuis sa règle quand elle en a une (phase 60), sinon déduite de ses dates
+ * (annonces antérieures, jams exceptionnelles). Renvoie null sans date.
+ */
+export function mentionAnnonce(annonce: {
+  rythme?: string | null;
+  jourSemaine?: number | null;
+  occurrences: { date: Date }[];
+}): string | null {
+  if (annonce.occurrences.length === 0) return null;
+  if (annonce.rythme === "CHAQUE_SEMAINE" && annonce.jourSemaine) {
+    return `Tous les ${JOURS[annonce.jourSemaine % 7]}s`;
+  }
+  return mentionRythme(annonce.occurrences.map((occurrence) => occurrence.date));
+}

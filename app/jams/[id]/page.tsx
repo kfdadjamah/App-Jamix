@@ -11,7 +11,7 @@ import {
   libelleStyles,
 } from "@/lib/annonce-constantes";
 import { mentionOrganisePar, recupererOccurrencePubliee, statutAffiche } from "@/lib/annonces";
-import { mentionRythme } from "@/lib/rythme";
+import { mentionAnnonce } from "@/lib/rythme";
 import DistanceJam from "./distance-jam";
 import PiedDePage from "@/components/pied-de-page";
 
@@ -50,7 +50,7 @@ export default async function PageJam({ params }: { params: Promise<{ id: string
   const { annonce } = occurrence;
   const statut = statutAffiche(occurrence);
   const mention = mentionOrganisePar(annonce.bar.organisateur.prenom, annonce.coOrganisateur);
-  const rythme = mentionRythme(annonce.occurrences.map((o) => o.date));
+  const rythme = mentionAnnonce(annonce);
   const afficherEcheance =
     (statut === "PROGRAMMEE" || statut === "EN_ATTENTE_CONFIRMATION") && occurrence.confirmationJ7;
   const photos = [annonce.photoUrl1, annonce.photoUrl2].filter((url): url is string => !!url);

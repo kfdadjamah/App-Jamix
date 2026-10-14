@@ -54,6 +54,7 @@
   - *Schéma* : nouveaux champs facultatifs sur `Annonce`, appliqués par `prisma db push` sans perte de données (les annonces existantes restent sans règle ; à relancer en production avant le déploiement) : `rythme RythmeRecurrence?`, avec l'enum `CHAQUE_SEMAINE | UNE_SEMAINE_SUR_DEUX | MENSUEL` ; `jourSemaine Int?` (1 = lundi … 7 = dimanche) ; `semaineDuMois Int?` (1 à 4, -1 = dernier) ; `debutRecurrence DateTime? @db.Date` et `finRecurrence DateTime? @db.Date` ; `datesRetirees DateTime[] @db.Date`. `estRecurrente` reste la source du type (récurrente / exceptionnelle). `OccurrenceJam` ne change pas.
   - *Génération* : une fonction pure unique (dans `lib/`) produit les dates à partir de la règle et des dates retirées, en UTC, date seule, comme le reste de l'app. Elle sert à l'aperçu côté client et au serveur. Le serveur ne fait jamais confiance aux dates envoyées par le client : il les recalcule depuis la règle. La validation zod (`lib/validation/annonce.ts`) remplace `NOMBRE_MAX_DATES` par la limite de 12 mois.
   - *Mention* : une fonction unique (dans `lib/annonces.ts`, à côté de `mentionOrganisePar`) rend le libellé depuis la règle, sinon le déduit des occurrences. Elle est utilisée par `app/carte-annonce.tsx`, `app/jams/[id]`, `app/mes-annonces/page.tsx` et la fiche du marqueur.
+  - *Décisions de la Phase 60* : une annonce publiée garde son affichage (dates figées, pas de champs de règle) et le serveur ignore ses champs de règle jusqu'à la Phase 62. Les dates passées sont filtrées à la publication et dans l'aperçu (la règle garde sa date de début) ; la limite de 12 mois se compte depuis la date de début (même jour, un an plus tard, inclus). Une jam exceptionnelle n'a pas de rythme ; sa date est aussi gardée dans `debutRecurrence`, pour qu'un brouillon sans horaire (donc sans occurrence) la retrouve. Ancien brouillon sans règle : une date → « Jam exceptionnelle » avec cette date ; plusieurs → « Jam récurrente », règle vide, dates sous « Dates choisies une à une » (retirables) ; réenregistré en brouillon, il ne garde que celles déjà en base parmi celles envoyées ; sa publication exige une règle complète (« Choisissez un jour, une date de début et une date de fin. »). « Reprendre la dernière annonce de ce bar » reprend aussi le type, le rythme et le jour, jamais les dates. Fonctions : `lib/recurrence.ts` (génération, bornes), `resoudreDates` (`lib/validation/annonce.ts`), `mentionAnnonce` (`lib/rythme.ts`, plutôt que `lib/annonces.ts` qui importe Prisma).
   - *Recréation* : sur une annonce publiée dont la règle change, une seule transaction supprime les occurrences de date ≥ aujourd'hui, les régénère et applique J-7 avec le même calcul qu'à la publication (Phase 6). Les dates passées ne sont pas touchées. `supprimerOccurrence` ajoute la date à `datesRetirees` quand l'annonce a une règle. `choixDePortee` (`app/mes-annonces/menu-annonce.tsx`) continue de dépendre de `estRecurrente`.
   - *Routes* : aucune nouvelle route.
 
@@ -1511,15 +1512,15 @@ Le formulaire d'annonce remplace la liste « Ajouter une date » par deux bouton
 
 ### Critères d'acceptation
 
-- [ ] « Tous les mardis » du 3 nov. 2026 au 26 janv. 2027 produit 13 dates, toutes des mardis, visibles dans l'aperçu avant publication
-- [ ] Une date retirée de l'aperçu n'apparaît ni côté musicien ni dans « Mes annonces » après publication
-- [ ] Une date de fin antérieure au début, ou à plus de 12 mois, bloque la publication avec le message prévu, et rien n'est enregistré ; idem si aucune date ne correspond au rythme
-- [ ] Jam exceptionnelle sans date : « Choisissez une date. »
-- [ ] Le brouillon s'enregistre avec une règle incomplète
-- [ ] Le serveur ignore les dates envoyées par le client et les recalcule depuis la règle
-- [ ] Chaque date générée suit la règle J-7 (programmée ou confirmée selon l'écart)
-- [ ] Aucun débordement à 360 px
-- [ ] Test e2e avec restauration des données (base partagée) ; DESIGN.md à jour
+- [x] « Tous les mardis » du 3 nov. 2026 au 26 janv. 2027 produit 13 dates, toutes des mardis, visibles dans l'aperçu avant publication
+- [x] Une date retirée de l'aperçu n'apparaît ni côté musicien ni dans « Mes annonces » après publication
+- [x] Une date de fin antérieure au début, ou à plus de 12 mois, bloque la publication avec le message prévu, et rien n'est enregistré ; idem si aucune date ne correspond au rythme
+- [x] Jam exceptionnelle sans date : « Choisissez une date. »
+- [x] Le brouillon s'enregistre avec une règle incomplète
+- [x] Le serveur ignore les dates envoyées par le client et les recalcule depuis la règle
+- [x] Chaque date générée suit la règle J-7 (programmée ou confirmée selon l'écart)
+- [x] Aucun débordement à 360 px
+- [x] Test e2e avec restauration des données (base partagée) ; DESIGN.md à jour
 
 ## Bloquée par
 

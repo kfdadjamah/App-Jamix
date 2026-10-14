@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { mentionRythme } from "./rythme";
+import { mentionAnnonce, mentionRythme } from "./rythme";
 
 const d = (...isos: string[]) => isos.map((iso) => new Date(iso));
 
@@ -63,5 +63,28 @@ describe("mentionRythme", () => {
 
   it("dimanches consécutifs : Tous les dimanches", () => {
     expect(mentionRythme(d("2026-11-08", "2026-11-15"))).toBe("Tous les dimanches");
+  });
+});
+
+describe("mentionAnnonce", () => {
+  it("règle hebdomadaire : la mention vient de la règle, trous compris", () => {
+    expect(
+      mentionAnnonce({
+        rythme: "CHAQUE_SEMAINE",
+        jourSemaine: 2,
+        occurrences: d("2026-11-03", "2026-11-24").map((date) => ({ date })),
+      })
+    ).toBe("Tous les mardis");
+  });
+
+  it("dimanche (7) : Tous les dimanches", () => {
+    expect(
+      mentionAnnonce({ rythme: "CHAQUE_SEMAINE", jourSemaine: 7, occurrences: [{ date: new Date("2026-11-08") }] })
+    ).toBe("Tous les dimanches");
+  });
+
+  it("sans règle : déduite des dates ; sans date : aucune mention", () => {
+    expect(mentionAnnonce({ occurrences: [{ date: new Date("2026-11-03") }] })).toBe("Exceptionnelle");
+    expect(mentionAnnonce({ rythme: "CHAQUE_SEMAINE", jourSemaine: 2, occurrences: [] })).toBeNull();
   });
 });

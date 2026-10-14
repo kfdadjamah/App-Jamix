@@ -10,7 +10,7 @@ import {
   libelleStyles,
 } from "@/lib/annonce-constantes";
 import { mentionOrganisePar, statutAffiche, type recupererAnnoncesPubliees } from "@/lib/annonces";
-import { mentionRythme } from "@/lib/rythme";
+import { mentionAnnonce } from "@/lib/rythme";
 
 type Occurrence = Awaited<ReturnType<typeof recupererAnnoncesPubliees>>[number];
 
@@ -32,7 +32,7 @@ export default function CarteAnnonce({
   const { annonce } = occurrence;
   const annulee = statut === "ANNULEE";
   const mention = mentionOrganisePar(annonce.bar.organisateur.prenom, annonce.coOrganisateur);
-  const rythme = mentionRythme(annonce.occurrences.map((o) => o.date));
+  const rythme = mentionAnnonce(annonce);
   const nomClasses = `min-w-0 break-words font-[family-name:var(--font-jakarta)] text-[20px] font-extrabold leading-[1.2] tracking-[-0.025em] text-[var(--harbor-marine)]     annulee ? "line-through" : ""
   }`;
   const styles = annonce.styles.includes(TOUS_LES_STYLES)
