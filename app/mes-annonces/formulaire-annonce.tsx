@@ -191,8 +191,8 @@ export default function FormulaireAnnonce({
   }
 
   // Écrase horaire, styles, instruments, précisions « Autre », description, co-organisateur et photos,
-  // y compris par du vide, ainsi que le type, le rythme et le jour (phase 60) quand l'annonce reprise
-  // en a ; les dates (date unique, début, fin) ne sont jamais touchées.
+  // y compris par du vide, ainsi que le type, le rythme, le jour et la semaine du mois (phases 60 et 61)
+  // quand l'annonce reprise en a ; les dates (date unique, début, fin) ne sont jamais touchées.
   function reprendre() {
     if (!reprise) return;
     if (reprise.typeJam) {
@@ -200,9 +200,12 @@ export default function FormulaireAnnonce({
       setChoixDates((choix) => ({
         ...choix,
         typeJam,
-        // Seul rythme proposé en phase 60 : le jour est repris, le rythme reste « Chaque semaine ».
-        ...(typeJam === "recurrente" && reprise.rythme === "CHAQUE_SEMAINE"
-          ? { rythme: reprise.rythme, jourSemaine: reprise.jourSemaine }
+        ...(typeJam === "recurrente" && reprise.rythme
+          ? {
+              rythme: reprise.rythme,
+              jourSemaine: reprise.jourSemaine,
+              semaineDuMois: reprise.semaineDuMois,
+            }
           : {}),
       }));
     }

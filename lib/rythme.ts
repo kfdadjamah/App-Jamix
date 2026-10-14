@@ -46,17 +46,24 @@ export function mentionRythme(dates: Date[]): string | null {
 }
 
 /**
- * Mention d'une annonce : depuis sa règle quand elle en a une (phase 60), sinon déduite de ses dates
- * (annonces antérieures, jams exceptionnelles). Renvoie null sans date.
+ * Mention d'une annonce : depuis sa règle quand elle en a une (phases 60 et 61), sinon déduite de ses
+ * dates (annonces antérieures, jams exceptionnelles). Renvoie null sans date.
  */
 export function mentionAnnonce(annonce: {
   rythme?: string | null;
   jourSemaine?: number | null;
+  semaineDuMois?: number | null;
   occurrences: { date: Date }[];
 }): string | null {
   if (annonce.occurrences.length === 0) return null;
-  if (annonce.rythme === "CHAQUE_SEMAINE" && annonce.jourSemaine) {
-    return `Tous les ${JOURS[annonce.jourSemaine % 7]}s`;
+  if (annonce.jourSemaine) {
+    const jour = JOURS[annonce.jourSemaine % 7];
+    if (annonce.rythme === "CHAQUE_SEMAINE") return `Tous les ${jour}s`;
+    if (annonce.rythme === "UNE_SEMAINE_SUR_DEUX") return `Un ${jour} sur deux`;
+    if (annonce.rythme === "MENSUEL" && annonce.semaineDuMois) {
+      const rang = annonce.semaineDuMois === -1 ? "dernier" : RANGS[annonce.semaineDuMois - 1];
+      return `Le ${rang} ${jour} du mois`;
+    }
   }
   return mentionRythme(annonce.occurrences.map((occurrence) => occurrence.date));
 }

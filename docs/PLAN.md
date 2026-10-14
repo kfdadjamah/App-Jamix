@@ -55,6 +55,7 @@
   - *Génération* : une fonction pure unique (dans `lib/`) produit les dates à partir de la règle et des dates retirées, en UTC, date seule, comme le reste de l'app. Elle sert à l'aperçu côté client et au serveur. Le serveur ne fait jamais confiance aux dates envoyées par le client : il les recalcule depuis la règle. La validation zod (`lib/validation/annonce.ts`) remplace `NOMBRE_MAX_DATES` par la limite de 12 mois.
   - *Mention* : une fonction unique (dans `lib/annonces.ts`, à côté de `mentionOrganisePar`) rend le libellé depuis la règle, sinon le déduit des occurrences. Elle est utilisée par `app/carte-annonce.tsx`, `app/jams/[id]`, `app/mes-annonces/page.tsx` et la fiche du marqueur.
   - *Décisions de la Phase 60* : une annonce publiée garde son affichage (dates figées, pas de champs de règle) et le serveur ignore ses champs de règle jusqu'à la Phase 62. Les dates passées sont filtrées à la publication et dans l'aperçu (la règle garde sa date de début) ; la limite de 12 mois se compte depuis la date de début (même jour, un an plus tard, inclus). Une jam exceptionnelle n'a pas de rythme ; sa date est aussi gardée dans `debutRecurrence`, pour qu'un brouillon sans horaire (donc sans occurrence) la retrouve. Ancien brouillon sans règle : une date → « Jam exceptionnelle » avec cette date ; plusieurs → « Jam récurrente », règle vide, dates sous « Dates choisies une à une » (retirables) ; réenregistré en brouillon, il ne garde que celles déjà en base parmi celles envoyées ; sa publication exige une règle complète (« Choisissez un jour, une date de début et une date de fin. »). « Reprendre la dernière annonce de ce bar » reprend aussi le type, le rythme et le jour, jamais les dates. Fonctions : `lib/recurrence.ts` (génération, bornes), `resoudreDates` (`lib/validation/annonce.ts`), `mentionAnnonce` (`lib/rythme.ts`, plutôt que `lib/annonces.ts` qui importe Prisma).
+  - *Décisions de la Phase 61* : « Une semaine sur deux » compte 14 jours à partir de la première date de la règle (premier jour choisi à partir du début), même si elle est passée ou retirée. Mensuel : le jour de la semaine du mois choisie, chaque mois entre le début et la fin ; un mois dont cette date précède le début ou suit la fin est sauté ; pas de 5e semaine (« Dernier » la couvre). « Semaine du mois » démarre vide : la règle reste incomplète (pas d'aperçu) tant qu'elle n'est pas choisie, et la publication en mensuel est refusée avec « Choisissez un jour, une semaine du mois, une date de début et une date de fin. » ; le brouillon l'accepte vide. `semaineDuMois` n'est enregistrée que pour le rythme mensuel (sinon `null`). « Reprendre la dernière annonce de ce bar » reprend aussi le rythme et la semaine du mois. La mention vient de la règle (`mentionAnnonce`). Aucun changement de schéma (champs déjà ajoutés en Phase 60).
   - *Recréation* : sur une annonce publiée dont la règle change, une seule transaction supprime les occurrences de date ≥ aujourd'hui, les régénère et applique J-7 avec le même calcul qu'à la publication (Phase 6). Les dates passées ne sont pas touchées. `supprimerOccurrence` ajoute la date à `datesRetirees` quand l'annonce a une règle. `choixDePortee` (`app/mes-annonces/menu-annonce.tsx`) continue de dépendre de `estRecurrente`.
   - *Routes* : aucune nouvelle route.
 
@@ -1538,11 +1539,11 @@ Le rythme propose aussi « Une semaine sur deux » et « Une fois par mois ». P
 
 ### Critères d'acceptation
 
-- [ ] « Un mardi sur deux » produit des dates espacées de 14 jours exactement, à partir de la première date
-- [ ] « Le dernier jeudi du mois » sur 6 mois produit 6 dates, chacune le dernier jeudi de son mois
-- [ ] « Semaine du mois » n'apparaît que pour le rythme mensuel
-- [ ] La mention affiche « Un mardi sur deux », « Le 1er vendredi du mois », « Le dernier jeudi du mois »
-- [ ] Test e2e ; DESIGN.md à jour
+- [x] « Un mardi sur deux » produit des dates espacées de 14 jours exactement, à partir de la première date
+- [x] « Le dernier jeudi du mois » sur 6 mois produit 6 dates, chacune le dernier jeudi de son mois
+- [x] « Semaine du mois » n'apparaît que pour le rythme mensuel
+- [x] La mention affiche « Un mardi sur deux », « Le 1er vendredi du mois », « Le dernier jeudi du mois »
+- [x] Test e2e ; DESIGN.md à jour
 
 ## Bloquée par
 

@@ -83,6 +83,19 @@ describe("mentionAnnonce", () => {
     ).toBe("Tous les dimanches");
   });
 
+  it("une semaine sur deux et mensuel (phase 61)", () => {
+    const occurrences = [{ date: new Date("2026-11-03") }];
+    expect(mentionAnnonce({ rythme: "UNE_SEMAINE_SUR_DEUX", jourSemaine: 2, occurrences })).toBe(
+      "Un mardi sur deux"
+    );
+    expect(
+      mentionAnnonce({ rythme: "MENSUEL", jourSemaine: 5, semaineDuMois: 1, occurrences })
+    ).toBe("Le 1er vendredi du mois");
+    expect(
+      mentionAnnonce({ rythme: "MENSUEL", jourSemaine: 4, semaineDuMois: -1, occurrences })
+    ).toBe("Le dernier jeudi du mois");
+  });
+
   it("sans règle : déduite des dates ; sans date : aucune mention", () => {
     expect(mentionAnnonce({ occurrences: [{ date: new Date("2026-11-03") }] })).toBe("Exceptionnelle");
     expect(mentionAnnonce({ rythme: "CHAQUE_SEMAINE", jourSemaine: 2, occurrences: [] })).toBeNull();

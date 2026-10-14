@@ -5,6 +5,7 @@ import {
   ERREUR_AUCUNE_DATE,
   ERREUR_DATE_UNIQUE,
   ERREUR_REGLE_INCOMPLETE,
+  ERREUR_REGLE_MENSUELLE_INCOMPLETE,
   RYTHMES,
   aujourdHuiIso,
   datesAPublier,
@@ -69,6 +70,8 @@ const champsCommuns = {
     .optional()
     .or(z.literal("")),
   jourSemaine: z.string().regex(/^[1-7]$/, "Jour invalide.").optional().or(z.literal("")),
+  // Rythme mensuel (phase 61) : 1 à 4, -1 = dernier.
+  semaineDuMois: z.string().regex(/^([1-4]|-1)$/, "Semaine du mois invalide.").optional().or(z.literal("")),
   debutRecurrence: schemaDateFacultative,
   finRecurrence: schemaDateFacultative,
   datesRetirees: schemaDates.default([]),
@@ -109,6 +112,7 @@ export type DatesResolues = {
   estRecurrente: boolean;
   rythme: RegleRecurrence["rythme"] | null;
   jourSemaine: number | null;
+  semaineDuMois: number | null;
   debutRecurrence: string | null;
   finRecurrence: string | null;
   datesRetirees: string[];
@@ -134,6 +138,7 @@ export function resoudreDates(
   const sansRegle = {
     rythme: null,
     jourSemaine: null,
+    semaineDuMois: null,
     debutRecurrence: null,
     finRecurrence: null,
     datesRetirees: [],
@@ -149,17 +154,25 @@ export function resoudreDates(
 
   const rythme = champs.rythme || "CHAQUE_SEMAINE";
   const jourSemaine = champs.jourSemaine ? Number(champs.jourSemaine) : null;
+  // Gardée seulement pour le rythme mensuel.
+  const semaineDuMois =
+    rythme === "MENSUEL" && champs.semaineDuMois ? Number(champs.semaineDuMois) : null;
   const debut = champs.debutRecurrence || null;
   const fin = champs.finRecurrence || null;
   const regleEnregistree = {
     rythme,
     jourSemaine,
+    semaineDuMois,
     debutRecurrence: debut,
     finRecurrence: fin,
   };
 
-  if (jourSemaine === null || !debut || !fin) {
-    if (publication) return { erreur: ERREUR_REGLE_INCOMPLETE };
+  if (jourSemaine === null || !debut || !fin || (rythme === "MENSUEL" && semaineDuMois === null)) {
+    if (publication) {
+      return {
+        erreur: rythme === "MENSUEL" ? ERREUR_REGLE_MENSUELLE_INCOMPLETE : ERREUR_REGLE_INCOMPLETE,
+      };
+    }
     const existantes = new Set(datesExistantes);
     return {
       estRecurrente: true,
@@ -169,7 +182,7 @@ export function resoudreDates(
     };
   }
 
-  const regle: RegleRecurrence = { rythme, jourSemaine, debut, fin };
+  const regle: RegleRecurrence = { rythme, jourSemaine, semaineDuMois, debut, fin };
   const erreur = erreurBornes(regle);
   if (erreur) {
     if (publication) return { erreur };

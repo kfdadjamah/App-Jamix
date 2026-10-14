@@ -123,10 +123,12 @@ export type ValeursReprises = {
   heureDebut: string;
   heureFin: string;
   publieeLe: string;
-  // Type, rythme et jour (phase 60) ; type null pour une ancienne annonce récurrente sans règle.
+  // Type, rythme, jour (phase 60) et semaine du mois (phase 61) ; type null pour une ancienne
+  // annonce récurrente sans règle.
   typeJam: "recurrente" | "exceptionnelle" | null;
   rythme: RythmeRecurrence | null;
   jourSemaine: string;
+  semaineDuMois: string;
 };
 
 type AnnoncePourReprise = {
@@ -144,6 +146,7 @@ type AnnoncePourReprise = {
   estRecurrente?: boolean;
   rythme?: RythmeRecurrence | null;
   jourSemaine?: number | null;
+  semaineDuMois?: number | null;
   occurrences: { date: Date; heureDebut: string; heureFin: string | null }[];
 };
 
@@ -184,6 +187,7 @@ export function valeursReprisesParBar(
       typeJam: !annonce.estRecurrente ? "exceptionnelle" : annonce.rythme ? "recurrente" : null,
       rythme: annonce.rythme ?? null,
       jourSemaine: annonce.jourSemaine ? String(annonce.jourSemaine) : "",
+      semaineDuMois: annonce.semaineDuMois ? String(annonce.semaineDuMois) : "",
     };
   }
   return table;

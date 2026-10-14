@@ -4,6 +4,7 @@ import {
   ERREUR_AUCUNE_DATE,
   JOURS_SEMAINE,
   RYTHMES,
+  SEMAINES_DU_MOIS,
   aujourdHuiIso,
   datesAPublier,
   erreurBornes,
@@ -15,12 +16,14 @@ import {
 
 export type TypeJam = "recurrente" | "exceptionnelle";
 
-/** État des dates du formulaire d'annonce (phase 60), hors annonce publiée. */
+/** État des dates du formulaire d'annonce (phases 60 et 61), hors annonce publiée. */
 export type ValeursDates = {
   typeJam: TypeJam;
   dateUnique: string;
   rythme: Rythme;
   jourSemaine: string;
+  // Rythme mensuel seulement (« 1 » à « 4 », « -1 » = dernier) ; ignorée par les autres rythmes.
+  semaineDuMois: string;
   debutRecurrence: string;
   finRecurrence: string;
   datesRetirees: string[];
@@ -33,6 +36,7 @@ export const valeursDatesVides: ValeursDates = {
   dateUnique: "",
   rythme: "CHAQUE_SEMAINE",
   jourSemaine: "",
+  semaineDuMois: "",
   debutRecurrence: "",
   finRecurrence: "",
   datesRetirees: [],
@@ -41,9 +45,12 @@ export const valeursDatesVides: ValeursDates = {
 
 function regleComplete(valeurs: ValeursDates): RegleRecurrence | null {
   if (!valeurs.jourSemaine || !valeurs.debutRecurrence || !valeurs.finRecurrence) return null;
+  const mensuel = valeurs.rythme === "MENSUEL";
+  if (mensuel && !valeurs.semaineDuMois) return null;
   return {
     rythme: valeurs.rythme,
     jourSemaine: Number(valeurs.jourSemaine),
+    semaineDuMois: mensuel ? Number(valeurs.semaineDuMois) : null,
     debut: valeurs.debutRecurrence,
     fin: valeurs.finRecurrence,
   };
@@ -66,6 +73,7 @@ export default function ChoixDates({
 }) {
   const aujourdHui = aujourdHuiIso();
   const maj = (champs: Partial<ValeursDates>) => onChange({ ...valeurs, ...champs });
+  const mensuel = valeurs.rythme === "MENSUEL";
   const regle = valeurs.typeJam === "recurrente" ? regleComplete(valeurs) : null;
   const erreurRegle = regle ? erreurBornes(regle) : null;
   const retirees = regle && !erreurRegle ? retireesPertinentes(regle, valeurs.datesRetirees) : [];
@@ -117,8 +125,10 @@ export default function ChoixDates({
         </label>
       ) : (
         <>
+          {/* Mensuel : « Rythme » seul, puis « Semaine du mois » et « Jour » côte à côte, qui se lisent
+              comme la mention (« Le dernier jeudi »). Sinon « Rythme » et « Jour » côte à côte. */}
           <div className="grid grid-cols-2 gap-3">
-            <ChampListe label="Rythme">
+            <ChampListe label="Rythme" className={mensuel ? "col-span-2" : undefined}>
               <select
                 name="rythme"
                 value={valeurs.rythme}
@@ -132,6 +142,23 @@ export default function ChoixDates({
                 ))}
               </select>
             </ChampListe>
+            {mensuel && (
+              <ChampListe label="Semaine du mois">
+                <select
+                  name="semaineDuMois"
+                  value={valeurs.semaineDuMois}
+                  onChange={(e) => maj({ semaineDuMois: e.target.value })}
+                  className="champ-input"
+                >
+                  <option value="">Choisir une semaine</option>
+                  {SEMAINES_DU_MOIS.map((semaine) => (
+                    <option key={semaine.valeur} value={semaine.valeur}>
+                      {semaine.libelle}
+                    </option>
+                  ))}
+                </select>
+              </ChampListe>
+            )}
             <ChampListe label="Jour">
               <select
                 name="jourSemaine"
@@ -246,9 +273,17 @@ function ListeDates({
   );
 }
 
-function ChampListe({ label, children }: { label: string; children: React.ReactNode }) {
+function ChampListe({
+  label,
+  className = "",
+  children,
+}: {
+  label: string;
+  className?: string;
+  children: React.ReactNode;
+}) {
   return (
-    <label className="flex min-w-0 flex-col gap-2">
+    <label className={`flex min-w-0 flex-col gap-2 ${className}`}>
       <span className="text-[13px] font-bold text-[var(--harbor-marine)]">{label}</span>
       {children}
     </label>

@@ -177,3 +177,44 @@ describe("resoudreDates (phase 60)", () => {
     expect(resultat).toMatchObject({ estRecurrente: false, rythme: null, dates: ["2026-11-20"] });
   });
 });
+
+describe("resoudreDates, une semaine sur deux et mensuel (phase 61)", () => {
+  const aujourdHui = "2026-11-10";
+  const mensuel = (champs: Record<string, unknown>) =>
+    schemaAnnonceBrouillon.parse({
+      typeJam: "recurrente",
+      rythme: "MENSUEL",
+      jourSemaine: "4",
+      semaineDuMois: "-1",
+      debutRecurrence: "2026-11-10",
+      finRecurrence: "2027-04-30",
+      ...champs,
+    });
+
+  it("mensuel : les derniers jeudis, semaine du mois enregistrée", () => {
+    const resultat = resoudreDates(mensuel({}), { publication: true, aujourdHui });
+    expect(resultat).toMatchObject({ rythme: "MENSUEL", semaineDuMois: -1 });
+    expect("dates" in resultat && resultat.dates).toHaveLength(6);
+  });
+
+  it("mensuel sans semaine du mois : publication refusée, brouillon accepté", () => {
+    expect(resoudreDates(mensuel({ semaineDuMois: "" }), { publication: true, aujourdHui })).toEqual({
+      erreur: "Choisissez un jour, une semaine du mois, une date de début et une date de fin.",
+    });
+    const brouillon = resoudreDates(mensuel({ semaineDuMois: "" }), { publication: false, aujourdHui });
+    expect(brouillon).toMatchObject({ rythme: "MENSUEL", semaineDuMois: null, dates: [] });
+  });
+
+  it("semaine du mois ignorée hors rythme mensuel", () => {
+    const resultat = resoudreDates(mensuel({ rythme: "UNE_SEMAINE_SUR_DEUX" }), {
+      publication: true,
+      aujourdHui,
+    });
+    expect(resultat).toMatchObject({ rythme: "UNE_SEMAINE_SUR_DEUX", semaineDuMois: null });
+    expect("dates" in resultat && resultat.dates.slice(0, 2)).toEqual(["2026-11-12", "2026-11-26"]);
+  });
+
+  it("semaine du mois invalide refusée par le schéma", () => {
+    expect(schemaAnnonceBrouillon.safeParse({ semaineDuMois: "5" }).success).toBe(false);
+  });
+});

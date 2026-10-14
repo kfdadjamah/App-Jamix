@@ -201,6 +201,13 @@ describe("valeursReprisesParBar : type, rythme et jour (phase 60)", () => {
     });
   });
 
+  it("jam mensuelle : semaine du mois reprise (phase 61)", () => {
+    const table = valeursReprisesParBar([
+      { ...base, estRecurrente: true, rythme: "MENSUEL", jourSemaine: 4, semaineDuMois: -1 },
+    ]);
+    expect(table["bar-a"]).toMatchObject({ rythme: "MENSUEL", jourSemaine: "4", semaineDuMois: "-1" });
+  });
+
   it("jam exceptionnelle : seul le type est repris", () => {
     const table = valeursReprisesParBar([{ ...base, estRecurrente: false, rythme: null }]);
     expect(table["bar-a"]).toMatchObject({ typeJam: "exceptionnelle", jourSemaine: "" });

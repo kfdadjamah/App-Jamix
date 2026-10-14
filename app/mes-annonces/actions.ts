@@ -38,6 +38,7 @@ function extraireChampsFormulaire(formData: FormData) {
     dateUnique: formData.get("dateUnique") ?? "",
     rythme: formData.get("rythme") ?? "",
     jourSemaine: formData.get("jourSemaine") ?? "",
+    semaineDuMois: formData.get("semaineDuMois") ?? "",
     debutRecurrence: formData.get("debutRecurrence") ?? "",
     finRecurrence: formData.get("finRecurrence") ?? "",
     datesRetirees: formData.getAll("datesRetirees"),
@@ -53,13 +54,14 @@ function extraireChampsFormulaire(formData: FormData) {
   };
 }
 
-/** Type et règle de récurrence à écrire sur l'annonce (phase 60). */
+/** Type et règle de récurrence à écrire sur l'annonce (phases 60 et 61). */
 function champsRegle(resolues: DatesResolues) {
   const versDate = (iso: string | null) => (iso ? new Date(iso) : null);
   return {
     estRecurrente: resolues.estRecurrente,
     rythme: resolues.rythme,
     jourSemaine: resolues.jourSemaine,
+    semaineDuMois: resolues.semaineDuMois,
     debutRecurrence: versDate(resolues.debutRecurrence),
     finRecurrence: versDate(resolues.finRecurrence),
     datesRetirees: resolues.datesRetirees.map((date) => new Date(date)),

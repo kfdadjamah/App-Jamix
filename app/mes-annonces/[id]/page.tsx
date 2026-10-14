@@ -49,9 +49,9 @@ export default async function PageEditionAnnonce({
   const choixDates: ValeursDates = {
     typeJam: annonce.estRecurrente ? "recurrente" : "exceptionnelle",
     dateUnique: annonce.estRecurrente ? "" : versIso(annonce.debutRecurrence) || (datesIso[0] ?? ""),
-    // Seul rythme proposé en phase 60.
-    rythme: "CHAQUE_SEMAINE",
+    rythme: annonce.rythme ?? "CHAQUE_SEMAINE",
     jourSemaine: annonce.jourSemaine ? String(annonce.jourSemaine) : "",
+    semaineDuMois: annonce.semaineDuMois ? String(annonce.semaineDuMois) : "",
     debutRecurrence: annonce.estRecurrente ? versIso(annonce.debutRecurrence) : "",
     finRecurrence: versIso(annonce.finRecurrence),
     datesRetirees: annonce.datesRetirees.map((date) => versIso(date)),
