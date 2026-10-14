@@ -27,3 +27,8 @@ Toujours lire DESIGN.md avant toute décision visuelle ou UI. Polices, couleurs,
 - Occurrence : une date précise d'une annonce, avec son propre statut, distincte de l'annonce elle-même.
 - J-7 : échéance de confirmation, 7 jours avant une date d'occurrence.
 - Portée (ciblée/globale) : appliquer une modif/annulation à une occurrence seule ou à toutes celles de l'annonce récurrente.
+
+##Faire appel au context7
+- Pour toute API ou librairie externe, consulte Context7 avant d'écrire. Pas d'invention de signature de mémoire.
+- Tout écran nouveau ou modifié doit être validé par un test Playwright avant que tu déclares "terminé".
+- Toute modification de données en base passe par le CLI Supabase, jamais de SQL direct. Toujours une lecture de vérification avant tout ajout ou changement.
