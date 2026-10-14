@@ -1585,11 +1585,11 @@ Une carte de « Mes annonces » affiche d'abord toutes les dates à confirmer (r
 
 ### Critères d'acceptation
 
-- [ ] Une jam hebdomadaire sur 12 mois n'affiche pas plus de 6 pastilles, plus « + N autres dates »
-- [ ] Les dates à confirmer passent avant les autres et sont toutes affichées
-- [ ] « + N autres dates » mène à la page de modification de l'annonce
-- [ ] Aucun débordement à 360 px
-- [ ] Test e2e ; DESIGN.md à jour
+- [x] Une jam hebdomadaire sur 12 mois n'affiche pas plus de 6 pastilles, plus « + N autres dates »
+- [x] Les dates à confirmer passent avant les autres et sont toutes affichées
+- [x] « + N autres dates » mène à la page de modification de l'annonce
+- [x] Aucun débordement à 360 px
+- [x] Test e2e ; DESIGN.md à jour
 
 ## Bloquée par
 

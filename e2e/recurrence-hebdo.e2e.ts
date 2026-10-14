@@ -116,7 +116,9 @@ test("13 semaines : aperçu de 13 dates, une retirée, J-7 par date, recalcul se
   const carte = page.locator(`a[href="/mes-annonces/${annonce.id}"]`);
   await expect(carte).toBeVisible();
   await expect(carte.getByText(/· Tous les /)).toBeVisible();
-  await expect(carte.getByRole("listitem")).toHaveCount(12);
+  // 12 dates : 6 pastilles puis « + 6 autres dates » (Phase 63).
+  await expect(carte.getByRole("listitem")).toHaveCount(7);
+  await expect(carte.getByText("+ 6 autres dates")).toBeVisible();
   const pastille = (iso: string) => {
     const libelle = new Date(iso).toLocaleDateString("fr-FR", {
       day: "numeric",
