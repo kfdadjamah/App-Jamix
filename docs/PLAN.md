@@ -1655,11 +1655,11 @@ L'email actuel de l'organisateur s'affiche sous le titre « Email » du profil, 
 
 ### Critères d'acceptation
 
-- [ ] Section repliée : l'email du compte est visible sous le titre « Email »
-- [ ] Section dépliée : l'email reste visible, au-dessus de « Nouvel email »
-- [ ] Après un changement d'email réussi, l'email affiché est le nouveau
-- [ ] Aucun débordement à 360 px avec un email long
-- [ ] Test e2e (sans modifier l'email du compte de test) ; DESIGN.md à jour
+- [x] Section repliée : l'email du compte est visible sous le titre « Email »
+- [x] Section dépliée : l'email reste visible, au-dessus de « Nouvel email »
+- [x] Après un changement d'email réussi, l'email affiché est le nouveau
+- [x] Aucun débordement à 360 px avec un email long
+- [x] Test e2e (sans modifier l'email du compte de test) ; DESIGN.md à jour
 
 ## Bloquée par
 
