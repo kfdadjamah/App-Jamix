@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { STYLES_MUSICAUX, INSTRUMENTS_BACKLINE, TOUS_LES_STYLES } from "@/lib/annonce-constantes";
 import {
   LONGUEUR_MAX_CO_ORGANISATEUR,
+  LONGUEUR_MAX_TITRE,
   LONGUEUR_MAX_DESCRIPTION,
 } from "@/lib/validation/annonce";
 import { decisionSortie, instantane } from "@/lib/garde-sortie";
@@ -20,7 +21,7 @@ const ERREUR_RESEAU = "Connexion impossible, l'annonce n'a pas été enregistré
 
 type Fenetre =
   | { type: "brouillon-enregistre"; destination: string }
-  | { type: "modification-prise-en-compte"; destination: string }
+  | { type: "modification-prise-en-compte" }
   | { type: "echec"; destination: string; raison: string }
   | { type: "avertir-perte"; destination: string }
   | { type: "recreer-dates" };
@@ -45,6 +46,7 @@ export type ValeursInitialesAnnonce = {
   styleAutre: string;
   instruments: string[];
   instrumentAutre: string;
+  titre: string;
   description: string;
   coOrganisateur: string;
 };
@@ -57,6 +59,7 @@ const valeursVides: ValeursInitialesAnnonce = {
   styleAutre: "",
   instruments: [],
   instrumentAutre: "",
+  titre: "",
   description: "",
   coOrganisateur: "",
 };
@@ -67,7 +70,22 @@ export type ChoixBar =
   // Annonce publiée : bar figé, affiché sans pouvoir être changé.
   | { mode: "fige"; nom: string };
 
-export default function FormulaireAnnonce({
+// Modification d'une annonce (phase 65) : après le pop-up, l'organisateur reste sur la page. Le
+// formulaire est remonté avec les valeurs enregistrées (reçues du serveur) et sans portée choisie.
+export default function FormulaireAnnonce(props: PropsFormulaire) {
+  const [cleEnregistrement, setCleEnregistrement] = useState(0);
+  return (
+    <FormulaireAnnonceInterne
+      key={cleEnregistrement}
+      {...props}
+      surModificationValidee={() => setCleEnregistrement((cle) => cle + 1)}
+    />
+  );
+}
+
+type PropsFormulaire = Parameters<typeof FormulaireAnnonceInterne>[0];
+
+function FormulaireAnnonceInterne({
   choixBar,
   nouvelleAnnonce = false,
   reprises,
@@ -79,6 +97,7 @@ export default function FormulaireAnnonce({
   actionPublier,
   actionModifier,
   destinationApresEnregistrement,
+  surModificationValidee,
 }: {
   choixBar: ChoixBar;
   // Sur une nouvelle annonce, choisir un bar ne compte pas à lui seul comme une saisie.
@@ -95,6 +114,7 @@ export default function FormulaireAnnonce({
   actionModifier?: (formData: FormData) => Promise<Resultat>;
   // Nouvelle annonce : après « Enregistrer le brouillon » ou « Publier », on quitte le formulaire.
   destinationApresEnregistrement?: string;
+  surModificationValidee?: () => void;
 }) {
   const [valeurs, setValeurs] = useState(valeursInitiales ?? valeursVides);
   const [photosReprises, setPhotosReprises] = useState<[string | null, string | null]>([
@@ -217,6 +237,7 @@ export default function FormulaireAnnonce({
       styleAutre: reprise.styleAutre,
       instruments: reprise.instruments,
       instrumentAutre: reprise.instrumentAutre,
+      titre: reprise.titre,
       description: reprise.description,
       coOrganisateur: reprise.coOrganisateur,
     });
@@ -239,13 +260,11 @@ export default function FormulaireAnnonce({
       return;
     }
     referenceRef.current = instantaneCourant();
-    if (resultat.destination) {
-      setFenetre({ type: "modification-prise-en-compte", destination: resultat.destination });
+    if (!destinationApresEnregistrement) {
+      setFenetre({ type: "modification-prise-en-compte" });
       return;
     }
-    if (destinationApresEnregistrement) {
-      router.push(destinationApresEnregistrement);
-    }
+    router.push(destinationApresEnregistrement);
   }
 
   const inactif = enCours || occupe;
@@ -268,7 +287,11 @@ export default function FormulaireAnnonce({
           titre="Modification enregistrée"
           message="La modification a été prise en compte."
           libelleDefaut="OK"
-          surDefaut={() => quitterVers(fenetre.destination)}
+          surDefaut={() => {
+            setFenetre(null);
+            router.refresh();
+            surModificationValidee?.();
+          }}
         />
       )}
       {fenetre?.type === "echec" && (
@@ -452,6 +475,19 @@ export default function FormulaireAnnonce({
           name="coOrganisateur"
           maxLength={LONGUEUR_MAX_CO_ORGANISATEUR}
           defaultValue={valeurs.coOrganisateur}
+          autoComplete="off"
+          className="champ-input"
+        />
+      </label>
+
+      <label className="flex flex-col gap-2">
+        <span className="text-[13px] font-bold text-[var(--harbor-marine)]">Titre (option)</span>
+        <input
+          key={`titre-${cleReprise}`}
+          type="text"
+          name="titre"
+          maxLength={LONGUEUR_MAX_TITRE}
+          defaultValue={valeurs.titre}
           autoComplete="off"
           className="champ-input"
         />

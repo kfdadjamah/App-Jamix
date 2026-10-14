@@ -116,6 +116,7 @@ export type ValeursReprises = {
   styleAutre: string;
   instruments: string[];
   instrumentAutre: string;
+  titre: string;
   description: string;
   coOrganisateur: string;
   photoUrl1: string | null;
@@ -139,6 +140,7 @@ type AnnoncePourReprise = {
   styleAutre: string | null;
   instruments: string[];
   instrumentAutre: string | null;
+  titre?: string | null;
   description: string | null;
   coOrganisateur: string | null;
   photoUrl1: string | null;
@@ -177,6 +179,7 @@ export function valeursReprisesParBar(
       styleAutre: annonce.styleAutre ?? "",
       instruments: annonce.instruments,
       instrumentAutre: annonce.instrumentAutre ?? "",
+      titre: annonce.titre ?? "",
       description: annonce.description ?? "",
       coOrganisateur: annonce.coOrganisateur ?? "",
       photoUrl1: annonce.photoUrl1,

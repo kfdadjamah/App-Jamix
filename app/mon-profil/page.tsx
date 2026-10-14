@@ -128,7 +128,14 @@ export default async function PageMonProfil({
           <FormulaireIdentite prenomActuel={organisateur.prenom} nomActuel={organisateur.nom} />
         </SectionDeroulable>
         <Separateur />
-        <SectionDeroulable titre="Email">
+        <SectionDeroulable
+          titre="Email"
+          sousTitre={
+            <p data-testid="email-actuel" className="break-all text-[14px] text-[var(--harbor-marine)]">
+              {organisateur.email}
+            </p>
+          }
+        >
           <FormulaireEmail />
         </SectionDeroulable>
         <Separateur />

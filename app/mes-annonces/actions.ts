@@ -28,7 +28,7 @@ import {
   type DatesResolues,
 } from "@/lib/validation/annonce";
 
-type Resultat = { erreur: string } | { succes: true; destination?: string };
+type Resultat = { erreur: string } | { succes: true };
 
 const ERREUR_ENREGISTREMENT = "L'annonce n'a pas pu être enregistrée. Réessayez.";
 const ERREUR_BAR_INTROUVABLE = "Bar introuvable.";
@@ -58,6 +58,7 @@ function extraireChampsFormulaire(formData: FormData) {
     styleAutre: formData.get("styleAutre") ?? "",
     instruments: formData.getAll("instruments"),
     instrumentAutre: formData.get("instrumentAutre") ?? "",
+    titre: formData.get("titre") ?? "",
     description: formData.get("description") ?? "",
     coOrganisateur: formData.get("coOrganisateur") ?? "",
   };
@@ -325,6 +326,7 @@ export async function creerAnnonce(
           styleAutre: donnees.styleAutre || null,
           instruments: donnees.instruments,
           instrumentAutre: donnees.instrumentAutre || null,
+          titre: donnees.titre || null,
           description: donnees.description || null,
           coOrganisateur: donnees.coOrganisateur || null,
           photoUrl1,
@@ -426,6 +428,7 @@ export async function modifierAnnonce(
           instruments: donnees.instruments,
           instrumentAutre: donnees.instrumentAutre || null,
           // Champ de l'annonce : toutes ses dates, quelle que soit la portée choisie.
+          titre: donnees.titre || null,
           description: donnees.description || null,
           coOrganisateur: donnees.coOrganisateur || null,
         },
@@ -451,22 +454,7 @@ export async function modifierAnnonce(
 
   revalidatePath("/mes-annonces");
   revalidatePath(`/mes-annonces/${annonceId}`);
-  return { succes: true, destination: await destinationApresModification(annonceId, nouveauStatut) };
-}
-
-/** Fiche de la prochaine date non annulée d'une annonce publiée, sinon « Mes annonces ». */
-async function destinationApresModification(
-  annonceId: string,
-  statut: "BROUILLON" | "PUBLIEE"
-): Promise<string> {
-  if (statut !== "PUBLIEE") return "/mes-annonces";
-  const aujourdHui = new Date(new Date().toISOString().slice(0, 10));
-  const prochaine = await prisma.occurrenceJam.findFirst({
-    where: { annonceId, statut: { not: "ANNULEE" }, date: { gte: aujourdHui } },
-    orderBy: { date: "asc" },
-    select: { id: true },
-  });
-  return prochaine ? `/jams/${prochaine.id}` : "/mes-annonces";
+  return { succes: true };
 }
 
 export async function confirmerOccurrence(occurrenceId: string): Promise<Resultat> {

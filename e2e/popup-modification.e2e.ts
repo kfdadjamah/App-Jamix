@@ -57,42 +57,77 @@ test.beforeEach(async ({ page }) => {
   await seConnecter(page);
 });
 
-test("annonce publiée : pop-up puis fiche de la prochaine date non annulée", async ({ page }) => {
+test("annonce publiée : pop-up puis on reste sur la modification avec les valeurs enregistrées", async ({ page }) => {
   const annonce = await creerAnnonce("PUBLIEE", [{ jours: 10, annulee: true }, { jours: 20 }]);
-  await page.goto(`/mes-annonces/${annonce.id}`);
+  const adresse = `/mes-annonces/${annonce.id}`;
+  await page.goto(adresse);
+  const description = page.getByLabel(/Description/);
+  await description.fill("Description modifiée par le test");
   await page.getByRole("button", { name: "Enregistrer les modifications" }).click();
 
   const fenetre = page.getByRole("dialog");
   await expect(fenetre).toBeVisible();
   await expect(fenetre).toContainText("La modification a été prise en compte");
   await fenetre.getByRole("button", { name: "OK" }).click();
-  await expect(page).toHaveURL(`/jams/${annonce.occurrences[1].id}`);
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+  await expect(page).toHaveURL(adresse);
+  await expect(page.getByLabel(/Description/)).toHaveValue("Description modifiée par le test");
+
+  // Après un rechargement, les valeurs enregistrées sont bien en base.
+  await page.reload();
+  await expect(page.getByLabel(/Description/)).toHaveValue("Description modifiée par le test");
 });
 
-test("Échap ferme le pop-up et mène à la fiche", async ({ page }) => {
+test("Échap ferme le pop-up et laisse sur la modification", async ({ page }) => {
   const annonce = await creerAnnonce("PUBLIEE", [{ jours: 15 }]);
-  await page.goto(`/mes-annonces/${annonce.id}`);
+  const adresse = `/mes-annonces/${annonce.id}`;
+  await page.goto(adresse);
   await page.getByRole("button", { name: "Enregistrer les modifications" }).click();
   await expect(page.getByRole("dialog")).toBeVisible();
   await page.keyboard.press("Escape");
-  await expect(page).toHaveURL(`/jams/${annonce.occurrences[0].id}`);
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+  await expect(page).toHaveURL(adresse);
 });
 
-test("brouillon : pop-up puis retour à Mes annonces", async ({ page }) => {
+test("brouillon : pop-up puis on reste sur la modification", async ({ page }) => {
   const annonce = await creerAnnonce("BROUILLON", [{ jours: 15 }]);
-  await page.goto(`/mes-annonces/${annonce.id}`);
+  const adresse = `/mes-annonces/${annonce.id}`;
+  await page.goto(adresse);
   await page.getByRole("button", { name: "Enregistrer le brouillon" }).click();
   const fenetre = page.getByRole("dialog");
   await expect(fenetre).toContainText("La modification a été prise en compte");
   await fenetre.getByRole("button", { name: "OK" }).click();
-  await expect(page).toHaveURL("/mes-annonces");
+  await expect(page).toHaveURL(adresse);
+  await expect(page.getByRole("button", { name: "Enregistrer le brouillon" })).toBeVisible();
 });
 
-test("annonce sans date à venir : retour à Mes annonces", async ({ page }) => {
+test("brouillon publié : pop-up puis modification en mode annonce publiée", async ({ page }) => {
+  const annonce = await creerAnnonce("BROUILLON", [{ jours: 15 }]);
+  const adresse = `/mes-annonces/${annonce.id}`;
+  await page.goto(adresse);
+  await page.getByRole("button", { name: "Publier" }).click();
+  const fenetre = page.getByRole("dialog");
+  await expect(fenetre).toContainText("La modification a été prise en compte");
+  await fenetre.getByRole("button", { name: "OK" }).click();
+  await expect(page).toHaveURL(adresse);
+  await expect(page.getByRole("button", { name: "Enregistrer les modifications" })).toBeVisible();
+});
+
+test("annonce sans date à venir : on reste sur la modification", async ({ page }) => {
   const annonce = await creerAnnonce("PUBLIEE", [{ jours: 15, annulee: true }]);
+  const adresse = `/mes-annonces/${annonce.id}`;
+  await page.goto(adresse);
+  await page.getByRole("button", { name: "Enregistrer les modifications" }).click();
+  await page.getByRole("dialog").getByRole("button", { name: "OK" }).click();
+  await expect(page).toHaveURL(adresse);
+});
+
+test("Retour mène à Mes annonces après un enregistrement", async ({ page }) => {
+  const annonce = await creerAnnonce("PUBLIEE", [{ jours: 15 }]);
   await page.goto(`/mes-annonces/${annonce.id}`);
   await page.getByRole("button", { name: "Enregistrer les modifications" }).click();
   await page.getByRole("dialog").getByRole("button", { name: "OK" }).click();
+  await page.getByRole("link", { name: "Retour" }).click();
   await expect(page).toHaveURL("/mes-annonces");
 });
 

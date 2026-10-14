@@ -1459,7 +1459,7 @@ Le formulaire d'annonce propose un champ facultatif « Co-organisateur », repri
 
 ---
 
-## Phase 58 : Pop-up et redirection après modification d'une annonce
+## Phase 58 : Pop-up et redirection après modification d'une annonce *(redirection remplacée par la Phase 65)*
 
 **User stories** : US-178, US-179, US-180, US-181
 
@@ -1594,3 +1594,95 @@ Une carte de « Mes annonces » affiche d'abord toutes les dates à confirmer (r
 ## Bloquée par
 
 - Aucune — démarrable immédiatement (utile dès la Phase 60)
+
+---
+
+## Phase 64 : Titre d'annonce et aperçu sur la carte
+
+**User stories** : US-199, US-200, US-201, US-202, US-203
+
+### Ce qu'on livre
+
+Un champ « Titre (option) » de 60 caractères au plus dans le formulaire d'annonce, repris par « Reprendre la dernière annonce de ce bar ». Sur les cartes (liste musicien et « Mes annonces »), sous les instruments : le titre en gras, le début de la description (30 caractères, « … » si coupé, sans couper un mot) et « Voir le détail » vers la page de la jam, qui montre le titre et la description entière. Sans titre ni description, rien n'est affiché. Modèle : champ facultatif `titre` sur l'annonce, commun à toutes ses dates.
+
+### Critères d'acceptation
+
+- [x] Une description de plus de 30 caractères est coupée à 30 au plus, sans couper un mot, avec « … » ; une description courte s'affiche en entier
+- [x] Le titre s'affiche en gras au-dessus du début de description, sous les instruments
+- [x] « Voir le détail » ouvre la page de la jam, qui affiche le titre et la description entière
+- [x] Une annonce sans titre ni description n'affiche ni aperçu ni « Voir le détail » ; les anciennes annonces restent valides
+- [x] Un titre de plus de 60 caractères est refusé
+- [x] « Mes annonces » affiche le même aperçu ; aucun débordement à 360 px
+- [x] Données modifiées via Prisma uniquement, avec vérification en lecture avant tout changement
+- [x] Test e2e avec restauration des données (base partagée) ; DESIGN.md à jour
+
+## Bloquée par
+
+- Aucune — démarrable immédiatement
+
+---
+
+## Phase 65 : Rester sur la modification après « Enregistrer »
+
+**User stories** : US-204, US-205 (remplace US-179 et US-180 de la Phase 58)
+
+### Ce qu'on livre
+
+Sur la page de modification d'une annonce (publiée ou brouillon), « Enregistrer » ouvre le pop-up « Modification enregistrée » ; après « OK », l'organisateur reste sur la page de modification avec les valeurs enregistrées, et peut ensuite faire retour. Un échec garde le message d'erreur sans pop-up de succès. La création d'une annonce garde son retour vers « Mes annonces ».
+
+### Critères d'acceptation
+
+- [x] Après « Enregistrer » puis « OK », l'adresse reste celle de la page de modification
+- [x] Le formulaire affiche les valeurs qui viennent d'être enregistrées
+- [x] Même comportement pour un brouillon et pour une annonce sans date à venir
+- [x] Un échec d'enregistrement affiche l'erreur sans pop-up de succès
+- [x] La création d'une nouvelle annonce redirige toujours vers « Mes annonces »
+- [x] Test e2e (adaptation du test de la Phase 58) avec restauration des données ; DESIGN.md à jour
+
+## Bloquée par
+
+- Aucune — démarrable immédiatement
+
+---
+
+## Phase 66 : Email visible dans la section « Email » du profil
+
+**User stories** : US-206
+
+### Ce qu'on livre
+
+L'email actuel de l'organisateur s'affiche sous le titre « Email » du profil, section repliée comme dépliée ; déplié, il se lit entre le titre et le premier champ de changement d'email.
+
+### Critères d'acceptation
+
+- [x] Section repliée : l'email du compte est visible sous le titre « Email »
+- [x] Section dépliée : l'email reste visible, au-dessus de « Nouvel email »
+- [x] Après un changement d'email réussi, l'email affiché est le nouveau
+- [x] Aucun débordement à 360 px avec un email long
+- [x] Test e2e (sans modifier l'email du compte de test) ; DESIGN.md à jour
+
+## Bloquée par
+
+- Aucune — démarrable immédiatement
+
+---
+
+## Phase 67 : Inscription : indication « autres bars » et photo masquée
+
+**User stories** : US-207, US-208
+
+### Ce qu'on livre
+
+Sous « Nom du bar », l'indication « Vous pouvez rajouter les autres bars dans le profil ». Le champ « Photo ou logo » disparaît du formulaire d'inscription, à revoir dans une prochaine version ; l'inscription aboutit sans photo.
+
+### Critères d'acceptation
+
+- [ ] L'indication est visible sous « Nom du bar »
+- [ ] Aucun champ « Photo ou logo » ni sélecteur de fichier dans le formulaire
+- [ ] Une inscription sans photo crée le compte et la fiche du bar
+- [ ] L'ajout de photo depuis le profil reste possible
+- [ ] Test e2e avec suppression du compte créé ; DESIGN.md à jour
+
+## Bloquée par
+
+- Aucune — démarrable immédiatement

@@ -45,6 +45,19 @@ const schemaDescription = z
       )
   );
 
+export const LONGUEUR_MAX_TITRE = 60;
+
+// Espaces de début et de fin retirés ; vide → absent.
+const schemaTitre = z
+  .string()
+  .optional()
+  .transform((texte) => (texte ?? "").trim())
+  .pipe(
+    z
+      .string()
+      .max(LONGUEUR_MAX_TITRE, `Le titre ne peut pas dépasser ${LONGUEUR_MAX_TITRE} caractères.`)
+  );
+
 export const LONGUEUR_MAX_CO_ORGANISATEUR = 40;
 
 // Espaces de début et de fin retirés ; vide → absent.
@@ -82,6 +95,7 @@ const champsCommuns = {
   styleAutre: z.string().trim().optional(),
   instruments: z.array(z.enum(INSTRUMENTS_BACKLINE)).default([]),
   instrumentAutre: z.string().trim().optional(),
+  titre: schemaTitre,
   description: schemaDescription,
   coOrganisateur: schemaCoOrganisateur,
   photo1: schemaPhotoAnnonce,
