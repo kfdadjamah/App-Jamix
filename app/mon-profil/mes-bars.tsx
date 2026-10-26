@@ -62,6 +62,11 @@ export default function MesBars({ bars }: { bars: BarDuProfil[] }) {
 
   return (
     <>
+      {bars.length === 0 && (
+        <p data-testid="aucun-bar" className="text-[14px] text-[var(--harbor-marine)]">
+          Aucun bar pour le moment. Ajoutez-en un pour publier des annonces.
+        </p>
+      )}
       <ul className="flex flex-col">
         {bars.map((bar) => {
           const deplie = panneau === bar.id;
