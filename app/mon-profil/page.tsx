@@ -50,7 +50,8 @@ export default async function PageMonProfil({
     },
   });
 
-  if (!organisateur || organisateur.bars.length === 0) {
+  // Un compte sans bar reste un compte valide : il doit pouvoir en ajouter un depuis son profil.
+  if (!organisateur) {
     return (
       <>
         <Bandeau page="mon-profil" />
@@ -106,7 +107,7 @@ export default async function PageMonProfil({
         </div>
 
         <Separateur />
-        <SectionDeroulable titre="Mes bars">
+        <SectionDeroulable titre="Mes bars" ouverteParDefaut={organisateur.bars.length === 0}>
           <MesBars
             bars={organisateur.bars.map((bar) => ({
               id: bar.id,
