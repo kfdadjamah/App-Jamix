@@ -8,9 +8,9 @@
 - **Deux axes de statut distincts** : (1) statut de l'annonce — `Brouillon` (invisible côté musicien, aucune occurrence n'entre dans le cycle J-7) → `Publiée` ; (2) statut de chaque occurrence — `confirmée` / `programmée (sera confirmée le J-7)` / `en attente de confirmation` / `annulée`, qui ne démarre qu'à la publication de l'annonce.
 - **Gestion des photos** : upload optionnel côté fiche bar (photo/logo) et côté annonce (jusqu'à 2 photos maximum) ; toute image importée est automatiquement ajustée/recadrée au format d'affichage de l'application (pas de cadrage manuel), sans jamais bloquer la création/publication si aucune photo n'est fournie.
 - **Authentification / autorisation** : seuls les organisateurs ont un compte (email/mot de passe) ; la consultation musicien est publique, sans compte, sans autorisation.
-- **Statuts d'occurrence** : `confirmée`, `programmée (en attente de confirmation, sera confirmée le J-7)`, `en attente de confirmation (J-7 dépassé)`, `annulée`. Ce cycle de statuts est fixé dès la Phase 6 et réutilisé jusqu'à la Phase 8.
-- **Déclenchement du cycle J-7 (Phase 6)** : la décision « cycle de confirmation requis ou non » est figée une seule fois, au moment de la publication de l'annonce (création directement publiée, ou passage Brouillon → Publiée) — jamais recalculée ensuite. Pour chaque occurrence, si sa date est à plus de 7 jours de l'instant de publication, on écrit `statut = PROGRAMMEE` et `confirmationJ7 = date - 7j` ; sinon (publiée à 7 jours ou moins de son échéance, ex. J-2), on écrit directement `statut = CONFIRMEE` et `confirmationJ7 = null`, sans cycle ni relance. Cette règle s'applique indépendamment à chaque occurrence, y compris pour une annonce récurrente publiée en une fois avec plusieurs dates. Le calcul des écarts de jours se fait en UTC, date seule (`new Date(new Date().toISOString().slice(0,10))`), cohérent avec le reste de l'app — pas de gestion de fuseau Europe/Paris. Le statut « en attente de confirmation » n'est jamais persisté : il est calculé à la volée à chaque lecture (statut = PROGRAMMEE et confirmationJ7 <= aujourd'hui), sans tâche planifiée (pas d'infra cron dans le projet).
-- **Relances de confirmation** : canal in-app uniquement (jamais d'email ni de SMS pour les relances J-7) ; l'email est réservé aux messages de compte (Phases 13 et 14).
+- **Statuts d'occurrence** : `confirmée`, `programmée (sera confirmée le J-7)`, `en attente de confirmation (de J-7 à J-4)`, `annulée`, la confirmation devenant automatique à J-3 (Phase 69). Ce cycle de statuts est fixé dès la Phase 6 et réutilisé jusqu'à la Phase 8.
+- **Déclenchement du cycle J-7 (Phase 6)** : la décision « cycle de confirmation requis ou non » est figée une seule fois, au moment de la publication de l'annonce (création directement publiée, ou passage Brouillon → Publiée) — jamais recalculée ensuite. Pour chaque occurrence, si sa date est à plus de 3 jours de l'instant de publication, on écrit `statut = PROGRAMMEE` et `confirmationJ7 = date - 7j` ; sinon (publiée à 3 jours ou moins, ex. J-2), on écrit directement `statut = CONFIRMEE` et `confirmationJ7 = null`, sans cycle ni relance *(avant la Phase 69, le seuil était 7 jours)*. Cette règle s'applique indépendamment à chaque occurrence, y compris pour une annonce récurrente publiée en une fois avec plusieurs dates. Le calcul des écarts de jours se fait en UTC, date seule (`new Date(new Date().toISOString().slice(0,10))`), cohérent avec le reste de l'app — pas de gestion de fuseau Europe/Paris. Les statuts « en attente de confirmation » et « confirmée automatiquement » ne sont jamais persistés : ils sont calculés à la volée à chaque lecture par `statutAffiche` (statut = PROGRAMMEE : confirmée si 3 jours ou moins restent, en attente si confirmationJ7 <= aujourd'hui, sinon programmée), sans tâche planifiée (pas d'infra cron dans le projet).
+- **Relances de confirmation** : canal in-app uniquement (jamais d'email ni de SMS pour les relances J-7) ; la relance n'existe que pendant l'état « en attente de confirmation » (J-7 à J-4) et rappelle la confirmation automatique à J-3 (Phase 69) ; l'email est réservé aux messages de compte (Phases 13 et 14).
 - **Géolocalisation** : basée sur l'API de géolocalisation du navigateur, demandée à la consultation ; dégradation gracieuse (pas de distance affichée) si refusée.
 - **Frontière tierce** : pas de SMS ; email uniquement pour les messages de compte, via **Resend** (réinitialisation du mot de passe, bienvenue, avis de changement de mot de passe ou d'email — Phases 13 et 14), jamais pour les relances J-7. Dépendances externes limitées à : Resend (clé `RESEND_API_KEY`), géolocalisation navigateur, géocodage des adresses de bar (API Adresse data.gouv.fr), fond de carte vectoriel gratuit et sans clé API (Phase 9), et applications de cartographie externes (Google Maps, Plans, Waze, Citymapper) ouvertes par simple lien universel avec le bar comme destination — aucun calcul d'itinéraire ni clé API côté application (Phase 10).
 - **Récurrence (Phase 5)** *(remplacé par « Récurrence par règle (Phases 59 à 63) » : plus de liste de dates ni de limite de 12 dates)* : le champ `estRecurrente` est dérivé automatiquement du nombre d'occurrences (`occurrences.length > 1`), pas de toggle dédié dans l'UI ; l'horaire (`heureDebut`/`heureFin`) est unique par annonce et s'applique à toutes ses occurrences ; jusqu'à 12 dates maximum par annonce, sans doublon (contrainte `@@unique([annonceId, date])` en base + validation applicative) ; les dates ne sont librement modifiables (ajout/retrait) que tant que l'annonce est en Brouillon — une fois Publiée, la modification des dates relève de la Phase 8 (portée ciblée/globale). Tant que l'annonce est en Brouillon, chaque sauvegarde resynchronise ses occurrences par remplacement complet (suppression puis recréation à partir des dates soumises), sans diff fin — aucune donnée par occurrence n'a encore d'état à préserver à ce stade. Une fois Publiée, les autres champs (horaire, style, instruments, photos) restent modifiables et s'appliquent alors à toutes les occurrences existantes.
@@ -204,7 +204,7 @@ Toute occurrence publiée plus de 7 jours à l'avance affiche « Jam programmée
 
 ### Ce qu'on livre
 
-Tant qu'une occurrence n'est pas confirmée après son échéance J-7, l'organisateur reçoit des relances in-app à J-5, J-3, J-2, J-1 et le jour J, visibles dans son espace organisateur.
+Tant qu'une occurrence n'est pas confirmée après son échéance J-7, l'organisateur reçoit des relances in-app à J-5, J-3, J-2, J-1 et le jour J, visibles dans son espace organisateur. *(Remplacé par la Phase 69 : relance de J-7 à J-4 seulement, confirmation automatique à J-3.)*
 
 ### Critères d'acceptation
 
@@ -1686,3 +1686,46 @@ Sous « Nom du bar », l'indication « Vous pouvez rajouter les autres bars dans
 ## Bloquée par
 
 - Aucune — démarrable immédiatement
+
+---
+
+## Phase 68 : Un compte sans bar accède à son profil
+
+**User stories** : US-209
+
+### Ce qu'on livre
+
+Un organisateur sans bar (compte créé avant l'obligation d'en avoir un) voit son profil au lieu de « Compte introuvable ». La section « Mes bars » est ouverte d'office, avec une mention et le bouton « Ajouter un bar ». Seul un compte absent affiche encore « Compte introuvable ».
+
+### Critères d'acceptation
+
+- [x] Un compte sans bar affiche son profil (plus de « Compte introuvable »)
+- [x] La section « Mes bars » est ouverte, avec une mention et le bouton « Ajouter un bar »
+- [x] Un compte absent affiche toujours « Compte introuvable »
+- [x] Test e2e avec compte jetable (dev uniquement) : `e2e/compte-sans-bar.e2e.ts`
+
+## Bloquée par
+
+- Aucune — démarrable immédiatement
+
+---
+
+## Phase 69 : Confirmation automatique à J-3
+
+**User stories** : US-8, US-10, US-11, US-210, US-211
+
+### Ce qu'on livre
+
+Le statut d'une date dépend des jours restants n avant la jam : n > 7 programmée ; 3 < n ≤ 7 en attente de confirmation ; n ≤ 3 confirmée automatiquement. La relance in-app n'existe que de J-7 à J-4 et précise que, sans confirmation à J-3, la date sera automatiquement confirmée. Les relances J-3, J-2, J-1 et J0 sont supprimées. Aucune migration : le statut est calculé à l'affichage (`statutAffiche`), et une date publiée à 4 jours ou plus reste `PROGRAMMEE` en base.
+
+### Critères d'acceptation
+
+- [x] Une date à plus de 7 jours est « programmée » ; de 7 à 4 jours « en attente de confirmation » ; à 3 jours ou moins « confirmée »
+- [x] Une date annulée reste annulée, quel que soit l'écart
+- [x] La relance affiche « Sans confirmation à J-3, la date sera automatiquement confirmée. » et disparaît à J-3
+- [x] Le compteur « À confirmer » ne compte que les dates en attente (J-7 à J-4)
+- [x] Tests unitaires (`lib/annonces.test.ts`, `lib/relances.test.ts`) et e2e `e2e/statut-confirmation-auto.e2e.ts`
+
+## Bloquée par
+
+- Phase 6 (statuts d'occurrence) et Phase 7 (relances)

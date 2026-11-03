@@ -58,8 +58,8 @@ test("hebdomadaire sur 12 mois : 6 pastilles au plus, dates à confirmer d'abord
   page,
 }) => {
   await page.setViewportSize({ width: 360, height: 800 });
-  // Deux dates passées, une à J+3 et une à J+5 (à confirmer), puis 50 semaines à partir de J+10.
-  const decalages = [-14, -7, 3, 5, ...Array.from({ length: 50 }, (_, i) => 10 + i * 7)];
+  // Deux dates passées, une à J+4 et une à J+5 (en attente : J+3 et moins seraient confirmées automatiquement), puis 50 semaines à partir de J+10.
+  const decalages = [-14, -7, 4, 5, ...Array.from({ length: 50 }, (_, i) => 10 + i * 7)];
   const annonce = await creerAnnonce(decalages, "Phase 63 hebdo 12 mois");
 
   await seConnecter(page);

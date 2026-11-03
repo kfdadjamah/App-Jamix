@@ -13,14 +13,20 @@ function joursApres(jours: number): Date {
 }
 
 describe("calculerStatutInitial", () => {
-  it("date à J-8 (publiée aujourd'hui) -> PROGRAMMEE, confirmationJ7 = J-1 par rapport à aujourd'hui", () => {
+  it("date à J-8 (publiée aujourd'hui) -> PROGRAMMEE, confirmationJ7 = J+1 par rapport à aujourd'hui", () => {
     const resultat = calculerStatutInitial(joursApres(8), AUJOURDHUI);
     expect(resultat.statut).toBe("PROGRAMMEE");
     expect(resultat.confirmationJ7).toEqual(joursApres(1));
   });
 
-  it("date à J-7 exactement -> CONFIRMEE (limite : 7 jours ou moins)", () => {
-    const resultat = calculerStatutInitial(joursApres(7), AUJOURDHUI);
+  it("date à J-4 (déjà passé J-7) -> PROGRAMMEE, affichée en attente", () => {
+    const resultat = calculerStatutInitial(joursApres(4), AUJOURDHUI);
+    expect(resultat.statut).toBe("PROGRAMMEE");
+    expect(resultat.confirmationJ7).toEqual(joursApres(-3));
+  });
+
+  it("date à J-3 exactement -> CONFIRMEE (confirmation automatique)", () => {
+    const resultat = calculerStatutInitial(joursApres(3), AUJOURDHUI);
     expect(resultat.statut).toBe("CONFIRMEE");
     expect(resultat.confirmationJ7).toBeNull();
   });
@@ -33,29 +39,47 @@ describe("calculerStatutInitial", () => {
 });
 
 describe("statutAffiche", () => {
-  it("PROGRAMMEE avec confirmationJ7 dans le passé -> EN_ATTENTE_CONFIRMATION", () => {
-    const resultat = statutAffiche({
-      statut: "PROGRAMMEE",
-      confirmationJ7: joursApres(-1),
-    }, AUJOURDHUI);
-    expect(resultat).toBe("EN_ATTENTE_CONFIRMATION");
+  function programmee(joursRestants: number) {
+    return {
+      statut: "PROGRAMMEE" as const,
+      confirmationJ7: joursApres(joursRestants - 7),
+      date: joursApres(joursRestants),
+    };
+  }
+
+  it("8 jours restants -> PROGRAMMEE", () => {
+    expect(statutAffiche(programmee(8), AUJOURDHUI)).toBe("PROGRAMMEE");
   });
 
-  it("PROGRAMMEE avec confirmationJ7 dans le futur -> PROGRAMMEE inchangé", () => {
-    const resultat = statutAffiche({
-      statut: "PROGRAMMEE",
-      confirmationJ7: joursApres(1),
-    }, AUJOURDHUI);
-    expect(resultat).toBe("PROGRAMMEE");
+  it("7 jours restants (J-7 atteint) -> EN_ATTENTE_CONFIRMATION", () => {
+    expect(statutAffiche(programmee(7), AUJOURDHUI)).toBe("EN_ATTENTE_CONFIRMATION");
+  });
+
+  it("4 jours restants -> EN_ATTENTE_CONFIRMATION", () => {
+    expect(statutAffiche(programmee(4), AUJOURDHUI)).toBe("EN_ATTENTE_CONFIRMATION");
+  });
+
+  it("3 jours restants -> CONFIRMEE automatiquement", () => {
+    expect(statutAffiche(programmee(3), AUJOURDHUI)).toBe("CONFIRMEE");
+  });
+
+  it("jour même (J0) -> CONFIRMEE automatiquement", () => {
+    expect(statutAffiche(programmee(0), AUJOURDHUI)).toBe("CONFIRMEE");
   });
 
   it("CONFIRMEE reste inchangé", () => {
-    const resultat = statutAffiche({ statut: "CONFIRMEE", confirmationJ7: null }, AUJOURDHUI);
+    const resultat = statutAffiche(
+      { statut: "CONFIRMEE", confirmationJ7: null, date: joursApres(10) },
+      AUJOURDHUI
+    );
     expect(resultat).toBe("CONFIRMEE");
   });
 
-  it("ANNULEE reste inchangé", () => {
-    const resultat = statutAffiche({ statut: "ANNULEE", confirmationJ7: null }, AUJOURDHUI);
+  it("ANNULEE reste inchangé, même à J-3 ou moins", () => {
+    const resultat = statutAffiche(
+      { statut: "ANNULEE", confirmationJ7: null, date: joursApres(1) },
+      AUJOURDHUI
+    );
     expect(resultat).toBe("ANNULEE");
   });
 });

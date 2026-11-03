@@ -1,39 +1,57 @@
 import { RythmeRecurrence, StatutOccurrence } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 
-const JOURS_LIMITE_CONFIRMATION_AUTO = 7;
+// Échéance de confirmation par l'organisateur (J-7) et confirmation automatique (J-3).
+const JOURS_ECHEANCE_CONFIRMATION = 7;
+const JOURS_CONFIRMATION_AUTO = 3;
 const MS_PAR_JOUR = 24 * 60 * 60 * 1000;
 
 export function aujourdHuiUTC(): Date {
   return new Date(new Date().toISOString().slice(0, 10));
 }
 
+/**
+ * Statut enregistré à la publication d'une date, selon les jours restants `n` avant la jam :
+ * `n > 3` -> PROGRAMMEE (affichée « en attente » dès que J-7 est atteint, voir `statutAffiche`) ;
+ * `n <= 3` -> CONFIRMEE d'office.
+ */
 export function calculerStatutInitial(
   date: Date,
   publieLe: Date = aujourdHuiUTC()
 ): { statut: StatutOccurrence; confirmationJ7: Date | null } {
   const ecartJours = Math.round((date.getTime() - publieLe.getTime()) / MS_PAR_JOUR);
 
-  if (ecartJours > JOURS_LIMITE_CONFIRMATION_AUTO) {
-    const confirmationJ7 = new Date(date.getTime() - JOURS_LIMITE_CONFIRMATION_AUTO * MS_PAR_JOUR);
+  if (ecartJours > JOURS_CONFIRMATION_AUTO) {
+    const confirmationJ7 = new Date(date.getTime() - JOURS_ECHEANCE_CONFIRMATION * MS_PAR_JOUR);
     return { statut: "PROGRAMMEE", confirmationJ7 };
   }
 
   return { statut: "CONFIRMEE", confirmationJ7: null };
 }
 
+/**
+ * Statut affiché, calculé à la lecture (aucune tâche planifiée) selon les jours restants `n` :
+ * `n > 7` programmée ; `3 < n <= 7` en attente de confirmation ; `n <= 3` confirmée automatiquement.
+ * Seule une occurrence PROGRAMMEE évolue : CONFIRMEE (action de l'organisateur) et ANNULEE sont figées.
+ */
 export function statutAffiche(
-  occurrence: { statut: StatutOccurrence; confirmationJ7: Date | null },
+  occurrence: { statut: StatutOccurrence; confirmationJ7: Date | null; date: Date },
   aujourdHui: Date = aujourdHuiUTC()
 ): StatutOccurrence {
+  if (occurrence.statut !== "PROGRAMMEE") {
+    return occurrence.statut;
+  }
+  const joursRestants = Math.round((occurrence.date.getTime() - aujourdHui.getTime()) / MS_PAR_JOUR);
+  if (joursRestants <= JOURS_CONFIRMATION_AUTO) {
+    return "CONFIRMEE";
+  }
   if (
-    occurrence.statut === "PROGRAMMEE" &&
     occurrence.confirmationJ7 !== null &&
     occurrence.confirmationJ7.getTime() <= aujourdHui.getTime()
   ) {
     return "EN_ATTENTE_CONFIRMATION";
   }
-  return occurrence.statut;
+  return "PROGRAMMEE";
 }
 
 export async function recupererAnnoncesPubliees(dateIso: string) {
