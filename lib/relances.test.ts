@@ -7,90 +7,44 @@ function joursApres(jours: number): Date {
   return new Date(AUJOURDHUI.getTime() + jours * 24 * 60 * 60 * 1000);
 }
 
+const MENTION = "Sans confirmation à J-3, la date sera automatiquement confirmée.";
+
 describe("messageRelance", () => {
-  it("joursAvantDate = 7 (limite haute du palier) -> En attente de confirmation", () => {
-    const message = messageRelance(
-      { statut: "PROGRAMMEE", confirmationJ7: joursApres(-1), date: joursApres(7) },
-      AUJOURDHUI
+  function programmee(joursRestants: number) {
+    return {
+      statut: "PROGRAMMEE" as const,
+      confirmationJ7: joursApres(joursRestants - 7),
+      date: joursApres(joursRestants),
+    };
+  }
+
+  it.each([7, 6])("%i jours restants -> En attente de confirmation + mention J-3", (jours) => {
+    expect(messageRelance(programmee(jours), AUJOURDHUI)).toBe(
+      `En attente de confirmation. ${MENTION}`
     );
-    expect(message).toBe("En attente de confirmation");
   });
 
-  it("joursAvantDate = 6 -> En attente de confirmation", () => {
-    const message = messageRelance(
-      { statut: "PROGRAMMEE", confirmationJ7: joursApres(-1), date: joursApres(6) },
-      AUJOURDHUI
+  it.each([5, 4])("%i jours restants -> Confirmation à faire bientôt + mention J-3", (jours) => {
+    expect(messageRelance(programmee(jours), AUJOURDHUI)).toBe(
+      `Confirmation à faire bientôt. ${MENTION}`
     );
-    expect(message).toBe("En attente de confirmation");
   });
 
-  it("joursAvantDate = 5 -> Confirmation à faire bientôt", () => {
-    const message = messageRelance(
-      { statut: "PROGRAMMEE", confirmationJ7: joursApres(-1), date: joursApres(5) },
-      AUJOURDHUI
-    );
-    expect(message).toBe("Confirmation à faire bientôt");
+  it.each([3, 2, 1, 0])("%i jours restants -> aucune relance (confirmée automatiquement)", (jours) => {
+    expect(messageRelance(programmee(jours), AUJOURDHUI)).toBeNull();
   });
 
-  it("joursAvantDate = 4 -> Confirmation à faire bientôt", () => {
-    const message = messageRelance(
-      { statut: "PROGRAMMEE", confirmationJ7: joursApres(-1), date: joursApres(4) },
-      AUJOURDHUI
-    );
-    expect(message).toBe("Confirmation à faire bientôt");
+  it("date passée -> null", () => {
+    expect(messageRelance(programmee(-1), AUJOURDHUI)).toBeNull();
   });
 
-  it("joursAvantDate = 3 -> Confirmation urgente", () => {
-    const message = messageRelance(
-      { statut: "PROGRAMMEE", confirmationJ7: joursApres(-1), date: joursApres(3) },
-      AUJOURDHUI
-    );
-    expect(message).toBe("Confirmation urgente");
-  });
-
-  it("joursAvantDate = 2 -> Confirmation urgente", () => {
-    const message = messageRelance(
-      { statut: "PROGRAMMEE", confirmationJ7: joursApres(-1), date: joursApres(2) },
-      AUJOURDHUI
-    );
-    expect(message).toBe("Confirmation urgente");
-  });
-
-  it("joursAvantDate = 1 -> Dernier rappel", () => {
-    const message = messageRelance(
-      { statut: "PROGRAMMEE", confirmationJ7: joursApres(-1), date: joursApres(1) },
-      AUJOURDHUI
-    );
-    expect(message).toBe("Dernier rappel : confirmez aujourd'hui");
-  });
-
-  it("joursAvantDate = 0 -> Dernier rappel", () => {
-    const message = messageRelance(
-      { statut: "PROGRAMMEE", confirmationJ7: joursApres(-1), date: joursApres(0) },
-      AUJOURDHUI
-    );
-    expect(message).toBe("Dernier rappel : confirmez aujourd'hui");
-  });
-
-  it("date passée (J+1) -> null", () => {
-    const message = messageRelance(
-      { statut: "PROGRAMMEE", confirmationJ7: joursApres(-8), date: joursApres(-1) },
-      AUJOURDHUI
-    );
-    expect(message).toBeNull();
-  });
-
-  it("PROGRAMMEE non échue (confirmationJ7 dans le futur) -> null", () => {
-    const message = messageRelance(
-      { statut: "PROGRAMMEE", confirmationJ7: joursApres(1), date: joursApres(8) },
-      AUJOURDHUI
-    );
-    expect(message).toBeNull();
+  it("PROGRAMMEE non échue (plus de 7 jours) -> null", () => {
+    expect(messageRelance(programmee(8), AUJOURDHUI)).toBeNull();
   });
 
   it("CONFIRMEE -> null", () => {
     const message = messageRelance(
-      { statut: "CONFIRMEE", confirmationJ7: null, date: joursApres(3) },
+      { statut: "CONFIRMEE", confirmationJ7: null, date: joursApres(5) },
       AUJOURDHUI
     );
     expect(message).toBeNull();
@@ -98,7 +52,7 @@ describe("messageRelance", () => {
 
   it("ANNULEE -> null", () => {
     const message = messageRelance(
-      { statut: "ANNULEE", confirmationJ7: null, date: joursApres(3) },
+      { statut: "ANNULEE", confirmationJ7: null, date: joursApres(5) },
       AUJOURDHUI
     );
     expect(message).toBeNull();
@@ -106,23 +60,24 @@ describe("messageRelance", () => {
 });
 
 describe("compterRelancesActives", () => {
-  it("compte uniquement les occurrences EN_ATTENTE_CONFIRMATION", () => {
+  it("compte uniquement les occurrences en attente (de J-7 à J-4)", () => {
     const occurrences = [
       { statut: "PROGRAMMEE" as const, confirmationJ7: joursApres(-1), date: joursApres(6) },
       { statut: "PROGRAMMEE" as const, confirmationJ7: joursApres(1), date: joursApres(8) },
-      { statut: "CONFIRMEE" as const, confirmationJ7: null, date: joursApres(3) },
-      { statut: "ANNULEE" as const, confirmationJ7: null, date: joursApres(3) },
+      { statut: "CONFIRMEE" as const, confirmationJ7: null, date: joursApres(5) },
+      { statut: "ANNULEE" as const, confirmationJ7: null, date: joursApres(5) },
       { statut: "PROGRAMMEE" as const, confirmationJ7: joursApres(-5), date: joursApres(2) },
+      { statut: "PROGRAMMEE" as const, confirmationJ7: joursApres(-3), date: joursApres(4) },
     ];
     expect(compterRelancesActives(occurrences, AUJOURDHUI)).toBe(2);
   });
 
-  it("exclut une date passée et compte une date du jour (J0)", () => {
+  it("exclut une date passée et une date du jour (confirmée automatiquement)", () => {
     const occurrences = [
       { statut: "PROGRAMMEE" as const, confirmationJ7: joursApres(-8), date: joursApres(-1) },
       { statut: "PROGRAMMEE" as const, confirmationJ7: joursApres(-7), date: joursApres(0) },
     ];
-    expect(compterRelancesActives(occurrences, AUJOURDHUI)).toBe(1);
+    expect(compterRelancesActives(occurrences, AUJOURDHUI)).toBe(0);
   });
 
   it("retourne 0 sur un tableau vide", () => {
@@ -160,9 +115,10 @@ describe("pastillesDeCarte", () => {
       occurrence(20),
     ];
     const { affichees } = pastillesDeCarte(occurrences, AUJOURDHUI);
+    // Seule la date à J-5 est en attente ; celle du jour (J0) est confirmée automatiquement.
     expect(affichees.map((o) => o.date)).toEqual([
-      joursApres(0),
       joursApres(5),
+      joursApres(0),
       joursApres(1),
       joursApres(12),
       joursApres(20),
@@ -170,7 +126,7 @@ describe("pastillesDeCarte", () => {
   });
 
   it("plus de 6 dates à confirmer : toutes affichées, aucune autre", () => {
-    const occurrences = [...Array.from({ length: 7 }, (_, i) => occurrence(i)), occurrence(30)];
+    const occurrences = [...Array.from({ length: 7 }, (_, i) => occurrence(4 + (i % 4))), occurrence(30)];
     const { affichees, autres } = pastillesDeCarte(occurrences, AUJOURDHUI);
     expect(affichees).toHaveLength(7);
     expect(autres).toBe(1);

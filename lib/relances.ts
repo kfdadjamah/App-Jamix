@@ -3,6 +3,9 @@ import { aujourdHuiUTC, statutAffiche } from "@/lib/annonces";
 
 const MS_PAR_JOUR = 24 * 60 * 60 * 1000;
 
+const MENTION_CONFIRMATION_AUTO =
+  "Sans confirmation à J-3, la date sera automatiquement confirmée.";
+
 export function joursAvantDate(date: Date, aujourdHui: Date = aujourdHuiUTC()): number {
   return Math.round((date.getTime() - aujourdHui.getTime()) / MS_PAR_JOUR);
 }
@@ -21,16 +24,11 @@ export function messageRelance(
     return null;
   }
 
+  // Statut « en attente » = de J-7 à J-4 ; à J-3 la date est confirmée automatiquement.
   if (joursRestants >= 6) {
-    return "En attente de confirmation";
+    return `En attente de confirmation. ${MENTION_CONFIRMATION_AUTO}`;
   }
-  if (joursRestants >= 4) {
-    return "Confirmation à faire bientôt";
-  }
-  if (joursRestants >= 2) {
-    return "Confirmation urgente";
-  }
-  return "Dernier rappel : confirmez aujourd'hui";
+  return `Confirmation à faire bientôt. ${MENTION_CONFIRMATION_AUTO}`;
 }
 
 // Dates passées exclues, J0 compris : même règle que messageRelance.
