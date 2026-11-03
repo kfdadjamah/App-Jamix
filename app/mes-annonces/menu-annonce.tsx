@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { ContenuConfirmationAnnulation } from "./confirmation-annulation";
 import { annulerAnnonce, annulerOccurrence, supprimerAnnonce, supprimerOccurrence } from "./actions";
 
 type Resultat = { erreur: string } | { succes: true };
@@ -287,6 +288,7 @@ function FenetreAnnulation({
   const [occurrenceId, setOccurrenceId] = useState(datesAnnulables[0]?.id ?? "");
   const [enCours, setEnCours] = useState(false);
   const [erreur, setErreur] = useState<string | null>(null);
+  const [etape, setEtape] = useState<"portee" | "finale">("portee");
 
   // Avec une seule date annulable, les deux portées sont équivalentes : simple confirmation.
   const choixDePortee = estRecurrente && datesAnnulables.length > 1;
@@ -320,10 +322,28 @@ function FenetreAnnulation({
   return (
     <dialog
       ref={fenetre}
-      aria-labelledby={`titre-annulation-${annonceId}`}
+      aria-labelledby={
+        etape === "finale" ? `titre-confirmation-${annonceId}` : `titre-annulation-${annonceId}`
+      }
       onClose={surFermeture}
       className="m-auto w-[calc(100%-48px)] max-w-sm rounded-[12px] border border-[var(--harbor-trait)] bg-white p-6 text-[var(--harbor-marine)] backdrop:bg-black/60"
     >
+      {etape === "finale" ? (
+        <ContenuConfirmationAnnulation
+          id={`titre-confirmation-${annonceId}`}
+          titre="Annuler définitivement ?"
+          recapitulatif={
+            portee === "date"
+              ? `Date annulée : ${datesAnnulables.find((date) => date.id === occurrenceId)?.libelle ?? ""}.`
+              : "Toutes les dates de l'annonce seront annulées."
+          }
+          action={() =>
+            portee === "date" ? annulerOccurrence(occurrenceId) : annulerAnnonce(annonceId)
+          }
+          surRetour={() => setEtape("portee")}
+          surTermine={surFermeture}
+        />
+      ) : (
       <div className="flex flex-col gap-4">
         <h2
           id={`titre-annulation-${annonceId}`}
@@ -391,7 +411,7 @@ function FenetreAnnulation({
         <div className="flex flex-wrap gap-2">
           <button
             type="button"
-            onClick={confirmer}
+            onClick={choixDePortee ? () => setEtape("finale") : confirmer}
             disabled={enCours}
             className="rounded-[12px] px-4 py-2 text-[13px] font-bold bg-[var(--harbor-erreur)] text-white transition-colors duration-[120ms] hover:bg-[color-mix(in_srgb,var(--harbor-erreur),black_10%)] active:bg-[color-mix(in_srgb,var(--harbor-erreur),black_20%)] disabled:opacity-60"
           >
@@ -407,6 +427,7 @@ function FenetreAnnulation({
           </button>
         </div>
       </div>
+      )}
     </dialog>
   );
 }

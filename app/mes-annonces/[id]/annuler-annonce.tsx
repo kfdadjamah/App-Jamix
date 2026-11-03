@@ -1,38 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { annulerAnnonce } from "../actions";
-
-type Resultat = { erreur: string } | { succes: true };
+import ConfirmationAnnulation from "../confirmation-annulation";
 
 export default function AnnulerAnnonce({ annonceId }: { annonceId: string }) {
-  const [enCours, setEnCours] = useState(false);
-  const [erreur, setErreur] = useState<string | null>(null);
-
-  async function surAnnulation() {
-    setErreur(null);
-    setEnCours(true);
-    const resultat: Resultat = await annulerAnnonce(annonceId);
-    setEnCours(false);
-    if ("erreur" in resultat) {
-      setErreur(resultat.erreur);
-    }
-  }
+  const [ouverte, setOuverte] = useState(false);
+  const idTitre = useId();
 
   return (
     <div className="flex flex-col gap-1">
       <button
         type="button"
-        onClick={surAnnulation}
-        disabled={enCours}
-        className="rounded-[8px] px-4 py-2 text-[13px] font-bold bg-[var(--harbor-erreur)] text-white transition-colors duration-[120ms] hover:bg-[color-mix(in_srgb,var(--harbor-erreur),black_10%)] active:bg-[color-mix(in_srgb,var(--harbor-erreur),black_20%)] disabled:opacity-60"
+        onClick={() => setOuverte(true)}
+        className="rounded-[8px] px-4 py-2 text-[13px] font-bold bg-[var(--harbor-erreur)] text-white transition-colors duration-[120ms] hover:bg-[color-mix(in_srgb,var(--harbor-erreur),black_10%)] active:bg-[color-mix(in_srgb,var(--harbor-erreur),black_20%)]"
       >
         Annuler toutes les dates
       </button>
-      {erreur && (
-        <span className="text-[13px] font-semibold text-[var(--harbor-erreur)]">
-          {erreur}
-        </span>
+      {ouverte && (
+        <ConfirmationAnnulation
+          id={idTitre}
+          titre="Annuler toutes les dates ?"
+          recapitulatif="Toutes les dates de l'annonce seront annulées."
+          action={() => annulerAnnonce(annonceId)}
+          surFermeture={() => setOuverte(false)}
+        />
       )}
     </div>
   );

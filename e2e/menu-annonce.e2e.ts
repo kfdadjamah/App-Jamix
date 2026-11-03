@@ -53,7 +53,7 @@ async function statutsEnBase(annonceId: string) {
 }
 
 function carte(page: Page, annonceId: string) {
-  return page.locator(`a[href="/mes-annonces/${annonceId}"]`).locator("..");
+  return page.locator(`a[href="/mes-annonces/${annonceId}"]`).locator("../..");
 }
 
 async function ouvrirMenu(page: Page, annonceId: string) {
@@ -138,6 +138,9 @@ test("annonce récurrente : « Cette date seulement » n'annule que la date choi
   await expect(fenetre.getByRole("radio", { name: "Cette date seulement" })).toBeChecked();
   await fenetre.getByRole("radio").nth(2).check(); // 2e date de la liste
   await fenetre.getByRole("button", { name: "Annuler l'annonce" }).click();
+  await expect(fenetre.getByRole("heading", { name: "Annuler définitivement ?" })).toBeVisible();
+  await expect(fenetre.getByText("Cette action est définitive.")).toBeVisible();
+  await fenetre.getByRole("button", { name: "Oui, annuler" }).click();
 
   await expect(fenetre).toHaveCount(0);
   await expect(carte(page, id).getByText("Annulée")).toHaveCount(1);
@@ -158,6 +161,8 @@ test("annonce récurrente : « Toutes les dates » annule toutes les dates", asy
   const fenetre = page.getByRole("dialog");
   await fenetre.getByRole("radio", { name: "Toutes les dates" }).check();
   await fenetre.getByRole("button", { name: "Annuler l'annonce" }).click();
+  await expect(fenetre.getByText("Toutes les dates de l'annonce seront annulées.")).toBeVisible();
+  await fenetre.getByRole("button", { name: "Oui, annuler" }).click();
 
   await expect(fenetre).toHaveCount(0);
   await expect(carte(page, id).getByText("Annulée")).toHaveCount(2);

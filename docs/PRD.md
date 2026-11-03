@@ -42,7 +42,7 @@ Chaque page se termine par un pied de page discret : les liens « CGU », « Men
 
 L'inscription d'un organisateur demande désormais, dans cet ordre, « Prénom », « Nom », « Email », « Mot de passe », « Nom du bar » et « Adresse du bar » (la photo du bar n'est plus demandée à l'inscription, voir US-208). Le prénom et le nom se modifient ensuite depuis le profil, où aucune section n'est dépliée d'office et où chaque champ à remplir porte son nom en placeholder.
 
-Sur chaque carte de « Mes annonces », un bouton « ⋯ » en haut à droite ouvre un petit menu : « Modifier » mène au formulaire de l'annonce ; « Annuler » ouvre une fenêtre de confirmation, avec choix de la portée (« Cette date seulement » + date, ou « Toutes les dates ») pour une annonce récurrente.
+Sur chaque carte de « Mes annonces », un bouton « ⋯ » en haut à droite ouvre un petit menu : « Modifier » mène au formulaire de l'annonce ; « Annuler » ouvre une fenêtre de confirmation, avec choix de la portée (« Cette date seulement » + date, ou « Toutes les dates ») pour une annonce récurrente, suivie d'une validation finale qui rappelle ce qui sera annulé. Sur la page de modification d'une annonce, « Annuler cette date » et « Annuler toutes les dates » ouvrent la même validation finale.
 
 En créant une annonce, l'organisateur choisit « Jam récurrente » ou « Jam exceptionnelle ». Pour une jam récurrente, il choisit un rythme (tous les mardis, un mardi sur deux, le 1er vendredi du mois…), une date de début et une date de fin. L'application en déduit les dates, qu'il vérifie et peut retirer une à une avant de publier. Pour une jam exceptionnelle, il choisit une seule date. Le musicien voit sur chaque jam son rythme en clair ou la mention « Exceptionnelle ».
 
@@ -264,6 +264,8 @@ US-208. En tant qu'organisateur qui s'inscrit, je veux un formulaire sans champ 
 US-209. En tant qu'organisateur dont le compte n'a aucun bar (créé avant l'obligation d'en avoir un), je veux accéder à mon profil, avec la section « Mes bars » ouverte, une mention et le bouton « Ajouter un bar », afin de pouvoir rattacher mon premier bar au lieu de rester bloqué sur « Compte introuvable ».
 US-210. En tant qu'organisateur, je veux qu'une date que je n'ai pas confirmée passe automatiquement au statut « confirmée » à J-3, afin que les musiciens voient une jam confirmée sans que j'aie une action de dernière minute à faire.
 US-211. En tant que musicien, je veux qu'une jam à 3 jours ou moins apparaisse « confirmée » (sauf si elle est annulée), afin de savoir que je peux m'y rendre.
+US-212. En tant qu'organisateur, je veux qu'une fenêtre de confirmation finale s'ouvre quand je clique sur « Annuler cette date » ou « Annuler toutes les dates » depuis la page de modification d'une annonce, afin de ne jamais annuler par erreur d'un seul clic.
+US-213. En tant qu'organisateur, je veux, dans la fenêtre d'annulation du menu « ⋯ » d'une annonce récurrente, une étape de validation finale après avoir choisi la portée (une date précise ou toutes les dates), qui rappelle ce qui sera annulé, afin d'être sûr de mon choix avant que l'annulation, définitive, soit appliquée.
 
 ## Critères de succès
 
@@ -342,6 +344,7 @@ US-211. En tant que musicien, je veux qu'une jam à 3 jours ou moins apparaisse 
 - Après « Enregistrer » sur la page de modification, le pop-up de confirmation s'affiche, l'adresse reste celle de la page de modification et les valeurs enregistrées y figurent.
 - Sur le profil, l'email du compte est lisible sous le titre « Email » section repliée et section dépliée (au-dessus de « Nouvel email »).
 - Le formulaire d'inscription affiche « Vous pouvez rajouter les autres bars dans le profil » sous « Nom du bar » et ne contient aucun champ « Photo ou logo » ; l'inscription aboutit sans photo.
+- Aucune annulation (menu « ⋯ » d'une annonce récurrente, « Annuler cette date » ou « Annuler toutes les dates » de la page de modification) n'est appliquée avant une validation finale ; « Retour » et Échap laissent tous les statuts inchangés en base.
 
 ## Hors périmètre
 
@@ -537,7 +540,7 @@ US-211. En tant que musicien, je veux qu'une jam à 3 jours ou moins apparaisse 
 - Les textes secondaires utilisent un crème à environ 70 % d'opacité ; le Driftwood est réservé aux séparateurs et bordures structurels. Les textes à 60 % d'opacité passent à 70 %.
 - « ← Retour » reste un bouton fantôme, avec une bordure de 2px, une graisse 500 et une couleur crème.
 - Le champ d'adresse d'un bar propose une liste déroulante après 3 caractères (5 suggestions au maximum), utilisable au clavier et fermée par Échap. La valeur envoyée est le texte du champ ; le géocodage serveur est inchangé (un échec laisse le bar absent de la carte).
-- Le bouton « ⋯ » des cartes de « Mes annonces » a une zone tactile d'au moins 44px et le libellé accessible « Actions de l'annonce » ; le menu a trois entrées au maximum (Modifier, Annuler, Supprimer). La fenêtre d'annulation propose « Annuler l'annonce » / « Retour » et affiche un message d'erreur dans la fenêtre si l'annulation échoue.
+- Le bouton « ⋯ » des cartes de « Mes annonces » a une zone tactile d'au moins 44px et le libellé accessible « Actions de l'annonce » ; le menu a trois entrées au maximum (Modifier, Annuler, Supprimer). La fenêtre d'annulation propose « Annuler l'annonce » / « Retour » et affiche un message d'erreur dans la fenêtre si l'annulation échoue. Pour une annonce récurrente aux dates multiples, « Annuler l'annonce » ouvre une validation finale (rappel de la portée choisie, mention « Cette action est définitive. », bouton de confirmation en Erreur plein, « ← Retour » neutre) ; une annonce à date unique garde sa fenêtre simple, qui est déjà la confirmation. Sur la page de modification, « Annuler cette date » et « Annuler toutes les dates » n'appellent l'action qu'après cette même validation ; Échap et « ← Retour » n'annulent rien.
 - Design Harbor (Phases 39 et 40) : toute l'application passe à un design clair (voir DESIGN.md), sans drapeau : tokens `--harbor-*` dans `:root`, ORYZO retiré, e-mails compris. Aucune règle métier ne change.
 - Sur l'accueil Harbor, un seul bandeau d'entête marine : pas de logo « Jammix » (le grand titre le remplace), « Connexion organisateur » ou l'icône de profil à droite ; l'organisateur connecté trouve « Accéder à mes annonces » en bouton secondaire sous l'accroche.
 - « Supprimer » (Phase 46) : suppression définitive, avec fenêtre de confirmation (« Cette suppression est définitive. », « Supprimer définitivement » / « Retour »). Annonce récurrente : portée explicite « Cette date seulement » / « Toutes les dates » ; ponctuelle ou brouillon : confirmation simple. La portée « toutes les dates » supprime l'annonce, ses occurrences et ses photos ; supprimer la dernière date d'une annonce supprime l'annonce. Seul le propriétaire peut supprimer. Aucun changement de schéma.
