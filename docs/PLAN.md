@@ -1729,3 +1729,25 @@ Le statut d'une date dépend des jours restants n avant la jam : n > 7 programm�
 ## Bloquée par
 
 - Phase 6 (statuts d'occurrence) et Phase 7 (relances)
+
+---
+
+## Phase 70 : Validation finale avant toute annulation
+
+**User stories** : US-212, US-213
+
+### Ce qu'on livre
+
+Aucune annulation ne part plus d'un seul clic. Un composant client réutilisable `ConfirmationAnnulation` (`app/mes-annonces/confirmation-annulation.tsx`, `<dialog>` + `showModal()`, même gabarit que les fenêtres existantes) affiche un titre explicite, la mention « Cette action est définitive. », un bouton de confirmation en Erreur plein et « ← Retour » neutre, avec message d'erreur dans la fenêtre si l'annulation échoue. Il est branché sur « Annuler cette date » (`app/mes-annonces/[id]/annuler-occurrence.tsx`) et « Annuler toutes les dates » (`annuler-annonce.tsx`), et sert d'étape finale dans `FenetreAnnulation` (`app/mes-annonces/menu-annonce.tsx`) quand une annonce récurrente propose un choix de portée. Une annonce à date unique garde sa fenêtre simple, déjà explicite. Aucune migration, aucune modification de `actions.ts`.
+
+### Critères d'acceptation
+
+- [x] « Annuler cette date » et « Annuler toutes les dates » (page de modification) ouvrent une fenêtre de confirmation ; rien n'est annulé avant le clic de confirmation
+- [x] Dans le menu « ⋯ » d'une annonce récurrente, « Annuler l'annonce » ouvre une validation finale qui rappelle la portée choisie (date précise ou toutes les dates)
+- [x] « ← Retour » et Échap ferment la fenêtre sans rien annuler (statuts en base inchangés)
+- [x] Boutons conformes à DESIGN.md (confirmation en Erreur plein, retour neutre) ; ligne « Boutons danger » mise à jour
+- [x] Tests e2e : `e2e/menu-annonce.e2e.ts` mis à jour, nouveau `e2e/confirmation-annulation.e2e.ts` ; `e2e/boutons-danger-succes.e2e.ts` toujours vert
+
+## Bloquée par
+
+- Phase 8 (annulation ciblée ou globale) et Phase 46 (menu « ⋯ »)

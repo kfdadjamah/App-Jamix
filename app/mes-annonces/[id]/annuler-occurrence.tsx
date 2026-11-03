@@ -1,38 +1,36 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { annulerOccurrence } from "../actions";
+import ConfirmationAnnulation from "../confirmation-annulation";
 
-type Resultat = { erreur: string } | { succes: true };
-
-export default function AnnulerOccurrence({ occurrenceId }: { occurrenceId: string }) {
-  const [enCours, setEnCours] = useState(false);
-  const [erreur, setErreur] = useState<string | null>(null);
-
-  async function surAnnulation() {
-    setErreur(null);
-    setEnCours(true);
-    const resultat: Resultat = await annulerOccurrence(occurrenceId);
-    setEnCours(false);
-    if ("erreur" in resultat) {
-      setErreur(resultat.erreur);
-    }
-  }
+export default function AnnulerOccurrence({
+  occurrenceId,
+  libelleDate,
+}: {
+  occurrenceId: string;
+  libelleDate: string;
+}) {
+  const [ouverte, setOuverte] = useState(false);
+  const idTitre = useId();
 
   return (
     <div className="flex flex-col items-end gap-1">
       <button
         type="button"
-        onClick={surAnnulation}
-        disabled={enCours}
-        className="rounded-[8px] px-2.5 py-2 text-[13px] font-bold bg-[var(--harbor-erreur)] text-white transition-colors duration-[120ms] hover:bg-[color-mix(in_srgb,var(--harbor-erreur),black_10%)] active:bg-[color-mix(in_srgb,var(--harbor-erreur),black_20%)] disabled:opacity-60"
+        onClick={() => setOuverte(true)}
+        className="rounded-[8px] px-2.5 py-2 text-[13px] font-bold bg-[var(--harbor-erreur)] text-white transition-colors duration-[120ms] hover:bg-[color-mix(in_srgb,var(--harbor-erreur),black_10%)] active:bg-[color-mix(in_srgb,var(--harbor-erreur),black_20%)]"
       >
         Annuler cette date
       </button>
-      {erreur && (
-        <span className="text-[13px] font-semibold text-[var(--harbor-erreur)]">
-          {erreur}
-        </span>
+      {ouverte && (
+        <ConfirmationAnnulation
+          id={idTitre}
+          titre="Annuler cette date ?"
+          recapitulatif={`Date annulée : ${libelleDate}.`}
+          action={() => annulerOccurrence(occurrenceId)}
+          surFermeture={() => setOuverte(false)}
+        />
       )}
     </div>
   );

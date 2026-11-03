@@ -91,7 +91,10 @@ export default async function PageEditionAnnonce({
                           <ConfirmerOccurrence occurrenceId={occurrence.id} />
                         )}
                         {statut !== "ANNULEE" && (
-                          <AnnulerOccurrence occurrenceId={occurrence.id} />
+                          <AnnulerOccurrence
+                            occurrenceId={occurrence.id}
+                            libelleDate={formaterDateCourte(new Date(occurrence.date))}
+                          />
                         )}
                       </div>
                     </div>

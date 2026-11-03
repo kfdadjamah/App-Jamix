@@ -92,7 +92,7 @@ test("page de l'annonce : annulations en Erreur plein, Confirmer en Succès plei
 });
 
 test("menu ⋯ : « Annuler » et « Supprimer » en texte Erreur, fenêtres en Erreur plein, fermeture neutre", async ({ page }) => {
-  const carte = page.locator(`a[href="/mes-annonces/${annonceId}"]`).locator("..");
+  const carte = page.locator(`a[href="/mes-annonces/${annonceId}"]`).locator("../..");
   const ouvrir = () => carte.getByRole("button", { name: "Actions de l'annonce" }).click();
 
   await ouvrir();
